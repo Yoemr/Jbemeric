@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="coaching">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coaching — JB EMERIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&family=Russo+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="nav.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#040a1e;font-family:'Outfit',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:1000;height:56px;background:rgba(4,10,30,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;padding:0 20px;gap:12px}
+.nav-logo{display:flex;align-items:center;flex-shrink:0}
+.nav-tabs{display:none;gap:2px;flex:1;margin-left:8px}
+.nav-cta-desk{display:none;flex-shrink:0;font-family:'DM Mono';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 18px;border-radius:7px;font-weight:500;white-space:nowrap;transition:all .2s}
+@media(min-width:700px){.nav-tabs{display:flex}.nav-cta-desk{display:block}}
+.nav-tab{flex-shrink:0;font-family:'DM Mono';font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,215,0,.55);padding:7px 12px;border-radius:6px;border:1px solid transparent;transition:all .2s}
+.nav-tab:hover{background:rgba(255,215,0,.07);color:rgba(255,215,0,.9)}
+.nav-tab.active{background:#0A3D91;color:#fff;border-color:#0A3D91}
+.nav-burger{display:flex;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;margin-left:auto;flex-shrink:0;padding:4px}
+.nav-burger span{display:block;height:2px;background:rgba(255,215,0,.8);border-radius:2px;transition:all .3s}
+.nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(min-width:700px){.nav-burger{display:none}}
+.nav-mobile{display:none;position:fixed;top:56px;left:0;right:0;background:rgba(4,10,30,.99);z-index:999;padding:12px 16px 20px;flex-direction:column;gap:4px;border-bottom:2px solid var(--accent,#FFCF00)}
+.nav-mobile.open{display:flex}
+@media(min-width:700px){.nav-mobile{display:none !important}}
+.nav-mobile .nav-tab{font-size:13px;padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.06)}
+.nav-mobile-cta{margin-top:8px;padding:13px;border-radius:8px;font-family:'DM Mono';font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;text-align:center;display:block}
+
+/* HERO — plein écran, photo fond, biais couleur à droite */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+@media(max-width:699px){.hero{min-height:88svh}}
+.hero-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,#040a1e 0%,#0A3D91 50%,#1252C0 100%)}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 35%}
+/* overlay défini par page via --hero-overlay */
+.hero-bg::after{content:'';position:absolute;inset:0;z-index:2;background:var(--hero-overlay)}
+.hero-num{position:absolute;top:50%;right:3vw;transform:translateY(-50%);font-family:'Bebas Neue';font-size:clamp(160px,26vw,340px);line-height:1;color:rgba(255,255,255,.03);z-index:2;pointer-events:none;user-select:none}
+.hero-content{position:relative;z-index:3;padding:clamp(40px,6vw,80px) clamp(20px,5vw,72px) clamp(36px,5vw,64px);max-width:760px}
+.hero-back{font-family:'DM Mono';font-size:9px;letter-spacing:3px;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;transition:opacity .2s;opacity:.5}
+.hero-back:hover{opacity:1}
+.hero-back::before{content:'←';font-size:12px}
+.hero-eyebrow{font-family:'DM Mono';font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';width:24px;height:2px;flex-shrink:0}
+.hero-title{font-family:'Bebas Neue';font-size:clamp(52px,10vw,120px);line-height:.82;letter-spacing:.5px;margin-bottom:20px}
+.hero-title em{font-style:normal;display:inline}
+.hero-rule{width:64px;height:3px;margin-bottom:20px}
+.hero-lead{font-size:clamp(14px,1.8vw,17px);line-height:1.75;max-width:500px;margin-bottom:28px}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:20px;border:1px solid currentColor;opacity:.7}
+.chip-solid{opacity:1;font-weight:500}
+
+/* CORPS — fond dominant clair, bandes alternées */
+/* bande légère — fond dominant de la page */
+.band{padding:clamp(48px,6vw,88px) clamp(20px,5vw,72px)}
+/* fond primaire clair */
+.band-base{background:var(--bg-base,#f0f4ff);color:var(--ink-base,#111)}
+/* fond légèrement plus marqué — couleur principale diluée */
+.band-tint{background:var(--bg-tint,#e6edff);color:var(--ink-base,#111)}
+/* accent plein — la couleur principale saturée */
+.band-accent{background:var(--accent,#0a1a4a);color:var(--ink-accent,#fff)}
+/* très sombre pour les blocs hero/cta */
+.band-dark{background:#08080f;color:#fff}
+
+/* GRILLES */
+.g2{display:grid;grid-template-columns:1fr;gap:clamp(32px,5vw,72px);align-items:start}
+@media(min-width:800px){.g2{grid-template-columns:3fr 2fr}}
+.g2r{display:grid;grid-template-columns:1fr;gap:clamp(32px,5vw,72px);align-items:start}
+@media(min-width:800px){.g2r{grid-template-columns:2fr 3fr}}
+
+/* étiquette rubrique */
+.rubrik{font-family:'DM Mono';font-size:9px;letter-spacing:3.5px;text-transform:uppercase;opacity:.4;display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.rubrik::after{content:'';flex:1;height:1px;background:currentColor;opacity:.2;max-width:80px}
+
+/* titre section */
+.sh{font-family:'Bebas Neue';font-size:clamp(38px,5.5vw,68px);line-height:.88;margin-bottom:16px}
+.sh em{font-style:normal;color:var(--accent,#0a1a4a)}
+.band-accent .sh em,.band-dark .sh em{color:var(--accent-em,#FFCF00)}
+
+/* corps */
+.sb{font-size:15px;line-height:1.8;opacity:.65;max-width:640px}
+.sb p+p{margin-top:14px}
+.sb strong{font-weight:500;opacity:1}
+.band-base .sb,.band-tint .sb{color:var(--ink-base,#111)}
+.band-accent .sb,.band-dark .sb{color:rgba(255,255,255,.7)}
+
+/* BANDE PRIX — fond accent plein */
+.prix-band{background:var(--accent,#0a1a4a);color:var(--ink-accent,#fff);padding:clamp(28px,4vw,52px) clamp(20px,5vw,72px);display:flex;flex-wrap:wrap;gap:32px;align-items:center;justify-content:space-between}
+.prix-val{font-family:'Bebas Neue';font-size:clamp(80px,13vw,150px);line-height:.82;letter-spacing:-2px}
+.prix-label{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;opacity:.5}
+.prix-list{display:flex;flex-direction:column;gap:8px;flex:1;min-width:220px}
+.prix-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;opacity:.8}
+.prix-item::before{content:'✓';font-weight:700;opacity:1;flex-shrink:0;margin-top:1px}
+.prix-cta{display:inline-flex;font-family:'DM Mono';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:14px 24px;border-radius:8px;transition:all .2s;flex-shrink:0;background:var(--prix-cta-bg,rgba(255,255,255,.12));color:var(--prix-cta-fg,#fff);border:1px solid var(--prix-cta-border,rgba(255,255,255,.2))}
+.prix-cta:hover{transform:translateY(-2px)}
+
+/* LISTES NUMÉROTÉES */
+.fi-list{display:flex;flex-direction:column}
+.fi{display:grid;grid-template-columns:48px 1fr;gap:0;border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.fi:last-child{border-bottom:1px solid var(--sep,rgba(0,0,0,.08))}
+.band-accent .fi,.band-dark .fi{border-color:rgba(255,255,255,.07)}
+.band-accent .fi:last-child,.band-dark .fi:last-child{border-color:rgba(255,255,255,.07)}
+.fi-n{font-family:'Bebas Neue';font-size:44px;color:var(--accent,#0a1a4a);line-height:1;padding:20px 0;opacity:.5}
+.band-accent .fi-n,.band-dark .fi-n{color:var(--accent-em,#FFCF00);opacity:.7}
+.fi-body{padding:20px 0 20px 20px;border-left:1px solid var(--sep,rgba(0,0,0,.08))}
+.band-accent .fi-body,.band-dark .fi-body{border-color:rgba(255,255,255,.07)}
+.fi-title{font-size:15px;font-weight:500;margin-bottom:5px;color:var(--ink-base,#111)}
+.band-base .fi-title,.band-tint .fi-title{color:var(--ink-base,#111)}
+.band-accent .fi-title,.band-dark .fi-title{color:#fff}
+.fi-desc{font-size:13px;line-height:1.7;opacity:.6}
+
+/* NIVEAUX */
+.lv-row{display:grid;grid-template-columns:54px 1fr;border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.lv-row:last-child{border-bottom:1px solid var(--sep,rgba(0,0,0,.08))}
+.lv-code{font-family:'Bebas Neue';font-size:20px;color:var(--accent,#0a1a4a);padding:20px 0;line-height:1}
+.lv-body{padding:20px 0 20px 20px;border-left:1px solid var(--sep,rgba(0,0,0,.08))}
+.lv-name{font-size:15px;font-weight:500;margin-bottom:4px;color:var(--ink-base,#111)}
+.lv-desc{font-size:13px;line-height:1.65;opacity:.6}
+.lv-tag{display:inline-block;margin-top:8px;font-family:'DM Mono';font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid var(--accent,#0a1a4a);color:var(--accent,#0a1a4a)}
+
+/* PROGRAMME */
+.sched-row{display:grid;grid-template-columns:56px 1fr;border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.sched-row:last-child{border-bottom:1px solid var(--sep,rgba(0,0,0,.08))}
+.sched-t{font-family:'DM Mono';font-size:10px;color:var(--accent,#0a1a4a);padding:18px 0;line-height:1.2;font-weight:500;opacity:.8}
+.sched-body{padding:18px 0 18px 20px;border-left:1px solid var(--sep,rgba(0,0,0,.08))}
+.sched-name{font-size:14px;font-weight:500;margin-bottom:3px;color:var(--ink-base,#111)}
+.sched-info{font-size:12px;opacity:.45;line-height:1.5}
+
+/* CIRCUITS */
+.circ-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.circ-grid{grid-template-columns:1fr}}
+.circ{padding:16px 18px;border:1px solid var(--sep,rgba(0,0,0,.1));border-radius:10px;transition:border-color .2s}
+.circ:hover{border-color:var(--accent,#0a1a4a)}
+.circ-name{font-family:'Bebas Neue';font-size:22px;line-height:1;margin-bottom:2px;color:var(--ink-base,#111)}
+.circ-dept{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent,#0a1a4a);margin-bottom:7px}
+.circ-info{font-size:12px;opacity:.5;line-height:1.55}
+
+/* BMW BLOC */
+.bmw{display:grid;grid-template-columns:1fr;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.08)}
+@media(min-width:700px){.bmw{grid-template-columns:1fr 1fr}}
+.bmw-img{overflow:hidden;min-height:260px}
+.bmw-img img{width:100%;height:100%;object-fit:cover}
+.bmw-info{background:#0a1a4a;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;justify-content:center}
+.bmw-badge{display:inline-block;font-family:'DM Mono';font-size:8px;letter-spacing:2px;text-transform:uppercase;background:#FFCF00;color:#000;padding:4px 12px;border-radius:20px;margin-bottom:14px}
+.bmw-name{font-family:'Bebas Neue';font-size:clamp(44px,6vw,72px);color:#fff;line-height:.88;margin-bottom:6px}
+.bmw-spec{font-family:'DM Mono';font-size:9px;color:rgba(255,255,255,.3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px}
+.bmw-facts{display:flex;flex-direction:column;gap:7px}
+.bmw-f{font-size:13px;color:rgba(255,255,255,.6);display:flex;gap:9px}
+.bmw-f::before{content:'·';color:#FFCF00;font-size:16px;line-height:1.1;flex-shrink:0}
+
+/* VOIES */
+.voie-row{display:grid;grid-template-columns:52px 1fr;border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.voie-row:last-child{border-bottom:1px solid var(--sep,rgba(0,0,0,.08))}
+.voie-n{font-family:'Bebas Neue';font-size:44px;color:var(--accent,#0a1a4a);line-height:1;padding:20px 0;opacity:.6}
+.voie-body{padding:20px 0 20px 20px;border-left:1px solid var(--sep,rgba(0,0,0,.08))}
+.voie-title{font-size:15px;font-weight:500;margin-bottom:4px;color:var(--ink-base,#111)}
+.voie-desc{font-size:13px;line-height:1.7;opacity:.6}
+
+/* FINALES */
+.finales{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(min-width:700px){.finales{grid-template-columns:repeat(4,1fr)}}
+.fin{padding:clamp(20px,3vw,36px);border-right:1px solid rgba(255,255,255,.08);position:relative}
+.fin:last-child{border-right:none}
+@media(max-width:699px){.fin{border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}}
+.fin::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-em,#FFCF00);opacity:.4}
+.fin.active::before{opacity:1}
+.fin-n{font-family:'DM Mono';font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:12px}
+.fin-date{font-family:'Bebas Neue';font-size:clamp(24px,3.5vw,36px);color:var(--accent-em,#FFCF00);line-height:1;margin-bottom:4px}
+.fin-circuit{font-family:'Bebas Neue';font-size:clamp(18px,2.5vw,24px);color:#fff;line-height:1;margin-bottom:8px}
+.fin-info{font-size:12px;color:rgba(255,255,255,.4);line-height:1.5}
+
+/* STATS sidebar */
+.stat-col{display:flex;flex-direction:column}
+.stat-row{padding:18px 0;border-bottom:1px solid var(--sep,rgba(0,0,0,.08))}
+.stat-row:first-child{border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.stat-val{font-family:'Bebas Neue';font-size:clamp(44px,7vw,72px);line-height:.85;color:var(--accent,#0a1a4a);letter-spacing:-1px}
+.stat-lbl{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;opacity:.4}
+
+/* WIDGET */
+.widget{padding-top:28px;margin-top:28px;border-top:2px solid var(--accent,#0a1a4a)}
+.widget-label{font-family:'DM Mono';font-size:9px;letter-spacing:3px;text-transform:uppercase;opacity:.4;margin-bottom:10px}
+.widget-title{font-family:'Bebas Neue';font-size:26px;line-height:.9;margin-bottom:8px;color:var(--ink-base,#111)}
+.widget-body{font-size:13px;line-height:1.7;opacity:.55;margin-bottom:14px}
+.widget-link{font-family:'DM Mono';font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent,#0a1a4a);display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
+.widget-link:hover{gap:10px}
+
+/* FAQ */
+.faq{display:flex;flex-direction:column}
+.fq{padding:18px 20px;margin-bottom:6px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
+.fq:first-child{border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.band-accent .fq,.band-dark .fq{border-color:rgba(255,255,255,.08)}
+.band-accent .fq:first-child,.band-dark .fq:first-child{border-color:rgba(255,255,255,.08)}
+.fq-q{font-family:'DM Mono';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent,#0a1a4a);margin-bottom:8px}
+.band-accent .fq-q,.band-dark .fq-q{color:var(--accent-em,#FFCF00)}
+.fq-a{font-size:14px;line-height:1.75;opacity:.65}
+
+/* CTA final */
+.cta-band{background:#08080f;color:#fff;padding:clamp(44px,7vw,88px) clamp(20px,5vw,72px);display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between}
+.cta-title{font-family:'Bebas Neue';font-size:clamp(44px,7vw,96px);line-height:.85}
+.cta-sub{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:6px}
+.cta-btns{display:flex;gap:12px;flex-wrap:wrap;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;font-family:'DM Mono';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:14px 22px;border-radius:8px;font-weight:500;transition:all .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-accent{background:var(--accent,#0a1a4a);color:#fff}
+.btn-y{background:#FFCF00;color:#000}.btn-y:hover{background:#C8A000}
+.btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}.btn-ghost:hover{background:rgba(255,255,255,.14)}
+
+/* FOOTER */
+.footer-sep{width:1px;height:22px;background:currentColor;opacity:.12;display:none}
+@media(min-width:600px){.footer-sep{display:block}}
+.footer-links{display:flex;gap:12px;flex-wrap:wrap}
+.footer-lnk{font-family:'DM Mono';font-size:9px;letter-spacing:1.5px;text-transform:uppercase;opacity:.3;transition:opacity .2s}
+.footer-lnk:hover{opacity:.8}
+.footer-email{font-family:'DM Mono';font-size:10px;color:var(--accent,#0a1a4a);opacity:.7}
+.footer-email:hover{opacity:1}
+/* nav → voir nav.css */
+
+/* ══ NAV ADDITIONS ══════════════════════════════════
+   Sous-menu Paddock · Socials · Auth buttons
+   ════════════════════════════════════════════════ */
+
+/* Socials dans la nav */
+.nav-socials {
+  display: none;
+  align-items: center;
+  gap: 14px;
+  padding: 0 14px;
+  border-left: 1px solid rgba(255,255,255,.08);
+  border-right: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+@media(min-width:1000px){ .nav-socials { display: flex } }
+.nav-social {
+  color: rgba(255,255,255,.28);
+  text-decoration: none;
+  transition: color .18s;
+  display: flex; align-items: center;
+}
+.nav-social:hover { color: #FFCF00 }
+.nav-social svg { width:13px;height:13px;fill:currentColor;display:block }
+
+/* Auth buttons */
+.nav-auth {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+@media(min-width:1000px){ .nav-auth { display: flex } }
+.nav-btn-login {
+  font-family: 'DM Mono';
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,.12);
+  transition: all .18s;
+  white-space: nowrap;
+}
+.nav-btn-login:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,.3);
+}
+.nav-btn-signup {
+  font-family: 'DM Mono';
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #000;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  background: #FFCF00;
+  transition: background .18s;
+  white-space: nowrap;
+}
+.nav-btn-signup:hover { background: #C8A000 }
+
+/* Sous-menu Paddock */
+.nav-tab.has-sub {
+  position: relative;
+}
+.nav-sub {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(4,10,30,.99);
+  border: 1px solid rgba(255,255,255,.08);
+  border-top: 2px solid #FFCF00;
+  border-radius: 0 0 8px 8px;
+  min-width: 160px;
+  flex-direction: column;
+  z-index: 200;
+  padding: 6px 0;
+  box-shadow: 0 16px 40px rgba(0,0,0,.5);
+}
+.nav-tab.has-sub:hover .nav-sub { display: flex }
+/* Flèche indicateur */
+.nav-tab.has-sub > a::after,
+.nav-tab.has-sub::after {
+  content: ' ▾';
+  font-size: 8px;
+  opacity: .4;
+  margin-left: 2px;
+}
+.nav-sub-item {
+  display: block;
+  padding: 10px 18px;
+  font-family: 'DM Mono';
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  text-decoration: none;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.nav-sub-item:hover {
+  color: #FFCF00;
+  background: rgba(255,215,0,.05);
+  padding-left: 22px;
+}
+.nav-sub-item::before {
+  content: '› ';
+  color: rgba(255,215,0,.3);
+}
+
+/* Mobile — auth + socials */
+.nav-mobile-auth {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.nav-mobile-auth a {
+  flex: 1;
+  text-align: center;
+  padding: 11px;
+  border-radius: 6px;
+  font-family: 'DM Mono';
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  text-decoration: none; transition: all .18s;
+}
+.nav-mobile-auth .mob-login {
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.55);
+}
+.nav-mobile-auth .mob-signup {
+  background: #FFCF00; color: #000;
+}
+.nav-mobile-socials {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 12px 0 4px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  margin-top: 8px;
+}
+.nav-mobile-socials a {
+  color: rgba(255,255,255,.3);
+  text-decoration: none; transition: color .18s;
+  display: flex; align-items: center;
+}
+.nav-mobile-socials a:hover { color: #FFCF00 }
+.nav-mobile-socials svg { width:16px;height:16px;fill:currentColor }
+
+/* ════════════════════════════════════════════════════
+   COACHING — DARK MODE PERFORMANCE
+   Fond : #040a1e · Accent : #FFCF00 · Texte : #fff
+   ════════════════════════════════════════════════════ */
+:root {
+  --night:   #040a1e;
+  --night2:  #07101f;
+  --night3:  #0a1628;
+  --gd:      #FFCF00;
+  --gd-dk:   #C8A000;
+  --bl:      #0A3D91;
+  --ink:     #ffffff;
+  --ink-s:   rgba(255,255,255,.5);
+  --ink-xs:  rgba(255,255,255,.22);
+  --sep:     rgba(255,255,255,.06);
+  --hero-overlay: linear-gradient(to bottom,rgba(4,10,30,.2) 0%,rgba(4,10,30,.7) 50%,rgba(4,10,30,1) 100%);
+}
+/* Fond global noir */
+body { background: var(--night) }
+@media(max-width:699px){
+  .hero-bg::after { background:linear-gradient(to bottom,rgba(4,10,30,0) 10%,rgba(4,10,30,1) 65%) }
+}
+
+/* Nav dark */
+.nav-cta-desk,.nav-mobile-cta { background:var(--gd);color:#000 }
+.nav-cta-desk:hover { background:var(--gd-dk) }
+.hero-eyebrow { color:var(--gd) }.hero-eyebrow::before { background:var(--gd) }
+.hero-title { color:#fff }.hero-title em { color:var(--gd) }
+.hero-rule { background:linear-gradient(135deg,#F5D061,#C8860A)}
+.hero-lead { color:rgba(255,255,255,.72) }
+.chip { color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.18) }
+.chip-solid { background:var(--gd);border-color:var(--gd);color:#000 }
+
+/* Footer dark */
+.footer-lnk { color: rgba(255,255,255,.38) !important }
+.footer-lnk:hover { color: var(--gd) !important }
+.footer-email { color: rgba(255,255,255,.3) !important }
+.footer-sep { background: rgba(255,255,255,.08) !important }
+
+/* ── SOCIALS NAV ────────────────────────────────────── */
+.nav-socials {
+  display: none;
+  align-items: center;
+  gap: 16px;
+  padding-left: 16px;
+  border-left: 1px solid rgba(255,255,255,.08);
+  margin-left: 4px;
+}
+@media(min-width:920px){ .nav-socials { display: flex } }
+.nav-social {
+  color: rgba(255,255,255,.25);
+  text-decoration: none;
+  transition: color .18s;
+  display: flex; align-items: center;
+}
+.nav-social:hover { color: var(--gd) }
+.nav-social svg { width:13px;height:13px;fill:currentColor;display:block }
+
+/* ── HERO ───────────────────────────────────────────── */
+.hero { min-height: 92svh }
+
+/* ── BARRE COCKPIT ── sous le hero, style HUD ───────── */
+.hud-bar {
+  background: var(--night2);
+  border-top: 1px solid var(--sep);
+  border-bottom: 1px solid var(--sep);
+  padding: 0 clamp(20px,5vw,72px);
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.hud-bar::-webkit-scrollbar { display: none }
+.hud-item {
+  padding: 14px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-right: 1px solid var(--sep);
+  flex-shrink: 0;
+}
+.hud-item:last-child { border-right: none }
+.hud-label {
+  font-family: 'DM Mono';
+  font-size: 7.5px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.25);
+}
+.hud-val {
+  font-family: 'Bebas Neue';
+  font-size: 22px;
+  color: var(--gd);
+  line-height: 1;
+  letter-spacing: .5px;
+}
+.hud-val.white { color: #fff }
+
+/* ── SPLIT SCREEN ───────────────────────────────────── */
+.split {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 100vh;
+}
+@media(min-width:900px){
+  .split { grid-template-columns: 1fr 1fr }
+}
+
+/* Panneau commun */
+.panel {
+  padding: clamp(48px,6vw,88px) clamp(28px,4.5vw,64px);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── GAUCHE : Amateur — glassmorphism ───────────────── */
+.panel-l {
+  background: #f0f4ff;
+  border-right: 1px solid rgba(10,61,145,.12);
+}
+/* Fond lumineux flou derrière le glass */
+
+.panel-l::after {
+  content: '01';
+  position: absolute;
+  bottom: -30px; right: -10px;
+  font-family: 'Bebas Neue';
+  font-size: clamp(140px,20vw,240px);
+  color: rgba(255,255,255,.018);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── DROITE : Pro — minimaliste militaire ────────────── */
+.panel-r {
+  background: var(--night);
+  border-top: 3px solid var(--gd);
+}
+@media(min-width:900px){
+  .panel-r { border-top: none; border-left: 3px solid var(--gd) }
+}
+.panel-r::after {
+  content: '02';
+  position: absolute;
+  bottom: -30px; right: -10px;
+  font-family: 'Bebas Neue';
+  font-size: clamp(140px,20vw,240px);
+  color: rgba(255,215,0,.025);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* En-tête panel */
+.panel-eyebrow {
+  font-family: 'DM Mono';
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel-l .panel-eyebrow { color: rgba(255,255,255,.28) }
+.panel-r .panel-eyebrow { color: rgba(255,215,0,.45) }
+.panel-eyebrow::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.panel-l .panel-eyebrow::before { background: rgba(100,160,255,.6) }
+.panel-r .panel-eyebrow::before { background: var(--gd) }
+
+.panel-title {
+  font-family: 'Bebas Neue';
+  font-size: clamp(52px,8vw,96px);
+  line-height: .82;
+  margin-bottom: 8px;
+  color: #fff;
+}
+.panel-title em { font-style: normal; display: block }
+.panel-l .panel-title em { color: rgba(140,185,255,.6) }
+.panel-r .panel-title em { color: var(--gd) }
+
+.panel-sub {
+  font-family: 'DM Mono';
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.panel-l .panel-sub { color: rgba(255,255,255,.2) }
+.panel-r .panel-sub { color: rgba(255,215,0,.3) }
+
+.panel-lead {
+  font-size: clamp(14px,1.6vw,16px);
+  line-height: 1.8;
+  color: rgba(255,255,255,.45);
+  max-width: 400px;
+  margin-bottom: 40px;
+}
+
+/* ── GLASS CARDS (gauche) ───────────────────────────── */
+.glass-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  margin-bottom: 36px;
+}
+.glass-card {
+  background: rgba(255,255,255,.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 8px;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 0 12px;
+  transition: all .22s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right,transparent,rgba(255,255,255,.1),transparent);
+}
+.glass-card:hover {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(100,160,255,.25);
+  transform: translateX(4px);
+}
+.gc-num {
+  font-family: 'Bebas Neue';
+  font-size: 30px;
+  color: rgba(255,255,255,.1);
+  line-height: 1;
+  padding-top: 2px;
+  transition: color .2s;
+}
+.glass-card:hover .gc-num { color: rgba(140,185,255,.5) }
+.gc-body { display: flex; flex-direction: column; gap: 4px }
+.gc-code {
+  font-family: 'DM Mono';
+  font-size: 7.5px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(140,185,255,.5);
+  margin-bottom: 3px;
+}
+.gc-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.2;
+}
+.gc-desc {
+  font-size: 11.5px;
+  color: rgba(255,255,255,.35);
+  line-height: 1.65;
+}
+
+/* ── LIGNES MILITAIRES (droite) ─────────────────────── */
+.tactical-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  margin-bottom: 36px;
+  border-top: 1px solid rgba(255,215,0,.12);
+}
+.tac-row {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  border-bottom: 1px solid rgba(255,215,0,.08);
+  padding: 18px 0;
+  transition: background .18s;
+  cursor: default;
+}
+.tac-row:hover { background: rgba(255,215,0,.03) }
+.tac-n {
+  font-family: 'DM Mono';
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: rgba(255,215,0,.25);
+  padding-top: 3px;
+}
+.tac-body { display: flex; flex-direction: column; gap: 4px }
+.tac-code {
+  font-family: 'DM Mono';
+  font-size: 7.5px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,215,0,.4);
+  margin-bottom: 3px;
+}
+.tac-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.2;
+}
+.tac-desc {
+  font-size: 11.5px;
+  color: rgba(255,255,255,.32);
+  line-height: 1.65;
+}
+.tac-status {
+  font-family: 'DM Mono';
+  font-size: 7.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,215,0,.35);
+  white-space: nowrap;
+  padding-top: 3px;
+  align-self: flex-start;
+}
+
+/* CTAs panels */
+.panel-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 24px;
+  border-radius: 3px;
+  font-family: 'DM Mono';
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all .2s;
+  align-self: flex-start;
+}
+.panel-l .panel-cta {
+  background: rgba(255,255,255,.07);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.14);
+}
+.panel-l .panel-cta:hover { background: rgba(255,255,255,.14) }
+.panel-r .panel-cta { background: var(--gd); color: #000 }
+.panel-r .panel-cta:hover { background: var(--gd-dk) }
+.panel-cta::after { content: '→'; margin-left: 2px }
+
+/* ── STAT STRIP or ──────────────────────────────────── */
+.stat-strip {
+  background:linear-gradient(135deg,#F5D061,#C8860A);
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+}
+@media(min-width:600px){ .stat-strip { grid-template-columns: repeat(4,1fr) } }
+.ss {
+  padding: clamp(20px,3vw,32px) clamp(16px,3vw,40px);
+  border-right: 1px solid rgba(0,0,0,.12);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.ss:last-child { border-right: none }
+.ss:nth-child(2n) { border-right: none }
+@media(min-width:600px){
+  .ss:nth-child(2n) { border-right: 1px solid rgba(0,0,0,.12) }
+  .ss:last-child { border-right: none }
+}
+.ss-val {
+  font-family: 'Bebas Neue';
+  font-size: clamp(36px,5.5vw,56px);
+  color: #000;
+  line-height: .82;
+  letter-spacing: -1px;
+}
+.ss-lbl {
+  font-family: 'DM Mono';
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.52);
+}
+
+/* ── PORTRAIT JB ────────────────────────────────────── */
+.jb-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  background: var(--night2);
+  border-top: 1px solid var(--sep);
+}
+@media(min-width:860px){ .jb-section { grid-template-columns: 5fr 7fr; min-height: 520px } }
+.jb-img { position:relative;overflow:hidden;min-height:360px;background:var(--night) }
+.jb-img img {
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;object-position:center top;
+  transition:transform .7s;
+  opacity:.85;
+}
+.jb-section:hover .jb-img img { transform:scale(1.03) }
+/* overlay sombre sur la photo */
+.jb-img::after {
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(to right,transparent 60%,var(--night2) 100%);
+}
+.jb-body {
+  padding: clamp(44px,6vw,72px) clamp(28px,5vw,60px);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.jb-tag {
+  font-family: 'DM Mono';
+  font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gd);
+  border: 1px solid rgba(255,215,0,.25);
+  display: inline-block; padding: 5px 14px; border-radius: 2px;
+  margin-bottom: 24px; align-self: flex-start;
+}
+.jb-name {
+  font-family: 'Bebas Neue';
+  font-size: clamp(40px,5.5vw,62px);
+  color: #fff; line-height: .88; margin-bottom: 6px;
+}
+.jb-sub {
+  font-family: 'DM Mono';
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,.22); margin-bottom: 22px;
+}
+.jb-quote {
+  font-size: clamp(14px,1.7vw,16px);
+  color: rgba(255,255,255,.55); line-height: 1.75; font-weight: 300;
+  border-left: 2px solid var(--gd); padding-left: 20px;
+  margin-bottom: 28px; font-style: italic; max-width: 460px;
+}
+.palm-row {
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 12px 0; border-top: 1px solid var(--sep);
+}
+.palm-row:last-child { border-bottom: 1px solid var(--sep) }
+.palm-yr {
+  font-family: 'Bebas Neue'; font-size: 18px;
+  color: var(--gd); line-height: 1; min-width: 72px; flex-shrink: 0;
+}
+.palm-name { font-size: 13px; font-weight: 600; color: #fff; display: block; margin-bottom: 2px }
+.palm-detail { font-size: 12px; color: rgba(255,255,255,.3) }
+
+/* ── FORMULES — dark avec blur ──────────────────────── */
+.formules {
+  padding: clamp(56px,7vw,96px) clamp(20px,5vw,72px);
+  background: #f0f4ff;
+  position: relative;
+  overflow: hidden;
+}
+.formules::before {
+  content: 'COACHING';
+  position: absolute;
+  bottom: -50px; right: -20px;
+  font-family: 'Bebas Neue';
+  font-size: clamp(100px,16vw,200px);
+  color: rgba(10,61,145,.04);
+  line-height: 1;
+  pointer-events: none;
+  letter-spacing: 4px;
+}
+.formules .rubrik { color: rgba(13,13,13,.45) }
+.formules .sh { color: #0d0d0d }
+.formules .sh em { color: var(--gd) }
+.f-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 40px;
+}
+@media(min-width:700px){ .f-grid { grid-template-columns: repeat(3,1fr) } }
+.fcard {
+  background: #ffffff;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid rgba(10,61,145,.1);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all .25s;
+  position: relative;
+}
+.fcard::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  opacity: 0; transition: opacity .25s;
+}
+.fcard.f-blue::after { background: rgba(100,160,255,.6) }
+.fcard.f-gold::after { background: var(--gd) }
+.fcard:hover { background: #fff; transform: translateY(-5px); box-shadow: 0 12px 40px rgba(10,61,145,.12) }
+.fcard:hover::after { opacity: 1 }
+.fcard:hover .fcard-border { border-color: rgba(255,255,255,.14) }
+.fcard-head { padding: 24px 22px 18px }
+.fcard-tag {
+  font-family: 'DM Mono';
+  font-size: 7.5px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 2px;
+  display: inline-block; margin-bottom: 14px;
+}
+.f-blue .fcard-tag { background: rgba(100,160,255,.1); color: rgba(140,185,255,.7) }
+.f-gold .fcard-tag { background: rgba(255,215,0,.1); color: var(--gd) }
+.f-both .fcard-tag { background: var(--gd); color: #000 }
+.fcard-name {
+  font-family: 'Bebas Neue'; font-size: 28px;
+  color: #0d0d0d; line-height: .9; margin-bottom: 10px;
+}
+.fcard-desc { font-size: 12px; color: rgba(13,13,13,.5); line-height: 1.7 }
+.fcard-sep { height: 1px; background: rgba(10,61,145,.08); margin: 0 22px }
+.fcard-body { padding: 16px 22px 22px; flex: 1; display: flex; flex-direction: column }
+.fcard-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 9px 0; border-bottom: 1px solid rgba(10,61,145,.08);
+  font-family: 'DM Mono'; font-size: 10px;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(13,13,13,.5); line-height: 1.5;
+}
+.fcard-item::before {
+  content: '›'; color: var(--gd); font-size: 14px;
+  line-height: 1; flex-shrink: 0; margin-top: 1px;
+}
+.fcard-cta {
+  display: block; margin-top: 16px; padding: 12px 20px;
+  text-align: center; font-family: 'DM Mono'; font-size: 9px;
+  letter-spacing: 2px; text-transform: uppercase;
+  text-decoration: none; border-radius: 3px; transition: all .2s;
+}
+.f-blue .fcard-cta {
+  background: #0A3D91; color: #fff;
+  border: 1px solid #0A3D91;
+}
+.f-blue .fcard-cta:hover { background: #0D2F6E }
+.f-gold .fcard-cta, .f-both .fcard-cta { background: var(--gd); color: #000 }
+.f-gold .fcard-cta:hover, .f-both .fcard-cta:hover { background: var(--gd-dk) }
+
+/* ── DISCIPLINES ────────────────────────────────────── */
+.disc-section {
+  padding: clamp(52px,7vw,88px) clamp(20px,5vw,72px);
+  background: var(--night2);
+  border-top: 1px solid var(--sep);
+}
+.disc-section .rubrik { color: rgba(255,255,255,.22) }
+.disc-section .sh { color: #fff }
+.disc-section .sh em { color: var(--gd) }
+.disc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 36px;
+}
+@media(min-width:640px){ .disc-grid { grid-template-columns: repeat(3,1fr) } }
+.disc {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--sep);
+  border-radius: 6px; padding: 22px 20px;
+  transition: all .22s; cursor: default; position: relative; overflow: hidden;
+}
+.disc::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--gd); transform: scaleX(0);
+  transform-origin: left; transition: transform .28s;
+}
+.disc:hover::after { transform: scaleX(1) }
+.disc:hover { border-color: rgba(255,215,0,.2); background: rgba(255,215,0,.04) }
+.disc-code {
+  font-family: 'DM Mono'; font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--gd);
+  opacity: .5; margin-bottom: 12px; display: block;
+}
+.disc:hover .disc-code { opacity: 1 }
+.disc-name { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px }
+.disc-desc { font-size: 12px; color: rgba(255,255,255,.32); line-height: 1.65 }
+
+/* ── FAQ ────────────────────────────────────────────── */
+.faq-section {
+  padding: clamp(52px,7vw,88px) clamp(20px,5vw,72px);
+  background: #040a1e;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.faq-section .rubrik { color: rgba(255,255,255,.35) }
+.faq-section .sh { color: #ffffff }
+.faq-section .sh em { color: #FFCF00 }
+.faq-list { margin-top: 32px; display: flex; flex-direction: column; gap: 8px; max-width: 760px }
+.fq {
+  background: #f8f9ff;
+  border-radius: 6px;
+  border: 1px solid rgba(10,61,145,.1);
+  padding: 20px 24px; transition: all .2s;
+}
+.fq:hover { border-color: rgba(10,61,145,.25); background: #fff; box-shadow: 0 4px 16px rgba(10,61,145,.07) }
+.fq-q {
+  font-family: 'DM Mono'; font-size: 9.5px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: #0A3D91; margin-bottom: 10px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.fq-q::before {
+  content: '?'; font-family: 'Bebas Neue'; font-size: 18px;
+  color: var(--gd); line-height: 1; flex-shrink: 0;
+}
+.fq-a { font-size: 13px; color: rgba(13,13,13,.52); line-height: 1.78; padding-left: 28px }
+
+/* ── CTA FINAL ──────────────────────────────────────── */
+.cta-band {
+  background: var(--gd) !important;
+}
+.cta-title { color: #000 !important }
+.cta-sub { color: rgba(0,0,0,.55) !important }
+.btn-y { background: #000 !important; color: var(--gd) !important }
+.btn-ghost { background: rgba(0,0,0,.1) !important; color: #000 !important; border-color: rgba(0,0,0,.2) !important }
+.btn-ghost:hover { background: rgba(0,0,0,.2) !important }
+
+/* ── TITRES PANELS GRANDS ── */
+.panel-title { font-size: clamp(64px,9vw,110px) !important; }
+.panel-eyebrow { font-size: 11px !important; letter-spacing: 2px !important; }
+
+/* ══ PANEL GAUCHE CLAIR — override final ══ */
+.panel.panel-l {
+  background: #f0f4ff !important;
+}
+.panel-l .panel-eyebrow { color: rgba(10,61,145,.55) !important; }
+.panel-l .panel-eyebrow::before { background: #0A3D91 !important; }
+.panel-l .panel-title { color: #0d0d0d !important; }
+.panel-l .panel-title em { color: #0A3D91 !important; display: inline !important; }
+.panel-l .panel-sub { color: rgba(10,61,145,.4) !important; }
+.panel-l .panel-rule { background: #0A3D91 !important; }
+.panel-l .panel-lead { color: rgba(13,13,13,.58) !important; }
+.panel-l .glass-card {
+  background: #fff !important;
+  border: 1px solid rgba(10,61,145,.1) !important;
+  backdrop-filter: none !important;
+}
+.panel-l .glass-card:hover {
+  border-color: rgba(10,61,145,.28) !important;
+  box-shadow: 0 4px 20px rgba(10,61,145,.1) !important;
+  transform: translateX(4px) !important;
+}
+.panel-l .gc-num { color: rgba(10,61,145,.1) !important; }
+.panel-l .glass-card:hover .gc-num { color: #0A3D91 !important; }
+.panel-l .gc-code { color: rgba(10,61,145,.45) !important; }
+.panel-l .gc-name { color: #0d0d0d !important; }
+.panel-l .gc-desc { color: rgba(13,13,13,.5) !important; }
+.panel-l .panel-cta {
+  background: #0A3D91 !important;
+  color: #fff !important;
+  border: none !important;
+}
+.panel-l .panel-cta:hover { background: #0D2F6E !important; }
+/* Numéro de fond du panel-l */
+.panel-l::after { color: rgba(10,61,145,.04) !important; }
+/* Supprimer la lueur bleue (pour fond clair) */
+.panel-l::before { display: none !important; }
+
+
+/* ══ FLYER PUBLICITAIRE — panels coaching ══ */
+.split { display:grid; grid-template-columns:1fr; min-height:100vh }
+@media(min-width:900px){ .split { grid-template-columns:1fr 1fr } }
+
+.panel {
+  padding: clamp(48px,6vw,80px) clamp(32px,5vw,64px);
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+}
+.panel-l {
+  background: #f0f4ff !important;
+  border-right: 1px solid rgba(10,61,145,.12);
+}
+.panel-r {
+  background: #040a1e;
+  border-top: 4px solid linear-gradient(90deg,#F5D061,#C8860A);
+}
+@media(min-width:900px){ .panel-r { border-top: none; border-left: 4px solid linear-gradient(180deg,#F5D061,#C8860A) } }
+
+/* Lettre déco de fond */
+.panel-l::after {
+  content: 'A'; position: absolute; bottom: -60px; right: -20px;
+  font-family: 'Bebas Neue'; font-size: clamp(200px,32vw,380px);
+  color: rgba(10,61,145,.04); line-height:1; pointer-events:none;
+}
+.panel-r::after {
+  content: 'P'; position: absolute; bottom: -60px; right: -20px;
+  font-family: 'Bebas Neue'; font-size: clamp(200px,32vw,380px);
+  color: rgba(255,215,0,.03); line-height:1; pointer-events:none;
+}
+
+/* En-tête flyer */
+.flyer-header { display:flex; align-items:center; gap:12px; margin-bottom:20px }
+.flyer-tag {
+  font-family:'DM Mono'; font-size:8px; letter-spacing:3px; text-transform:uppercase;
+  background:#0A3D91; color:#fff; padding:4px 12px; border-radius:2px;
+}
+.flyer-tag-gold { background:#FFCF00; color:#000 }
+.flyer-pretitle {
+  font-family:'DM Mono'; font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  color:rgba(10,61,145,.5);
+}
+.flyer-pretitle-dark { color:rgba(255,215,0,.4) }
+
+/* ══ NOM DE L'OFFRE — MASSIF ══ */
+.flyer-name {
+  font-family: 'Bebas Neue';
+  font-size: clamp(72px,11vw,130px);
+  line-height: .84;
+  color: #0d0d0d;
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+  position: relative; z-index: 1;
+}
+.flyer-name em { font-style:normal; color:#0A3D91; display:block }
+.flyer-name-dark { color:#fff }
+.flyer-name-dark em { color:#FFCF00; display:block }
+
+.flyer-rule { width:60px; height:3px; background:#0A3D91; margin-bottom:24px; position:relative; z-index:1 }
+.flyer-rule-dark { background:#FFCF00 }
+
+.flyer-hook {
+  font-size: clamp(14px,1.6vw,16px); line-height:1.75;
+  color: rgba(13,13,13,.58); margin-bottom:32px; max-width:420px;
+  position: relative; z-index:1;
+}
+.flyer-hook-dark { color:rgba(255,255,255,.5) }
+
+/* Modules */
+.flyer-modules { display:flex; flex-direction:column; gap:18px; flex:1; margin-bottom:32px; position:relative; z-index:1 }
+.flyer-mod { display:flex; gap:14px; align-items:flex-start; padding-bottom:18px; border-bottom:1px solid rgba(10,61,145,.1) }
+.flyer-mod:last-child { border-bottom:none; padding-bottom:0 }
+.flyer-mod-dark { border-bottom-color:rgba(255,255,255,.07) }
+.flyer-mod-icon { font-family:'Bebas Neue'; font-size:20px; color:#0A3D91; line-height:1.2; flex-shrink:0; width:24px; text-align:center }
+.flyer-mod-icon-dark { color:#FFCF00 }
+.flyer-mod-name { font-size:14px; font-weight:700; color:#0d0d0d; margin-bottom:3px }
+.flyer-mod-name-dark { color:#fff }
+.flyer-mod-desc { font-size:12px; color:rgba(13,13,13,.5); line-height:1.65 }
+.flyer-mod-desc-dark { color:rgba(255,255,255,.38) }
+
+/* CTA */
+.flyer-cta {
+  display:inline-flex; align-items:center; padding:16px 28px;
+  font-family:'DM Mono'; font-size:11px; letter-spacing:2px; text-transform:uppercase;
+  text-decoration:none; border-radius:3px; transition:all .2s;
+  align-self:flex-start; font-weight:500;
+  background:#0A3D91; color:#fff; margin-bottom:24px;
+  position:relative; z-index:1;
+}
+.flyer-cta:hover { background:#0D2F6E; transform:translateY(-2px) }
+.flyer-cta-dark { background:#FFCF00; color:#000 }
+.flyer-cta-dark:hover { background:#C8A000 }
+
+/* Niveaux */
+.flyer-levels { display:flex; align-items:center; gap:8px; flex-wrap:wrap; position:relative; z-index:1 }
+.flyer-level { font-family:'DM Mono'; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(13,13,13,.35) }
+.active-level { color:#0A3D91; font-weight:500 }
+.flyer-sep { color:rgba(13,13,13,.2) }
+.flyer-level-dark { color:rgba(255,255,255,.25) }
+.active-level-dark { color:rgba(255,215,0,.6) }
+.flyer-sep-dark { color:rgba(255,255,255,.15) }
+.flyer-levels-dark .flyer-sep { color:rgba(255,255,255,.15) }
+
+
+/* ══ FOOTER UNIFIÉ ══ */
+@media(min-width:640px){ }
+@media(min-width:960px){ }
+.footer-nav a:hover { color:#FFCF00 }
+.footer-contact a:hover { color:#FFCF00 }
+
+.disc-section{background:#040a1e}
+.jb-section{background:#040a1e}
+.faq-section{background:#040a1e;padding:clamp(44px,6vw,80px) clamp(20px,5vw,72px)}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ════════════════════════════════════════════ -->
+<nav class="nav">
+  <a class="nav-logo" href="index.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 38" width="200" height="28">
+      <polygon points="14,0 25,0 11,38 0,38" fill="#0A3D91"/>
+      <polygon points="32,0 43,0 29,38 18,38" fill="#0A3D91"/>
+      <polygon points="50,0 61,0 47,38 36,38" fill="#0A3D91"/>
+      <text x="72" y="29" font-family="'Russo One',sans-serif" font-size="28" fill="#FFCF00" letter-spacing="2">JB EMERIC</text>
+    </svg></a>
+  <div class="nav-tabs">
+    <a class="nav-tab" href="index.html">Accueil</a>
+    <a class="nav-tab" href="academie.html">Académie</a>
+    <a class="nav-tab active" href="coaching.html">Coaching</a>
+    <a class="nav-tab" href="track.html">Track-Days</a>
+    <div class="nav-tab has-sub" onclick="location.href='paddock.html'">
+      Paddock
+      <div class="nav-sub">
+        <a class="nav-sub-item" href="paddock.html#blog">Articles techniques</a>
+        <a class="nav-sub-item" href="paddock.html#forum">Tribune pilotes</a>
+        <a class="nav-sub-item" href="paddock.html#media">YouTube</a>
+        <a class="nav-sub-item" href="paddock.html#events">Calendrier</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-socials">
+    <a class="nav-social" href="https://www.youtube.com/channel/UCMTQjYff8llakx2twVNH2SA" target="_blank" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8ZM9.7 15.5V8.5l6.3 3.5-6.3 3.5Z"/></svg></a>
+    <a class="nav-social" href="https://www.instagram.com/jbemeric.ecoledepilotage/" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.2.1 4.6 1.6 4.7 4.7.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.1-1.5 4.6-4.7 4.7-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1C4 21.2 2.5 19.8 2.4 16.7 2.3 15.5 2.3 15.1 2.3 12s0-3.6.1-4.8C2.5 4 4 2.5 7.2 2.3c1.2-.1 1.6-.1 4.8-.1Zm0-2.2C8.7 0 8.3 0 7.1.1 2.9.3.3 2.9.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9C.3 21.1 2.9 23.7 7.1 23.9c1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.2-.2 6.8-2.8 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.9 21.1.3 16.9.1 15.7 0 15.3 0 12 0Zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8Zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8Z"/></svg></a>
+    <a class="nav-social" href="https://www.facebook.com/JBEMERIC.Since1989" target="_blank" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3v-2.6c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5H13.9v8.4A12 12 0 0 0 24 12Z"/></svg></a>
+    <a class="nav-social" href="https://www.tiktok.com/@stagepilotagejbemeric" target="_blank" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M19.6 3.3A4.5 4.5 0 0 1 15.2 0h-3.3v15.6a2.7 2.7 0 0 1-2.7 2.3 2.7 2.7 0 0 1-2.7-2.7 2.7 2.7 0 0 1 2.7-2.7c.3 0 .5 0 .8.1V9.2a6 6 0 0 0-.8-.1 6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6V7.7a7.8 7.8 0 0 0 4.5 1.4V5.8a4.5 4.5 0 0 1-2.1-.5Z"/></svg></a>
+  </div>
+  <div class="nav-auth">
+    <a class="nav-btn-login" href="login.html">Se connecter</a>
+    <a class="nav-btn-signup" href="signup.html">S'inscrire</a>
+  </div>
+  <button class="nav-burger" id="nav-burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a class="nav-tab" href="index.html">Accueil</a>
+  <a class="nav-tab" href="academie.html">Académie</a>
+  <a class="nav-tab active" href="coaching.html">Coaching</a>
+  <a class="nav-tab" href="track.html">Track-Days</a>
+  <a class="nav-tab" href="paddock.html">Paddock</a>
+  <div class="nav-mobile-socials">
+    <a href="https://www.youtube.com/channel/UCMTQjYff8llakx2twVNH2SA" target="_blank" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8ZM9.7 15.5V8.5l6.3 3.5-6.3 3.5Z"/></svg></a>
+    <a href="https://www.instagram.com/jbemeric.ecoledepilotage/" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.2.1 4.6 1.6 4.7 4.7.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.1-1.5 4.6-4.7 4.7-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1C4 21.2 2.5 19.8 2.4 16.7 2.3 15.5 2.3 15.1 2.3 12s0-3.6.1-4.8C2.5 4 4 2.5 7.2 2.3c1.2-.1 1.6-.1 4.8-.1Zm0-2.2C8.7 0 8.3 0 7.1.1 2.9.3.3 2.9.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9C.3 21.1 2.9 23.7 7.1 23.9c1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.2-.2 6.8-2.8 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.9 21.1.3 16.9.1 15.7 0 15.3 0 12 0Zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8Zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8Z"/></svg></a>
+    <a href="https://www.facebook.com/JBEMERIC.Since1989" target="_blank" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3v-2.6c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5H13.9v8.4A12 12 0 0 0 24 12Z"/></svg></a>
+    <a href="https://www.tiktok.com/@stagepilotagejbemeric" target="_blank" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M19.6 3.3A4.5 4.5 0 0 1 15.2 0h-3.3v15.6a2.7 2.7 0 0 1-2.7 2.3 2.7 2.7 0 0 1-2.7-2.7 2.7 2.7 0 0 1 2.7-2.7c.3 0 .5 0 .8.1V9.2a6 6 0 0 0-.8-.1 6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6V7.7a7.8 7.8 0 0 0 4.5 1.4V5.8a4.5 4.5 0 0 1-2.1-.5Z"/></svg></a>
+  </div>
+  <div class="nav-mobile-auth">
+    <a class="mob-login" href="login.html">Se connecter</a>
+    <a class="mob-signup" href="signup.html">S'inscrire</a>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-bg">
+    <img src="https://jbemeric.com/wp-content/uploads/2020/07/JB-EXPLIQUE-PISTE-A-LANDINI-RICARD-SUPERTOURISME-300x169.png" alt="JB EMERIC coaching circuit" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;z-index:1">
+  </div>
+  <div class="hero-num">02</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Coaching · Individuel · Tous niveaux</div>
+    <h1 class="hero-title">COACHING</h1>
+    <div class="hero-rule"></div>
+    <p class="hero-lead">Vous pouvez tourner seul pendant des années sans progresser. Ou passer une journée avec JB et comprendre ce que vous faites — vraiment.</p>
+    <div class="hero-chips">
+      <span class="chip chip-solid">Sur circuit · Vidéo</span>
+      <span class="chip">Tous niveaux</span>
+      <span class="chip">Devis sous 24h</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HUD BAR ══════════════════════════════════════════ -->
+<div class="hud-bar">
+  <div class="hud-item">
+    <div class="hud-label">Formateur depuis</div>
+    <div class="hud-val">1989</div>
+  </div>
+  <div class="hud-item">
+    <div class="hud-label">Champion France FF</div>
+    <div class="hud-val">1988</div>
+  </div>
+  <div class="hud-item">
+    <div class="hud-label">Années compétition</div>
+    <div class="hud-val white">39</div>
+  </div>
+  <div class="hud-item">
+    <div class="hud-label">Circuits PACA</div>
+    <div class="hud-val white">5</div>
+  </div>
+  <div class="hud-item">
+    <div class="hud-label">Retour vidéo</div>
+    <div class="hud-val">48H</div>
+  </div>
+  <div class="hud-item">
+    <div class="hud-label">Disciplines</div>
+    <div class="hud-val white">ALL</div>
+  </div>
+</div>
+
+<!-- ═══ SPLIT SCREEN ════════════════════════════════════ -->
+<div class="split" id="formules">
+
+  <!-- PANEL GAUCHE — COACHING AMATEUR · Flyer clair -->
+  <div class="panel panel-l">
+
+    <!-- EN-TÊTE FLYER -->
+    <div class="flyer-header">
+      <div class="flyer-tag">Offre 01</div>
+      <div class="flyer-pretitle">Pour le pilote amateur</div>
+    </div>
+
+    <!-- NOM DE L'OFFRE — L'élément qui saute aux yeux -->
+    <div class="flyer-name">COACHING<br><em>CIRCUIT</em></div>
+    <div class="flyer-rule"></div>
+
+    <!-- ACCROCHE COURTE -->
+    <p class="flyer-hook">Vous stagnez depuis des années sans savoir pourquoi. JB vous dit exactement ce qui se passe — et comment le corriger dès la session suivante.</p>
+
+    <!-- MODULES -->
+    <div class="flyer-modules">
+      <div class="flyer-mod">
+        <div class="flyer-mod-icon">→</div>
+        <div>
+          <div class="flyer-mod-name">Coaching piste</div>
+          <div class="flyer-mod-desc">JB toute la journée sur le circuit — bord de piste, debrief entre chaque session, chrono avant/après.</div>
+        </div>
+      </div>
+      <div class="flyer-mod">
+        <div class="flyer-mod-icon">→</div>
+        <div>
+          <div class="flyer-mod-name">Coaching vidéo</div>
+          <div class="flyer-mod-desc">Envoyez votre embarquée depuis n'importe où. Rapport complet image par image sous 48h.</div>
+        </div>
+      </div>
+      <div class="flyer-mod">
+        <div class="flyer-mod-icon">→</div>
+        <div>
+          <div class="flyer-mod-name">Votre voiture</div>
+          <div class="flyer-mod-desc">JB s'adapte à votre machine et votre circuit — karting, GT, sportive de route.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <a class="flyer-cta" href="/cdn-cgi/l/email-protection#fd979f9890988f949ebd979f9890988f949ed39e9290">
+      Réserver une session →
+    </a>
+
+    <!-- NIVEAUX -->
+    <div class="flyer-levels">
+      <span class="flyer-level">Débutant</span>
+      <span class="flyer-sep">·</span>
+      <span class="flyer-level">Amateur</span>
+      <span class="flyer-sep">·</span>
+      <span class="flyer-level active-level">Confirmé</span>
+    </div>
+
+  </div>
+
+  <!-- PANEL DROIT — COACHING COMPÉTITION · Flyer sombre -->
+  <div class="panel panel-r">
+
+    <!-- EN-TÊTE FLYER -->
+    <div class="flyer-header">
+      <div class="flyer-tag flyer-tag-gold">Offre 02</div>
+      <div class="flyer-pretitle flyer-pretitle-dark">Pilote licencié en compétition</div>
+    </div>
+
+    <!-- NOM DE L'OFFRE — En or massif -->
+    <div class="flyer-name flyer-name-dark">COACHING<br><em>COMPÉTITION</em></div>
+    <div class="flyer-rule flyer-rule-dark"></div>
+
+    <!-- ACCROCHE COURTE -->
+    <p class="flyer-hook flyer-hook-dark">Vous avez des chronos, pas les résultats que vous méritez. JB a couru au même niveau, sous la même pression. Il voit ce que vous ne voyez pas depuis le volant.</p>
+
+    <!-- MODULES -->
+    <div class="flyer-modules">
+      <div class="flyer-mod flyer-mod-dark">
+        <div class="flyer-mod-icon flyer-mod-icon-dark">→</div>
+        <div>
+          <div class="flyer-mod-name flyer-mod-name-dark">Stand complet</div>
+          <div class="flyer-mod-desc flyer-mod-desc-dark">JB dans votre stand du vendredi au dimanche — qualif, stratégie, gestion des gommes.</div>
+        </div>
+      </div>
+      <div class="flyer-mod flyer-mod-dark">
+        <div class="flyer-mod-icon flyer-mod-icon-dark">→</div>
+        <div>
+          <div class="flyer-mod-name flyer-mod-name-dark">Analyse de tours</div>
+          <div class="flyer-mod-desc flyer-mod-desc-dark">Votre meilleur tour contre le tour de référence — virage par virage, au dixième de seconde.</div>
+        </div>
+      </div>
+      <div class="flyer-mod flyer-mod-dark">
+        <div class="flyer-mod-icon flyer-mod-icon-dark">→</div>
+        <div>
+          <div class="flyer-mod-name flyer-mod-name-dark">Suivi saison</div>
+          <div class="flyer-mod-desc flyer-mod-desc-dark">Accompagnement manche par manche — résultats, ajustements, préparation mentale et technique.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <a class="flyer-cta flyer-cta-dark" href="/cdn-cgi/l/email-protection#58323a3d353d2a313b18323a3d353d2a313b763b3735">
+      Parler de ma saison →
+    </a>
+
+    <!-- NIVEAUX -->
+    <div class="flyer-levels flyer-levels-dark">
+      <span class="flyer-level flyer-level-dark active-level-dark">Licencié FFSA</span>
+      <span class="flyer-sep flyer-sep-dark">·</span>
+      <span class="flyer-level flyer-level-dark active-level-dark">Compétition nationale</span>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ═══ STAT<!-- ═══ STAT STRIP ══════════════════════════════════════ -->
+<div class="stat-strip">
+  <div class="ss"><div class="ss-val">1988</div><div class="ss-lbl">Champion France FF</div></div>
+  <div class="ss"><div class="ss-val">2012</div><div class="ss-lbl">Champion FR Classic</div></div>
+  <div class="ss"><div class="ss-val">39</div><div class="ss-lbl">Ans de compétition</div></div>
+  <div class="ss"><div class="ss-val">1989</div><div class="ss-lbl">Formateur depuis</div></div>
+</div>
+
+<!-- ═══ PORTRAIT JB ══════════════════════════════════════ -->
+<div class="jb-section">
+  <div class="jb-img">
+    <img src="https://jbemeric.com/wp-content/uploads/2020/07/JB-EXPLIQUE-PISTE-A-LANDINI-RICARD-SUPERTOURISME-300x169.png" alt="JB EMERIC coaching">
+  </div>
+  <div class="jb-body">
+    <span class="jb-tag">Votre coach · Depuis 1986</span>
+    <div class="jb-name">Jean-Baptiste Emeric</div>
+    <div class="jb-sub">Pilote depuis 1986 · Formateur depuis 1989</div>
+    <blockquote class="jb-quote">Ce que je vous dis, je l'ai vécu en compétition. Chaque point que j'observe depuis le bord de piste, j'ai eu à le corriger moi-même — sous pression, avec un chrono.</blockquote>
+    <div class="palm-row">
+      <div class="palm-yr">1988</div>
+      <div><span class="palm-name">Champion de France Formule Ford</span><span class="palm-detail">La discipline de Senna, Schumacher, Verstappen.</span></div>
+    </div>
+    <div class="palm-row">
+      <div class="palm-yr">2012</div>
+      <div><span class="palm-name">Champion Formule Renault Classic</span><span class="palm-detail">24 ans après le premier titre.</span></div>
+    </div>
+    <div class="palm-row">
+      <div class="palm-yr">Endurance</div>
+      <div><span class="palm-name">Sebring · Spa · Paul Belmondo Racing</span><span class="palm-detail">39 ans de compétition internationale.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FORMULES ════════════════════════════════════════ -->
+<div class="formules">
+  <div class="rubrik">Les formules</div>
+  <h2 class="sh">Quelle formule <em>vous correspond ?</em></h2>
+  <div class="f-grid">
+    <div class="fcard f-blue">
+      <div class="fcard-head">
+        <span class="fcard-tag">Sur circuit</span>
+        <div class="fcard-name">Coaching Piste</div>
+        <p class="fcard-desc">JB présent toute la journée. Il observe depuis le bord, chronomètre, debriefe entre chaque session.</p>
+      </div>
+      <div class="fcard-sep"></div>
+      <div class="fcard-body">
+        <div class="fcard-item">Présence JB · Journée complète</div>
+        <div class="fcard-item">Analyse trajectoires · Temps réel</div>
+        <div class="fcard-item">Chrono comparatif · Session / session</div>
+        <div class="fcard-item">Debrief détaillé · Après chaque sortie</div>
+        <div class="fcard-item">Compte-rendu écrit · Fin de journée</div>
+        <a class="fcard-cta" href="/cdn-cgi/l/email-protection#ec868e8981899e858fac868e8981899e858fc28f8381">Demander un devis</a>
+      </div>
+    </div>
+    <div class="fcard f-both">
+      <div class="fcard-head">
+        <span class="fcard-tag">Vidéo · Distance</span>
+        <div class="fcard-name">Coaching Vidéo</div>
+        <p class="fcard-desc">Envoyez votre embarquée. Analyse image par image — rapport complet sous 48h, n'importe quel circuit.</p>
+      </div>
+      <div class="fcard-sep"></div>
+      <div class="fcard-body">
+        <div class="fcard-item">Embarquée · Analyse complète</div>
+        <div class="fcard-item">Commentaires · Image par image</div>
+        <div class="fcard-item">Rapport écrit · Priorités de progression</div>
+        <div class="fcard-item">Tout circuit · Toute discipline</div>
+        <div class="fcard-item">Retour garanti · Sous 48h</div>
+        <a class="fcard-cta" href="/cdn-cgi/l/email-protection#69030b0c040c1b000a29030b0c040c1b000a470a0604">Envoyer ma vidéo</a>
+      </div>
+    </div>
+    <div class="fcard f-gold">
+      <div class="fcard-head">
+        <span class="fcard-tag">Compétition</span>
+        <div class="fcard-name">Coaching Course</div>
+        <p class="fcard-desc">Week-end complet. JB dans votre stand vendredi → dimanche — qualif, stratégie, course, debrief.</p>
+      </div>
+      <div class="fcard-sep"></div>
+      <div class="fcard-body">
+        <div class="fcard-item">Stand · Vendredi → Dimanche</div>
+        <div class="fcard-item">Qualifications · Préparation stratégie</div>
+        <div class="fcard-item">Tours · Comparaison chronométrée</div>
+        <div class="fcard-item">Post-course · Debrief détaillé</div>
+        <div class="fcard-item">Saison · Suivi possible</div>
+        <a class="fcard-cta" href="/cdn-cgi/l/email-protection#315b53545c54435852715b53545c544358521f525e5c">Parler de ma saison</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DISCIPLINES ══════════════════════════════════════ -->
+<div class="disc-section">
+  <div class="rubrik">Disciplines</div>
+  <h2 class="sh">JB coache sur <em>toutes les machines</em></h2>
+  <div class="disc-grid">
+    <div class="disc">
+      <span class="disc-code">KRT · 01</span>
+      <div class="disc-name">Karting</div>
+      <div class="disc-desc">Sa discipline de prédilection. 5 circuits PACA, matériel fourni. La meilleure école du pilotage fondamental.</div>
+    </div>
+    <div class="disc">
+      <span class="disc-code">GT · 02</span>
+      <div class="disc-name">Voiture de course</div>
+      <div class="disc-desc">GT, tourisme, monoplace. JB a couru sur ces machines — il sait ce qu'on ressent dedans, pas juste ce qu'il faut faire.</div>
+    </div>
+    <div class="disc">
+      <span class="disc-code">VHP · 03</span>
+      <div class="disc-name">Votre voiture</div>
+      <div class="disc-desc">Track day sur votre véhicule personnel. JB adapte son coaching à la machine et au circuit — pas l'inverse.</div>
+    </div>
+    <div class="disc">
+      <span class="disc-code">SIM · 04</span>
+      <div class="disc-name">Simulateur</div>
+      <div class="disc-desc">World SIM RACER à Brignoles. Apprentissage d'un tracé avant d'y rouler, ou progression hivernale hors saison.</div>
+    </div>
+    <div class="disc">
+      <span class="disc-code">ALL · 05</span>
+      <div class="disc-name">Toutes disciplines</div>
+      <div class="disc-desc">La lecture d'une piste et la gestion du freinage sont universelles. JB s'adapte à votre contexte, quelle que soit la machine.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FAQ ══════════════════════════════════════════════ -->
+<div class="faq-section">
+  <div class="rubrik">Questions</div>
+  <h2 class="sh"><em>FAQ</em></h2>
+  <div class="faq-list">
+    <div class="fq">
+      <div class="fq-q">Faut-il un niveau minimum ?</div>
+      <div class="fq-a">Aucun. JB coache des débutants complets comme des pilotes en compétition nationale. Il adapte son approche et son vocabulaire à votre niveau réel.</div>
+    </div>
+  </div>
+
+
+<footer class="footer">
+  <div class="footer-top">
+    <div class="ft-brand">
+      <div class="ft-logo">JB <em>EMERIC</em></div>
+      <div class="ft-tagline">École de Pilotage · Région PACA<br>Champion de France 1988<br>Fondée en 1989</div>
+      <div class="ft-socials">
+        <a class="ft-social" href="https://www.youtube.com/channel/UCMTQjYff8llakx2twVNH2SA" target="_blank" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8ZM9.7 15.5V8.5l6.3 3.5-6.3 3.5Z"/></svg></a>
+        <a class="ft-social" href="https://www.instagram.com/jbemeric.ecoledepilotage/" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.2.1 4.6 1.6 4.7 4.7.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.1-1.5 4.6-4.7 4.7-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1C4 21.2 2.5 19.8 2.4 16.7 2.3 15.5 2.3 15.1 2.3 12s0-3.6.1-4.8C2.5 4 4 2.5 7.2 2.3c1.2-.1 1.6-.1 4.8-.1Zm0-2.2C8.7 0 8.3 0 7.1.1 2.9.3.3 2.9.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9C.3 21.1 2.9 23.7 7.1 23.9c1.2.1 1.6.1 4.9.1s3.7 0 4.9-.1c4.2-.2 6.8-2.8 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9C23.7 2.9 21.1.3 16.9.1 15.7 0 15.3 0 12 0Zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8Zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8Z"/></svg></a>
+        <a class="ft-social" href="https://www.facebook.com/JBEMERIC.Since1989" target="_blank" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3v-2.6c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5H13.9v8.4A12 12 0 0 0 24 12Z"/></svg></a>
+        <a class="ft-social" href="https://www.tiktok.com/@stagepilotagejbemeric" target="_blank" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M19.6 3.3A4.5 4.5 0 0 1 15.2 0h-3.3v15.6a2.7 2.7 0 0 1-2.7 2.3 2.7 2.7 0 0 1-2.7-2.7 2.7 2.7 0 0 1 2.7-2.7c.3 0 .5 0 .8.1V9.2a6 6 0 0 0-.8-.1 6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6V7.7a7.8 7.8 0 0 0 4.5 1.4V5.8a4.5 4.5 0 0 1-2.1-.5Z"/></svg></a>
+      </div>
+    </div>
+    <div class="ft-col">
+      <div class="ft-col-title">Navigation</div>
+      <a href="index.html">Accueil</a>
+      <a href="academie.html">Académie</a>
+      <a href="coaching.html">Coaching</a>
+      <a href="track.html">Track-Days</a>
+      <a href="paddock.html">Paddock</a>
+    </div>
+    <div class="ft-col">
+      <div class="ft-col-title">Académie</div>
+      <a href="academie-karting.html">Karting Enfant</a>
+      <a href="academie-adulte.html">Karting Adulte</a>
+      <a href="academie-challenge.html">Challenge Auto</a>
+      <a href="coaching.html">Coaching vidéo</a>
+    </div>
+    <div class="ft-contact">
+      <div class="ft-col-title">Contact</div>
+      <div class="ft-contact-item">
+        <span class="ft-contact-label">Email</span>
+        <a class="ft-contact-val" href="/cdn-cgi/l/email-protection#fd979f9890988f949ebd979f9890988f949ed39e9290"><span class="__cf_email__" data-cfemail="78121a

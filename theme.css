@@ -1,0 +1,177 @@
+/*
+ * theme.css — JB EMERIC · Source de vérité couleurs
+ * ═══════════════════════════════════════════════════
+ * UNE SEULE SOURCE. Changer ici → cascade sur tout le site.
+ *
+ * STRUCTURE :
+ *   1. Palette globale (les couleurs officielles, jamais modifiées directement dans les pages)
+ *   2. Thèmes par page  (--page-* : couleur principale, em, fond, hero)
+ *   3. Transitions anticipées (--next-* : couleur du bloc "page suivante")
+ *   4. Application aux sélecteurs
+ */
+
+
+/* ══════════════════════════════════════════════════
+   1. PALETTE GLOBALE — les 8 couleurs officielles
+   ══════════════════════════════════════════════════ */
+:root {
+  /* Jaune */
+  --Y:   #FFCF00;
+  --Yd:  #C8A000;
+  --Ya:  #a88f00;   /* hover profond */
+
+  /* Bleus */
+  --B1:  #0a1a4a;   /* bleu nuit — Karting Enfant */
+  --B2:  #0A3D91;   /* bleu moyen — Karting Adulte / Académie */
+  --B3:  #0D2F6E;   /* bleu marine foncé */
+  --B4:  #1252C0;   /* bleu vif */
+  --BN:  #040a1e;   /* bleu quasi-noir — fonds sombres */
+
+  /* Or */
+  --OR:  #C8A000;   /* doré Challenge */
+
+  /* Neutres */
+  --WH:  #ffffff;
+  --BG:  #F3F2EF;   /* beige index */
+  --NK:  #08080f;   /* noir nav/cta-band */
+  --INK: #0d0d0d;
+
+  /* Séparateurs */
+  --sep-blue:  rgba(10, 61, 145, .09);
+  --sep-night: rgba(10, 26, 74,  .09);
+  --sep-gold:  rgba(180, 130, 0, .12);
+  --sep-dark:  rgba(0, 0, 0, .08);
+}
+
+
+/* ══════════════════════════════════════════════════
+   2. THÈMES PAR PAGE
+   Chaque page déclare ses propres overrides via
+   l'attribut data-theme sur <html>.
+   ══════════════════════════════════════════════════ */
+
+/* ── INDEX ───────────────────────────────────────── */
+[data-theme="index"] {
+  --page-main:    var(--B2);
+  --page-em:      var(--Y);
+  --page-bg:      var(--BG);
+  --page-sep:     var(--sep-dark);
+  --page-hero-ol: linear-gradient(to top, rgba(10,20,60,.95) 0%, rgba(10,20,60,.45) 50%, transparent 100%);
+}
+
+/* ── ACADÉMIE (portail) ──────────────────────────── */
+[data-theme="academie"] {
+  --page-main:    var(--B2);
+  --page-dark:    var(--BN);
+  --page-em:      var(--Y);
+  --page-bg:      #f4f6fb;
+  --page-sep:     var(--sep-blue);
+  --page-hero-ol: linear-gradient(110deg, rgba(7,31,92,0) 20%, rgba(7,31,92,.55) 52%, rgba(7,31,92,.97) 100%);
+  /* Transition vers : Karting Enfant */
+  --next-bg:      var(--B1);
+  --next-bg-h:    var(--BN);
+  --next-text:    #fff;
+  --next-em:      var(--Y);
+}
+
+/* ── KARTING ENFANT ──────────────────────────────── */
+[data-theme="karting-enfant"] {
+  --page-main:    var(--B1);
+  --page-mid:     var(--B2);
+  --page-em:      var(--Y);
+  --page-bg:      #f0f4ff;
+  --page-sep:     var(--sep-night);
+  --page-hero-ol: linear-gradient(108deg, rgba(10,26,74,0) 22%, rgba(10,26,74,.58) 52%, rgba(10,26,74,.97) 100%);
+  --page-grad:    linear-gradient(135deg, rgba(10,26,74,1) 0%, rgba(7,20,60,.97) 60%, rgba(10,35,80,.95) 100%);
+  /* Transition → Karting Adulte (bleu moyen, texte blanc) */
+  --next-bg:      var(--B2);
+  --next-bg-h:    var(--B3);
+  --next-text:    #fff;
+  --next-em:      var(--Y);
+  --next-kicker:  rgba(255,255,255,.42);
+  --next-body:    rgba(255,255,255,.52);
+}
+
+/* ── KARTING ADULTE ──────────────────────────────── */
+[data-theme="karting-adulte"] {
+  --page-main:    var(--B2);
+  --page-dark:    var(--BN);
+  --page-em:      var(--Y);
+  --page-bg:      #f0f4ff;
+  --page-sep:     var(--sep-blue);
+  --page-hero-ol: linear-gradient(108deg, rgba(7,31,92,0) 22%, rgba(7,31,92,.58) 52%, rgba(7,31,92,.97) 100%);
+  --page-grad:    linear-gradient(135deg, rgba(4,10,30,1) 0%, rgba(10,35,85,.97) 60%, rgba(16,56,128,.9) 100%);
+  /* Transition → Challenge (doré, texte noir) */
+  --next-bg:      var(--OR);
+  --next-bg-h:    var(--Ya);
+  --next-text:    #000;
+  --next-em:      var(--B3);
+  --next-kicker:  rgba(0,0,0,.42);
+  --next-body:    rgba(0,0,0,.55);
+}
+
+/* ── CHALLENGE ───────────────────────────────────── */
+[data-theme="challenge"] {
+  --page-main:    var(--OR);
+  --page-em:      var(--B3);
+  --page-bg:      #fffdf0;
+  --page-bg-tint: #fff9d6;
+  --page-sep:     var(--sep-gold);
+  --page-hero-ol: linear-gradient(105deg, rgba(195,148,0,0) 0%, rgba(195,148,0,0) 35%, rgba(195,148,0,.62) 52%, rgba(195,148,0,.97) 100%);
+  /* Challenge est terminus — pas de next */
+}
+
+/* ── COACHING ────────────────────────────────────── */
+[data-theme="coaching"] {
+  --page-main:    var(--B2);
+  --page-em:      var(--Y);
+  --page-bg:      var(--BG);
+  --page-sep:     var(--sep-dark);
+}
+
+/* ── TRACK-DAYS ──────────────────────────────────── */
+[data-theme="track"] {
+  --page-main:    var(--B2);
+  --page-em:      var(--Y);
+  --page-bg:      var(--BG);
+  --page-sep:     var(--sep-dark);
+}
+
+/* ── PADDOCK ─────────────────────────────────────── */
+[data-theme="paddock"] {
+  --page-main:    var(--B2);
+  --page-em:      var(--Y);
+  --page-bg:      var(--BG);
+  --page-sep:     var(--sep-dark);
+}
+
+
+/* ══════════════════════════════════════════════════
+   3. APPLICATION — uniquement le bloc "page suivante"
+   Les couleurs viennent des --next-* du thème actif.
+   Pas de règles globales body/hero : elles restent
+   dans chaque page pour éviter les conflits.
+   ══════════════════════════════════════════════════ */
+.next-link {
+  background: var(--next-bg, var(--B2));
+  transition: background .2s;
+}
+.next-link:hover {
+  background: var(--next-bg-h, var(--B3));
+}
+.nl-kicker {
+  color: var(--next-kicker, rgba(255,255,255,.38));
+}
+.nl-title {
+  color: var(--next-text, #fff);
+}
+.nl-title em {
+  color: var(--next-em, var(--Y));
+  font-style: normal;
+}
+.nl-body {
+  color: var(--next-body, rgba(255,255,255,.52));
+}
+.nl-arrow {
+  color: var(--next-em, var(--Y));
+}

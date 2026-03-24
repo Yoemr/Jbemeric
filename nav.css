@@ -1,0 +1,252 @@
+/* ══════════════════════════════════════════════════════
+   nav.css — JB EMERIC — Navigation unifiée
+   Inclus dans toutes les pages. Ne pas modifier inline.
+   ══════════════════════════════════════════════════════ */
+
+/* ── Structure ── */
+.nav {
+  position: sticky; top: 0; z-index: 1000;
+  height: 56px;
+  background: rgba(4,10,30,.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  display: flex; align-items: center;
+  padding: 0 clamp(12px,2.5vw,24px);
+  gap: 10px;
+}
+.nav-logo { display: flex; align-items: center; flex-shrink: 0; text-decoration: none }
+
+/* ── Tabs desktop ── */
+.nav-tabs {
+  display: none; gap: 2px; flex: 1;
+  margin-left: 8px; overflow-x: auto; scrollbar-width: none;
+}
+.nav-tabs::-webkit-scrollbar { display: none }
+@media(min-width:700px) { .nav-tabs { display: flex } }
+
+.nav-tab {
+  flex-shrink: 0;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(255,215,0,.55);
+  padding: 7px 13px; border-radius: 6px;
+  border: 1px solid transparent;
+  white-space: nowrap; text-decoration: none;
+  transition: all .2s; cursor: pointer;
+}
+.nav-tab:hover { background: rgba(255,215,0,.07); color: rgba(255,215,0,.9) }
+.nav-tab.active { background: #0A3D91; color: #fff; border-color: #0A3D91 }
+
+/* ── Sous-menu Paddock ── */
+.nav-tab.has-sub { position: relative }
+.nav-sub {
+  display: none;
+  position: absolute; top: calc(100% + 6px); left: 50%;
+  transform: translateX(-50%);
+  background: rgba(4,10,30,.99);
+  border: 1px solid rgba(255,255,255,.08);
+  border-top: 2px solid #FFCF00;
+  border-radius: 0 0 8px 8px;
+  min-width: 160px; flex-direction: column;
+  z-index: 300; padding: 6px 0;
+  box-shadow: 0 16px 40px rgba(0,0,0,.5);
+}
+.nav-tab.has-sub:hover .nav-sub { display: flex }
+.nav-tab.has-sub::after { content: ' ▾'; font-size: 8px; opacity: .35; margin-left: 2px }
+.nav-sub-item {
+  display: block; padding: 10px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,.45); text-decoration: none;
+  transition: all .15s; white-space: nowrap;
+}
+.nav-sub-item::before { content: '› '; color: rgba(255,215,0,.3) }
+.nav-sub-item:hover { color: #FFCF00; background: rgba(255,215,0,.05); padding-left: 22px }
+
+/* ── Socials ── */
+.nav-socials {
+  display: none; align-items: center; gap: 14px;
+  padding: 0 12px;
+  border-left: 1px solid rgba(255,255,255,.08);
+  border-right: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+@media(min-width:1040px) { .nav-socials { display: flex } }
+.nav-social {
+  color: rgba(255,255,255,.28); text-decoration: none;
+  transition: color .18s; display: flex; align-items: center;
+}
+.nav-social:hover { color: #FFCF00 }
+.nav-social svg { width: 13px; height: 13px; fill: currentColor; display: block }
+
+/* ── Auth buttons ── */
+.nav-auth { display: none; align-items: center; gap: 8px; flex-shrink: 0 }
+@media(min-width:1040px) { .nav-auth { display: flex } }
+.nav-btn-login {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,.5); text-decoration: none;
+  padding: 6px 13px; border-radius: 4px;
+  border: 1px solid rgba(255,255,255,.12);
+  transition: all .18s; white-space: nowrap;
+}
+.nav-btn-login:hover { color: #fff; border-color: rgba(255,255,255,.3) }
+.nav-btn-signup {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #000; text-decoration: none;
+  padding: 6px 13px; border-radius: 4px;
+  background: linear-gradient(135deg,#F5D061,#C8860A); transition: background .18s; white-space: nowrap;
+}
+.nav-btn-signup:hover { background: linear-gradient(135deg,#e8c040,#b06d00) }
+
+/* ── CTA desktop ── */
+.nav-cta-desk {
+  display: none !important; flex-shrink: 0;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 8px 16px; border-radius: 7px; font-weight: 500;
+  white-space: nowrap; transition: all .2s; text-decoration: none;
+  background: linear-gradient(135deg,#F5D061,#C8860A); color: #000;
+}
+.nav-cta-desk:hover { background: #C8A000 }
+@media(min-width:700px) { .nav-cta-desk { display: block } }
+
+/* ── Burger ── */
+.nav-burger {
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 5px; width: 36px; height: 36px;
+  background: none; border: none; cursor: pointer;
+  margin-left: auto; flex-shrink: 0; padding: 4px;
+}
+.nav-burger span {
+  display: block; height: 2px;
+  background: rgba(255,215,0,.8); border-radius: 2px; transition: all .3s;
+}
+.nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg) }
+.nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0) }
+.nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg) }
+@media(min-width:700px) { .nav-burger { display: none } }
+
+/* ── Menu mobile ── */
+.nav-mobile {
+  display: none; position: fixed;
+  top: 56px; left: 0; right: 0;
+  background: rgba(4,10,30,.99);
+  z-index: 999; padding: 12px 16px 20px;
+  flex-direction: column; gap: 4px;
+  border-bottom: 2px solid #FFCF00;
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+.nav-mobile.open { display: flex }
+@media(min-width:700px) { .nav-mobile { display: none !important } }
+.nav-mobile .nav-tab {
+  font-size: 13px; padding: 12px 16px;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,.06);
+}
+.nav-mobile-cta {
+  margin-top: 8px; padding: 13px; border-radius: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+  font-weight: 500; text-align: center; display: block; text-decoration: none;
+  background: #FFCF00; color: #000;
+}
+
+/* Socials mobile */
+.nav-mobile-socials {
+  display: flex; justify-content: center; gap: 22px;
+  padding: 14px 0 6px;
+  border-top: 1px solid rgba(255,255,255,.07);
+  margin-top: 10px;
+}
+.nav-mobile-socials a {
+  color: rgba(255,255,255,.3); text-decoration: none;
+  transition: color .18s; display: flex; align-items: center;
+}
+.nav-mobile-socials a:hover { color: #FFCF00 }
+.nav-mobile-socials svg { width: 16px; height: 16px; fill: currentColor }
+
+/* Auth mobile */
+.nav-mobile-auth {
+  display: flex; gap: 8px;
+  margin-top: 10px; padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.nav-mobile-auth a {
+  flex: 1; text-align: center; padding: 11px;
+  border-radius: 6px; font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  text-decoration: none; transition: all .18s;
+}
+.nav-mobile-auth .mob-login {
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.55);
+}
+.nav-mobile-auth .mob-signup { background: linear-gradient(135deg,#F5D061,#C8860A); color: #000 }
+
+/* Supprimer CTA nav */
+.nav-cta-desk { display: none !important }
+.nav-mobile-cta { display: none !important }
+
+
+/* ══ FOOTER REFAIT ══ */
+.footer {
+  background: rgba(4,10,30,.97);
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(90deg,#F5D061,#C8860A,rgba(200,134,10,0)) 1;
+  position: relative;
+  overflow: hidden;
+}
+.footer::before {
+  content: 'JB';
+  position: absolute; right: -20px; bottom: -40px;
+  font-family: 'Bebas Neue'; font-size: 260px;
+  color: rgba(255,255,255,.02); line-height: 1;
+  pointer-events: none; user-select: none;
+}
+.footer-top {
+  padding: clamp(44px,6vw,72px) clamp(20px,5vw,72px) clamp(32px,4vw,48px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+@media(min-width:640px) { .footer-top { grid-template-columns: 2fr 1fr 1fr } }
+@media(min-width:960px) { .footer-top { grid-template-columns: 3fr 2fr 2fr 2fr } }
+
+/* Brand */
+.ft-brand { display: flex; flex-direction: column; gap: 12px }
+.ft-logo { font-family: 'Bebas Neue'; font-size: 32px; letter-spacing: 3px; color: #fff; line-height: 1 }
+.ft-logo em { font-style: normal; background: linear-gradient(135deg,#F5D061,#C8860A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text }
+.ft-tagline { font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.28); line-height: 1.7; max-width: 220px }
+.ft-socials { display: flex; gap: 14px; margin-top: 4px }
+.ft-social { color: rgba(255,255,255,.25); text-decoration: none; transition: color .18s; display: flex; align-items: center }
+.ft-social:hover { color: #FFCF00 }
+.ft-social svg { width: 14px; height: 14px; fill: currentColor; display: block }
+
+/* Colonnes nav */
+.ft-col { display: flex; flex-direction: column; gap: 4px }
+.ft-col-title { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,.25); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,.07) }
+.ft-col a { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.35); text-decoration: none; padding: 5px 0; transition: color .18s; display: flex; align-items: center; gap: 7px }
+.ft-col a::before { content: '›'; color: rgba(255,207,0,.2); font-size: 14px; transition: color .18s }
+.ft-col a:hover { color: #fff }
+.ft-col a:hover::before { color: #FFCF00 }
+
+/* Contact */
+.ft-contact { display: flex; flex-direction: column; gap: 12px }
+.ft-contact-item { display: flex; flex-direction: column; gap: 3px }
+.ft-contact-label { font-family: 'DM Mono'; font-size: 7px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.2) }
+.ft-contact-val { font-family: 'DM Mono'; font-size: 11px; letter-spacing: 1px; color: rgba(255,255,255,.55); text-decoration: none; word-break: break-word; transition: color .18s }
+.ft-contact-val:hover { color: #FFCF00 }
+
+/* Bottom bar */
+.footer-bottom {
+  padding: 14px clamp(20px,5vw,72px);
+  border-top: 1px solid rgba(255,255,255,.05);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px;
+}
+.fb-copy { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.15) }
+.fb-badge { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.15); display: flex; align-items: center; gap: 8px }
+.fb-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg,#F5D061,#C8860A); flex-shrink: 0 }

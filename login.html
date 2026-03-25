@@ -818,4 +818,68 @@ body { background: var(--night); min-height: 100vh }
   </div>
   <div class="footer-bottom">
     <span class="fb-copy">© 2026 JB EMERIC · Tous dr
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+const sb = createClient(
+  'https://fyaybxamuabawerqzuud.supabase.co',
+  'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
+)
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Si déjà connecté → rediriger directement
+  sb.auth.getSession().then(({ data: { session } }) => {
+    if (session) window.location.href = 'index.html'
+  })
+
+  const form    = document.querySelector('form')
+  const btn     = document.querySelector('button[type="submit"]')
+  const alertEl = document.getElementById('login-alert')
+
+  function showError(msg) {
+    if (alertEl) {
+      alertEl.textContent = msg
+      alertEl.style.display = 'block'
+    } else {
+      alert(msg)
+    }
+  }
+
+  function setLoading(loading) {
+    btn.disabled    = loading
+    btn.textContent = loading ? 'Connexion…' : 'Se connecter →'
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    const email    = document.getElementById('email').value.trim()
+    const password = document.getElementById('password').value
+
+    if (!email || !password) {
+      showError('Veuillez remplir tous les champs.')
+      return
+    }
+
+    setLoading(true)
+    if (alertEl) alertEl.style.display = 'none'
+
+    const { error } = await sb.auth.signInWithPassword({ email, password })
+
+    if (error) {
+      setLoading(false)
+      const msg = error.message.includes('Invalid login credentials')
+        ? 'Email ou mot de passe incorrect.'
+        : error.message
+      showError(msg)
+      return
+    }
+
+    // Succès → redirection
+    window.location.href = 'index.html'
+  })
+
+})
+</script>
 <script type="module" src="assets/js/live-editor.js"></script>

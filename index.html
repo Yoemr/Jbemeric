@@ -1240,25 +1240,6 @@ for (var i = 0; i < mobileLinks.length; i++) {
 }
 </script>
 
-<script>
-/* ═══════════════════════════════════════════════════════════
-   INDEX DYNAMIQUE — JB EMERIC
-   Lit window.JBEMERIC_DATA (site-data.js) et reconstruit
-   les 4 sections. Pour tout mettre à jour : modifier site-data.js
-   ═══════════════════════════════════════════════════════════ */
-(function () {
-  if (!window.JBEMERIC_DATA) {
-    console.warn('[JBE] site-data.js non chargé — sections statiques conservées');
-    return;
-  }
-  var D = window.JBEMERIC_DATA;
 
-  /* ── helpers ── */
-  function badge(text, gold) {
-    return '<span class="ov-card-badge' + (gold ? ' ov-card-badge-y' : '') + '">' + text + '</span>';
-  }
-  function tag(t) {
-    return '<span class="ov-tag' + (t.gold ? ' ov-tag-y' : '') + '">' + t.label + '</sp
-<script type="module" src="assets/js/sync-mirror.js"></script>
 
 <script type="module" src="assets/js/live-editor.js"></script>

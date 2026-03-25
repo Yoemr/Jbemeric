@@ -45,19 +45,23 @@ let _content = {}
 //  POINT D'ENTRÉE
 // ═══════════════════════════════════════════════════════════════════
 async function init() {
-  // 1. Charger les textes sauvegardés (pour tout le monde)
-  await loadContent()
-  applyContent()
+  // loadContent et getUser en parallèle — ni l'un ni l'autre ne bloque la page
+  const [_, authResult] = await Promise.allSettled([
+    loadContent().then(() => applyContent()),
+    sb.auth.getUser()
+  ])
 
-  // 2. Vérifier si admin
-  const { data: { user } } = await sb.auth.getUser()
-  const role = user?.user_metadata?.role ?? null
+  // Récupérer user sans crash si auth échoue
+  const user    = authResult.status === 'fulfilled'
+    ? (authResult.value?.data?.user ?? null)
+    : null
+  const role    = user?.user_metadata?.role ?? null
   const isAdmin = role === 'admin' || role === 'moderateur'
 
-  // 3. Mettre à jour le nav selon l'état de connexion
+  // Mettre à jour le nav
   updateNav(user, isAdmin)
 
-  // 4. Activer les crayons si admin
+  // Crayons uniquement si admin connecté
   if (isAdmin) {
     injectStyles()
     injectCrayons()
@@ -72,14 +76,18 @@ async function loadContent() {
   try {
     const { data, error } = await sb
       .from('site_content')
-      .select('key, value')
-    if (error) throw error
-    if (data) {
-      _content = Object.fromEntries(data.map(r => [r.key, r.value]))
+      .select('id, content')
+    // Erreur 400 / table vide → on continue sans bloquer
+    if (error) {
+      console.info('[JBE] site_content inaccessible (normal si table vide) :', error.message)
+      return
+    }
+    if (data && data.length > 0) {
+      _content = Object.fromEntries(data.map(r => [r.id, r.content]))
     }
   } catch (e) {
-    // Silencieux en public — Supabase peut ne pas encore être configuré
-    console.info('[JBE] site_content non disponible:', e.message)
+    // Jamais de crash page — le site tourne toujours avec le HTML d'origine
+    console.info('[JBE] site_content non disponible :', e.message)
   }
 }
 
@@ -88,9 +96,11 @@ async function loadContent() {
 //  Chaque élément doit avoir data-content-key="ma_cle"
 // ═══════════════════════════════════════════════════════════════════
 function applyContent() {
+  // Si la table est vide ou inaccessible, _content = {} → rien ne s'applique, page intacte
+  if (!_content || Object.keys(_content).length === 0) return
   document.querySelectorAll('[data-content-key]').forEach(el => {
     const key = el.dataset.contentKey
-    if (_content[key] !== undefined) {
+    if (_content[key] !== undefined && _content[key] !== '') {
       el.textContent = _content[key]
     }
   })
@@ -313,8 +323,8 @@ async function saveElement(el) {
     const { error } = await sb
       .from('site_content')
       .upsert(
-        { key, value, page: PAGE_KEY, updated_at: new Date().toISOString() },
-        { onConflict: 'key' }
+        { id: key, content: value, page: PAGE_KEY, updated_at: new Date().toISOString() },
+        { onConflict: 'id' }
       )
     if (error) throw error
 

@@ -1,513 +1,694 @@
 /**
- * live-editor.js — JB EMERIC
+ * live-editor.js — JB EMERIC  v4  "Senior-Ready"
  * ═══════════════════════════════════════════════════════════════════
- * Système "Crayon Live" — Édition directe sur toutes les pages
  *
- * Ce script fait 4 choses :
- *  1. Détecte si l'utilisateur est admin/moderateur (Supabase Auth)
- *  2. Met à jour le nav (remplace Login/Inscr par Espace Admin + Déco)
- *  3. Charge les textes sauvegardés depuis site_content et les injecte
- *  4. Si admin → affiche les crayons ✎ sur tous les textes éditables
+ *  Ce que fait ce fichier, dans l'ordre :
  *
- * Usage : ajouter dans chaque page HTML, juste avant </body> :
- *   <script type="module" src="assets/js/live-editor.js"></script>
+ *  1. SCAN du DOM → attribue un id "txt-01", "txt-02"… à chaque
+ *     texte éditable qui n'en a pas encore.
+ *
+ *  2. SUPABASE → charge site_content (colonnes: id, content)
+ *     et remplace les textes AVANT le premier affichage (via
+ *     visibility:hidden sur le body jusqu'au remplacement).
+ *
+ *  3. SESSION → getSession() (cookie local, 0 appel réseau).
+ *     Si admin/moderateur → active le mode crayon.
+ *
+ *  4. CRAYONS → boutons blancs ultra-visibles, bordure jaune
+ *     sur l'élément actif.
+ *
+ *  5. ANTI-CASSE → paste = texte brut seulement.
+ *     Ctrl+B/I/U bloqués. Entrée = sauvegarde + quitter.
+ *
+ *  6. BARRE ADMIN → barre blanche fixe en haut : "Mode Édition
+ *     Activé — Bonjour JB".
+ *
+ *  Table Supabase : site_content
+ *  Colonnes       : id TEXT PRIMARY KEY, content TEXT, page TEXT
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-// ── Connexion Supabase ────────────────────────────────────────────
+// ── Config ────────────────────────────────────────────────────────
 const SB_URL  = 'https://fyaybxamuabawerqzuud.supabase.co'
 const SB_ANON = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
 const sb      = createClient(SB_URL, SB_ANON)
 
-// ── Sélecteurs éditables (tout sauf nav et footer) ────────────────
-const EDITABLE_SELECTOR = `
-  main h1, main h2, main h3, main h4,
-  main p, main li, main span,
-  main .hero-title, main .hero-lead, main .hero-eyebrow,
-  main .ov-title, main .ov-desc, main .ov-card-name, main .ov-card-sub,
-  main .flyer-name, main .flyer-hook, main .flyer-pretitle,
-  main .sec-title, main .sec-lead, main .sr-title, main .sr-lead,
-  main .kicker, main .pc-title, main .pc-lead,
-  main .nl-subtitle, main .lib-card-title,
-  [data-editable="true"]
-`
-  .split(',').map(s => s.trim()).filter(Boolean).join(', ')
+// Page courante : "index", "coaching", "track"…
+const PAGE = location.pathname.split('/').pop().replace('.html','') || 'index'
 
-// ── Page courante (ex: "coaching" depuis "coaching.html") ─────────
-const PAGE_KEY = location.pathname.split('/').pop().replace('.html','') || 'index'
+// Sélecteurs de texte éditorial — tout sauf nav, footer, scripts
+// On cible les classes réelles observées dans le site JBE
+const SELECTORS = [
+  /* Titres génériques */
+  'h1','h2','h3','h4',
+  /* Classes texte hero */
+  '.hero-title','.hero-lead','.hero-sub','.hero-kicker','.hero-eyebrow',
+  /* Overview index */
+  '.ov-title','.ov-desc','.ov-eyebrow','.ov-card-name','.ov-card-sub','.ov-card-num',
+  /* Coaching */
+  '.flyer-name','.flyer-hook','.flyer-pretitle','.flyer-tag','.fcard-desc',
+  /* Académie */
+  '.pc-title','.pc-lead','.man-title','.man-lead',
+  /* Track */
+  '.sr-title','.sr-lead','.body-txt',
+  /* Générique */
+  '.section-title','.section-lead','.kicker','.sh',
+  /* Fallback paragraphes orphelins */
+  'p'
+].join(',')
 
-// ── Cache local des contenus Supabase ────────────────────────────
-let _content = {}
+// Cache Supabase { "index__txt-01": "texte...", ... }
+let _db = {}
+// Éléments indexés
+let _els = []
+// Modifications en attente
+let _dirty = new Set()
+// Barre de statut
+let _statusEl = null
+// Élément actif
+let _active = null
+
+// ═══════════════════════════════════════════════════════════════════
+//  MASQUER le body pour éviter le flash de l'ancien texte
+// ═══════════════════════════════════════════════════════════════════
+;(function hideDuringLoad() {
+  const s = document.createElement('style')
+  s.id = 'jbe-hide'
+  s.textContent = 'body{visibility:hidden!important}'
+  document.head.appendChild(s)
+})()
+
+function showBody() {
+  const s = document.getElementById('jbe-hide')
+  if (s) s.remove()
+}
 
 // ═══════════════════════════════════════════════════════════════════
 //  POINT D'ENTRÉE
 // ═══════════════════════════════════════════════════════════════════
-async function init() {
-  // loadContent et getUser en parallèle — ni l'un ni l'autre ne bloque la page
-  const [_, authResult] = await Promise.allSettled([
-    loadContent().then(() => applyContent()),
-    sb.auth.getUser()
+document.addEventListener('DOMContentLoaded', async () => {
+
+  // 1. Scanner et attribuer les IDs en premier (synchrone, rapide)
+  scanAndAssignIds()
+
+  // 2. Charger Supabase + session en parallèle
+  const [dbResult, sessResult] = await Promise.allSettled([
+    loadFromSupabase(),
+    sb.auth.getSession()
   ])
 
-  // Récupérer user sans crash si auth échoue
-  const user    = authResult.status === 'fulfilled'
-    ? (authResult.value?.data?.user ?? null)
-    : null
+  // 3. Appliquer les textes sauvegardés au DOM
+  applyTexts()
+
+  // 4. Révéler la page
+  showBody()
+
+  // 5. Analyser la session
+  const session = sessResult.value?.data?.session ?? null
+  const user    = session?.user ?? null
   const role    = user?.user_metadata?.role ?? null
   const isAdmin = role === 'admin' || role === 'moderateur'
 
-  // Mettre à jour le nav
+  // 6. Adapter le nav
   updateNav(user, isAdmin)
 
-  // Crayons uniquement si admin connecté
+  // 7. Activer le mode édition si admin
   if (isAdmin) {
-    injectStyles()
-    injectCrayons()
-    injectStatusBar(user)
+    buildStyles()
+    buildCrayons()
+    buildStatusBar(user)
   }
+})
+
+// ═══════════════════════════════════════════════════════════════════
+//  1. SCAN — attribue txt-01, txt-02… aux éléments sans id
+// ═══════════════════════════════════════════════════════════════════
+function scanAndAssignIds() {
+  _els = []
+  let counter = 1
+
+  document.querySelectorAll(SELECTORS).forEach(el => {
+    // Exclure nav, footer, scripts, éléments vides
+    if (el.closest('nav, footer, script, style, [data-no-edit]')) return
+    // Exclure SVG et leurs enfants
+    if (el.closest('svg') || el.tagName === 'SVG') return
+    // Exclure si pas de texte visible
+    const txt = el.textContent.trim()
+    if (!txt || txt.length < 2) return
+    // Exclure les wrappers qui contiennent eux-mêmes d'autres cibles
+    if (el.querySelector(SELECTORS)) return
+
+    // Attribuer un id si absent
+    if (!el.id) {
+      el.id = `txt-${String(counter).padStart(2,'0')}`
+    }
+    counter++
+
+    // Stocker le texte original comme fallback (touche Échap)
+    el.dataset.originalText = txt
+    // Clé Supabase = "page__id"
+    el.dataset.sbKey = `${PAGE}__${el.id}`
+
+    _els.push(el)
+  })
+
+  console.info(`[JBE] ${_els.length} éléments indexés (${PAGE})`)
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  1. CHARGER LES TEXTES DEPUIS SUPABASE
+//  2. CHARGER depuis Supabase — colonnes id + content
 // ═══════════════════════════════════════════════════════════════════
-async function loadContent() {
+async function loadFromSupabase() {
   try {
     const { data, error } = await sb
       .from('site_content')
       .select('id, content')
-    // Erreur 400 / table vide → on continue sans bloquer
+      .eq('page', PAGE)
+
     if (error) {
-      console.info('[JBE] site_content inaccessible (normal si table vide) :', error.message)
+      // 400 ou table vide → normal, pas de crash
+      console.info('[JBE] site_content:', error.message)
       return
     }
-    if (data && data.length > 0) {
-      _content = Object.fromEntries(data.map(r => [r.id, r.content]))
+    if (data?.length) {
+      _db = Object.fromEntries(data.map(r => [r.id, r.content]))
+      console.info(`[JBE] ${data.length} texte(s) chargé(s) depuis Supabase`)
     }
   } catch (e) {
-    // Jamais de crash page — le site tourne toujours avec le HTML d'origine
-    console.info('[JBE] site_content non disponible :', e.message)
+    console.info('[JBE] Supabase inaccessible:', e.message)
   }
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  2. APPLIQUER LES TEXTES AU DOM
-//  Chaque élément doit avoir data-content-key="ma_cle"
+//  3. APPLIQUER les textes Supabase au DOM (texte brut, jamais HTML)
 // ═══════════════════════════════════════════════════════════════════
-function applyContent() {
-  // Si la table est vide ou inaccessible, _content = {} → rien ne s'applique, page intacte
-  if (!_content || Object.keys(_content).length === 0) return
-  document.querySelectorAll('[data-content-key]').forEach(el => {
-    const key = el.dataset.contentKey
-    if (_content[key] !== undefined && _content[key] !== '') {
-      el.textContent = _content[key]
-    }
+function applyTexts() {
+  if (!Object.keys(_db).length) return
+  _els.forEach(el => {
+    const val = _db[el.dataset.sbKey]
+    if (val) el.textContent = val
   })
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  3. NAV — ADAPTER SELON L'ÉTAT D'AUTH
+//  4. NAV — connecté ou non
 // ═══════════════════════════════════════════════════════════════════
 function updateNav(user, isAdmin) {
-  const authZone = document.querySelector('.nav-auth')
-  const mobileAuthZone = document.querySelector('.nav-mobile-cta, .nav-mobile-auth')
+  if (!user) return
 
-  if (!user) {
-    // Non connecté → nav standard inchangé
-    return
-  }
+  const prenom = user.user_metadata?.prenom
+    || user.email?.split('@')[0]
+    || 'Admin'
 
-  const prenom = user.user_metadata?.prenom ?? 'Admin'
-
-  // ── Desktop nav-auth ──────────────────────────────────────────
-  if (authZone) {
-    authZone.innerHTML = isAdmin
+  // Desktop
+  const desk = document.querySelector('.nav-auth')
+  if (desk) {
+    desk.innerHTML = isAdmin
       ? `<a class="nav-btn-admin" href="admin.html">✦ Espace Admin</a>
-         <button class="nav-btn-logout" onclick="window.__jbeLogout()">Déconnexion</button>`
+         <button class="nav-btn-logout" onclick="window.__jbeOut()">Déconnexion</button>`
       : `<span class="nav-btn-user">${prenom}</span>
-         <button class="nav-btn-logout" onclick="window.__jbeLogout()">Déconnexion</button>`
+         <button class="nav-btn-logout" onclick="window.__jbeOut()">Déconnexion</button>`
   }
 
-  // ── Mobile ───────────────────────────────────────────────────
-  if (mobileAuthZone) {
-    mobileAuthZone.innerHTML = isAdmin
+  // Mobile
+  const mob = document.querySelector('.nav-mobile-cta, .nav-mobile-auth')
+  if (mob) {
+    mob.innerHTML = isAdmin
       ? `<a class="nav-mobile-btn" href="admin.html">✦ Espace Admin</a>
-         <button class="nav-mobile-btn nav-mobile-logout" onclick="window.__jbeLogout()">Déconnexion</button>`
-      : `<button class="nav-mobile-btn nav-mobile-logout" onclick="window.__jbeLogout()">Déconnexion</button>`
+         <button class="nav-mobile-btn nav-mobile-logout" onclick="window.__jbeOut()">Déconnexion</button>`
+      : `<button class="nav-mobile-btn nav-mobile-logout" onclick="window.__jbeOut()">Déconnexion</button>`
   }
 
-  // Déconnexion globale
-  window.__jbeLogout = async () => {
-    await sb.auth.signOut()
-    location.reload()
-  }
+  window.__jbeOut = async () => { await sb.auth.signOut(); location.reload() }
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  4. CRAYONS — INJECTION ET ÉDITION
+//  5. CRAYONS — boutons ultra-visibles
 // ═══════════════════════════════════════════════════════════════════
-let _activeEl   = null
-let _pendingSave = new Set()
-
-function injectCrayons() {
-  // Trouver tous les éléments éditables avec contenu texte
-  document.querySelectorAll(EDITABLE_SELECTOR).forEach(el => {
-    // Ignorer les éléments vides, les liens de navigation, les éléments enfants d'un éditable
-    if (!el.textContent.trim()) return
-    if (el.closest('a[data-content-key]')) return
-    if (el.querySelectorAll(EDITABLE_SELECTOR).length > 2) return // pas de gros containers
-
-    makePencil(el)
-  })
+function buildCrayons() {
+  _els.forEach(el => attachPencil(el))
 }
 
-function makePencil(el) {
-  // Générer une clé automatique si pas de data-content-key
-  if (!el.dataset.contentKey) {
-    const tag  = el.tagName.toLowerCase()
-    const cls  = (el.className || '').split(' ').filter(Boolean)[0] || ''
-    const text = el.textContent.trim().slice(0, 20).replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')
-    el.dataset.contentKey = `${PAGE_KEY}__${tag}${cls ? '_' + cls : ''}_${text}`
+function attachPencil(el) {
+  // Appliquer le contenu Supabase si dispo
+  const val = _db[el.dataset.sbKey]
+  if (val) el.textContent = val
+
+  // Position relative pour le bouton absolu
+  if (getComputedStyle(el).position === 'static') {
+    el.style.position = 'relative'
   }
 
-  // Appliquer le contenu Supabase si disponible
-  const key = el.dataset.contentKey
-  if (_content[key] !== undefined) el.textContent = _content[key]
-
-  // Wrapper position:relative
-  el.style.position = 'relative'
-
-  // Crayon
+  // Créer le bouton "Modifier"
   const btn = document.createElement('button')
-  btn.className = 'jbe-pencil'
-  btn.textContent = '✎'
-  btn.title = `Modifier — clé : ${key}`
-  btn.addEventListener('click', (e) => { e.stopPropagation(); activateEdit(el) })
+  btn.className   = 'jbe-btn-edit'
+  btn.textContent = '✎ Modifier'
+  btn.title       = `Clé : ${el.dataset.sbKey}`
+  btn.setAttribute('type', 'button')
+  btn.addEventListener('click', e => { e.stopPropagation(); startEdit(el) })
   el.appendChild(btn)
 }
 
-function activateEdit(el) {
-  // Désactiver le champ précédent si différent
-  if (_activeEl && _activeEl !== el) deactivateEdit(_activeEl, true)
+// ── Démarrer l'édition ────────────────────────────────────────────
+function startEdit(el) {
+  // Fermer l'édition précédente
+  if (_active && _active !== el) endEdit(_active, true)
+  _active = el
 
-  _activeEl = el
-  const key = el.dataset.contentKey
+  // Retirer le bouton le temps de l'édition
+  el.querySelector('.jbe-btn-edit')?.remove()
 
-  // Marquer visuellement
-  el.classList.add('jbe-editing')
-
-  // Activer contentEditable
+  // Surbrillance active
+  el.classList.add('jbe-active')
   el.contentEditable = 'true'
-  el.spellcheck = false
-  el.focus()
+  el.spellcheck      = false
 
-  // Sélectionner tout
+  // Placer le curseur — sélectionner tout
+  el.focus()
   const range = document.createRange()
   range.selectNodeContents(el)
   const sel = window.getSelection()
   sel?.removeAllRanges()
   sel?.addRange(range)
 
-  // Events
-  el._jbe_paste    = (e) => handlePaste(e)
-  el._jbe_keydown  = (e) => handleKeydown(e)
-  el._jbe_input    = ()  => handleInput(el)
-  el._jbe_blur     = ()  => deactivateEdit(el, true)
+  // Handlers (stockés pour pouvoir les retirer proprement)
+  el._jPaste   = e  => interceptPaste(e)
+  el._jKey     = e  => interceptKey(e)
+  el._jInput   = () => onInput(el)
+  el._jBlur    = () => endEdit(el, true)
 
-  el.addEventListener('paste',   el._jbe_paste)
-  el.addEventListener('keydown', el._jbe_keydown)
-  el.addEventListener('input',   el._jbe_input)
-  el.addEventListener('blur',    el._jbe_blur)
+  el.addEventListener('paste',   el._jPaste)
+  el.addEventListener('keydown', el._jKey)
+  el.addEventListener('input',   el._jInput)
+  el.addEventListener('blur',    el._jBlur)
 
-  updateStatus(`✎ Modification en cours — ${el.tagName.toLowerCase()}`)
+  setStatus('✎  Tapez votre texte · Entrée = sauvegarder · Échap = annuler')
 }
 
-function deactivateEdit(el, save = false) {
+// ── Terminer l'édition ────────────────────────────────────────────
+function endEdit(el, save = false) {
   el.contentEditable = 'false'
-  el.classList.remove('jbe-editing')
+  el.classList.remove('jbe-active')
 
-  el.removeEventListener('paste',   el._jbe_paste)
-  el.removeEventListener('keydown', el._jbe_keydown)
-  el.removeEventListener('input',   el._jbe_input)
-  el.removeEventListener('blur',    el._jbe_blur)
+  el.removeEventListener('paste',   el._jPaste)
+  el.removeEventListener('keydown', el._jKey)
+  el.removeEventListener('input',   el._jInput)
+  el.removeEventListener('blur',    el._jBlur)
 
-  if (save) saveElement(el)
-  if (_activeEl === el) _activeEl = null
+  // Remettre le bouton
+  attachPencil(el)
+
+  if (save && _dirty.has(el.dataset.sbKey)) saveElement(el)
+  if (_active === el) _active = null
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  NETTOYAGE TEXTE — Anti-casse total
+//  6. ANTI-CASSE — texte brut absolu
 // ═══════════════════════════════════════════════════════════════════
 
-// Intercepte le coller → texte brut uniquement
-function handlePaste(e) {
+// Coller → texte brut uniquement, zéro HTML
+function interceptPaste(e) {
   e.preventDefault()
   const raw   = e.clipboardData?.getData('text/plain') ?? ''
-  const clean = sanitize(raw)
+  const clean = purify(raw)
+  // insertText = seule méthode qui respecte la position du curseur
   document.execCommand('insertText', false, clean)
 }
 
-// Bloque les raccourcis de formatage
-function handleKeydown(e) {
-  const BLOCKED = ['b', 'i', 'u', 'k']
-  if ((e.ctrlKey || e.metaKey) && BLOCKED.includes(e.key.toLowerCase())) {
+// Clavier → bloquer le formatage, gérer Entrée et Échap
+function interceptKey(e) {
+  // Bloquer Ctrl/Cmd + B I U K H (gras, italique, souligné, lien, titre)
+  if ((e.ctrlKey || e.metaKey) && 'biukh'.includes(e.key.toLowerCase())) {
     e.preventDefault()
     return
   }
-  // Entrée → sortir du champ (pas de retour ligne)
+  // Entrée → sauvegarder et quitter
   if (e.key === 'Enter') {
     e.preventDefault()
     e.target.blur()
+    return
   }
-  // Échap → annuler et restaurer
+  // Échap → restaurer le texte original
   if (e.key === 'Escape') {
-    const key = e.target.dataset.contentKey
-    e.target.textContent = _content[key] ?? e.target.dataset.originalText ?? ''
+    const original = _db[e.target.dataset.sbKey] ?? e.target.dataset.originalText ?? ''
+    e.target.textContent = original
+    _dirty.delete(e.target.dataset.sbKey)
     e.target.blur()
   }
 }
 
-// Nettoie en temps réel les styles parasites collés
-function handleInput(el) {
-  // Retirer toutes les balises de style qui se glissent
-  ;['b','strong','i','em','u','s','font','span'].forEach(tag => {
-    el.querySelectorAll(tag).forEach(node => node.replaceWith(...node.childNodes))
+// Input → nettoyer en temps réel les balises de style
+function onInput(el) {
+  // Supprimer toutes les balises de formatage
+  ;['b','strong','i','em','u','s','strike','font','mark','span','code'].forEach(tag => {
+    el.querySelectorAll(tag).forEach(n => n.replaceWith(...n.childNodes))
   })
-  el.querySelectorAll('[style],[class],[face],[color],[size]').forEach(node => {
-    node.removeAttribute('style')
-    node.removeAttribute('class')
-    node.removeAttribute('face')
-    node.removeAttribute('color')
-    node.removeAttribute('size')
+  // Retirer les attributs style/color/face sur les descendants
+  el.querySelectorAll('[style],[color],[face],[size],[class]').forEach(n => {
+    ;['style','color','face','size'].forEach(a => n.removeAttribute(a))
   })
-  _pendingSave.add(el.dataset.contentKey)
-  updateStatus(`✎ Modification en cours — appuyez sur Entrée ou cliquez ailleurs pour sauvegarder`)
+  _dirty.add(el.dataset.sbKey)
+  setStatus('✎  Modification non sauvegardée · cliquez ailleurs ou appuyez Entrée')
 }
 
-// Texte brut final depuis le DOM
-function getPlainText(el) {
+// Texte brut depuis le DOM (retire le bouton crayon du texte)
+function extractText(el) {
   const clone = el.cloneNode(true)
-  // Retirer le bouton crayon du clone
-  clone.querySelectorAll('.jbe-pencil').forEach(b => b.remove())
-  // Convertir <br> en \n
-  clone.querySelectorAll('br').forEach(br => br.replaceWith('\n'))
-  return sanitize(clone.textContent || '')
+  clone.querySelectorAll('.jbe-btn-edit').forEach(b => b.remove())
+  clone.querySelectorAll('br').forEach(b => b.replaceWith('\n'))
+  return purify(clone.textContent || '')
 }
 
-function sanitize(text) {
-  return text
-    .replace(/\r\n|\r/g, '\n')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim()
+// Nettoyage final : retours ligne normalisés, trim
+function purify(t) {
+  return t.replace(/\r\n|\r/g, '\n').replace(/\n{3,}/g, '\n\n').trim()
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  SAUVEGARDE SUPABASE
+//  7. SAUVEGARDE — upsert sur colonnes id + content
 // ═══════════════════════════════════════════════════════════════════
 async function saveElement(el) {
-  const key   = el.dataset.contentKey
-  const value = getPlainText(el)
-  if (!key || !value) return
+  const key     = el.dataset.sbKey
+  const content = extractText(el)
+  if (!key || !content) return
 
-  // Mettre à jour le DOM proprement
-  // Retirer l'ancien crayon, remettre le texte, remettre le crayon
-  const pencil = el.querySelector('.jbe-pencil')
-  pencil?.remove()
-  el.textContent = value
-  if (pencil) el.appendChild(pencil)
+  // Remettre le DOM propre (textContent retire les enfants)
+  const btn = el.querySelector('.jbe-btn-edit')
+  btn?.remove()
+  el.textContent = content
+  // Le bouton sera remis par endEdit → attachPencil
 
-  updateStatus('⏳ Sauvegarde…')
+  setStatus('⏳  Sauvegarde en cours…')
 
   try {
     const { error } = await sb
       .from('site_content')
       .upsert(
-        { id: key, content: value, page: PAGE_KEY, updated_at: new Date().toISOString() },
+        {
+          id:         key,          // ex: "coaching__txt-03"
+          content:    content,      // texte brut
+          page:       PAGE,         // ex: "coaching"
+          updated_at: new Date().toISOString()
+        },
         { onConflict: 'id' }
       )
+
     if (error) throw error
 
-    _content[key] = value
-    _pendingSave.delete(key)
-    updateStatus(`✅ Sauvegardé`)
-    flashEl(el, 'success')
+    _db[key] = content
+    _dirty.delete(key)
+    setStatus('✅  Texte sauvegardé !')
+    flash(el, true)
 
-  } catch (e) {
-    console.error('[JBE] Sauvegarde:', e)
-    updateStatus(`❌ Erreur : ${e.message}`)
-    flashEl(el, 'error')
+  } catch (err) {
+    setStatus('❌  Erreur : ' + err.message)
+    flash(el, false)
+    console.error('[JBE] Sauvegarde:', err)
   }
 }
 
-// Sauvegarder toutes les modifs en attente
+// Tout sauvegarder d'un coup (bouton dans la barre)
 async function saveAll() {
-  const elements = document.querySelectorAll('[data-content-key]')
-  const toSave = [...elements].filter(el => _pendingSave.has(el.dataset.contentKey))
-  if (!toSave.length) { updateStatus('✅ Tout est déjà sauvegardé'); return }
-  await Promise.all(toSave.map(el => saveElement(el)))
+  const todo = _els.filter(el => _dirty.has(el.dataset.sbKey))
+  if (!todo.length) { setStatus('✅  Rien à sauvegarder'); return }
+  setStatus(`⏳  Sauvegarde de ${todo.length} élément(s)…`)
+  await Promise.all(todo.map(el => saveElement(el)))
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  BARRE DE STATUT ADMIN
+//  8. BARRE DE STATUT ADMIN
 // ═══════════════════════════════════════════════════════════════════
-let _statusBar, _statusMsg
+function buildStatusBar(user) {
+  const prenom = user.user_metadata?.prenom
+    || user.email?.split('@')[0]
+    || 'JB'
 
-function injectStatusBar(user) {
-  const prenom = user.user_metadata?.prenom ?? 'Admin'
-
-  _statusBar = document.createElement('div')
-  _statusBar.id = 'jbe-bar'
-  _statusBar.innerHTML = `
-    <div class="jbe-bar-left">
-      <div class="jbe-bar-dot"></div>
-      <span class="jbe-bar-user">Mode édition — <strong>${prenom}</strong></span>
+  const bar = document.createElement('div')
+  bar.id = 'jbe-bar'
+  bar.innerHTML = `
+    <div class="jbe-bar-l">
+      <span class="jbe-dot"></span>
+      <strong>Mode Édition Activé</strong>
+      <span class="jbe-sep">—</span>
+      <span>Bonjour <strong>${prenom}</strong> 👋</span>
     </div>
-    <div class="jbe-bar-msg" id="jbe-bar-msg">Survolez un texte pour le modifier</div>
-    <div class="jbe-bar-right">
-      <button class="jbe-bar-btn jbe-bar-save" onclick="window.__jbeSaveAll()">
+    <div id="jbe-status" class="jbe-bar-c">
+      Survolez un texte pour voir le bouton Modifier
+    </div>
+    <div class="jbe-bar-r">
+      <span class="jbe-zones">${_els.length} zones éditables</span>
+      <button class="jbe-save" onclick="window.__jbeSaveAll()">
         ✓ Tout sauvegarder
       </button>
-      <a class="jbe-bar-btn" href="admin.html">Dashboard →</a>
+      <a class="jbe-dash" href="admin.html">Dashboard →</a>
     </div>
   `
-  document.body.prepend(_statusBar)
-  document.body.style.paddingTop = '40px'
+  document.body.prepend(bar)
+  // Compenser la hauteur de la barre
+  document.body.style.paddingTop = '48px'
 
-  _statusMsg = document.getElementById('jbe-bar-msg')
+  _statusEl = document.getElementById('jbe-status')
   window.__jbeSaveAll = saveAll
 }
 
-function updateStatus(msg) {
-  if (_statusMsg) _statusMsg.textContent = msg
-  // Reset après 3s si message de succès
+function setStatus(msg) {
+  if (!_statusEl) return
+  _statusEl.textContent = msg
   if (msg.startsWith('✅')) {
     setTimeout(() => {
-      if (_statusMsg) _statusMsg.textContent = 'Survolez un texte pour le modifier'
+      if (_statusEl) _statusEl.textContent = 'Survolez un texte pour voir le bouton Modifier'
     }, 3000)
   }
 }
 
-function flashEl(el, type) {
+function flash(el, ok) {
   el.style.transition = 'outline .15s'
-  el.style.outline    = type === 'success'
-    ? '2px solid rgba(34,197,94,.6)'
-    : '2px solid rgba(239,68,68,.6)'
-  setTimeout(() => { el.style.outline = '' }, 1200)
+  el.style.outline    = ok
+    ? '3px solid rgba(34,197,94,.8)'
+    : '3px solid rgba(239,68,68,.8)'
+  setTimeout(() => el.style.outline = '', 1600)
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  CSS INJECTÉ
+//  9. CSS — injecté une seule fois, uniquement pour les admins
 // ═══════════════════════════════════════════════════════════════════
-function injectStyles() {
+function buildStyles() {
   if (document.getElementById('jbe-styles')) return
 
-  const style = document.createElement('style')
-  style.id = 'jbe-styles'
-  style.textContent = `
-  /* ── Barre admin ── */
+  const s = document.createElement('style')
+  s.id = 'jbe-styles'
+  s.textContent = `
+
+  /* ═══════════════════════════════════════
+     BARRE ADMIN — blanche, épurée, fixe
+     ═══════════════════════════════════════ */
   #jbe-bar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-    height: 40px;
-    background: #fff;
-    border-bottom: 1px solid #e5e7eb;
-    display: flex; align-items: center;
-    padding: 0 20px; gap: 16px;
-    font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
-    font-size: 12px; color: #111;
-    box-shadow: 0 1px 6px rgba(0,0,0,.08);
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 99999;
+    height: 48px;
+    background: #ffffff;
+    border-bottom: 2px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    color: #111111;
+    box-shadow: 0 2px 12px rgba(0,0,0,.10);
   }
-  .jbe-bar-left  { display: flex; align-items: center; gap: 8px; flex-shrink: 0 }
-  .jbe-bar-dot   {
-    width: 7px; height: 7px; border-radius: 50%;
+  .jbe-bar-l {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    font-size: 13px;
+    color: #333;
+  }
+  .jbe-dot {
+    display: inline-block;
+    width: 9px; height: 9px;
+    border-radius: 50%;
     background: #22c55e;
-    box-shadow: 0 0 0 0 rgba(34,197,94,.4);
+    box-shadow: 0 0 0 0 rgba(34,197,94,.5);
     animation: jbe-ping 2s ease-in-out infinite;
+    flex-shrink: 0;
   }
   @keyframes jbe-ping {
-    0%   { box-shadow: 0 0 0 0 rgba(34,197,94,.4) }
-    70%  { box-shadow: 0 0 0 8px rgba(34,197,94,0) }
-    100% { box-shadow: 0 0 0 0 rgba(34,197,94,0) }
+    0%   { box-shadow: 0 0 0 0   rgba(34,197,94,.5) }
+    70%  { box-shadow: 0 0 0 10px rgba(34,197,94,0) }
+    100% { box-shadow: 0 0 0 0   rgba(34,197,94,0) }
   }
-  .jbe-bar-user  { font-size: 12px; color: #555 }
-  .jbe-bar-user strong { color: #111; font-weight: 600 }
-  .jbe-bar-msg   { flex: 1; font-size: 11px; color: #888; text-align: center }
-  .jbe-bar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0 }
-  .jbe-bar-btn {
-    padding: 5px 14px;
-    background: #fff; color: #111;
-    border: 1px solid #d1d5db; border-radius: 6px;
-    font-size: 11px; font-weight: 500; cursor: pointer;
-    text-decoration: none;
-    transition: all .15s;
+  .jbe-sep { color: #ccc }
+  .jbe-bar-c {
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .jbe-bar-r {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .jbe-zones {
+    font-size: 11px;
+    color: #bbb;
+    white-space: nowrap;
+  }
+  .jbe-save {
+    padding: 7px 16px;
+    background: #111111;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s;
+    white-space: nowrap;
     font-family: inherit;
   }
-  .jbe-bar-btn:hover { background: #f9fafb; border-color: #9ca3af }
-  .jbe-bar-save {
-    background: #111; color: #fff; border-color: #111;
-  }
-  .jbe-bar-save:hover { background: #333 }
-
-  /* ── Crayon ── */
-  .jbe-pencil {
-    position: absolute;
-    top: -10px; right: -10px;
-    width: 22px; height: 22px;
-    border-radius: 50%;
+  .jbe-save:hover { background: #333 }
+  .jbe-dash {
+    padding: 7px 16px;
     background: #fff;
-    border: 1px solid #d1d5db;
-    box-shadow: 0 2px 8px rgba(0,0,0,.12);
-    font-size: 11px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; transition: opacity .15s, transform .15s;
-    z-index: 100;
     color: #111;
+    border: 1.5px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .15s;
+    white-space: nowrap;
   }
-  [data-content-key]:hover > .jbe-pencil,
-  [data-content-key]:focus-within > .jbe-pencil {
-    opacity: 1; transform: scale(1.1);
-  }
-  .jbe-pencil:hover { background: #111; color: #fff; border-color: #111 }
+  .jbe-dash:hover { background: #f9fafb; border-color: #9ca3af }
 
-  /* ── Élément en cours d'édition ── */
-  .jbe-editing {
-    outline: 2px dashed rgba(0,0,0,.2) !important;
+  /* ═══════════════════════════════════════
+     BOUTON "MODIFIER" — ultra-visible
+     Fond blanc pur, texte noir, gras
+     ═══════════════════════════════════════ */
+  .jbe-btn-edit {
+    /* Positioning */
+    position: absolute;
+    top: -14px;
+    right: -8px;
+    z-index: 1000;
+
+    /* Apparence — blanc pur, bien visible */
+    background: #ffffff;
+    color: #111111;
+    font-weight: 700;
+    font-size: 11px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.3px;
+
+    /* Forme */
+    padding: 4px 10px;
+    border: 1.5px solid #111111;
+    border-radius: 20px;
+    white-space: nowrap;
+
+    /* Ombre pour visibilité sur tous fonds */
+    box-shadow:
+      0 2px 8px rgba(0,0,0,.20),
+      0 0 0 3px rgba(255,255,255,.8);
+
+    /* Interaction */
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity .18s ease, transform .18s ease;
+
+    /* Empêcher la sélection du bouton */
+    user-select: none;
+  }
+
+  /* Apparaît au survol du parent */
+  [data-sb-key]:hover .jbe-btn-edit {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .jbe-btn-edit:hover {
+    background: #111111;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,.3), 0 0 0 3px rgba(255,255,255,.8);
+  }
+
+  /* ═══════════════════════════════════════
+     SURBRILLANCE ACTIVE — bordure jaune vif
+     Visible sur tous les fonds (clair/sombre)
+     ═══════════════════════════════════════ */
+  .jbe-active {
+    outline: 3px solid #FFCF00 !important;
     outline-offset: 6px;
-    background: rgba(255,255,255,.03) !important;
+    background: rgba(255, 207, 0, 0.06) !important;
+    border-radius: 2px;
     cursor: text !important;
   }
+  /* Caret visible en édition */
+  [contenteditable="true"] {
+    caret-color: #111111;
+    user-select: text !important;
+  }
 
-  /* ── Nav admin buttons ── */
+  /* ═══════════════════════════════════════
+     NAV — état connecté
+     ═══════════════════════════════════════ */
   .nav-btn-admin {
     font-family: 'DM Mono', monospace;
-    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-    background: #fff; color: #111;
-    padding: 6px 13px; border-radius: 4px;
-    text-decoration: none; font-weight: 700;
-    transition: all .18s; white-space: nowrap;
-    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    background: rgba(255,255,255,.95);
+    color: #111;
+    padding: 7px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.20);
+    transition: all .18s;
   }
-  .nav-btn-admin:hover { background: #f3f4f6 }
+  .nav-btn-admin:hover { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.3) }
+
   .nav-btn-logout {
     font-family: 'DM Mono', monospace;
-    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: rgba(255,255,255,.4); background: none;
-    padding: 6px 13px; border-radius: 4px;
-    border: 1px solid rgba(255,255,255,.1);
-    cursor: pointer; transition: all .18s; white-space: nowrap;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.45);
+    background: transparent;
+    padding: 7px 13px;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,.15);
+    cursor: pointer;
+    transition: all .18s;
+    white-space: nowrap;
   }
-  .nav-btn-logout:hover { color: #fff; border-color: rgba(255,255,255,.3) }
+  .nav-btn-logout:hover { color: #fff; border-color: rgba(255,255,255,.4) }
+
   .nav-btn-user {
     font-family: 'DM Mono', monospace;
-    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-    color: rgba(255,255,255,.6);
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.55);
   }
-
-  /* ── Accessibilité ── */
-  [contenteditable="true"] { user-select: text !important }
   `
-  document.head.appendChild(style)
-}
 
-// ── Lancer ───────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', init)
+  document.head.appendChild(s)
+}

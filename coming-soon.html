@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bientôt disponible — JB EMERIC</title>
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Outfit',sans-serif;
+  background:#040a1e;
+  color:#fff;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ── Fond animé ── */
+.bg-anim{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(10,61,145,.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 20%, rgba(255,207,0,.06) 0%, transparent 45%);
+}
+.bg-anim::after{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    -55deg,transparent,transparent 40px,
+    rgba(255,255,255,.012) 40px,rgba(255,255,255,.012) 41px
+  );
+}
+
+/* ── Main ── */
+main{
+  position:relative;z-index:1;
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:clamp(40px,8vw,100px) clamp(20px,5vw,60px);
+  text-align:center;
+  gap:0;
+}
+
+/* ── Badge ── */
+.cs-badge{
+  font-family:'DM Mono';font-size:9px;letter-spacing:4px;
+  text-transform:uppercase;color:rgba(255,207,0,.6);
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:28px;
+}
+.cs-badge::before,.cs-badge::after{
+  content:'';width:32px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,207,0,.4));
+  flex-shrink:0;
+}
+.cs-badge::after{
+  background:linear-gradient(90deg,rgba(255,207,0,.4),transparent);
+}
+
+/* ── Titre ── */
+.cs-title{
+  font-family:'Bebas Neue';
+  font-size:clamp(52px,10vw,110px);
+  line-height:.85;letter-spacing:-2px;
+  color:#fff;
+  margin-bottom:12px;
+}
+.cs-title em{
+  font-style:normal;
+  background:linear-gradient(135deg,#F5D061,#C8860A);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  display:block;
+}
+
+/* ── Sous-titre ── */
+.cs-page-name{
+  font-family:'DM Mono';font-size:clamp(11px,2vw,14px);
+  letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,.35);
+  margin-bottom:32px;
+}
+#cs-page-label{color:rgba(255,207,0,.6)}
+
+/* ── Divider ── */
+.cs-rule{
+  width:60px;height:3px;
+  background:linear-gradient(90deg,#F5D061,#C8860A);
+  margin:0 auto 32px;
+  box-shadow:0 0 12px rgba(245,208,97,.4);
+}
+
+/* ── Message ── */
+.cs-lead{
+  font-size:clamp(15px,2vw,18px);line-height:1.75;
+  color:rgba(255,255,255,.5);max-width:480px;
+  margin-bottom:48px;
+}
+.cs-lead strong{color:rgba(255,255,255,.85)}
+
+/* ── CTA ── */
+.cs-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:56px}
+.cs-btn-primary{
+  padding:14px 28px;
+  background:linear-gradient(135deg,#F5D061,#C8860A);color:#000;
+  font-family:'DM Mono';font-size:10px;letter-spacing:2.5px;
+  text-transform:uppercase;font-weight:700;
+  border:none;border-radius:5px;cursor:pointer;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  transition:filter .15s;
+  box-shadow:0 4px 24px rgba(245,208,97,.25);
+}
+.cs-btn-primary:hover{filter:brightness(1.08)}
+.cs-btn-ghost{
+  padding:14px 28px;
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);
+  font-family:'DM Mono';font-size:10px;letter-spacing:2.5px;
+  text-transform:uppercase;font-weight:600;
+  border:1px solid rgba(255,255,255,.12);border-radius:5px;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  transition:all .15s;
+}
+.cs-btn-ghost:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* ── Contact rapide ── */
+.cs-contact{
+  display:flex;gap:24px;flex-wrap:wrap;justify-content:center;
+  padding:20px 28px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:8px;
+}
+.cs-contact-item{
+  display:flex;flex-direction:column;gap:4px;
+  text-align:center;
+}
+.cs-contact-lbl{
+  font-family:'DM Mono';font-size:7px;letter-spacing:2px;
+  text-transform:uppercase;color:rgba(255,255,255,.22);
+}
+.cs-contact-val{
+  font-family:'DM Mono';font-size:12px;letter-spacing:.5px;
+  color:rgba(255,255,255,.6);text-decoration:none;
+  transition:color .15s;
+}
+.cs-contact-val:hover{color:#FFCF00}
+
+/* ── Filigrane JB ── */
+.cs-wm{
+  position:fixed;right:-40px;bottom:-60px;z-index:0;
+  font-family:'Bebas Neue';font-size:clamp(200px,30vw,380px);
+  color:rgba(255,255,255,.015);line-height:1;
+  pointer-events:none;user-select:none;
+  letter-spacing:-8px;
+}
+</style>
+</head>
+<body>
+
+<div class="bg-anim"></div>
+<div class="cs-wm">JB</div>
+
+<!-- Nav injectée par nav.css -->
+
+<main>
+  <div class="cs-badge">JB EMERIC · École de Pilotage</div>
+
+  <h1 class="cs-title">
+    BIENTÔT
+    <em>DISPONIBLE</em>
+  </h1>
+
+  <div class="cs-page-name">
+    Page <span id="cs-page-label">en construction</span>
+  </div>
+
+  <div class="cs-rule"></div>
+
+  <p class="cs-lead">
+    Cette section est en cours de développement.<br>
+    En attendant, <strong>JB est joignable directement</strong> pour toute question sur les stages, le coaching ou l'Académie.
+  </p>
+
+  <div class="cs-btns">
+    <a href="index.html" class="cs-btn-primary">
+      ← Retour à l'accueil
+    </a>
+    <a href="track.html" class="cs-btn-ghost">
+      Voir les sessions →
+    </a>
+  </div>
+
+  <div class="cs-contact">
+    <div class="cs-contact-item">
+      <span class="cs-contact-lbl">Email</span>
+      <a href="mailto:jbemeric@jbemeric.com" class="cs-contact-val">jbemeric@jbemeric.com</a>
+    </div>
+    <div class="cs-contact-item">
+      <span class="cs-contact-lbl">Téléphone</span>
+      <a href="tel:+33660188787" class="cs-contact-val">06 60 18 87 87</a>
+    </div>
+    <div class="cs-contact-item">
+      <span class="cs-contact-lbl">Instagram</span>
+      <a href="https://www.instagram.com/jbemeric.ecoledepilotage/" target="_blank" class="cs-contact-val">@jbemeric</a>
+    </div>
+  </div>
+</main>
+
+<script>
+// Afficher le nom de la page d'origine dans le titre
+const params = new URLSearchParams(location.search)
+const page = params.get('from')
+const labels = {
+  'voitures':'Voitures & Flotte','circuits':'Circuits','stages':'Stages',
+  'palmares':'Palmarès','contact':'Contact','boutique':'Boutique',
+  'resultat

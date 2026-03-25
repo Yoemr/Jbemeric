@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — JB EMERIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   VARIABLES
+   ═══════════════════════════════════════ */
+:root {
+  --Y:     #FFCF00;  --Yd: #C8A000;
+  --B2:    #0A3D91;  --B4: #1252C0;
+  --BN:    #040a1e;  --NK: #07080f;
+  --bg:    #07080f;  --card: #0d1120;  --card2: #111827;
+  --bd:    rgba(255,255,255,.07);
+  --bd-y:  rgba(255,207,0,.18);
+  --tx:    rgba(255,255,255,.92);
+  --tx2:   rgba(255,255,255,.45);
+  --muted: rgba(255,255,255,.22);
+  --ok:    #22c55e;  --err: #ef4444;
+  --vote:  #6366f1;
+  --sw:    220px;   /* sidebar width */
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+html { scroll-behavior:smooth }
+body {
+  font-family:'Outfit',sans-serif;
+  background:var(--bg); color:var(--tx);
+  min-height:100vh; display:flex;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ═══════════════════════════════════════
+   SIDEBAR
+   ═══════════════════════════════════════ */
+.sb {
+  width:var(--sw); background:var(--NK);
+  border-right:1px solid var(--bd);
+  position:fixed; top:0; bottom:0; left:0;
+  z-index:100; overflow-y:auto;
+  display:flex; flex-direction:column;
+}
+.sb-logo {
+  padding:18px 16px 14px;
+  border-bottom:1px solid var(--bd);
+}
+.sb-logotype {
+  font-family:'Bebas Neue'; font-size:22px;
+  letter-spacing:2px; color:#fff; line-height:1;
+}
+.sb-logotype em {
+  font-style:normal;
+  background:linear-gradient(135deg,#F5D061,#C8860A);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.sb-env {
+  font-family:'DM Mono'; font-size:7px;
+  letter-spacing:2.5px; text-transform:uppercase;
+  color:var(--muted); margin-top:4px;
+}
+.sb-env strong { color:var(--Y) }
+
+/* User pill */
+.sb-user {
+  padding:10px 14px;
+  border-bottom:1px solid var(--bd);
+  display:flex; align-items:center; gap:10px;
+}
+.sb-av {
+  width:30px; height:30px; border-radius:50%;
+  background:linear-gradient(135deg,#F5D061,#C8860A);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Bebas Neue'; font-size:13px; color:#000;
+  flex-shrink:0;
+}
+.sb-uname { font-size:12px; font-weight:600; color:var(--tx); white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.sb-urole {
+  font-family:'DM Mono'; font-size:8px;
+  letter-spacing:1.5px; text-transform:uppercase; color:var(--Y);
+}
+
+/* Nav groups */
+.sb-nav { flex:1; padding:8px 0 }
+.sb-group {
+  font-family:'DM Mono'; font-size:7px;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--muted); padding:12px 14px 4px;
+}
+.sb-btn {
+  display:flex; align-items:center; gap:9px;
+  width:100%; padding:9px 14px;
+  font-size:13px; font-weight:500;
+  color:var(--tx2); background:none;
+  border:none; border-left:2px solid transparent;
+  cursor:pointer; transition:all .15s; text-align:left;
+}
+.sb-btn:hover { color:var(--tx); background:rgba(255,255,255,.04) }
+.sb-btn.active {
+  color:var(--Y); background:rgba(255,207,0,.06);
+  border-left-color:var(--Y);
+}
+.sb-btn svg { width:15px; height:15px; fill:currentColor; opacity:.55; flex-shrink:0 }
+.sb-btn.active svg { opacity:1 }
+.sb-pill {
+  margin-left:auto; font-family:'DM Mono'; font-size:8px; font-weight:700;
+  padding:2px 6px; border-radius:10px; background:var(--ok); color:#000;
+}
+.sb-pill.vote { background:var(--vote); color:#fff }
+.sb-logout { color:var(--err) !important; margin-top:4px }
+.sb-logout svg { opacity:1 !important }
+
+/* ═══════════════════════════════════════
+   MAIN
+   ═══════════════════════════════════════ */
+.main {
+  margin-left:var(--sw); flex:1;
+  display:flex; flex-direction:column;
+  min-height:100vh;
+}
+
+/* Topbar */
+.topbar {
+  height:50px; padding:0 24px;
+  background:rgba(13,17,32,.96);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--bd);
+  display:flex; align-items:center;
+  justify-content:space-between; gap:12px;
+  position:sticky; top:0; z-index:50;
+}
+.topbar-title {
+  font-family:'DM Mono'; font-size:10px;
+  letter-spacing:3px; text-transform:uppercase; color:var(--muted);
+}
+.topbar-title strong { color:var(--tx); font-size:11px }
+.topbar-right { display:flex; align-items:center; gap:8px }
+.tb-time {
+  font-family:'DM Mono'; font-size:9px;
+  letter-spacing:1px; color:var(--muted);
+}
+
+/* ── Boutons ── */
+.btn {
+  padding:5px 12px; border-radius:4px;
+  font-family:'DM Mono'; font-size:8px;
+  letter-spacing:1.5px; text-transform:uppercase; font-weight:700;
+  border:none; cursor:pointer; transition:all .15s;
+  display:inline-flex; align-items:center; gap:5px; text-decoration:none;
+}
+.btn-gold { background:linear-gradient(135deg,#F5D061,#C8860A); color:#000 }
+.btn-gold:hover { filter:brightness(1.08) }
+.btn-ok { background:rgba(34,197,94,.12); color:var(--ok); border:1px solid rgba(34,197,94,.25) }
+.btn-ok:hover { background:rgba(34,197,94,.22) }
+.btn-ghost { background:rgba(255,255,255,.06); color:var(--tx2); border:1px solid var(--bd) }
+.btn-ghost:hover { background:rgba(255,255,255,.1); color:var(--tx) }
+.btn-err { background:rgba(239,68,68,.08); color:var(--err); border:1px solid rgba(239,68,68,.2) }
+.btn-err:hover { background:rgba(239,68,68,.18) }
+.btn-sm { padding:4px 10px; font-size:7px }
+
+/* ── Contenu sections ── */
+.content { padding:20px 24px; display:flex; flex-direction:column; gap:18px; flex:1 }
+.section-view { display:none; flex-direction:column; gap:18px }
+.section-view.active { display:flex }
+
+/* ── Cards ── */
+.card { background:var(--card); border:1px solid var(--bd); border-radius:6px; overflow:hidden }
+.card-head {
+  padding:12px 16px; border-bottom:1px solid var(--bd);
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.card-title {
+  font-family:'DM Mono'; font-size:10px;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--tx); font-weight:600;
+  display:flex; align-items:center; gap:8px;
+}
+.ctd { width:6px; height:6px; border-radius:50%; background:var(--Y); flex-shrink:0 }
+.card-acts { display:flex; gap:6px }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start }
+.grid3c { display:grid; grid-template-columns:2fr 1fr; gap:16px; align-items:start }
+@media(max-width:900px){.grid2,.grid3c{grid-template-columns:1fr}}
+
+/* ── KPIs ── */
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px }
+.kpi {
+  background:var(--card); border:1px solid var(--bd); border-radius:6px;
+  padding:13px 15px; position:relative; overflow:hidden;
+  transition:border-color .2s;
+}
+.kpi:hover { border-color:rgba(255,207,0,.2) }
+.kpi::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:var(--kc,linear-gradient(90deg,#F5D061,#C8860A));
+}
+.kpi-l { font-family:'DM Mono'; font-size:8px; letter-spacing:2px; text-transform:uppercase; color:var(--muted) }
+.kpi-v { font-family:'Bebas Neue'; font-size:30px; line-height:1.1; letter-spacing:-1px; color:var(--tx) }
+.kpi-s { font-size:10px; color:var(--muted); margin-top:2px }
+.up { color:var(--ok) } .dn { color:var(--err) }
+
+/* ── Tables ── */
+.tw { overflow-x:auto }
+table { width:100%; border-collapse:collapse; font-size:12px }
+thead tr { background:rgba(255,255,255,.03); border-bottom:1px solid var(--bd) }
+th {
+  padding:9px 14px; font-family:'DM Mono'; font-size:7.5px;
+  letter-spacing:2px; text-transform:uppercase; color:var(--muted);
+  text-align:left; white-space:nowrap;
+}
+td {
+  padding:10px 14px; color:var(--tx2);
+  border-bottom:1px solid rgba(255,255,255,.04); vertical-align:middle;
+}
+tr:last-child td { border-bottom:none }
+tr:hover td { background:rgba(255,255,255,.02); color:var(--tx) }
+.td-main { color:var(--tx); font-weight:500 }
+.td-mono { font-family:'DM Mono'; font-size:11px; letter-spacing:.5px }
+.td-acts { display:flex; gap:4px; align-items:center }
+
+/* ── Badges ── */
+.badge {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:2px 8px; border-radius:10px;
+  font-family:'DM Mono'; font-size:7px;
+  letter-spacing:1.5px; text-transform:uppercase; font-weight:600;
+}
+.badge::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; opacity:.8; flex-shrink:0 }
+.b-open     { background:rgba(34,197,94,.1);   color:#22c55e; border:1px solid rgba(34,197,94,.22) }
+.b-open::before { animation:bdot 1.4s infinite }
+@keyframes bdot{0%,100%{opacity:.8}50%{opacity:.2}}
+.b-potential{ background:rgba(99,102,241,.12); color:#818cf8; border:1px solid rgba(99,102,241,.25) }
+.b-full     { background:rgba(239,68,68,.1);   color:#f87171; border:1px solid rgba(239,68,68,.22) }
+.b-draft    { background:rgba(148,163,184,.08);color:#94a3b8; border:1px solid rgba(148,163,184,.18) }
+.b-admin    { background:rgba(245,208,97,.1);  color:rgba(245,208,97,.9); border:1px solid rgba(245,208,97,.2) }
+.b-mod      { background:rgba(18,82,192,.12);  color:#60a5fa; border:1px solid rgba(18,82,192,.25) }
+.b-client   { background:rgba(255,255,255,.06);color:var(--muted); border:1px solid var(--bd) }
+
+/* ── Toggle ── */
+.tog { width:28px; height:16px; border-radius:8px; background:rgba(255,255,255,.12); position:relative; cursor:pointer; transition:background .2s; flex-shrink:0 }
+.tog.on { background:var(--B4) }
+.tog::after { content:''; position:absolute; top:2px; left:2px; width:12px; height:12px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.3) }
+.tog.on::after { transform:translateX(12px) }
+
+/* ── Vote bar ── */
+.vbar-wrap { display:flex; align-items:center; gap:7px; min-width:80px }
+.vbar { flex:1; height:4px; background:rgba(255,255,255,.08); border-radius:2px; overflow:hidden }
+.vbar-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--vote),#818cf8); transition:width .5s }
+.vcnt { font-family:'DM Mono'; font-size:9px; color:var(--muted) }
+
+/* ── Log items ── */
+.log-item { display:flex; align-items:flex-start; gap:10px; padding:9px 16px; border-bottom:1px solid rgba(255,255,255,.04) }
+.log-item:last-child { border-bottom:none }
+.log-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; margin-top:4px }
+.log-txt { flex:1; font-size:11px; color:var(--tx2); line-height:1.5 }
+.log-txt strong { color:var(--tx) }
+.log-time { font-family:'DM Mono'; font-size:8px; color:var(--muted); white-space:nowrap }
+
+/* ── Formulaires ── */
+.fi { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:11px 14px; border-bottom:1px solid var(--bd) }
+.fi label { font-family:'DM Mono'; font-size:8px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); white-space:nowrap }
+.fi input, .fi select, .fi textarea {
+  background:rgba(255,255,255,.05); border:1px solid var(--bd); border-radius:4px;
+  color:var(--tx); font-family:'DM Mono'; font-size:11px; padding:6px 10px;
+  outline:none; transition:border-color .15s;
+}
+.fi input:focus, .fi select:focus { border-color:rgba(255,207,0,.4) }
+.fi select option { background:var(--card2) }
+
+/* ═══════════════════════════════════════
+   SECTION : ÉDITEUR CONTENU
+   ═══════════════════════════════════════ */
+.editor-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(280px,1fr));
+  gap:12px;
+  padding:14px;
+}
+.editable-block {
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--bd);
+  border-radius:6px;
+  overflow:hidden;
+  transition:border-color .18s;
+}
+.editable-block:hover { border-color:rgba(255,207,0,.18) }
+.eb-header {
+  padding:8px 12px;
+  background:rgba(255,255,255,.03);
+  border-bottom:1px solid var(--bd);
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+}
+.eb-page {
+  font-family:'DM Mono'; font-size:7px;
+  letter-spacing:2px; text-transform:uppercase; color:var(--muted);
+}
+.eb-key {
+  font-family:'DM Mono'; font-size:8px;
+  letter-spacing:1px; text-transform:uppercase; color:var(--Y);
+}
+.eb-status {
+  font-family:'DM Mono'; font-size:7px;
+  letter-spacing:1px; text-transform:uppercase;
+  padding:2px 7px; border-radius:10px;
+}
+.eb-status.saved  { background:rgba(34,197,94,.1);  color:#22c55e }
+.eb-status.unsaved{ background:rgba(245,208,97,.1);  color:var(--Y) }
+.eb-status.saving { background:rgba(99,102,241,.1);  color:#818cf8 }
+.eb-status.error  { background:rgba(239,68,68,.1);   color:var(--err) }
+.eb-field {
+  padding:10px 12px;
+  font-size:13px; color:var(--tx2); line-height:1.6;
+  min-height:48px; outline:none;
+  cursor:text;
+  transition:background .15s, color .15s;
+}
+.eb-field:focus {
+  background:rgba(255,207,0,.04);
+  color:var(--tx);
+}
+.eb-field[contenteditable="true"] {
+  border-bottom:1px dashed rgba(255,207,0,.25);
+}
+.eb-field[contenteditable="true"]::after {
+  content:'Cliquez pour modifier';
+  display:none;
+}
+.eb-field:empty::before {
+  content:attr(data-placeholder);
+  color:var(--muted); font-style:italic; pointer-events:none;
+}
+.eb-actions {
+  padding:8px 12px;
+  display:flex; gap:6px; justify-content:flex-end;
+  border-top:1px solid rgba(255,255,255,.04);
+}
+
+/* Section filter pills */
+.page-filters {
+  display:flex; gap:6px; flex-wrap:wrap;
+  padding:12px 16px; border-bottom:1px solid var(--bd);
+}
+.pf-btn {
+  padding:4px 12px; border-radius:12px;
+  font-family:'DM Mono'; font-size:8px;
+  letter-spacing:1.5px; text-transform:uppercase;
+  border:1px solid var(--bd); cursor:pointer;
+  background:transparent; color:var(--muted);
+  transition:all .15s;
+}
+.pf-btn:hover { background:rgba(255,255,255,.05); color:var(--tx) }
+.pf-btn.on { background:rgba(255,207,0,.1); border-color:rgba(255,207,0,.35); color:var(--Y) }
+
+/* ═══════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════ */
+#toast {
+  position:fixed; bottom:20px; right:20px; z-index:9999;
+  background:var(--card2); border:1px solid var(--bd);
+  border-radius:6px; padding:11px 18px;
+  font-family:'DM Mono'; font-size:10px; letter-spacing:1px; text-transform:uppercase;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);
+  transform:translateY(16px); opacity:0;
+  transition:all .22s; pointer-events:none;
+}
+#toast.show { transform:translateY(0); opacity:1 }
+#toast.ok  { border-color:rgba(34,197,94,.3);  color:var(--ok) }
+#toast.err { border-color:rgba(239,68,68,.3);  color:var(--err) }
+#toast.info{ border-color:rgba(99,102,241,.3); color:#818cf8 }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+@media(max-width:768px){
+  :root{--sw:0px}
+  .sb{display:none}
+  .main{margin-left:0}
+  .content{padding:14px}
+}
+
+/* ════════════════════════════════════════
+   RADAR — Détection automatique circuits
+   ════════════════════════════════════════ */
+.radar-section {
+  background: rgba(99,102,241,.04);
+  border: 1px solid rgba(99,102,241,.15);
+  border-radius:6px; overflow:hidden;
+  margin-top:0;
+}
+.radar-header {
+  padding:12px 16px;
+  border-bottom:1px solid rgba(99,102,241,.12);
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:rgba(99,102,241,.06);
+}
+.radar-title {
+  font-family:'DM Mono'; font-size:10px;
+  letter-spacing:2px; text-transform:uppercase;
+  color:#818cf8; font-weight:600;
+  display:flex; align-items:center; gap:8px;
+}
+.radar-pulse {
+  width:8px; height:8px; border-radius:50%;
+  background:#818cf8; flex-shrink:0;
+  box-shadow:0 0 0 0 rgba(129,140,248,.4);
+  animation:radar-ping 2s ease-in-out infinite;
+}
+@keyframes radar-ping {
+  0%   { box-shadow:0 0 0 0 rgba(129,140,248,.5) }
+  70%  { box-shadow:0 0 0 10px rgba(129,140,248,0) }
+  100% { box-shadow:0 0 0 0 rgba(129,140,248,0) }
+}
+.radar-meta {
+  font-family:'DM Mono'; font-size:8px; letter-spacing:1.5px;
+  text-transform:uppercase; color:rgba(255,255,255,.28);
+  display:flex; align-items:center; gap:10px;
+}
+.radar-meta .radar-count {
+  background:rgba(99,102,241,.2); border:1px solid rgba(99,102,241,.35);
+  color:#818cf8; padding:2px 8px; border-radius:10px;
+  font-weight:700; font-size:9px;
+}
+.radar-meta .radar-count.new {
+  background:rgba(239,68,68,.15); border-color:rgba(239,68,68,.3);
+  color:#f87171; animation:radar-ping-red 1.5s infinite;
+}
+@keyframes radar-ping-red {
+  0%,100%{opacity:1} 50%{opacity:.5}
+}
+
+/* Sources config */
+.radar-sources {
+  padding:10px 14px;
+  border-bottom:1px solid rgba(99,102,241,.1);
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.radar-source-tag {
+  display:flex; align-items:center; gap:5px;
+  padding:3px 10px; border-radius:10px;
+  font-family:'DM Mono'; font-size:7.5px; letter-spacing:1px;
+  text-transform:uppercase; font-weight:700;
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.5);
+}
+.radar-source-tag .src-dot {
+  width:5px; height:5px; border-radius:50%;
+  background:var(--ok); flex-shrink:0;
+}
+.radar-source-tag.inactive .src-dot { background:rgba(255,255,255,.2) }
+
+/* Résultats détection */
+.radar-results { padding:0 }
+.radar-row {
+  display:grid;
+  grid-template-columns: 56px 1fr auto auto;
+  align-items:center; gap:14px;
+  padding:13px 16px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  transition:background .15s;
+}
+.radar-row:hover { background:rgba(255,255,255,.02) }
+.radar-row:last-child { border-bottom:none }
+.radar-row.validated { opacity:.35; pointer-events:none }
+.radar-row.ignored   { opacity:.2;  pointer-events:none }
+
+.radar-date-box {
+  text-align:center;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:5px; padding:5px 8px;
+  flex-shrink:0;
+}
+.radar-day   { font-family:'Bebas Neue'; font-size:22px; color:var(--tx); line-height:1 }
+.radar-month { font-family:'DM Mono'; font-size:7px; letter-spacing:1px; text-transform:uppercase; color:var(--muted) }
+
+.radar-info { min-width:0 }
+.radar-circuit { font-size:13px; font-weight:600; color:var(--tx); margin-bottom:4px }
+.radar-tags  { display:flex; gap:5px; flex-wrap:wrap; align-items:center }
+.radar-tag {
+  font-family:'DM Mono'; font-size:7px; letter-spacing:1.5px;
+  text-transform:uppercase; padding:2px 7px; border-radius:10px;
+  white-space:nowrap;
+}
+.rt-paca   { background:rgba(10,61,145,.2);  color:#60a5fa; border:1px solid rgba(10,61,145,.3) }
+.rt-occ    { background:rgba(99,102,241,.12); color:#818cf8; border:1px solid rgba(99,102,241,.2) }
+.rt-other  { background:rgba(255,255,255,.05); color:var(--muted); border:1px solid var(--bd) }
+.rt-gt     { background:rgba(245,208,97,.08); color:rgba(245,208,97,.8); border:1px solid rgba(245,208,97,.15) }
+.rt-tour   { background:rgba(34,197,94,.07);  color:#4ade80; border:1px solid rgba(34,197,94,.15) }
+.radar-source { font-family:'DM Mono'; font-size:8px; color:var(--muted); margin-top:3px }
+.radar-source em { color:rgba(255,207,0,.4); font-style:normal }
+
+.radar-price { font-family:'Bebas Neue'; font-size:20px; color:var(--tx); letter-spacing:-1px; text-align:right; white-space:nowrap; flex-shrink:0 }
+.radar-price-sub { font-family:'DM Mono'; font-size:7px; text-transform:uppercase; letter-spacing:1px; color:var(--muted) }
+
+.radar-actions { display:flex; flex-direction:column; gap:5px; flex-shrink:0; min-width:90px }
+.btn-validate-radar {
+  padding:6px 10px; border-radius:4px;
+  font-family:'DM Mono'; font-size:8px; letter-spacing:1.5px; text-transform:uppercase; font-weight:700;
+  background:rgba(34,197,94,.12); color:var(--ok);
+  border:1px solid rgba(34,197,94,.25); cursor:pointer; transition:all .15s;
+  white-space:nowrap;
+}
+.btn-validate-radar:hover { background:rgba(34,197,94,.22) }
+.btn-validate-radar.done  { background:rgba(34,197,94,.06); color:rgba(34,197,94,.4); cursor:default }
+.btn-ignore-radar {
+  padding:5px 10px; border-radius:4px;
+  font-family:'DM Mono'; font-size:7px; letter-spacing:1px; text-transform:uppercase;
+  background:transparent; color:var(--muted); border:1px solid var(--bd); cursor:pointer; transition:all .15s;
+}
+.btn-ignore-radar:hover { background:rgba(239,68,68,.07); color:#f87171; border-color:rgba(239,68,68,.2) }
+
+/* Pill notification rouge sur sidebar */
+.sb-pill-notif {
+  margin-left:auto; font-family:'DM Mono'; font-size:8px; font-weight:700;
+  padding:2px 7px; border-radius:10px;
+  background:var(--err); color:#fff;
+  animation:radar-ping-red 1.5s infinite;
+}
+
+/* Barre de statut scan */
+.radar-scan-bar {
+  display:flex; align-items:center; gap:10px;
+  padding:8px 16px; border-top:1px solid rgba(99,102,241,.1);
+  background:rgba(99,102,241,.03);
+}
+.radar-scan-status {
+  font-family:'DM Mono'; font-size:8px; letter-spacing:1.5px;
+  text-transform:uppercase; color:rgba(99,102,241,.6);
+}
+.radar-scan-time { margin-left:auto; font-family:'DM Mono'; font-size:8px; color:var(--muted) }
+.radar-spinner {
+  width:10px; height:10px; border-radius:50%;
+  border:2px solid rgba(129,140,248,.3); border-top-color:#818cf8;
+  animation:spin .8s linear infinite; display:none;
+}
+@keyframes spin { to { transform:rotate(360deg) } }
+
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-logotype">JB <em>EMERIC</em></div>
+    <div class="sb-env">Admin · <strong id="sb-role-label">…</strong></div>
+  </div>
+
+  <div class="sb-user">
+    <div class="sb-av" id="sb-av">?</div>
+    <div>
+      <div class="sb-uname" id="sb-uname">Chargement…</div>
+      <div class="sb-urole" id="sb-urole">—</div>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-group">Vue d'ensemble</div>
+    <button class="sb-btn active" onclick="nav('dashboard')">
+      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      Dashboard
+    </button>
+
+    <div class="sb-group">Track-Days</div>
+    <button class="sb-btn" onclick="nav('sessions')">
+      <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+      Sessions
+      <span class="sb-pill" id="pill-open">—</span>
+      <span class="sb-pill-notif" id="pill-radar" style="display:none">!</span>
+    </button>
+    <button class="sb-btn" onclick="nav('votes')">
+      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      Votes Potential
+      <span class="sb-pill vote" id="pill-vote">—</span>
+    </button>
+
+    <div class="sb-group">Contenu</div>
+    <button class="sb-btn" onclick="nav('coaching')">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+      Coaching
+    </button>
+    <button class="sb-btn" onclick="nav('paddock')">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+      Paddock
+    </button>
+    <button class="sb-btn" onclick="nav('editeur')">
+      <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+      Éditeur texte
+    </button>
+
+    <div class="sb-group" id="admin-only-group" style="display:none">Administration</div>
+    <button class="sb-btn" id="btn-users" onclick="nav('users')" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      Utilisateurs
+    </button>
+
+    <div style="flex:1"></div>
+    <div class="sb-group">Compte</div>
+    <a href="index.html" class="sb-btn">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      Voir le site
+    </a>
+    <button class="sb-btn sb-logout" onclick="doLogout()">
+      <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+      Déconnexion
+    </button>
+  </nav>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-title"><strong id="page-title">Dashboard</strong> · JB EMERIC Admin</div>
+    <div class="topbar-right">
+      <span class="tb-time" id="tb-clock"></span>
+      <a href="track.html" class="btn btn-ghost btn-sm">Track-Days</a>
+      <button class="btn btn-gold btn-sm" onclick="nav('sessions')">+ Session</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div id="v-dashboard" class="section-view active">
+    <div class="kpis" id="kpis-container">
+      <div class="kpi"><div class="kpi-l">Sessions ouvertes</div><div class="kpi-v" id="k-open">—</div><div class="kpi-s">Inscriptions actives</div></div>
+      <div class="kpi" style="--kc:linear-gradient(90deg,#6366f1,#818cf8)"><div class="kpi-l">Votes en attente</div><div class="kpi-v" id="k-votes">—</div><div class="kpi-s">Dates Potential</div></div>
+      <div class="kpi"><div class="kpi-l">Inscrits</div><div class="kpi-v" id="k-inscrits">—</div><div class="kpi-s">Sessions ouvertes</div></div>
+      <div class="kpi" style="--kc:linear-gradient(90deg,#ef4444,#dc2626)"><div class="kpi-l">Complet</div><div class="kpi-v" id="k-full">—</div></div>
+    </div>
+
+    <div class="grid3c">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><div class="ctd"></div>Prochaines dates</div>
+          <button class="btn btn-gold btn-sm" onclick="nav('sessions')">Gérer →</button>
+        </div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Date</th><th>Circuit</th><th>Statut</th><th>Places</th><th>Actions</th></tr></thead>
+            <tbody id="dash-events-tbody">
+              <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Chargement…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><div class="ctd" style="background:#6366f1"></div>Activité</div>
+        </div>
+        <div id="activity-log">
+          <div class="log-item">
+            <div class="log-dot" style="background:var(--ok)"></div>
+            <div class="log-txt">Dashboard chargé</div>
+            <div class="log-time" id="log-time-1">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SESSIONS ═══ -->
+  <div id="v-sessions" class="section-view">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="ctd"></div>Toutes les sessions</div>
+        <div class="card-acts">
+          <button class="btn btn-gold btn-sm" onclick="openNewEventForm()">+ Nouvelle</button>
+        </div>
+      </div>
+      <div class="fi">
+        <label>Statut</label>
+        <select id="filter-status" onchange="loadEvents()">
+          <option value="">Tous</option>
+          <option>Open</option><option>Potential</option>
+          <option>Full</option><option>Draft</option>
+        </select>
+        <input type="text" id="filter-search" placeholder="Rechercher…"
+          oninput="filterEventsTable(this.value)" style="flex:1;min-width:160px">
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr>
+            <th>Date</th><th>Circuit</th><th>Type</th><th>Statut</th>
+            <th>Places</th><th>Prix</th><th>Visible</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="events-tbody">
+            <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- ═══ RADAR DÉTECTION ═══════════════════════════════════════ -->
+    <div class="radar-section">
+      <div class="radar-header">
+        <div class="radar-title">
+          <div class="radar-pulse"></div>
+          Radar — Dates détectées automatiquement
+        </div>
+        <div class="radar-meta">
+          <span id="radar-new-count" class="radar-count" style="display:none">0 nouvelles</span>
+          <span id="radar-last-scan" class="radar-scan-time">—</span>
+          <button class="btn btn-ghost btn-sm" onclick="runRadarScan()">
+            ↻ Scanner maintenant
+          </button>
+        </div>
+      </div>
+
+      <!-- Sources configurées -->
+      <div class="radar-sources" id="radar-sources">
+        <!-- Généré par JS -->
+      </div>
+
+      <!-- Résultats -->
+      <div class="radar-results" id="radar-results">
+        <div style="padding:24px;text-align:center;font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25)">
+          Lance un scan pour détecter les nouvelles dates…
+        </div>
+      </div>
+
+      <!-- Barre de statut -->
+      <div class="radar-scan-bar">
+        <div class="radar-spinner" id="radar-spinner"></div>
+        <div class="radar-scan-status" id="radar-scan-status">En veille</div>
+        <div class="radar-scan-time" id="radar-scan-time">—</div>
+      </div>
+    </div>
+
+  <!-- ═══ VOTES ═══ -->
+  <div id="v-votes" class="section-view">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="ctd" style="background:#6366f1"></div>Sessions Potential — Votes clients</div>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr>
+            <th>Date</th><th>Circuit</th><th>Votes</th><th>Progression</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="votes-tbody">
+            <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ COACHING ═══ -->
+  <div id="v-coaching" class="section-view">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="ctd"></div>Offres Coaching</div>
+        <div class="card-acts">
+          <span style="font-family:'DM Mono';font-size:8px;color:var(--muted)">
+            Édition directe — sauvegardé sur blur
+          </span>
+        </div>
+      </div>
+      <div class="editor-grid" id="coaching-editor"></div>
+    </div>
+  </div>
+
+  <!-- ═══ PADDOCK ═══ -->
+  <div id="v-paddock" class="section-view">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="ctd"></div>Contenu Paddock</div>
+      </div>
+      
+    <!-- Upload doc -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-head">
+        <div class="card-title"><div class="ctd" style="background:#60a5fa"></div>Ajouter un document</div>
+      </div>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label class="form-label" style="font-family:'DM Mono';font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Titre *</label>
+            <input class="form-input" id="doc-title" type="text" placeholder="Réglage freinage RX8…" style="width:100%">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label class="form-label" style="font-family:'DM Mono';font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Catégorie</label>
+            <select class="form-input" id="doc-cat" style="width:100%">
+              <option value="meca">🔧 Mécanique</option>
+              <option value="elec">⚡ Électronique</option>
+              <option value="chas">🏗 Châssis</option>
+              <option value="data">📊 Data & Télémétrie</option>
+              <option value="regl">⚙ Réglages</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label class="form-label" style="font-family:'DM Mono';font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Mots-clés (virgule)</label>
+          <input class="form-input" id="doc-keywords" type="text" placeholder="freinage, RX8, pression…" style="width:100%">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <label class="form-label" style="font-family:'DM Mono';font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Fichier (PDF ou schéma)</label>
+          <input id="doc-file" type="file" accept=".pdf,.png,.jpg,.svg"
+            style="font-family:'DM Mono';font-size:11px;color:var(--text-pri);"
+            onchange="previewDocFile(this)">
+          <div id="doc-preview" style="font-family:'DM Mono';font-size:9px;color:var(--text-muted);min-height:16px"></div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-gold" onclick="uploadDoc()" id="doc-upload-btn">↑ Publier dans la bibliothèque</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modération forum -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="ctd" style="background:#818cf8"></div>Modération forum</div>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Sujet</th><th>Tag</th><th>Auteur</th><th>Réponses</th><th>Actions</th></tr></thead>
+          <tbody id="forum-mod-tbody">
+            <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:20px;font-family:'DM Mono';font-size:9px">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ═══ ÉDITEUR TEXTE ═══ -->
+  <div id="v-editeur" class="section-view">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="ctd"></div>Éditeur de contenu</div>
+        <div class="card-acts">
+          <button class="btn btn-ok btn-sm" onclick="saveAllPending()">✓ Tout sauvegarder</button>
+        </div>
+      </div>
+      <div class="page-filters">
+        <button class="pf-btn on" onclick="filterEditor(this,'all')">Tout</button>
+        <button class="pf-btn" onclick="filterEditor(this,'index')">Index</button>
+        <button class="pf-btn" onclick="filterEditor(this,'coaching')">Coaching</button>
+        <button class="pf-btn" onclick="filterEditor(this,'paddock')">Paddock</button>
+        <button class="pf-btn" onclick="filterEditor(this,'track')">Track</button>
+      </div>
+      <div class="editor-grid" id="main-editor"></div>
+    </div>
+  </div>
+
+  <!-- ═══ UTILISATEURS (admin only) ═══ -->
+  <div id="v-users" class="section-view">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><div class="ctd" style="background:var(--B4)"></div>Utilisateurs</div>
+        <span id="users-count" style="font-family:'DM Mono';font-size:9px;color:var(--muted)">—</span>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr><th>#</th><th>Nom</th><th>Email</th><th>Rôle</th><th>Inscrit le</th><th>Actions</th></tr></thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script type="module">
+import { supabase, getUser, logout as sbLogout } from './assets/js/supabase.js'
+import { initEditor, saveAllPending, filterEditor } from './assets/js/editor.js'
+
+// ── Expose pour onclick HTML ──────────────────────────────────────
+window.saveAllPending = saveAllPending
+window.filterEditor  = filterEditor
+
+// ═══════════════════════════════════════════════════════════════════
+//  AUTH GUARD — bloquer les non-admins
+// ═══════════════════════════════════════════════════════════════════
+const ALLOWED_ROLES = ['admin', 'moderateur']
+let currentUser = null
+let currentRole = null
+
+;(async () => {
+  const user = await getUser()
+  if (!user) return redirect('login.html')
+
+  const role = user.user_metadata?.role ?? 'client'
+  if (!ALLOWED_ROLES.includes(role)) return redirect('index.html')
+
+  currentUser = user
+  currentRole = role
+
+  // Remplir la sidebar
+  const initials = ((user.user_metadata?.prenom?.[0] ?? '') +
+                    (user.user_metadata?.nom?.[0] ?? '')).toUpperCase() || '?'
+  document.getElementById('sb-av').textContent      = initials
+  document.getElementById('sb-uname').textContent   = (user.user_metadata?.prenom ?? '') + ' ' + (user.user_metadata?.nom ?? '')
+  document.getElementById('sb-urole').textContent   = role.toUpperCase()
+  document.getElementById('sb-role-label').textContent = role === 'admin' ? 'ADMIN' : 'MODÉRATEUR'
+
+  // Afficher les éléments admin-only
+  if (role === 'admin') {
+    document.getElementById('admin-only-group').style.display = ''
+    document.getElementById('btn-users').style.display        = ''
+  }
+
+  // Charger les données initiales
+  await Promise.all([loadKPIs(), loadEvents(), loadVotes()])
+  initEditor(supabase, currentRole)
+  startClock()
+})()
+
+function redirect(url) {
+  window.location.href = url
+}
+
+window.doLogout = async () => {
+  await sbLogout()
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════════════════
+const TITLES = {
+  dashboard:'Dashboard', sessions:'Sessions Track-Days',
+  votes:'Votes Potential', coaching:'Coaching',
+  paddock:'Paddock', editeur:'Éditeur de contenu',
+  users:'Utilisateurs'
+}
+
+window.nav = (name) => {
+  document.querySelectorAll('.section-view').forEach(v => v.classList.remove('active'))
+  document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'))
+
+  const view = document.getElementById(`v-${name}`)
+  if (view) view.classList.add('active')
+
+  document.querySelectorAll('.sb-btn').forEach(b => {
+    if (b.getAttribute('onclick') === `nav('${name}')`) b.classList.add('active')
+  })
+
+  document.getElementById('page-title').textContent = TITLES[name] || name
+
+  // Lazy load des sections
+  if (name === 'users') loadUsers()
+  if (name === 'coaching') loadContentEditor('coaching')
+  if (name === 'paddock')  loadContentEditor('paddock')
+  if (name === 'editeur')  loadMainEditor()
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  KPIs
+// ═══════════════════════════════════════════════════════════════════
+async function loadKPIs() {
+  try {
+    const [open, potential, full, inscrits] = await Promise.all([
+      supabase.from('events').select('id',{count:'exact'}).eq('status','Open'),
+      supabase.from('events').select('id',{count:'exact'}).eq('status','Potential'),
+      supabase.from('events').select('id',{count:'exact'}).eq('status','Full'),
+      supabase.from('events').select('nb_inscrits').eq('status','Open'),
+    ])
+    document.getElementById('k-open').textContent    = open.count    ?? '—'
+    document.getElementById('k-votes').textContent   = potential.count ?? '—'
+    document.getElementById('k-full').textContent    = full.count    ?? '—'
+    document.getElementById('k-inscrits').textContent =
+      (inscrits.data ?? []).reduce((s,e) => s + (e.nb_inscrits||0), 0)
+
+    document.getElementById('pill-open').textContent = open.count    ?? '?'
+    document.getElementById('pill-vote').textContent = potential.count ?? '?'
+  } catch(e) { console.warn('KPIs:', e) }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  EVENTS TABLE
+// ═══════════════════════════════════════════════════════════════════
+window.loadEvents = async () => {
+  const status  = document.getElementById('filter-status')?.value
+  const today   = new Date().toISOString().split('T')[0]
+
+  let q = supabase
+    .from('events')
+    .select('id,date_event,type,status,prix,nb_places,nb_inscrits,visible_site,circuits(nom)')
+    .gte('date_event', today)
+    .order('date_event')
+    .limit(30)
+
+  if (status) q = q.eq('status', status)
+
+  const { data, error } = await q
+  const tbody = document.getElementById('events-tbody')
+  const dashTbody = document.getElementById('dash-events-tbody')
+  if (error) { tbody.innerHTML = `<tr><td colspan="8" style="color:var(--err);padding:16px;font-size:11px">${error.message}</td></tr>`; return }
+
+  const rows = (data ?? []).map(ev => `
+    <tr id="erow-${ev.id}">
+      <td class="td-mono td-main">${fmtDate(ev.date_event)}</td>
+      <td class="td-main">${ev.circuits?.nom ?? '—'}</td>
+      <td style="font-size:11px">${ev.type}</td>
+      <td>${badgeStatus(ev.status)}</td>
+      <td class="td-mono">${ev.nb_inscrits}/${ev.nb_places}</td>
+      <td class="td-mono">${Number(ev.prix).toLocaleString('fr-FR')} €</td>
+      <td><div class="tog${ev.visible_site?' on':''}"
+        onclick="toggleVisible(${ev.id},this)"></div></td>
+      <td><div class="td-acts">
+        ${ev.status==='Potential'?`<button class="btn btn-ok btn-sm" onclick="setStatus(${ev.id},'Open',this)">→ Open</button>`:''}
+        <button class="btn btn-err btn-sm" onclick="deleteEvent(${ev.id},this)">✕</button>
+      </div></td>
+    </tr>`).join('')
+
+  tbody.innerHTML = rows || `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Aucun événement</td></tr>`
+  if (dashTbody) dashTbody.innerHTML = rows.split('</tr>').slice(0,5).join('</tr>')
+}
+
+window.filterEventsTable = (q) => {
+  document.querySelectorAll('#events-tbody tr').forEach(tr => {
+    tr.style.display = tr.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none'
+  })
+}
+
+window.setStatus = async (id, status, btn) => {
+  btn.disabled = true; btn.textContent = '…'
+  const { error } = await supabase.from('events').update({status}).eq('id',id)
+  if (!error) {
+    toast(`Statut → ${status}`)
+    loadEvents(); loadKPIs()
+  } else {
+    toast(error.message,'err')
+    btn.disabled=false; btn.textContent='→ Open'
+  }
+}
+
+window.toggleVisible = async (id, tog) => {
+  const vis = !tog.classList.contains('on')
+  tog.classList.toggle('on')
+  const { error } = await supabase.from('events').update({visible_site:vis}).eq('id',id)
+  if (error) { tog.classList.toggle('on'); toast(error.message,'err') }
+}
+
+window.deleteEvent = async (id, btn) => {
+  if (!confirm('Supprimer cet événement ?')) return
+  btn.disabled = true
+  const { error } = await supabase.from('events').delete().eq('id',id)
+  if (!error) {
+    document.getElementById(`erow-${id}`)?.remove()
+    toast('Événement supprimé')
+    loadKPIs()
+  } else {
+    toast(error.message,'err')
+    btn.disabled=false
+  }
+}
+
+
+// ── Upload doc Supabase Storage ───────────────────────────────────
+window.previewDocFile = (input) => {
+  const file = input.files[0]
+  const prev = document.getElementById('doc-preview')
+  if (file && prev) {
+    const size = (file.size / 1024 / 1024).toFixed(1)
+    prev.textContent = `✓ ${file.name} — ${size} Mo`
+  }
+}
+
+window.uploadDoc = async () => {
+  const title    = document.getElementById('doc-title').value.trim()
+  const cat      = document.getElementById('doc-cat').value
+  const keywords = document.getElementById('doc-keywords').value.trim()
+  const fileInp  = document.getElementById('doc-file')
+  const file     = fileInp.files[0]
+  const btn      = document.getElementById('doc-upload-btn')
+
+  if (!title) { toast('Titre obligatoire', 'err'); return }
+  if (!file)  { toast('Fichier obligatoire', 'err'); return }
+
+  btn.disabled = true; btn.textContent = '↑ Upload…'
+
+  try {
+    // 1. Upload vers Supabase Storage (bucket "docs")
+    const ext      = file.name.split('.').pop()
+    const filename = `${Date.now()}-${title.toLowerCase().replace(/[^a-z0-9]/g,'-')}.${ext}`
+    const { data: storageData, error: storageErr } = await supabase
+      .storage.from('docs').upload(filename, file)
+    if (storageErr) throw storageErr
+
+    // 2. URL publique
+    const { data: { publicUrl } } = supabase.storage.from('docs').getPublicUrl(filename)
+
+    // 3. Insérer dans la table docs
+    const { error: dbErr } = await supabase.from('docs').insert({
+      title, category: cat, keywords,
+      type: ext === 'pdf' ? 'pdf' : 'schema',
+      file_url: publicUrl,
+      file_size: (file.size / 1024 / 1024).toFixed(1) + ' Mo',
+    })
+    if (dbErr) throw dbErr
+
+    toast('Document publié dans la bibliothèque !')
+    document.getElementById('doc-title').value    = ''
+    document.getElementById('doc-keywords').value = ''
+    fileInp.value = ''
+    document.getElementById('doc-preview').textContent = ''
+  } catch(e) {
+    toast(e.message, 'err')
+  } finally {
+    btn.disabled = false; btn.textContent = '↑ Publier dans la bibliothèque'
+  }
+}
+
+// ── Chargement modération forum ───────────────────────────────────
+async function loadForumMod() {
+  const { data } = await supabase
+    .from('forum_threads')
+    .select('id,title,tag,author_name,reply_count,pinned,visible')
+    .order('created_at', { ascending:false })
+    .limit(20)
+
+  const tbody = document.getElementById('forum-mod-tbody')
+  if (!tbody) return
+  const tagLabels = { meca:'🔧', elec:'⚡', chas:'🏗', data:'📊', regl:'⚙' }
+
+  tbody.innerHTML = (data??[]).map(t => `
+    <tr id="ft-${t.id}">
+      <td class="td-main" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+        ${t.pinned?'📌 ':''}${t.title}
+      </td>
+      <td>${tagLabels[t.tag]??'?'} ${t.tag}</td>
+      <td style="font-size:11px">${t.author_name??'—'}</td>
+      <td class="td-mono">${t.reply_count}</td>
+      <td><div class="td-acts">
+        <button class="btn btn-ok btn-sm" onclick="pinThread(${t.id},${!t.pinned})">
+          ${t.pinned?'Désépingler':'Épingler'}
+        </button>
+        <button class="btn btn-err btn-sm" onclick="deleteThread(${t.id})">Suppr.</button>
+      </div></td>
+    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px;font-family:'DM Mono';font-size:9px">Aucun sujet</td></tr>'
+}
+
+window.pinThread = async (id, pin) => {
+  const { error } = await supabase.from('forum_threads').update({ pinned: pin }).eq('id', id)
+  if (!error) { toast(pin ? '📌 Épinglé' : 'Désépinglé'); loadForumMod() }
+  else toast(error.message, 'err')
+}
+
+window.deleteThread = async (id) => {
+  if (!confirm('Supprimer ce fil ? (irréversible)')) return
+  const { error } = await supabase.from('forum_threads').delete().eq('id', id)
+  if (!error) { document.getElementById(`ft-${id}`)?.remove(); toast('Fil supprimé') }
+  else toast(error.message, 'err')
+}
+
+window.openNewEventForm = () => toast('Formulaire d\'ajout — à connecter à la table events','info')
+
+// ═══════════════════════════════════════════════════════════════════
+//  VOTES TABLE
+// ═══════════════════════════════════════════════════════════════════
+async function loadVotes() {
+  const { data } = await supabase
+    .from('events')
+    .select('id,date_event,nb_votes,circuits(nom)')
+    .eq('status','Potential')
+    .order('nb_votes',{ascending:false})
+    .limit(15)
+
+  const tbody = document.getElementById('votes-tbody')
+  if (!data?.length) { tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Aucun vote</td></tr>`; return }
+
+  const SEUIL = 5
+  tbody.innerHTML = data.map(ev => {
+    const pct = Math.min(100, Math.round((ev.nb_votes||0)/SEUIL*100))
+    return `<tr>
+      <td class="td-mono td-main">${fmtDate(ev.date_event)}</td>
+      <td class="td-main">${ev.circuits?.nom??'—'}</td>
+      <td class="td-mono">${ev.nb_votes||0}</td>
+      <td><div class="vbar-wrap">
+        <div class="vbar"><div class="vbar-fill" style="width:${pct}%"></div></div>
+        <span class="vcnt">${ev.nb_votes||0}/${SEUIL}</span>
+      </div></td>
+      <td><div class="td-acts">
+        <button class="btn btn-ok btn-sm" onclick="setStatus(${ev.id},'Open',this)">✓ Valider</button>
+        <button class="btn btn-err btn-sm" onclick="setStatus(${ev.id},'Annulé',this)">✕</button>
+      </div></td>
+    </tr>`
+  }).join('')
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  UTILISATEURS
+// ═══════════════════════════════════════════════════════════════════
+async function loadUsers() {
+  const { data } = await supabase
+    .from('users')
+    .select('id,prenom,nom,email,role,created_at')
+    .order('created_at',{ascending:false})
+    .limit(50)
+
+  const tbody = document.getElementById('users-tbody')
+  document.getElementById('users-count').textContent = `${data?.length??0} utilisateurs`
+
+  tbody.innerHTML = (data??[]).map(u => `
+    <tr>
+      <td class="td-mono" style="font-size:10px">${u.id.substring(0,8)}…</td>
+      <td class="td-main">${u.prenom??''} ${u.nom??''}</td>
+      <td style="font-size:11px">${u.email}</td>
+      <td>${u.role==='admin'?'<span class="badge b-admin">Admin</span>':u.role==='moderateur'?'<span class="badge b-mod">Modérateur</span>':'<span class="badge b-client">Client</span>'}</td>
+      <td class="td-mono">${u.created_at?new Date(u.created_at).toLocaleDateString('fr-FR'):'-'}</td>
+      <td><div class="td-acts"><button class="btn btn-ghost btn-sm">Modifier</button></div></td>
+    </tr>`).join('')
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  ÉDITEUR CONTENU (délégue à editor.js)
+// ═══════════════════════════════════════════════════════════════════
+function loadContentEditor(page) {
+  const container = document.getElementById(`${page}-editor`)
+  if (!container || container.dataset.loaded) return
+  container.dataset.loaded = '1'
+  // initEditor initialise les blocs pour cette page
+  window._initEditorPage?.(page, container)
+}
+
+function loadMainEditor() {
+  const container = document.getElementById('main-editor')
+  if (!container || container.dataset.loaded) return
+  container.dataset.loaded = '1'
+  window._initEditorPage?.('all', container)
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════════════════════════
+function badgeStatus(s) {
+  const m = {Open:'b-open Open',Potential:'b-potential Vote',Full:'b-full Full',Draft:'b-draft Draft'}
+  const [cls, lbl] = (m[s]||'b-draft '+s).split(' ')
+  return `<span class="badge ${cls}">${lbl}</span>`
+}
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})
+}
+
+window.toast = (msg, type='ok') => {
+  const t = document.getElementById('toast')
+  t.textContent = msg; t.className = `show ${type}`
+  clearTimeout(t._to); t._to = setTimeout(()=>t.className='',3200)
+}
+
+
+// ═══════════════════════════════════════════════════════════════════
+//  RADAR — Détection automatique de journées circuit
+// ═══════════════════════════════════════════════════════════════════
+
+// ── Configuration sources (ajouter des URLs ici) ───────────────────
+const RADAR_SOURCES = [
+  { id:'paul-ricard',    name:'Paul Ricard HTTT',      region:'PACA',       active:true,  type:'gt',   rss:null },
+  { id:'grand-sambuc',   name:'Circuit Grand Sambuc',  region:'PACA',       active:true,  type:'tour', rss:null },
+  { id:'cuges',          name:'Cuges-les-Pins',         region:'PACA',       active:true,  type:'tour', rss:null },
+  { id:'brignoles',      name:'Circuit Brignoles',      region:'PACA',       active:true,  type:'tour', rss:null },
+  { id:'ledenon',        name:'Circuit de Lédenon',     region:'Occitanie',  active:true,  type:'tour', rss:null },
+  { id:'nogaro',         name:'Circuit de Nogaro',      region:'Occitanie',  active:false, type:'gt',   rss:null },
+  { id:'albi',           name:'Circuit d'Albi',        region:'Occitanie',  active:false, type:'gt',   rss:null },
+  { id:'magny-cours',    name:'Circuit de Magny-Cours', region:'Autre France',active:false,type:'gt',   rss:null },
+]
+
+// ── Données simulées (en prod → remplacer par fetch RSS/API) ───────
+// Structure : { source_id, circuit, region, type, date, prix, url }
+function generateSimulatedDates() {
+  const today = new Date()
+  const results = []
+
+  // Simuler des dates futures pour les sources actives
+  const fakeData = [
+    { source_id:'paul-ricard',   circuit:'Circuit Paul Ricard HTTT', prix:320, days:12 },
+    { source_id:'grand-sambuc',  circuit:'Circuit du Grand Sambuc',  prix:195, days:19 },
+    { source_id:'ledenon',       circuit:'Circuit de Lédenon',       prix:245, days:33 },
+    { source_id:'cuges',         circuit:'Cuges-les-Pins',           prix:195, days:47 },
+    { source_id:'brignoles',     circuit:'Circuit de Brignoles',     prix:195, days:61 },
+    { source_id:'nogaro',        circuit:'Circuit de Nogaro',        prix:310, days:75 },
+  ]
+
+  fakeData.forEach(item => {
+    const src = RADAR_SOURCES.find(s => s.id === item.source_id)
+    if (!src) return
+
+    const eventDate = new Date(today)
+    eventDate.setDate(today.getDate() + item.days)
+
+    results.push({
+      id:         `radar-${item.source_id}-${item.days}`,
+      source_id:  item.source_id,
+      circuit:    item.circuit,
+      region:     src.region,
+      type_tag:   src.type,
+      date:       eventDate.toISOString().split('T')[0],
+      prix:       item.prix,
+      source_url: `https://${item.source_id}.fr/calendrier`,
+      source_name:src.name,
+      detected_at:new Date().toISOString(),
+      status:     'new', // 'new' | 'validated' | 'ignored'
+    })
+  })
+
+  return results
+}
+
+// ── État local du Radar ────────────────────────────────────────────
+let _radarResults  = []
+let _radarNewCount = 0
+
+// Persistance localStorage — retrouver les décisions (validé/ignoré)
+const RADAR_KEY = 'jbe_radar_decisions'
+function getDecisions() { return JSON.parse(localStorage.getItem(RADAR_KEY) || '{}') }
+function saveDecision(id, status) {
+  const d = getDecisions(); d[id] = status; localStorage.setItem(RADAR_KEY, JSON.stringify(d))
+}
+
+// ── Rendu sources sidebar ──────────────────────────────────────────
+function renderRadarSources() {
+  const el = document.getElementById('radar-sources')
+  if (!el) return
+  el.innerHTML = RADAR_SOURCES.map(s => `
+    <div class="radar-source-tag${s.active?'':' inactive'}">
+      <div class="src-dot"></div>
+      ${s.name}
+    </div>`).join('')
+}
+
+// ── Lancer le scan ─────────────────────────────────────────────────
+window.runRadarScan = async function() {
+  const spinner = document.getElementById('radar-spinner')
+  const status  = document.getElementById('radar-scan-status')
+  const scanTime= document.getElementById('radar-scan-time')
+  const results = document.getElementById('radar-results')
+
+  // Anim scan
+  spinner.style.display = 'block'
+  status.textContent    = 'Analyse en cours…'
+  results.innerHTML     = `<div style="padding:20px;text-align:center;font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(129,140,248,.5)">
+    <div style="animation:spin .8s linear infinite;display:inline-block;width:16px;height:16px;border-radius:50%;border:2px solid rgba(129,140,248,.3);border-top-color:#818cf8;margin-bottom:8px"></div><br>
+    Interrogation des sources…
+  </div>`
+
+  // Simuler un délai réseau (en prod → remplacer par Promise.all des fetch)
+  await new Promise(r => setTimeout(r, 1800))
+
+  // Générer les résultats
+  const rawResults  = generateSimulatedDates()
+  const decisions   = getDecisions()
+
+  // Appliquer les décisions sauvegardées
+  _radarResults = rawResults.map(r => ({
+    ...r, status: decisions[r.id] || 'new'
+  }))
+
+  // Compter les nouvelles
+  _radarNewCount = _radarResults.filter(r => r.status === 'new').length
+
+  spinner.style.display = 'none'
+  status.textContent    = `Scan terminé — ${_radarResults.length} dates trouvées`
+  scanTime.textContent  = 'Mis à jour : ' + new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})
+
+  // Mettre à jour la pastille
+  updateRadarPill()
+  renderRadarResults()
+
+  // Mettre à jour le log
+  addActivityLog(`Radar : ${_radarNewCount} nouvelle(s) date(s) détectée(s)`, '#818cf8')
+}
+
+// ── Rendu des résultats ────────────────────────────────────────────
+function renderRadarResults() {
+  const container = document.getElementById('radar-results')
+  if (!container) return
+
+  // Trier : nouvelles en premier, puis validées, puis ignorées
+  const sorted = [..._radarResults].sort((a,b) => {
+    const order = { new:0, validated:1, ignored:2 }
+    return (order[a.status]||0) - (order[b.status]||0) || new Date(a.date) - new Date(b.date)
+  })
+
+  if (!sorted.length) {
+    container.innerHTML = '<div style="padding:24px;text-align:center;font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25)">Aucune date détectée</div>'
+    return
+  }
+
+  const regionTag = { PACA:'rt-paca', Occitanie:'rt-occ' }
+  const typeTag   = { gt:'rt-gt', tour:'rt-tour' }
+
+  container.innerHTML = sorted.map(r => {
+    const d    = new Date(r.date)
+    const day  = d.getDate()
+    const mo   = d.toLocaleDateString('fr-FR',{month:'short'})
+    const rgCls= regionTag[r.region] || 'rt-other'
+    const tyCls= typeTag[r.type_tag] || 'rt-other'
+
+    const isNew       = r.status === 'new'
+    const isValidated = r.status === 'validated'
+    const isIgnored   = r.status === 'ignored'
+
+    return `
+    <div class="radar-row${isValidated?' validated':''}${isIgnored?' ignored':''}" id="rrow-${r.id}">
+      <div class="radar-date-box">
+        <div class="radar-day">${day}</div>
+        <div class="radar-month">${mo}</div>
+      </div>
+      <div class="radar-info">
+        <div class="radar-circuit">${r.circuit}</div>
+        <div class="radar-tags">
+          <span class="radar-tag ${rgCls}">${r.region}</span>
+          <span class="radar-tag ${tyCls}">${r.type_tag === 'gt' ? 'GT' : 'Tourisme'}</span>
+          ${isValidated ? '<span class="radar-tag" style="background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.2)">✓ Ajouté</span>' : ''}
+          ${isIgnored   ? '<span class="radar-tag" style="background:rgba(255,255,255,.05);color:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.08)">Ignoré</span>' : ''}
+        </div>
+        <div class="radar-source">Source : <em>${r.source_name}</em></div>
+      </div>
+      <div>
+        <div class="radar-price">${r.prix} €</div>
+        <div class="radar-price-sub">/ pilote</div>
+      </div>
+      <div class="radar-actions">
+        ${isNew ? `
+          <button class="btn-validate-radar" onclick="validateRadarDate('${r.id}')">✅ Valider</button>
+          <button class="btn-ignore-radar"   onclick="ignoreRadarDate('${r.id}')">❌ Ignorer</button>
+        ` : isValidated ? `
+          <span style="font-family:'DM Mono';font-size:8px;color:rgba(34,197,94,.5)">✓ Validé</span>
+        ` : `
+          <span style="font-family:'DM Mono';font-size:8px;color:rgba(255,255,255,.2)">Ignoré</span>
+        `}
+      </div>
+    </div>`
+  }).join('')
+}
+
+// ── Valider une date ───────────────────────────────────────────────
+window.validateRadarDate = async function(id) {
+  const result = _radarResults.find(r => r.id === id)
+  if (!result) return
+
+  const btn = document.querySelector(`#rrow-${id} .btn-validate-radar`)
+  if (btn) { btn.disabled = true; btn.textContent = '…' }
+
+  try {
+    // Trouver le circuit_id dans Supabase
+    const { data: circuits } = await supabase
+      .from('circuits')
+      .select('id')
+      .ilike('nom', `%${result.circuit.split(' ').slice(-2).join(' ')}%`)
+      .limit(1)
+
+    const circuit_id = circuits?.[0]?.id ?? 1 // fallback au premier circuit
+
+    // Insérer dans la table events
+    const { data: newEvent, error } = await supabase
+      .from('events')
+      .insert({
+        circuit_id,
+        date_event:   result.date,
+        type:         result.type_tag === 'gt' ? 'Stage GT' : 'Track-Day',
+        status:       'Potential',       // Démarre en Potential — JB valide ensuite
+        prix:         result.prix,
+        visible_site: false,             // Masqué jusqu'à validation manuelle
+        source_veille:result.source_url,
+        nb_places:    10,
+        nb_votes:     0,
+      })
+      .select()
+      .single()
+
+    if (error) throw error
+
+    // Sauvegarder la décision localement
+    result.status = 'validated'
+    saveDecision(id, 'validated')
+
+    // Mettre à jour le compteur
+    _radarNewCount = Math.max(0, _radarNewCount - 1)
+    updateRadarPill()
+    renderRadarResults()
+
+    toast(`✅ ${result.circuit} ajouté en Potential`)
+    addActivityLog(`Radar : "${result.circuit}" validé → Potential`, '#22c55e')
+
+    // Refresh KPIs
+    loadKPIs()
+
+  } catch(e) {
+    toast('Erreur : ' + e.message, 'err')
+    if (btn) { btn.disabled = false; btn.textContent = '✅ Valider' }
+  }
+}
+
+// ── Ignorer une date ───────────────────────────────────────────────
+window.ignoreRadarDate = function(id) {
+  const result = _radarResults.find(r => r.id === id)
+  if (!result) return
+
+  result.status = 'ignored'
+  saveDecision(id, 'ignored')
+  _radarNewCount = Math.max(0, _radarNewCount - 1)
+  updateRadarPill()
+  renderRadarResults()
+  toast('Date ignorée')
+}
+
+// ── Pastille notification ──────────────────────────────────────────
+function updateRadarPill() {
+  const pill    = document.getElementById('pill-radar')
+  const counter = document.getElementById('radar-new-count')
+
+  if (_radarNewCount > 0) {
+    if (pill)    { pill.textContent = _radarNewCount; pill.style.display = '' }
+    if (counter) { counter.textContent = `${_radarNewCount} nouvelle${_radarNewCount>1?'s':''}`; counter.style.display = ''; counter.classList.add('new') }
+  } else {
+    if (pill)    pill.style.display = 'none'
+    if (counter) { counter.style.display = 'none'; counter.classList.remove('new') }
+  }
+}
+
+// ── Log activité ───────────────────────────────────────────────────
+function addActivityLog(text, color) {
+  const log = document.getElementById('activity-log')
+  if (!log) return
+  const item = document.createElement('div')
+  item.className = 'log-item'
+  item.innerHTML = `
+    <div class="log-dot" style="background:${color}"></div>
+    <div class="log-txt">${text}</div>
+    <div class="log-time">${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>`
+  log.insertBefore(item, log.firstChild)
+  // Garder max 6 logs
+  while (log.children.length > 6) log.removeChild(log.lastChild)
+}
+
+// ── Auto-scan au chargement ────────────────────────────────────────
+// Lancer automatiquement après 1.5s
+setTimeout(() => {
+  renderRadarSources()
+  runRadarScan()
+}, 1500)
+
+function startClock() {
+  const el = document.getElementById('tb-clock')
+  const tick = () => { el.textContent = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}) }
+  tick(); setInterval(tick, 30000)
+  document.getElementById('log-time-1').textContent = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})
+}
+</script>
+</body>
+</html>

@@ -242,3 +242,151 @@ INSERT INTO `vehicules` (`nom`,`marque`,`modele`,`propriete`,`type_vehicule`,`pu
 ('Peugeot 206 S16',  'Peugeot',  '206 S16',      'partenaire', 'Tourisme',    167, 'Manuelle');
 
 SET foreign_key_checks = 1;
+
+
+-- ═══════════════════════════════════════════════════════════════════
+--  TABLE : site_content (éditeur de texte)
+--  Stocke les contenus éditables du site sous forme clé/valeur
+-- ═══════════════════════════════════════════════════════════════════
+
+CREATE TABLE IF NOT EXISTS `site_content` (
+  `key`        VARCHAR(120)   NOT NULL  COMMENT 'Identifiant unique ex: coach_off1_name',
+  `value`      TEXT           NOT NULL  COMMENT 'Contenu texte brut (jamais de HTML)',
+  `page`       VARCHAR(40)    DEFAULT NULL COMMENT 'Page source : index, coaching, paddock, track',
+  `updated_at` DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP
+                              ON UPDATE CURRENT_TIMESTAMP,
+  `updated_by` VARCHAR(36)    DEFAULT NULL COMMENT 'UUID utilisateur Supabase',
+  PRIMARY KEY (`key`),
+  KEY `idx_page` (`page`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Données par défaut (correspondant aux CONTENT_BLOCKS dans editor.js)
+INSERT IGNORE INTO `site_content` (`key`, `value`, `page`) VALUES
+-- Index
+('index_hero_title',    'JB EMERIC',                                        'index'),
+('index_acad_title',    'DEVENIR PILOTE',                                   'index'),
+('index_acad_desc',     'Du karting enfant à la compétition officielle.',   'index'),
+('index_coach_title',   'LE COACHING JB',                                   'index'),
+('index_coach_desc',    'JB coache depuis 1989.',                           'index'),
+('index_track_title',   'TRACK-DAYS & STAGES',                              'index'),
+('index_paddock_title', 'LE PADDOCK',                                       'index'),
+-- Coaching
+('coach_off1_tag',      'Offre 01',                                         'coaching'),
+('coach_off1_pretitle', 'Pour le pilote amateur',                           'coaching'),
+('coach_off1_name',     'COACHING CIRCUIT',                                 'coaching'),
+('coach_off1_hook',     'Vous stagnez depuis des années sans savoir pourquoi. JB vous dit exactement ce qui se passe — et comment le corriger dès la session suivante.', 'coaching'),
+('coach_off1_cta',      'Réserver une session',                             'coaching'),
+('coach_off2_tag',      'Offre 02',                                         'coaching'),
+('coach_off2_pretitle', 'Pilote licencié en compétition',                   'coaching'),
+('coach_off2_name',     'COACHING COMPÉTITION',                             'coaching'),
+('coach_off2_hook',     'Vous avez des chronos, pas les résultats que vous méritez. JB a couru au même niveau, sous la même pression.', 'coaching'),
+('coach_off2_cta',      'Parler de ma saison',                              'coaching'),
+('coach_faq_q1',        'Faut-il un niveau minimum ?',                      'coaching'),
+('coach_faq_a1',        'Aucun. JB coache des débutants complets comme des pilotes en compétition nationale.', 'coaching'),
+-- Paddock
+('paddock_subtitle',    'Toute l\'actu en un coup d\'œil',                  'paddock'),
+('paddock_art1_title',  'Titre de l\'article',                              'paddock'),
+('paddock_art1_desc',   'Résumé de l\'article…',                            'paddock'),
+('paddock_art2_title',  'Titre de l\'article',                              'paddock'),
+('paddock_art2_desc',   'Résumé de l\'article…',                            'paddock'),
+-- Track
+('track_section_title', 'PROCHAINES SESSIONS DISPONIBLES & EN ATTENTE DE VOTE', 'track'),
+('track_section_lead',  'Inscrivez-vous aux sessions confirmées ou votez pour déclencher une date. À partir de 5 pilotes intéressés, JB valide la sortie.', 'track');
+
+
+-- ═══════════════════════════════════════════════════════════════════
+--  TABLE : docs (Bibliothèque technique)
+-- ═══════════════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS `docs` (
+  `id`          INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+  `title`       VARCHAR(200)    NOT NULL,
+  `description` TEXT            DEFAULT NULL,
+  `category`    ENUM('meca','elec','chas','data','regl','autre')
+                                NOT NULL DEFAULT 'meca',
+  `type`        ENUM('pdf','schema','video','autre')
+                                NOT NULL DEFAULT 'pdf',
+  `keywords`    VARCHAR(300)    DEFAULT NULL
+                                COMMENT 'Mots-clés séparés par virgule',
+  `file_url`    VARCHAR(500)    NOT NULL
+                                COMMENT 'URL Supabase Storage',
+  `file_size`   VARCHAR(20)     DEFAULT NULL COMMENT 'ex: 2.4 Mo',
+  `downloads`   INT             NOT NULL DEFAULT 0,
+  `visible`     TINYINT(1)      NOT NULL DEFAULT 1,
+  `uploaded_by` VARCHAR(36)     DEFAULT NULL COMMENT 'UUID Supabase Auth',
+  `created_at`  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP
+                                ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_category` (`category`),
+  KEY `idx_visible`  (`visible`),
+  FULLTEXT KEY `ft_search` (`title`, `keywords`, `description`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ═══════════════════════════════════════════════════════════════════
+--  TABLE : forum_threads (Sujets du forum)
+-- ═══════════════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS `forum_threads` (
+  `id`          INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+  `title`       VARCHAR(200)    NOT NULL,
+  `tag`         ENUM('meca','elec','chas','data','autre')
+                                NOT NULL DEFAULT 'meca',
+  `author_id`   VARCHAR(36)     DEFAULT NULL COMMENT 'UUID Supabase Auth',
+  `author_name` VARCHAR(80)     DEFAULT NULL COMMENT 'Nom de l auteur',
+  `pinned`      TINYINT(1)      NOT NULL DEFAULT 0,
+  `locked`      TINYINT(1)      NOT NULL DEFAULT 0,
+  `legacy`      TINYINT(1)      NOT NULL DEFAULT 0
+                                COMMENT '1 = importé depuis ancien forum',
+  `reply_count` SMALLINT        NOT NULL DEFAULT 0,
+  `last_reply`  DATETIME        DEFAULT NULL,
+  `visible`     TINYINT(1)      NOT NULL DEFAULT 1,
+  `created_at`  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_tag`     (`tag`),
+  KEY `idx_pinned`  (`pinned`),
+  KEY `idx_visible` (`visible`),
+  KEY `idx_last`    (`last_reply`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ═══════════════════════════════════════════════════════════════════
+--  TABLE : forum_posts (Messages dans les fils)
+-- ═══════════════════════════════════════════════════════════════════
+CREATE TABLE IF NOT EXISTS `forum_posts` (
+  `id`          INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+  `thread_id`   INT UNSIGNED    NOT NULL,
+  `author_id`   VARCHAR(36)     DEFAULT NULL,
+  `author_name` VARCHAR(80)     DEFAULT NULL,
+  `is_coach`    TINYINT(1)      NOT NULL DEFAULT 0
+                                COMMENT '1 = message JB / modérateur',
+  `content`     TEXT            NOT NULL,
+  `edited_at`   DATETIME        DEFAULT NULL,
+  `deleted`     TINYINT(1)      NOT NULL DEFAULT 0,
+  `created_at`  DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_thread`  (`thread_id`),
+  KEY `idx_author`  (`author_id`),
+  CONSTRAINT `fk_post_thread`
+    FOREIGN KEY (`thread_id`) REFERENCES `forum_threads`(`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── Trigger : incrémenter reply_count ──────────────────────────────
+DELIMITER $$
+CREATE TRIGGER IF NOT EXISTS after_post_insert
+AFTER INSERT ON `forum_posts`
+FOR EACH ROW BEGIN
+  UPDATE `forum_threads`
+  SET reply_count = reply_count + 1,
+      last_reply  = NEW.created_at
+  WHERE id = NEW.thread_id;
+END$$
+DELIMITER ;
+
+-- ── Données de démo ─────────────────────────────────────────────────
+INSERT IGNORE INTO `forum_threads` (`title`,`tag`,`author_name`,`pinned`,`reply_count`,`last_reply`) VALUES
+('Réglage freinage RX8 — quelle pression de pédale ?', 'meca', 'Lucas M.', 1, 7, NOW()),
+('Comment lire la télémétrie MXS Strada — tutoriel débutant', 'data', 'Sophie R.', 0, 3, NOW()),
+('[ARCHIVE] Géométrie Lotus Elise — réglages circuit Le Luc', 'chas', 'Forum Legacy', 0, 12, '2023-06-15 10:00:00'),
+('OBD2 en piste — quels capteurs surveiller en live ?', 'elec', 'Thomas V.', 0, 5, NOW());
+
+-- Mettre à jour legacy pour les anciens sujets
+UPDATE `forum_threads` SET `legacy`=1 WHERE `author_name`='Forum Legacy';

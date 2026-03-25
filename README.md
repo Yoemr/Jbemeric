@@ -1,2 +1,0 @@
-# JBemeric
-Jbemeric web Site

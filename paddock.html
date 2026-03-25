@@ -6,9 +6,9 @@
 <title>Paddock — JB EMERIC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&family=Russo+One&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme.css">
-<link rel="stylesheet" href="nav.css">
-<script src="site-data.js"></script>
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<script src="assets/js/site-data.js"></script>
 <style>
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -689,6 +689,205 @@ body { background: var(--night) }
 @media(min-width:960px) { }
 .footer-nav a:hover { color:var(--gd) }
 .footer-contact a:hover { color:var(--gd) }
+
+/* ════════════════════════════════════════════
+   BIBLIOTHÈQUE TECHNIQUE
+   ════════════════════════════════════════════ */
+.lib-root { background:#07080f; padding:clamp(44px,6vw,72px) clamp(20px,5vw,72px) }
+.lib-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:28px }
+.lib-head-left { display:flex; flex-direction:column; gap:6px }
+.lib-kicker { font-family:'DM Mono'; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:rgba(255,207,0,.5); display:flex; align-items:center; gap:10px }
+.lib-kicker::before { content:''; width:24px; height:2px; background:linear-gradient(90deg,#F5D061,#C8860A); flex-shrink:0 }
+.lib-title { font-family:'Bebas Neue'; font-size:clamp(32px,5vw,52px); line-height:.9; letter-spacing:-1px; color:#fff }
+.lib-title em { font-style:normal; color:#FFCF00 }
+
+/* Barre de recherche */
+.lib-search-bar { display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+.lib-search { position:relative; flex:1; min-width:200px; max-width:380px }
+.lib-search-input {
+  width:100%; padding:10px 14px 10px 38px;
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+  border-radius:6px; color:#fff; font-family:'DM Mono'; font-size:12px;
+  outline:none; transition:border-color .18s;
+}
+.lib-search-input:focus { border-color:rgba(255,207,0,.4) }
+.lib-search-input::placeholder { color:rgba(255,255,255,.28) }
+.lib-search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,.35); pointer-events:none; font-size:14px }
+.lib-count { font-family:'DM Mono'; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.3) }
+.lib-count span { color:rgba(255,207,0,.7) }
+
+/* Tags filtre */
+.lib-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:20px }
+.lib-tag {
+  padding:4px 13px; border-radius:12px;
+  font-family:'DM Mono'; font-size:8px; letter-spacing:2px; text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.12); cursor:pointer; background:transparent; color:rgba(255,255,255,.45);
+  transition:all .15s;
+}
+.lib-tag:hover { background:rgba(255,255,255,.07); color:#fff }
+.lib-tag.active { background:rgba(255,207,0,.12); border-color:rgba(255,207,0,.4); color:#FFCF00 }
+.lib-tag-meca  { --tc:#60a5fa }
+.lib-tag-elec  { --tc:#4ade80 }
+.lib-tag-chas  { --tc:#f87171 }
+.lib-tag-data  { --tc:#a78bfa }
+.lib-tag-regl  { --tc:#fbbf24 }
+.lib-tag.active { color:var(--tc,#FFCF00); border-color:color-mix(in srgb, var(--tc,#FFCF00) 40%, transparent) }
+
+/* Grille docs */
+.lib-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(280px,1fr));
+  gap:14px;
+  margin-bottom:20px;
+}
+.lib-card {
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
+  border-radius:8px; overflow:hidden;
+  display:flex; flex-direction:column;
+  transition:border-color .2s, transform .2s;
+}
+.lib-card:hover { border-color:rgba(255,207,0,.2); transform:translateY(-2px) }
+.lib-card-top { padding:16px 16px 12px; flex:1; display:flex; flex-direction:column; gap:10px }
+.lib-card-cat {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:3px 10px; border-radius:10px; align-self:flex-start;
+  font-family:'DM Mono'; font-size:7.5px; letter-spacing:1.5px; text-transform:uppercase; font-weight:700;
+}
+.cat-meca  { background:rgba(96,165,250,.12);  color:#60a5fa; border:1px solid rgba(96,165,250,.25) }
+.cat-elec  { background:rgba(74,222,128,.1);   color:#4ade80; border:1px solid rgba(74,222,128,.22) }
+.cat-chas  { background:rgba(248,113,113,.1);  color:#f87171; border:1px solid rgba(248,113,113,.22) }
+.cat-data  { background:rgba(167,139,250,.1);  color:#a78bfa; border:1px solid rgba(167,139,250,.22) }
+.cat-regl  { background:rgba(251,191,36,.1);   color:#fbbf24; border:1px solid rgba(251,191,36,.22) }
+.cat-pdf   { background:rgba(239,68,68,.1);    color:#f87171; border:1px solid rgba(239,68,68,.22) }
+.cat-schema{ background:rgba(99,102,241,.1);   color:#818cf8; border:1px solid rgba(99,102,241,.22) }
+.lib-card-title { font-size:14px; font-weight:600; color:#fff; line-height:1.3 }
+.lib-card-kw { font-family:'DM Mono'; font-size:9px; letter-spacing:1px; color:rgba(255,255,255,.3); line-height:1.6 }
+.lib-card-meta { display:flex; align-items:center; gap:10px; font-family:'DM Mono'; font-size:8px; color:rgba(255,255,255,.25); flex-wrap:wrap }
+.lib-card-size { background:rgba(255,255,255,.06); padding:2px 8px; border-radius:4px }
+
+/* Icone type doc */
+.lib-card-icon { font-size:28px; flex-shrink:0 }
+.lib-card-icon-row { display:flex; align-items:flex-start; gap:12px }
+
+/* Boutons d'action */
+.lib-card-foot {
+  padding:10px 14px;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex; gap:8px; align-items:center;
+}
+.lib-btn {
+  padding:6px 13px; border-radius:5px; font-family:'DM Mono';
+  font-size:8px; letter-spacing:2px; text-transform:uppercase; font-weight:700;
+  border:none; cursor:pointer; transition:all .15s;
+  display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+}
+.lib-btn-dl { background:linear-gradient(135deg,#F5D061,#C8860A); color:#000 }
+.lib-btn-dl:hover { filter:brightness(1.08) }
+.lib-btn-view { background:rgba(255,255,255,.07); color:rgba(255,255,255,.7); border:1px solid rgba(255,255,255,.1) }
+.lib-btn-view:hover { background:rgba(255,255,255,.13); color:#fff }
+
+/* Empty state */
+.lib-empty {
+  grid-column:1/-1; text-align:center; padding:52px 20px;
+  color:rgba(255,255,255,.22); font-family:'DM Mono';
+  font-size:9px; letter-spacing:2px; text-transform:uppercase;
+}
+.lib-empty span { display:block; font-size:28px; margin-bottom:12px; opacity:.4 }
+
+/* ════════════════════════════════════════════
+   FORUM
+   ════════════════════════════════════════════ */
+.forum-root { background:#0a0f1e; padding:clamp(44px,6vw,72px) clamp(20px,5vw,72px) }
+.forum-head { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:24px }
+.forum-title { font-family:'Bebas Neue'; font-size:clamp(28px,4vw,44px); line-height:.9; letter-spacing:-1px; color:#fff }
+.forum-title em { font-style:normal; color:#FFCF00 }
+.forum-kicker { font-family:'DM Mono'; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:rgba(255,207,0,.45); margin-bottom:8px; display:flex; align-items:center; gap:10px }
+.forum-kicker::before { content:''; width:24px; height:2px; background:linear-gradient(90deg,#F5D061,#C8860A); flex-shrink:0 }
+
+/* Forum tags */
+.forum-tag-filters { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px }
+.ftag {
+  padding:4px 12px; border-radius:12px;
+  font-family:'DM Mono'; font-size:8px; letter-spacing:1.5px; text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.1); cursor:pointer; background:transparent; color:rgba(255,255,255,.4);
+  transition:all .15s;
+}
+.ftag:hover { color:#fff; background:rgba(255,255,255,.06) }
+.ftag.on { border-color:var(--ftc,rgba(255,207,0,.4)); color:var(--ftc,#FFCF00); background:rgba(255,207,0,.07) }
+.ftag-meca { --ftc:#60a5fa }
+.ftag-elec { --ftc:#4ade80 }
+.ftag-chas { --ftc:#f87171 }
+.ftag-data { --ftc:#a78bfa }
+
+/* Liste des sujets */
+.forum-list { display:flex; flex-direction:column; gap:0 }
+.forum-row {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 18px; border-bottom:1px solid rgba(255,255,255,.05);
+  text-decoration:none; color:inherit;
+  transition:background .15s; cursor:pointer;
+  position:relative;
+}
+.forum-row:hover { background:rgba(255,255,255,.03) }
+.forum-row:last-child { border-bottom:none }
+.forum-row.pinned { background:rgba(255,207,0,.03); border-left:3px solid rgba(255,207,0,.35) }
+.forum-row.legacy { opacity:.6 }
+.forum-pin-icon { position:absolute; top:10px; right:14px; font-size:11px; opacity:.5 }
+
+/* Badge tag forum */
+.ftag-badge {
+  flex-shrink:0; padding:3px 9px; border-radius:4px;
+  font-family:'DM Mono'; font-size:7px; letter-spacing:1.5px; text-transform:uppercase; font-weight:700;
+}
+.fb-meca { background:rgba(96,165,250,.12);  color:#60a5fa; border:1px solid rgba(96,165,250,.22) }
+.fb-elec { background:rgba(74,222,128,.1);   color:#4ade80; border:1px solid rgba(74,222,128,.22) }
+.fb-chas { background:rgba(248,113,113,.1);  color:#f87171; border:1px solid rgba(248,113,113,.22) }
+.fb-data { background:rgba(167,139,250,.1);  color:#a78bfa; border:1px solid rgba(167,139,250,.22) }
+.fb-legacy { background:rgba(148,163,184,.08); color:#94a3b8; border:1px solid rgba(148,163,184,.15) }
+
+.forum-body { flex:1; min-width:0 }
+.forum-row-title { font-size:14px; font-weight:600; color:#fff; margin-bottom:3px; line-height:1.3 }
+.forum-row.legacy .forum-row-title { color:rgba(255,255,255,.7) }
+.forum-row-preview { font-size:12px; color:rgba(255,255,255,.35); white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.forum-row-meta { font-family:'DM Mono'; font-size:8px; color:rgba(255,255,255,.25); margin-top:3px; display:flex; align-items:center; gap:8px; flex-wrap:wrap }
+.forum-row-meta .dot { width:3px; height:3px; border-radius:50%; background:currentColor; opacity:.4 }
+
+.forum-stats { flex-shrink:0; text-align:center; min-width:44px }
+.forum-replies { font-family:'Bebas Neue'; font-size:20px; color:rgba(255,255,255,.45); line-height:1 }
+.forum-rep-lbl { font-family:'DM Mono'; font-size:7px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,.2) }
+
+/* Vue discussion */
+.forum-discussion { display:none; flex-direction:column; gap:0 }
+.forum-discussion.open { display:flex }
+.forum-back { display:flex; align-items:center; gap:8px; padding:12px 18px; border-bottom:1px solid rgba(255,255,255,.06); cursor:pointer; background:none; border-left:none; border-right:none; border-top:none; color:rgba(255,207,0,.6); font-family:'DM Mono'; font-size:9px; letter-spacing:2px; text-transform:uppercase; transition:color .15s; width:100%; text-align:left }
+.forum-back:hover { color:#FFCF00 }
+
+.forum-post { padding:16px 18px; border-bottom:1px solid rgba(255,255,255,.05) }
+.forum-post:last-child { border-bottom:none }
+.fp-author { display:flex; align-items:center; gap:10px; margin-bottom:10px }
+.fp-av { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#0A3D91,#1252C0); display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:13px; color:#fff; flex-shrink:0 }
+.fp-av.jb { background:linear-gradient(135deg,#F5D061,#C8860A); color:#000 }
+.fp-name { font-size:13px; font-weight:600; color:#fff }
+.fp-role { font-family:'DM Mono'; font-size:8px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.3) }
+.fp-role.coach { color:rgba(255,207,0,.6) }
+.fp-time { font-family:'DM Mono'; font-size:8px; color:rgba(255,255,255,.22); margin-left:auto }
+.fp-content { font-size:14px; line-height:1.75; color:rgba(255,255,255,.72) }
+.fp-jb-badge { display:inline-flex; align-items:center; gap:5px; padding:2px 9px; background:rgba(255,207,0,.1); border:1px solid rgba(255,207,0,.25); border-radius:10px; font-family:'DM Mono'; font-size:7px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,207,0,.8); margin-bottom:8px }
+
+/* Zone reply */
+.forum-reply { padding:14px 18px; border-top:1px solid rgba(255,255,255,.07); background:rgba(255,255,255,.02) }
+.forum-reply-input { width:100%; padding:10px 14px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:6px; color:#fff; font-size:13px; resize:none; outline:none; font-family:'Outfit',sans-serif; transition:border-color .15s; min-height:80px }
+.forum-reply-input:focus { border-color:rgba(255,207,0,.4) }
+.forum-reply-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:8px }
+
+/* Legacy banner */
+.legacy-banner { display:flex; align-items:center; gap:10px; padding:10px 18px; background:rgba(148,163,184,.06); border-top:1px solid rgba(148,163,184,.12); font-family:'DM Mono'; font-size:8px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(148,163,184,.5) }
+.legacy-banner::before { content:'📦'; font-size:14px }
+
+/* Load more */
+.forum-loadmore { text-align:center; padding:16px }
+.lib-loadmore   { text-align:center; padding:12px 0; margin-top:4px }
+
 </style>
 </head>
 <body>
@@ -767,7 +966,7 @@ body { background: var(--night) }
 </section>
 
 <!-- ═══ NEWSLETTER — plein écran ════════════════════════ -->
-<section class="newsletter-section" id="une">
+<section class="newsletter-section" id="une" data-mirror="paddock-une">
   <div class="nl-header">
     <div class="nl-header-left">
       <div class="nl-label">Le Paddock</div>
@@ -857,31 +1056,98 @@ body { background: var(--night) }
 </section>
 
 <!-- ═══ ARTICLES TECHNIQUES ══════════════════════════════ -->
-<div class="section s-blue" id="blog">
-  <div class="sec-head">
-    <div><div class="kl">Bibliothèque</div><div class="tl">Articles <em>techniques</em></div></div>
-    <a class="lk-l" href="#">Tous les articles</a>
+<!-- ═══ BIBLIOTHÈQUE TECHNIQUE ═══════════════════════════════════ -->
+<div class="lib-root" id="blog">
+  <div class="lib-head">
+    <div class="lib-head-left">
+      <div class="lib-kicker">Open Access · Aucune inscription requise</div>
+      <div class="lib-title">BIBLIOTHÈQUE <em>TECHNIQUE</em></div>
+    </div>
+    <div class="lib-search-bar">
+      <div class="lib-search">
+        <span class="lib-search-icon">🔍</span>
+        <input class="lib-search-input" type="text" id="lib-search"
+          placeholder="V8, injection, freinage…"
+          oninput="filterLib(this.value)" autocomplete="off">
+      </div>
+      <div class="lib-count"><span id="lib-count-num">—</span> documents</div>
+    </div>
   </div>
-  <div class="art-grid" id="art-grid">
-    <!-- Généré par JS -->
+
+  <div class="lib-tags" id="lib-tag-filters">
+    <button class="lib-tag active" onclick="filterLibTag(this,'all')">Tout</button>
+    <button class="lib-tag lib-tag-meca" onclick="filterLibTag(this,'meca')">🔧 Mécanique</button>
+    <button class="lib-tag lib-tag-elec" onclick="filterLibTag(this,'elec')">⚡ Électronique</button>
+    <button class="lib-tag lib-tag-chas" onclick="filterLibTag(this,'chas')">🏗 Châssis</button>
+    <button class="lib-tag lib-tag-data" onclick="filterLibTag(this,'data')">📊 Data & Télémétrie</button>
+    <button class="lib-tag lib-tag-regl" onclick="filterLibTag(this,'regl')">⚙ Réglages</button>
+  </div>
+
+  <div class="lib-grid" id="lib-grid">
+    <!-- Généré dynamiquement par loadDocs() -->
+    <div class="lib-empty"><span>📂</span>Chargement des documents…</div>
+  </div>
+
+  <div class="lib-loadmore" id="lib-loadmore" style="display:none">
+    <button class="lib-btn lib-btn-view" onclick="loadMoreDocs()">Charger plus →</button>
   </div>
 </div>
 
-<!-- ═══ FORUM ════════════════════════════════════════════ -->
-<div class="section s-light" id="forum">
-  <div class="sec-head">
-    <div><div class="kl">Tribune pilotes</div><div class="tl">Discussions <em>actives</em></div></div>
-    <a class="lk-l" href="#">Toutes les discussions</a>
+<!-- ═══ FORUM ═══════════════════════════════════════════════════ -->
+<div class="forum-root" id="forum">
+  <div class="forum-head">
+    <div>
+      <div class="forum-kicker">Tribune pilotes · Ouvert à tous</div>
+      <div class="forum-title">DISCUSSIONS <em>TECHNIQUES</em></div>
+    </div>
+    <button class="lib-btn lib-btn-dl" onclick="openNewThread()"
+      style="align-self:flex-start;margin-top:8px">
+      + Nouveau sujet
+    </button>
   </div>
-  <div class="forum-wrap">
-    <a class="f-row" href="#"><div class="f-badge-wrap"><span class="f-badge f-k">Karting</span></div><div class="f-body"><div class="f-title">Réglage freinage RX8 — quelle pression de pédale ?</div><div class="f-preview">JB a répondu hier sur la modulation progressive vs. blocage franc en karting loisir...</div><div class="f-author">Lucas M.</div></div><div class="f-count"><div class="f-count-n">12</div><div class="f-count-lbl">rép.</div><div class="f-time">23 min</div></div></a>
-    <a class="f-row" href="#"><div class="f-badge-wrap"><span class="f-badge f-ch">Challenge</span></div><div class="f-body"><div class="f-title">Sélection 2026 — retour session qualificative Brignoles</div><div class="f-preview">3 pilotes partagent leurs impressions après la session de février. JB a commenté chaque retour...</div><div class="f-author">Thomas R.</div></div><div class="f-count"><div class="f-count-n">28</div><div class="f-count-lbl">rép.</div><div class="f-time">1h</div></div></a>
-    <a class="f-row" href="#"><div class="f-badge-wrap"><span class="f-badge f-s">Sim</span></div><div class="f-body"><div class="f-title">World SIM RACER vs iRacing pour préparer Lédenon</div><div class="f-preview">Débat ouvert après que JB mentionne l'utilité du simulateur pour mémoriser un tracé...</div><div class="f-author">Mathieu D.</div></div><div class="f-count"><div class="f-count-n">7</div><div class="f-count-lbl">rép.</div><div class="f-time">3h</div></div></a>
-    <a class="f-row" href="#"><div class="f-badge-wrap"><span class="f-badge f-co">Coaching</span></div><div class="f-body"><div class="f-title">Comment préparer sa vidéo embarquée pour JB ?</div><div class="f-preview">Angle, qualité, durée optimale — les tips des membres pour envoyer une vidéo exploitable...</div><div class="f-author">Camille F.</div></div><div class="f-count"><div class="f-count-n">15</div><div class="f-count-lbl">rép.</div><div class="f-time">5h</div></div></a>
+
+  <div class="forum-tag-filters">
+    <button class="ftag on" onclick="filterForum(this,'all')">Tout</button>
+    <button class="ftag ftag-meca" onclick="filterForum(this,'meca')">🔧 Mécanique</button>
+    <button class="ftag ftag-elec" onclick="filterForum(this,'elec')">⚡ Électronique</button>
+    <button class="ftag ftag-chas" onclick="filterForum(this,'chas')">🏗 Châssis</button>
+    <button class="ftag ftag-data" onclick="filterForum(this,'data')">📊 Data</button>
+  </div>
+
+  <!-- Liste des sujets -->
+  <div class="card" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;overflow:hidden">
+
+    <div class="forum-list" id="forum-list">
+      <div style="padding:24px;text-align:center;font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25)">
+        Chargement…
+      </div>
+    </div>
+
+    <div class="legacy-banner">
+      Archives legacy — sujets importés depuis l'ancien forum
+    </div>
+
+    <div class="forum-loadmore" id="forum-loadmore" style="display:none">
+      <button class="lib-btn lib-btn-view" onclick="loadMorePosts()">Charger plus →</button>
+    </div>
+  </div>
+
+  <!-- Vue discussion (masquée par défaut) -->
+  <div class="card" id="forum-discussion" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;overflow:hidden;margin-top:14px;display:none">
+    <div class="forum-list" id="discussion-posts"></div>
+    <div class="forum-reply">
+      <div style="font-family:'DM Mono';font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:8px">
+        Votre réponse
+      </div>
+      <textarea class="forum-reply-input" id="reply-input" placeholder="Partagez votre expérience…"></textarea>
+      <div class="forum-reply-actions">
+        <button class="lib-btn lib-btn-view" onclick="closeDiscussion()">← Retour</button>
+        <button class="lib-btn lib-btn-dl" onclick="submitReply()">Envoyer →</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- ═══ YOUTUBE ══════════════════════════════════════════ -->
 <div class="section s-dark2" id="media">
   <div class="sec-head">
     <div><div class="kd">Chaîne YouTube</div><div class="td">Dernières <em>vidéos</em></div></div>
@@ -925,7 +1191,7 @@ body { background: var(--night) }
     <div style="font-family:'DM Mono';font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(0,0,0,.55);margin-top:4px">Newsletter · Réseaux · Contact direct</div>
   </div>
   <div style="display:flex;gap:12px;flex-wrap:wrap">
-    <a href="/cdn-cgi/l/email-protection#c2a8a0a7afa7b0aba182a8a0a7afa7b0aba1eca1adaf" style="display:inline-flex;align-items:center;padding:13px 24px;background:#040a1e;color:var(--gd);font-family:'DM Mono';font-size:10px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border-radius:3px;font-weight:500"><span class="__cf_email__" data-cfemail="2e444c4b434b5c474d6e444c4b434b5c474d004d4143">[email&#160;protected]</span></a>
+    <a href="mailto:jbemeric@jbemeric.com" style="display:inline-flex;align-items:center;padding:13px 24px;background:#040a1e;color:var(--gd);font-family:'DM Mono';font-size:10px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border-radius:3px;font-weight:500">jbemeric@jbemeric.com</a>
     <a href="tel:+33660188787" style="display:inline-flex;align-items:center;padding:13px 24px;background:rgba(0,0,0,.15);color:#000;font-family:'DM Mono';font-size:10px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border-radius:3px">06 60 18 87 87</a>
   </div>
 </div>
@@ -961,7 +1227,7 @@ body { background: var(--night) }
       <div class="ft-col-title">Contact</div>
       <div class="ft-contact-item">
         <span class="ft-contact-label">Email</span>
-        <a class="ft-contact-val" href="/cdn-cgi/l/email-protection#86ece4e3ebe3f4efe5c6ece4e3ebe3f4efe5a8e5e9eb"><span class="__cf_email__" data-cfemail="68020a0d050d1a010b28020a0d050d1a010b460b0705">[email&#160;protected]</span></a>
+        <a class="ft-contact-val" href="mailto:jbemeric@jbemeric.com">jbemeric@jbemeric.com</a>
       </div>
       <div class="ft-contact-item">
         <span class="ft-contact-label">Téléphone</span>
@@ -979,7 +1245,314 @@ body { background: var(--night) }
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script type="module">
+// ═══════════════════════════════════════════════════════════════════
+//  paddock-modules.js — Bibliothèque technique + Forum
+//  Chargement Supabase (si configuré) ou données statiques
+// ═══════════════════════════════════════════════════════════════════
+
+// ── Import Supabase (optionnel — commenter si pas encore configuré) ──
+// import { supabase } from './assets/js/supabase.js'
+
+// ── Données statiques de démo ───────────────────────────────────────
+const DEMO_DOCS = [
+  { id:1, title:'Réglage freinage RX8 270cc — guide complet', category:'meca', type:'pdf',
+    keywords:'freinage, pédale, RX8, karting, pression', size:'1.2 Mo', date:'2026-02-15',
+    downloads:47, url:'#', description:'Tout sur la modulation freinage en kart loisir.' },
+  { id:2, title:'Injection électronique — diagnostic OBD2 tourisme', category:'elec', type:'pdf',
+    keywords:'injection, OBD2, diagnostic, tourisme, panne', size:'3.4 Mo', date:'2026-01-28',
+    downloads:83, url:'#', description:'Guide de lecture des codes défauts sport auto.' },
+  { id:3, title:'Géométrie châssis GT — angles de carrossage', category:'chas', type:'schema',
+    keywords:'châssis, carrossage, parallélisme, GT, réglage', size:'800 Ko', date:'2026-01-10',
+    downloads:31, url:'#', description:'Schémas et valeurs cibles pour la piste.' },
+  { id:4, title:'Analyse télémétrie — lecture du tracé virage par virage', category:'data', type:'pdf',
+    keywords:'télémétrie, data, tracé, apex, freinage, accélération', size:'5.1 Mo', date:'2026-03-01',
+    downloads:112, url:'#', description:'Méthode JB pour exploiter vos données embarquées.' },
+  { id:5, title:'Réglages suspension Peugeot 206 S16 — guide circuit', category:'regl', type:'pdf',
+    keywords:'suspension, 206, réglage, amortisseur, ressort', size:'2.0 Mo', date:'2025-12-20',
+    downloads:58, url:'#', description:'Tableau de réglages pour différents circuits PACA.' },
+  { id:6, title:'Schéma câblage BMW 325i HTCC — faisceau compétition', category:'elec', type:'schema',
+    keywords:'BMW, HTCC, câblage, faisceau, électronique', size:'1.8 Mo', date:'2026-02-05',
+    downloads:29, url:'#', description:'Plan électrique complet pour la 325i de compétition.' },
+  { id:7, title:'Points de corde — guide visuel 8 virages types', category:'meca', type:'schema',
+    keywords:'point de corde, trajectoire, virage, apex, freinage', size:'600 Ko', date:'2026-03-10',
+    downloads:201, url:'#', description:'Les 8 configurations de virages les plus communes.' },
+  { id:8, title:'Comportement sous-vireur vs survireur — diagnostics', category:'chas', type:'pdf',
+    keywords:'sous-virage, survirage, comportement, réglage, conduite', size:'1.5 Mo', date:'2025-11-30',
+    downloads:94, url:'#', description:'Identifier et corriger les défauts de comportement.' },
+]
+
+const DEMO_POSTS = [
+  { id:1, tag:'meca', title:'Réglage freinage RX8 — quelle pression de pédale ?', preview:'JB a répondu sur la modulation progressive vs. blocage franc…',
+    author:'Lucas M.', date:'il y a 2 jours', replies:7, pinned:true, legacy:false,
+    posts:[
+      { author:'Lucas M.', initials:'LM', role:'Pilote', roleClass:'', date:'12 mars', jb:false,
+        content:'Bonjour à tous. Je galère avec le freinage sur le RX8 270cc. Ma pédale est très dure et j'ai tendance à bloquer l'arrière en entrée de virage. JB ou quelqu'un peut m'aider ?' },
+      { author:'Jean-Baptiste Emeric', initials:'JB', role:'Coach · JB EMERIC', roleClass:'coach', date:'12 mars', jb:true,
+        content:'Bonjour Lucas. Plusieurs pistes : 1) Vérifie la plaquette arrière — souvent trop neuve = trop de mordant. 2) Essaie de reculer légèrement le point d'appui (réglage maître-cylindre si disponible). 3) Surtout travaille le relâché progressif plutôt qu'un appui full. Je te prépare une fiche technique détaillée.' },
+      { author:'Marc T.', initials:'MT', role:'Pilote confirmé', roleClass:'', date:'13 mars', jb:false,
+        content:'Lucas, j'ai eu le même problème. Pour moi c'était surtout la position du pied — j'appuyais trop avec la semelle au lieu du milieu du pied. Ça change tout sur la progressivité.' },
+    ]
+  },
+  { id:2, tag:'data', title:'Comment lire la télémétrie MXS Strada — tutoriel débutant', preview:'Comprendre les canaux vitesse/accélération lat…',
+    author:'Sophie R.', date:'il y a 4 jours', replies:3, pinned:false, legacy:false,
+    posts:[
+      { author:'Sophie R.', initials:'SR', role:'Pilote', roleClass:'', date:'9 mars', jb:false,
+        content:'Quelqu'un peut m'expliquer comment interpréter les graphiques de vitesse en courbe ? Je n'arrive pas à identifier où je perds du temps exactement.' },
+      { author:'Jean-Baptiste Emeric', initials:'JB', role:'Coach · JB EMERIC', roleClass:'coach', date:'9 mars', jb:true,
+        content:'Sophie, regardez la courbe de vitesse en entrée de virage : si elle descend trop tôt et trop fort, vous freinez trop tard paradoxalement. Le bon indicateur c'est le point le plus bas de la courbe — il doit coïncider avec votre apex géographique.' },
+    ]
+  },
+  { id:3, tag:'chas', title:'[ARCHIVE] Géométrie Lotus Elise — réglages circuit Le Luc', preview:'Discussion importée depuis l'ancien forum…',
+    author:'Forum Legacy', date:'2023', replies:12, pinned:false, legacy:true,
+    posts:[
+      { author:'Archive Forum', initials:'AF', role:'Legacy', roleClass:'', date:'Juin 2023', jb:false,
+        content:'[Sujet archivé] Ce fil provient de l'ancien forum JB EMERIC et a été importé pour conservation. Les informations techniques restent valables.' },
+    ]
+  },
+  { id:4, tag:'elec', title:'OBD2 en piste — quels capteurs surveiller en live ?', preview:'Discussion sur les paramètres critiques à monitorer…',
+    author:'Thomas V.', date:'il y a 1 semaine', replies:5, pinned:false, legacy:false,
+    posts:[
+      { author:'Thomas V.', initials:'TV', role:'Pilote', roleClass:'', date:'6 mars', jb:false,
+        content:'Je branche un dongle OBD2 en piste pour le monitoring en live. Quels sont les paramètres les plus utiles à surveiller ? Température moteur, pression huile… vous avez des configs ?' },
+    ]
+  },
+  { id:5, tag:'meca', title:'[ARCHIVE] Comparatif plaquettes de frein karting loisir vs compé', preview:'Sujet archivé — comparatifs plaquettes…',
+    author:'Forum Legacy', date:'2022', replies:8, pinned:false, legacy:true,
+    posts:[]
+  },
+]
+
+// ═══════════════════════════════════════════════════════════════════
+//  BIBLIOTHÈQUE — RENDU
+// ═══════════════════════════════════════════════════════════════════
+let _libFilter = 'all'
+let _libSearch = ''
+let _libPage   = 0
+const LIB_PER_PAGE = 6
+
+const CAT_MAP = {
+  meca: { label:'Mécanique',      cls:'cat-meca', icon:'🔧' },
+  elec: { label:'Électronique',   cls:'cat-elec', icon:'⚡' },
+  chas: { label:'Châssis',        cls:'cat-chas', icon:'🏗' },
+  data: { label:'Data',           cls:'cat-data', icon:'📊' },
+  regl: { label:'Réglages',       cls:'cat-regl', icon:'⚙' },
+}
+const TYPE_ICONS = { pdf:'📄', schema:'📐', video:'🎬', default:'📁' }
+
+function getFilteredDocs() {
+  return DEMO_DOCS.filter(doc => {
+    const matchTag = _libFilter === 'all' || doc.category === _libFilter
+    const q = _libSearch.toLowerCase()
+    const matchSearch = !q ||
+      doc.title.toLowerCase().includes(q) ||
+      doc.keywords.toLowerCase().includes(q) ||
+      doc.description.toLowerCase().includes(q)
+    return matchTag && matchSearch
+  })
+}
+
+function renderLib() {
+  const docs  = getFilteredDocs()
+  const grid  = document.getElementById('lib-grid')
+  const count = document.getElementById('lib-count-num')
+  const more  = document.getElementById('lib-loadmore')
+  if (!grid) return
+
+  count.textContent = docs.length
+  const page = docs.slice(0, (_libPage + 1) * LIB_PER_PAGE)
+  more.style.display = docs.length > page.length ? '' : 'none'
+
+  if (!docs.length) {
+    grid.innerHTML = '<div class="lib-empty"><span>🔍</span>Aucun document trouvé pour ces critères</div>'
+    return
+  }
+
+  grid.innerHTML = page.map(doc => {
+    const cat  = CAT_MAP[doc.category] || { label:doc.category, cls:'cat-meca', icon:'📁' }
+    const icon = TYPE_ICONS[doc.type] || TYPE_ICONS.default
+    const date = new Date(doc.date).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})
+    return `
+    <div class="lib-card" data-cat="${doc.category}" data-kw="${doc.keywords.toLowerCase()} ${doc.title.toLowerCase()}">
+      <div class="lib-card-top">
+        <div class="lib-card-icon-row">
+          <div class="lib-card-icon">${icon}</div>
+          <div style="flex:1;min-width:0">
+            <span class="lib-card-cat ${cat.cls}">${cat.icon} ${cat.label}</span>
+            <div class="lib-card-title" style="margin-top:6px">${doc.title}</div>
+          </div>
+        </div>
+        <div class="lib-card-kw">${doc.keywords}</div>
+        <div class="lib-card-meta">
+          <span>${date}</span>
+          <span class="lib-card-size">${doc.size}</span>
+          <span>↓ ${doc.downloads}</span>
+        </div>
+      </div>
+      <div class="lib-card-foot">
+        <a href="${doc.url}" class="lib-btn lib-btn-dl" download>↓ Télécharger</a>
+        <a href="${doc.url}" class="lib-btn lib-btn-view" target="_blank">👁 Consulter</a>
+      </div>
+    </div>`
+  }).join('')
+}
+
+window.filterLib = function(q) {
+  _libSearch = q; _libPage = 0; renderLib()
+}
+window.filterLibTag = function(btn, tag) {
+  document.querySelectorAll('.lib-tag').forEach(b => b.classList.remove('active'))
+  btn.classList.add('active')
+  _libFilter = tag; _libPage = 0; renderLib()
+}
+window.loadMoreDocs = function() { _libPage++; renderLib() }
+
+// ═══════════════════════════════════════════════════════════════════
+//  FORUM — RENDU LISTE
+// ═══════════════════════════════════════════════════════════════════
+let _forumFilter = 'all'
+let _currentPost = null
+
+const FTAG_MAP = {
+  meca:{ label:'Mécanique', cls:'fb-meca' },
+  elec:{ label:'Électronique', cls:'fb-elec' },
+  chas:{ label:'Châssis', cls:'fb-chas' },
+  data:{ label:'Data', cls:'fb-data' },
+}
+
+function getFilteredPosts() {
+  return DEMO_POSTS.filter(p => _forumFilter === 'all' || p.tag === _forumFilter)
+}
+
+function renderForumList() {
+  const list = document.getElementById('forum-list')
+  const posts = getFilteredPosts()
+  if (!list) return
+
+  list.innerHTML = posts.map(p => {
+    const ftag = FTAG_MAP[p.tag] || { label:p.tag, cls:'fb-meca' }
+    return `
+    <div class="forum-row${p.pinned?' pinned':''}${p.legacy?' legacy':''}"
+         data-post-id="${p.id}" onclick="openDiscussion(${p.id})">
+      ${p.pinned ? '<span class="forum-pin-icon">📌</span>' : ''}
+      <span class="ftag-badge ${ftag.cls}">${ftag.label}</span>
+      <div class="forum-body">
+        <div class="forum-row-title">${p.legacy ? '📦 ' : ''}${p.title}</div>
+        <div class="forum-row-preview">${p.preview}</div>
+        <div class="forum-row-meta">
+          <span>${p.author}</span>
+          <span class="dot"></span>
+          <span>${p.date}</span>
+          ${p.legacy ? '<span class="dot"></span><span style="color:rgba(148,163,184,.5)">Legacy</span>' : ''}
+        </div>
+      </div>
+      <div class="forum-stats">
+        <div class="forum-replies">${p.replies}</div>
+        <div class="forum-rep-lbl">réponses</div>
+      </div>
+    </div>`
+  }).join('')
+}
+
+window.filterForum = function(btn, tag) {
+  document.querySelectorAll('.ftag').forEach(b => b.classList.remove('on'))
+  btn.classList.add('on')
+  _forumFilter = tag
+  renderForumList()
+  closeDiscussion()
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  FORUM — VUE DISCUSSION
+// ═══════════════════════════════════════════════════════════════════
+window.openDiscussion = function(postId) {
+  const post = DEMO_POSTS.find(p => p.id === postId)
+  if (!post) return
+  _currentPost = post
+
+  const disc = document.getElementById('forum-discussion')
+  const postsEl = document.getElementById('discussion-posts')
+  disc.style.display = 'flex'
+  disc.style.flexDirection = 'column'
+
+  postsEl.innerHTML = `
+    <button class="forum-back" onclick="closeDiscussion()">← Retour aux sujets</button>
+    <div style="padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.06)">
+      <div style="font-family:'Bebas Neue';font-size:clamp(18px,3vw,26px);color:#fff;line-height:1.1">${post.title}</div>
+      <div style="font-family:'DM Mono';font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:5px">
+        ${post.replies} réponse${post.replies>1?'s':''} · ${post.date}
+      </div>
+    </div>
+    ${post.posts.length ? post.posts.map(renderPost).join('') : '<div style="padding:24px;text-align:center;color:rgba(255,255,255,.3);font-size:13px">Aucun message dans ce fil.</div>'}
+    <div id="new-posts-area"></div>
+  `
+  disc.scrollIntoView({ behavior:'smooth', block:'start' })
+}
+
+function renderPost(p) {
+  return `
+  <div class="forum-post">
+    <div class="fp-author">
+      <div class="fp-av${p.jb?' jb':''}">${p.initials}</div>
+      <div>
+        ${p.jb ? '<div class="fp-jb-badge">⭐ Coach JB EMERIC</div>' : ''}
+        <div class="fp-name">${p.author}</div>
+        <div class="fp-role${p.jb?' coach':''}">${p.role}</div>
+      </div>
+      <div class="fp-time">${p.date}</div>
+    </div>
+    <div class="fp-content">${p.content}</div>
+  </div>`
+}
+
+window.closeDiscussion = function() {
+  const disc = document.getElementById('forum-discussion')
+  if (disc) disc.style.display = 'none'
+  _currentPost = null
+  document.getElementById('reply-input').value = ''
+}
+
+window.submitReply = function() {
+  const input = document.getElementById('reply-input')
+  const text  = input.value.trim()
+  if (!text) return
+
+  // Ajouter le message localement (en prod → POST Supabase)
+  const area = document.getElementById('new-posts-area')
+  if (area) {
+    area.insertAdjacentHTML('beforeend', renderPost({
+      author:'Vous', initials:'V', role:'Pilote', roleClass:'',
+      date:'à l'instant', jb:false, content:text
+    }))
+    area.lastElementChild?.scrollIntoView({ behavior:'smooth', block:'nearest' })
+  }
+  input.value = ''
+  if (_currentPost) _currentPost.replies++
+}
+
+window.openNewThread = function() {
+  // Toast informatif — en prod ouvrir une modale
+  if (typeof window.toast === 'function') {
+    window.toast('Formulaire nouveau sujet — connexion requise','info')
+  } else {
+    alert('Fonctionnalité disponible après connexion.')
+  }
+}
+
+window.loadMorePosts = function() {
+  if (typeof window.toast === 'function') window.toast('Chargement…','info')
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderLib()
+  renderForumList()
+})
+</script>
+
+<script>
 (function(){
   // Burger
   var b=document.getElementById('nav-burger'),m=document.getElementById('nav-mobile');
@@ -999,5 +1572,4 @@ body { background: var(--night) }
     {revue:'CHALLENGE AUTO',issue:'N°02',bg:'linear-gradient(150deg,#120800,#3d1800)',img:'https://jbemeric.com/wp-content/uploads/2026/02/B-M-W-325-I-HTCC-3-4-AVANT.jpg',cat:'Challenge',catBg:'linear-gradient(135deg,#F5D061,#C8860A)',catCol:'#000',title:'Du kart à la BMW HTCC — ce que personne ne dit',kw:'Transition · Course',rule:'#C8860A',date:'5 Mars 2026',read:'8 min'},
     {revue:'SIM RACING',issue:'N°03',bg:'linear-gradient(150deg,#071f5c,#040a1e)',img:'https://jbemeric.com/wp-content/uploads/2026/02/SIMULATEUR-1-768x480.png',cat:'Simulateur',catBg:'rgba(255,255,255,.15)',catCol:'#fff',title:'Le simulateur sert vraiment en circuit réel ?',kw:'World SIM RACER · Mémorisation',rule:'#4A9EFF',date:'28 Fév. 2026',read:'4 min'},
     {revue:'CIRCUITS PACA',issue:'N°04',bg:'linear-gradient(150deg,#0f0f0f,#0A3D91)',img:'https://jbemeric.com/wp-content/uploads/2022/05/Depart-avec-les-news-270cc-compresse-768x576.jpg',cat:'Karting',catBg:'#0A3D91',catCol:'#fff',title:'Brignoles virage par virage — analyse complète',kw:'Apex · Freinage · Corde',rule:'#FFCF00',date:'20 Fév. 2026',read:'5 min'},
-    {revue:'COACHING LAB',issue:'N°05',bg:'linear-gradient(150deg,#1a0a00,#3d2000)',img:'https://jbemeric.com/wp-content/uploads/2022/01/COACHING-CIRCUIT-compresse-768x576.jpg',cat:'Méthode',catBg:'linear-gradient(135deg,#F5D061,#C8860A)',catCol:'#000',title:'Comment JB analyse votre vidéo embarquée',kw:'Méthode · Rapport · Repères',rule:'#C8860A',date:'14 Fév. 2026',read:'3 min'},
-    {revue:'JB EMERIC',issue:'N°06',bg:'linear-gradient(150deg,#040a1e,#0a1a4a)',img:'https://jbemeric.com/wp-content/uploads/2025/12/PODIUM-RICARD-94-CHAMP-B-JB-GUIBBERT-TARRES-DANIEL-DELIEN-300x216-1.jpg',cat:'Palmarès',catB
+    {revue:'COACHING LAB',issue:'N°05',bg:'linear-gradient(150deg,#1a0a00,#3d2000)',img:'https://jbemeric.com/wp-content/uploads/2022/01/COACHING-CIRCUIT-compresse-768x576.jpg',cat:'Méthode',catBg:'linear-gradient(135deg,#F5D061,#C886

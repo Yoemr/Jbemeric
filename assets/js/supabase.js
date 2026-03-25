@@ -6,8 +6,8 @@
 
 // ── Config — remplacer par tes vraies clés Supabase ────────────────
 // Dashboard Supabase → Settings → API
-const SUPABASE_URL  = 'https://XXXXX.supabase.co'       // ← ta project URL
-const SUPABASE_ANON = 'eyJhXXXXXXXXXXXXXXXXXXXXXXXXX'  // ← ta anon/public key
+const SUPABASE_URL  = 'https://fyaybxamuabawerqzuud.supabase.co'       // ← ta project URL
+const SUPABASE_ANON = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'  // ← ta anon/public key
 
 // ── Initialisation du client ────────────────────────────────────────
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'

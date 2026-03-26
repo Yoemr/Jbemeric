@@ -126,9 +126,16 @@ function applyTexts() {
     var el  = _els[i]
     var key = PAGE + '__' + el.id
     if (!_db[key]) continue
-    // Ne jamais toucher aux elements avec HTML interne (em, span)
-    // pour ne pas casser le style
-    if (el.querySelector('em,span,strong,b,i')) continue
+    // Ne JAMAIS appliquer si l element contient du HTML structure (em, span...)
+    // car textContent efface le em/span et casse le style CSS
+    var origHtml = el.getAttribute('data-orig-html') || ''
+    var hasMixed = el.querySelector('em,span,strong,b,i')
+                || origHtml.indexOf('<em') >= 0
+                || origHtml.indexOf('<span') >= 0
+    if (hasMixed) {
+      console.log('[JBE] Skip mixed element:', key)
+      continue
+    }
     el.textContent = _db[key]
   }
 }
@@ -374,6 +381,52 @@ function saveEl(el) {
     })
 }
 
+function cleanBrokenEntries() {
+  setStatus('\u23f3 Recherche des entr\u00e9es invalides...')
+
+  // Chercher dans Supabase toutes les entrées de cette page
+  sb.from('site_content').select('*').like('id', PAGE + '__%')
+    .then(function (res) {
+      if (res.error) { setStatus('\u274c ' + res.error.message); return }
+      if (!res.data || !res.data.length) {
+        setStatus('\u2705 Aucune entr\u00e9e \u00e0 nettoyer')
+        return
+      }
+
+      var toDelete = []
+      for (var i = 0; i < res.data.length; i++) {
+        var row = res.data[i]
+        // Trouver l'élément DOM correspondant
+        var elId = row.id.replace(PAGE + '__', '')
+        var el   = document.getElementById(elId)
+        if (!el) continue
+        // Si l'élément a des enfants HTML stylés → entrée invalide
+        if (el.querySelector('em,span,strong,b,i')) {
+          toDelete.push(row.id)
+          console.log('[JBE] Entrée invalide:', row.id, '=', row.content)
+        }
+      }
+
+      if (!toDelete.length) {
+        setStatus('\u2705 Aucune entr\u00e9e invalide trouv\u00e9e')
+        return
+      }
+
+      setStatus('\u23f3 Suppression de ' + toDelete.length + ' entr\u00e9e(s)...')
+      var delPromises = []
+      for (var j = 0; j < toDelete.length; j++) {
+        delPromises.push(sb.from('site_content').delete().eq('id', toDelete[j]))
+        delete _db[toDelete[j]]
+      }
+      Promise.all(delPromises).then(function () {
+        setStatus('\u2705 ' + toDelete.length + ' entr\u00e9e(s) supprim\u00e9e(s) \u2014 rechargez')
+        console.log('[JBE] Nettoy\u00e9:', toDelete)
+      }).catch(function (err) {
+        setStatus('\u274c ' + err.message)
+      })
+    })
+}
+
 function saveAll() {
   var count = 0
   for (var i = 0; i < _els.length; i++) {
@@ -397,8 +450,8 @@ function buildBar(user) {
     + '<div class="jbe-bar-left">'
     +   '<span class="jbe-dot"></span>'
     +   '<div class="jbe-bar-info">'
-    +     '<span class="jbe-bar-mode">Mode édition</span>'
-    +     '<span class="jbe-bar-user">Bonjour, <strong>' + prenom + '</strong></span>'
+    +     '<span class="jbe-bar-mode">Mode \u00e9dition</span>'
+    +     '<span class="jbe-bar-user">Bonjour\u00a0<strong>' + prenom + '</strong></span>'
     +   '</div>'
     + '</div>'
     + '<div id="jbe-msg" class="jbe-bar-status">'
@@ -406,24 +459,30 @@ function buildBar(user) {
     + '</div>'
     + '<div class="jbe-bar-right">'
     +   '<span class="jbe-bar-cnt" id="jbe-cnt"></span>'
-    +   '<button class="jbe-btn-save" onclick="window.__jbeSaveAll()">✓ Sauvegarder</button>'
-    +   '<a class="jbe-btn-dash" href="admin.html">Dashboard →</a>'
+    +   '<button class="jbe-btn-clean" onclick="window.__jbeClean()">\u26a0 R\u00e9parer</button>'
+    +   '<button class="jbe-btn-save" onclick="window.__jbeSaveAll()">\u2713 Sauvegarder</button>'
+    +   '<a class="jbe-btn-dash" href="admin.html">Dashboard \u2192</a>'
     + '</div>'
     + '</div>'
+
   var nav = document.querySelector('nav.nav')
   if (nav && nav.nextSibling) {
     nav.parentNode.insertBefore(bar, nav.nextSibling)
   } else {
     document.body.insertBefore(bar, document.body.firstChild)
   }
+
   var navH = nav ? nav.offsetHeight : 56
   bar.style.top = navH + 'px'
-  document.body.style.paddingTop = (navH + 42) + 'px'
+  var currentPad = parseInt(window.getComputedStyle(document.body).paddingTop) || 0
+  document.body.style.paddingTop = (currentPad + 42) + 'px'
+
   _bar = document.getElementById('jbe-msg')
   window.__jbeSaveAll = saveAll
+  window.__jbeClean   = cleanBrokenEntries
   var cntEl = document.getElementById('jbe-cnt')
   if (cntEl) cntEl.textContent = _els.length + ' zones'
-  console.log('[JBE] Barre admin sous nav')
+  console.log('[JBE] Barre admin OK')
 }
 
 function setStatus(msg) {
@@ -453,22 +512,24 @@ function injectCSS() {
   var s = document.createElement('style')
   s.id  = 'jbe-css'
   var css = ''
-  css += '#jbe-bar{position:fixed;left:0;right:0;z-index:999;background:#fff;border-bottom:1px solid rgba(0,0,0,.08);font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.06)}'
-  css += '.jbe-bar-inner{display:flex;align-items:center;height:42px;padding:0 20px;gap:16px}'
-  css += '.jbe-bar-left{display:flex;align-items:center;gap:10px;flex-shrink:0}'
+  css += '#jbe-bar{position:fixed;left:0;right:0;z-index:999;background:#fff;border-bottom:1px solid rgba(0,0,0,.1);font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.08)}'
+  css += '.jbe-bar-inner{display:flex;align-items:center;height:42px;padding:0 16px;gap:12px}'
+  css += '.jbe-bar-left{display:flex;align-items:center;gap:8px;flex-shrink:0}'
   css += '.jbe-dot{width:7px;height:7px;border-radius:50%;background:#34c759;flex-shrink:0;animation:jbepulse 2.5s ease-in-out infinite}'
   css += '@keyframes jbepulse{0%,100%{box-shadow:0 0 0 0 rgba(52,199,89,.4)}70%{box-shadow:0 0 0 7px rgba(52,199,89,0)}}'
-  css += '.jbe-bar-info{display:flex;flex-direction:column;line-height:1.2}'
-  css += '.jbe-bar-mode{font-size:11px;font-weight:600;color:#1c1c1e;letter-spacing:.2px}'
+  css += '.jbe-bar-info{display:flex;flex-direction:column;line-height:1.25}'
+  css += '.jbe-bar-mode{font-size:11px;font-weight:600;color:#1c1c1e}'
   css += '.jbe-bar-user{font-size:10px;color:#8e8e93}'
   css += '.jbe-bar-user strong{color:#1c1c1e;font-weight:600}'
-  css += '.jbe-bar-status{flex:1;font-size:11px;color:#aeaeb2;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;padding:0 12px}'
-  css += '.jbe-bar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}'
-  css += '.jbe-bar-cnt{font-size:10px;color:#c7c7cc;white-space:nowrap}'
-  css += '.jbe-btn-save{padding:6px 15px;background:#1c1c1e;color:#fff;border:none;border-radius:20px;font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .15s}'
-  css += '.jbe-btn-save:hover{opacity:.75}'
-  css += '.jbe-btn-dash{padding:6px 15px;background:transparent;color:#007aff;border:1.5px solid rgba(0,122,255,.3);border-radius:20px;font-size:11px;font-weight:600;text-decoration:none;transition:all .15s}'
-  css += '.jbe-btn-dash:hover{background:rgba(0,122,255,.06);border-color:rgba(0,122,255,.5)}'
+  css += '.jbe-bar-status{flex:1;font-size:11px;color:#aeaeb2;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;padding:0 8px}'
+  css += '.jbe-bar-right{display:flex;align-items:center;gap:6px;flex-shrink:0}'
+  css += '.jbe-bar-cnt{font-size:10px;color:#c7c7cc;white-space:nowrap;margin-right:4px}'
+  css += '.jbe-btn-save{padding:5px 13px;background:#1c1c1e;color:#fff;border:none;border-radius:20px;font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .15s;white-space:nowrap}'
+  css += '.jbe-btn-save:hover{opacity:.7}'
+  css += '.jbe-btn-clean{padding:5px 11px;background:transparent;color:#ff9500;border:1.5px solid rgba(255,149,0,.4);border-radius:20px;font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;white-space:nowrap}'
+  css += '.jbe-btn-clean:hover{background:rgba(255,149,0,.1)}'
+  css += '.jbe-btn-dash{padding:5px 13px;background:transparent;color:#007aff;border:1.5px solid rgba(0,122,255,.35);border-radius:20px;font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap;transition:all .15s}'
+  css += '.jbe-btn-dash:hover{background:rgba(0,122,255,.06)}'
   css += '.jbe-hover{outline:2px solid rgba(0,122,255,.4)!important;outline-offset:3px;border-radius:3px;cursor:text!important}'
   css += '.jbe-editing{outline:2px solid #007aff!important;outline-offset:3px;border-radius:3px;background:rgba(0,122,255,.04)!important;cursor:text!important}'
   css += '[contenteditable="true"]{caret-color:#007aff;user-select:text!important}'

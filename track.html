@@ -1479,4 +1479,61 @@ a{text-decoration:none;color:inherit}
       <div class="ft-contact-item">
         <span class="ft-contact-label">Email</span>
         <a class="ft-contact-val" href="mailto:jbemeric@jbemeric.com"><span c
+<script src="assets/js/track-sessions.js"></script>
 <script type="module" src="assets/js/live-editor.js"></script>
+
+<script>
+function vote(circuitId, pts) {
+  var btn = event.currentTarget
+  if (btn.disabled) return
+  btn.disabled = true
+  btn.textContent = 'Voté ✓'
+  btn.style.background = '#22c55e'
+  btn.style.color = '#000'
+  var cnt = document.getElementById('vote-count-' + circuitId)
+  if (cnt) cnt.textContent = parseInt(cnt.textContent || 0) + 1
+  var fill = document.getElementById('vote-fill-' + circuitId)
+  if (fill) fill.style.width = Math.min(100, parseFloat(fill.style.width||0) + 20) + '%'
+}
+function openModal(id) {
+  var m = document.getElementById(id)
+  if (!m) return
+  m.style.display = 'flex'
+  document.body.style.overflow = 'hidden'
+}
+function closeModal() {
+  document.querySelectorAll('.modal, [id$="-modal"]').forEach(function(m){ m.style.display='none' })
+  document.body.style.overflow = ''
+}
+function closeModalOutside(e) {
+  if (e.target === e.currentTarget) closeModal()
+}
+function confirmInscription() {
+  var nom  = document.getElementById('insc-nom')
+  var mail = document.getElementById('insc-email')
+  if (nom && !nom.value.trim()) { alert('Veuillez saisir votre nom.'); return }
+  if (mail && !mail.value.trim()) { alert('Veuillez saisir votre email.'); return }
+  var sujet = 'Inscription Track-Day JB EMERIC'
+  var corps = 'Nom : ' + (nom?nom.value:'') + '%0AEmail : ' + (mail?mail.value:'')
+  closeModal()
+  window.location.href = 'mailto:jbemeric@jbemeric.com?subject=' + encodeURIComponent(sujet) + '&body=' + corps
+}
+function filterCards(type) {
+  document.querySelectorAll('.sr-card').forEach(function(card) {
+    card.style.display = (type==='all' || card.getAttribute('data-status')===type) ? '' : 'none'
+  })
+  document.querySelectorAll('[data-filter]').forEach(function(b) {
+    b.classList.toggle('active', b.getAttribute('data-filter')===type)
+  })
+}
+function selectVeh(el, id) {
+  document.querySelectorAll('[data-veh]').forEach(function(v){ v.classList.remove('selected') })
+  el.classList.add('selected')
+  var inp = document.getElementById('selected-veh')
+  if (inp) inp.value = id
+}
+function toggleCoaching(el) { el.classList.toggle('selected') }
+function toggleCheck(el) { el.classList.toggle('checked') }
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal() })
+</script>
+</body></html>

@@ -1532,3 +1532,27 @@ body { background: var(--night) }
         <span class="ft-contact-label">Email</span>
         <a class="ft-contact-val" href="mailto:jbemeric@jbemeric.com">jbemeric@jbemeric.com
 <script type="module" src="assets/js/live-editor.js"></script>
+
+<script>
+(function() {
+  var fqs = document.querySelectorAll('.fq')
+  if (!fqs.length) return
+  var s = document.createElement('style')
+  s.textContent = ''
+    + '.fq{cursor:pointer}'
+    + '.fq-a{overflow:hidden;max-height:0;opacity:0;transition:max-height .35s ease,opacity .25s}'
+    + '.fq.open .fq-a{max-height:600px;opacity:1;padding-top:12px}'
+    + '.fq-q{display:flex;justify-content:space-between;align-items:center;user-select:none}'
+    + '.fq-q::after{content:"+";font-size:22px;font-weight:300;margin-left:16px;transition:transform .3s;color:var(--Y,#FFCF00);flex-shrink:0}'
+    + '.fq.open .fq-q::after{transform:rotate(45deg)}'
+  document.head.appendChild(s)
+  fqs.forEach(function(fq) {
+    fq.addEventListener('click', function() {
+      var isOpen = fq.classList.contains('open')
+      fqs.forEach(function(other){ other.classList.remove('open') })
+      if (!isOpen) fq.classList.add('open')
+    })
+  })
+})()
+</script>
+</body></html>

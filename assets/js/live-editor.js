@@ -15,29 +15,25 @@ var PAGE = (location.pathname.split('/').pop().replace('.html','')) || 'index'
 // Sélecteurs stricts — TEXTES PURS SEULEMENT
 // Exclus : éléments contenant des <em>, <span>, <a>, <img> (HTML structurant)
 var SEL = [
-  '.hero-kicker',
-  '.hero-sub',
-  '.hero-lead',
-  '.hero-eyebrow',
-  '.ov-desc',
-  '.ov-card-name',
-  '.ov-card-sub',
-  '.ov-card-num',
-  '.ov-eyebrow',
-  '.flyer-name',
-  '.flyer-hook',
-  '.flyer-pretitle',
-  '.flyer-tag',
-  '.pc-title',
-  '.pc-lead',
-  '.sr-title',
-  '.sr-lead',
-  '.body-txt',
-  '.kicker',
-  '.stat-key',
-  '.stat-desc',
-  '.man-title',
-  '.man-lead'
+  // Hero
+  '.hero-kicker', '.hero-sub', '.hero-lead', '.hero-eyebrow',
+  // Overview index
+  '.ov-desc', '.ov-eyebrow',
+  '.ov-card-name', '.ov-card-sub', '.ov-card-num', '.ov-card-price',
+  // Titres de section (sans span interne)
+  '.sh-kick',
+  // Coaching
+  '.flyer-hook', '.flyer-pretitle', '.flyer-tag', '.flyer-cta',
+  // Académie
+  '.pc-lead', '.man-lead',
+  '.porte-tag', '.porte-body', '.porte-cta',
+  // Track
+  '.sr-lead', '.body-txt',
+  '.sr-circuit', '.sr-prix',
+  // Générique
+  '.kicker', '.stat-key', '.stat-desc',
+  // Paddock
+  '.nl-subtitle', '.art-title', '.art-desc'
 ].join(',')
 
 var _db     = {}

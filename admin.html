@@ -10,18 +10,19 @@
    VARIABLES
    ═══════════════════════════════════════ */
 :root {
-  --Y:     #FFCF00;  --Yd: #C8A000;
-  --B2:    #0A3D91;  --B4: #1252C0;
-  --BN:    #040a1e;  --NK: #07080f;
-  --bg:    #07080f;  --card: #0d1120;  --card2: #111827;
-  --bd:    rgba(255,255,255,.07);
-  --bd-y:  rgba(255,207,0,.18);
-  --tx:    rgba(255,255,255,.92);
-  --tx2:   rgba(255,255,255,.45);
-  --muted: rgba(255,255,255,.22);
-  --ok:    #22c55e;  --err: #ef4444;
-  --vote:  #6366f1;
-  --sw:    220px;   /* sidebar width */
+  /* Palette Apple/Stripe — fond blanc, accents bleu iOS */
+  --Y:     #FFD60A;  --Yd: #F5C400;
+  --B2:    #0A3D91;  --B4: #007AFF;
+  --BN:    #1c1c1e;  --NK: #f5f5f7;
+  --bg:    #f5f5f7;  --card: #ffffff;  --card2: #f5f5f7;
+  --bd:    rgba(0,0,0,.09);
+  --bd-y:  rgba(0,122,255,.25);
+  --tx:    #1c1c1e;
+  --tx2:   #6e6e73;
+  --muted: #aeaeb2;
+  --ok:    #34c759;  --err: #ff3b30;
+  --vote:  #007AFF;
+  --sw:    220px;
 }
 
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
@@ -98,10 +99,10 @@ body {
   border:none; border-left:2px solid transparent;
   cursor:pointer; transition:all .15s; text-align:left;
 }
-.sb-btn:hover { color:var(--tx); background:rgba(255,255,255,.04) }
+.sb-btn:hover { color:var(--tx); background:rgba(0,0,0,.04) }
 .sb-btn.active {
-  color:var(--Y); background:rgba(255,207,0,.06);
-  border-left-color:var(--Y);
+  color:var(--B4); background:rgba(0,122,255,.07);
+  border-left-color:var(--B4);
 }
 .sb-btn svg { width:15px; height:15px; fill:currentColor; opacity:.55; flex-shrink:0 }
 .sb-btn.active svg { opacity:1 }
@@ -125,7 +126,7 @@ body {
 /* Topbar */
 .topbar {
   height:50px; padding:0 24px;
-  background:rgba(13,17,32,.96);
+  background:rgba(255,255,255,.96);
   backdrop-filter:blur(12px);
   border-bottom:1px solid var(--bd);
   display:flex; align-items:center;
@@ -167,7 +168,7 @@ body {
 .section-view.active { display:flex }
 
 /* ── Cards ── */
-.card { background:var(--card); border:1px solid var(--bd); border-radius:6px; overflow:hidden }
+.card { background:var(--card); border:1px solid var(--bd); border-radius:8px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,.06) }
 .card-head {
   padding:12px 16px; border-bottom:1px solid var(--bd);
   display:flex; align-items:center; justify-content:space-between; gap:10px;
@@ -442,7 +443,7 @@ tr:hover td { background:rgba(255,255,255,.02); color:var(--tx) }
   font-family:'DM Mono'; font-size:7.5px; letter-spacing:1px;
   text-transform:uppercase; font-weight:700;
   background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1);
-  color:rgba(255,255,255,.5);
+  color:var(--tx2);
 }
 .radar-source-tag .src-dot {
   width:5px; height:5px; border-radius:50%;

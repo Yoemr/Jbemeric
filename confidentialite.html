@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="index">
+<html lang="fr">
 <head>
 <link rel="stylesheet" href="assets/css/theme.css">
 <link rel="stylesheet" href="assets/css/nav.css">
@@ -379,8 +379,82 @@ a{text-decoration:none;color:inherit}
 </style>
 <script src="assets/js/site-data.js"></script>
 </head>
+<style>
+.legal-hero {
+  background: var(--BN);
+  padding: clamp(80px,10vw,120px) clamp(20px,5vw,72px) clamp(40px,5vw,60px);
+  text-align: center;
+}
+.legal-hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(36px,6vw,64px);
+  color: #fff;
+  letter-spacing: -1px;
+  margin: 0 0 12px;
+}
+.legal-hero .sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.35);
+}
+.legal-body {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: clamp(40px,6vw,80px) clamp(20px,5vw,40px);
+  color: rgba(255,255,255,.75);
+  line-height: 1.8;
+  font-size: 15px;
+}
+.legal-body h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  color: #fff;
+  margin: 40px 0 12px;
+  letter-spacing: .5px;
+}
+.legal-body h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,.9);
+  margin: 24px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.legal-body p { margin: 0 0 16px; }
+.legal-body a { color: var(--Y); text-decoration: none; }
+.legal-body a:hover { text-decoration: underline; }
+.legal-body ul { padding-left: 20px; margin: 0 0 16px; }
+.legal-body li { margin-bottom: 6px; }
+.legal-updated {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.25);
+  text-align: center;
+  padding: 0 0 60px;
+}
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--Y);
+  color: #000;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 4px;
+  margin: 0 0 40px;
+}
+</style>
+</head>
 <body>
-
 <nav class="nav">
   <a class="nav-logo" href="index.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 38" width="200" height="28">
       <polygon points="14,0 25,0 11,38 0,38" fill="#0A3D91"/>
@@ -427,198 +501,64 @@ a{text-decoration:none;color:inherit}
     <a href="https://www.facebook.com/JBEMERIC.Since1989" target="_blank" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3v-2.6c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5H13.9v8.4A12 12 0 0 0 24 12Z"/></svg></a>
     <a href="https://www.tiktok.com/@stagepilotagejbemeric" target="_blank" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M19.6 3.3A4.5 4.5 0 0 1 15.2 0h-3.3v15.6a2.7 2.7 0 0 1-2.7 2.3 2.7 2.7 0 0 1-2.7-2.7 2.7 2.7 0 0 1 2.7-2.7c.3 0 .5 0 .8.1V9.2a6 6 0 0 0-.8-.1 6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6V7.7a7.8 7.8 0 0 0 4.5 1.4V5.8a4.5 4.5 0 0 1-2.1-.5Z"/></svg></a>
   </div>
-  <div class="nav-mobile-auth">
-    <a class="mob-login" href="login.html">Se connecter</a>
-    <a class="mob-signup" href="signup.html">S'inscrire</a>
+
+<div class="legal-hero">
+  <div class="legal-hero">
+    <h1>Politique de Confidentialité</h1>
+    <div class="sub">JB EMERIC · École de Pilotage · Région PACA</div>
   </div>
 </div>
 
-<section class="hero">
-  <img src="https://jbemeric.com/wp-content/uploads/2025/12/PODIUM-RICARD-94-CHAMP-B-JB-GUIBBERT-TARRES-DANIEL-DELIEN-300x216-1.jpg" alt="JB Emeric podium Paul Ricard" style="object-position:center 20%">
-  <div class="hero-overlay"></div>
-  <div class="hero-stripe"></div>
-  <div class="hero-content">
-    <div class="hero-kicker">École de pilotage · Région PACA · Fondée en 1989</div>
-    <h1 class="hero-title">JB <em>EMERIC</em></h1>
-    <p class="hero-sub">Karting, coaching, stages en voiture de course et compétition. Encadré par Jean-Baptiste Emeric, Champion de France Formule Ford 1988.</p>
-    <div class="hero-btns">
-      <a class="btn btn-y" href="academie.html">Découvrir l'Académie</a>
-      <a class="btn btn-g" href="track.html">Stages &amp; Track-Days</a>
-    </div>
-  </div>
-</section>
+<div class="legal-body">
+  <a href="javascript:history.back()" class="back-btn">← Retour</a>
 
-<div class="sec-intro">
-  <div class="rv">
-    <div class="sh-kick">Jean-Baptiste Emeric · Champion de France 1988</div>
-    <div class="sh-title">39 ans de <span class="b">compétition.</span><br>Une seule école.</div>
-  </div>
-  <div class="stats">
-    <div class="stat rv d1">
-      <div class="stat-val" style="color:var(--B)">35+</div>
-      <div class="stat-key">Années d'expérience</div>
-      <div class="stat-desc">Pilote de course depuis 1986, formateur depuis 1989.</div>
-    </div>
-    <div class="stat rv d2">
-      <div class="stat-val" style="color:var(--B)">1988</div>
-      <div class="stat-key">Champion de France</div>
-      <div class="stat-desc">Formule Ford. Sebring, Spa, Paul Belmondo Racing.</div>
-    </div>
-    <div class="stat rv d3">
-      <div class="stat-val" style="color:var(--B)">5</div>
-      <div class="stat-key">Circuits partenaires</div>
-      <div class="stat-desc">Brignoles, KIP La Penne, Trets, Hyères, Cuges-les-Pins.</div>
-    </div>
-  </div>
+<h2>Responsable du traitement</h2>
+<p>Jean-Baptiste Emeric — École de Pilotage JB EMERIC<br>
+Email : <a href="mailto:jbemeric@jbemeric.com">jbemeric@jbemeric.com</a></p>
+
+<h2>Données collectées</h2>
+<p>Lors de votre inscription ou de votre contact via ce site, nous collectons les données suivantes :</p>
+<ul>
+  <li>Nom et prénom</li>
+  <li>Adresse e-mail</li>
+  <li>Numéro de téléphone (optionnel)</li>
+  <li>Données de connexion (adresse IP, navigateur)</li>
+</ul>
+
+<h2>Finalité du traitement</h2>
+<p>Vos données sont utilisées pour :</p>
+<ul>
+  <li>Gérer votre inscription aux stages et track-days</li>
+  <li>Vous envoyer des informations sur les prochaines sessions</li>
+  <li>Répondre à vos demandes de contact</li>
+  <li>Améliorer nos services</li>
+</ul>
+
+<h2>Base légale</h2>
+<p>Le traitement de vos données est fondé sur votre consentement explicite lors de l'inscription, et sur l'exécution du contrat pour les inscriptions aux stages.</p>
+
+<h2>Conservation des données</h2>
+<p>Vos données sont conservées pendant une durée de 3 ans à compter de votre dernière interaction avec nos services, sauf obligation légale contraire.</p>
+
+<h2>Partage des données</h2>
+<p>Vos données ne sont jamais vendues à des tiers. Elles peuvent être partagées uniquement avec les prestataires techniques nécessaires au fonctionnement du site (hébergeur Netlify, base de données Supabase), dans le strict cadre de leurs missions.</p>
+
+<h2>Vos droits</h2>
+<p>Conformément au RGPD, vous disposez des droits suivants :</p>
+<ul>
+  <li>Droit d'accès à vos données</li>
+  <li>Droit de rectification</li>
+  <li>Droit à l'effacement ("droit à l'oubli")</li>
+  <li>Droit à la portabilité</li>
+  <li>Droit d'opposition</li>
+</ul>
+<p>Pour exercer ces droits, contactez-nous à <a href="mailto:jbemeric@jbemeric.com">jbemeric@jbemeric.com</a></p>
+
+<h2>Cookies</h2>
+<p>Ce site utilise uniquement des cookies techniques essentiels au fonctionnement (authentification, préférences). Aucun cookie publicitaire n'est utilisé.</p>
+
 </div>
-
-<div class="sections-intro rv">
-  <div class="sh-kick">Ce que propose l'école</div>
-  <div class="sh-title" style="margin-bottom:0;padding-bottom:clamp(20px,3vw,36px)">Quatre façons de <span class="b">progresser.</span></div>
-</div>
-
-<div class="ov-sec light rv" id="section-academie" data-section="academie">
-  <div class="ov-head">
-    <div class="ov-head-left">
-      <div class="ov-eyebrow">01 · Académie</div>
-      <div class="ov-title">DEVENIR <span class="b">PILOTE</span></div>
-      <p class="ov-desc">Sur un circuit, on ne peut pas tricher. Du karting dès 7 ans jusqu'à la compétition officielle en BMW — un parcours en 3 étapes, encadré par JB EMERIC, Champion de France 1988.</p>
-    </div>
-    <a href="academie.html" class="ov-cta ov-cta-y">Découvrir l'Académie</a>
-  </div>
-  
-  
-  <div id="mirror-academie" class="mirror-container">
-    <!-- Chargé dynamiquement par sync-mirror.js -->
-  </div>
-
-  <div class="ov-tags rv d2">
-    <span class="ov-tag">Dès 7 ans</span>
-    <span class="ov-tag">5 circuits PACA</span>
-    <span class="ov-tag">Diplôme JB EMERIC</span>
-    <span class="ov-tag">BPJEPS Sport Auto</span>
-    <span class="ov-tag ov-tag-y">Champion de France 1988</span>
-  </div>
-</div>
-
-<div class="ov-sec dark rv" id="section-coaching" data-section="coaching">
-  <div class="ov-head">
-    <div class="ov-head-left">
-      <div class="ov-eyebrow">02 · Coaching</div>
-      <div class="ov-title" style="color:var(--B) !important">PROGRESSER VITE</div>
-      <p class="ov-desc">Coaching en présentiel sur circuit ou par vidéo à distance. 5 modules du pilote débutant au compétiteur confirmé.</p>
-    </div>
-    <a href="coaching.html" class="ov-cta">Voir le Coaching</a>
-  </div>
-  
-  
-  <div id="mirror-coaching" class="mirror-container">
-    <!-- Chargé dynamiquement par sync-mirror.js -->
-  </div>
-
-  <div class="ov-tags rv d2">
-    <span class="ov-tag">Débutant à confirmé</span>
-    <span class="ov-tag">Trajectoires</span>
-    <span class="ov-tag">Freinage progressif</span>
-    <span class="ov-tag">Sous-virage · Survirage</span>
-    <span class="ov-tag ov-tag-y">Retour JB direct</span>
-  </div>
-</div>
-
-<div class="ov-sec warm rv" id="section-track" data-section="track">
-  <div class="ov-head">
-    <div class="ov-head-left">
-      <div class="ov-eyebrow">03 · Track-Days &amp; Stages</div>
-      <div class="ov-title" style="color:#fff !important">VOITURES DE <span style="color:var(--B3)">COURSE</span></div>
-      <p class="ov-desc">Lotus Elise, Peugeot 206 S16, Caterham, Ferrari F8. Sur les plus beaux circuits France et Espagne.</p>
-    </div>
-    <a href="track.html" class="ov-cta ov-cta-y">Voir les dates 2026</a>
-  </div>
-  
-  
-  <div id="mirror-track" class="mirror-container">
-    <!-- Chargé dynamiquement par sync-mirror.js -->
-  </div>
-
-  <div class="ov-tags rv d2">
-    <span class="ov-tag">Paul Ricard</span>
-    <span class="ov-tag">Grand Sambuc</span>
-    <span class="ov-tag">Lédenon</span>
-    <span class="ov-tag">Barcelone</span>
-    <span class="ov-tag">Dijon-Prenois</span>
-    <span class="ov-tag ov-tag-y">Votre voiture possible</span>
-  </div>
-</div>
-
-<div class="ov-sec slate rv" id="section-paddock" data-section="paddock">
-  <div class="ov-head">
-    <div class="ov-head-left">
-      <div class="ov-eyebrow">04 · Le Paddock</div>
-      <div class="ov-title" style="color:var(--B) !important">L'UNIVERS JB</div>
-      <p class="ov-desc">40 ans de compétition, 10 000 abonnés YouTube, blog pilotage, réseaux sociaux et palmarès complet depuis 1986.</p>
-    </div>
-    <a href="paddock.html" class="ov-cta">Entrer dans le Paddock</a>
-  </div>
-  
-  <div class="ov-cards ov-cards-3 rv d1">
-    <a href="paddock.html#palmares" class="ov-card">
-      <div class="ov-card-img">
-        <img src="https://jbemeric.com/wp-content/uploads/2022/01/KARTING-X-2-AV-768x512.jpg" alt="Palmarès">
-        <span class="ov-card-badge ov-card-badge-y">1986 → 2026</span>
-      </div>
-      <div class="ov-card-body">
-        <div class="ov-card-num">40 ans</div>
-        <div class="ov-card-name">Palmarès</div>
-        <div class="ov-card-sub">Champion France FF1988 · Sebring · Spa</div>
-        <div class="ov-card-price" style="font-size:18px">Champion 1988</div>
-      </div>
-    </a>
-    <a href="https://www.youtube.com/channel/UCMTQjYff8llakx2twVNH2SA" target="_blank" class="ov-card">
-      <div class="ov-card-img" style="background:#0f0f0f;display:flex;align-items:center;justify-content:center">
-        <div style="text-align:center">
-          <div style="font-family:'Bebas Neue';font-size:52px;color:#fff;line-height:1">10K+</div>
-          <div style="font-family:'DM Mono';font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.4);text-transform:uppercase">Abonnés YouTube</div>
-        </div>
-        <span class="ov-card-badge" style="background:#FF0000">YouTube</span>
-      </div>
-      <div class="ov-card-body">
-        <div class="ov-card-num">Chaîne</div>
-        <div class="ov-card-name">YouTube</div>
-        <div class="ov-card-sub">Trajectoires · Conseils · Circuits</div>
-        <div class="ov-card-price" style="font-size:18px">10 000+ abonnés</div>
-      </div>
-    </a>
-    <a href="paddock.html#contact" class="ov-card">
-      <div class="ov-card-img" style="background:var(--B3);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px">
-        <div style="font-family:'Bebas Neue';font-size:20px;color:rgba(255,255,255,.3);letter-spacing:2px">AVIS CLIENTS</div>
-        <div style="display:flex;gap:4px">
-          <span style="font-size:24px">★</span><span style="font-size:24px">★</span><span style="font-size:24px">★</span><span style="font-size:24px">★</span><span style="font-size:24px">★</span>
-        </div>
-        <div style="font-family:'DM Mono';font-size:8px;letter-spacing:2px;color:rgba(255,255,255,.4);text-transform:uppercase">TripAdvisor</div>
-        <span class="ov-card-badge ov-card-badge-y" style="position:static">5 étoiles</span>
-      </div>
-      <div class="ov-card-body">
-        <div class="ov-card-num">Contact</div>
-        <div class="ov-card-name">Nous Contacter</div>
-        <div class="ov-card-sub">jbemeric@jbemeric.com · 06 60 18 87 87</div>
-        <div class="ov-card-price" style="font-size:16px;color:var(--B)">Réponse sous 24h</div>
-      </div>
-    </a>
-  </div>
-
-  <div class="ov-tags rv d2">
-    <span class="ov-tag">Facebook</span>
-    <span class="ov-tag">Instagram</span>
-    <span class="ov-tag">TikTok</span>
-    <span class="ov-tag">Blog pilotage</span>
-    <span class="ov-tag ov-tag-y">TripAdvisor 5★</span>
-  </div>
-</div>
-
-  
-</div>
-
-    
+<div class="legal-updated">Dernière mise à jour : Mars 2026</div>
 
 <footer class="footer">
   <div class="footer-top">
@@ -693,58 +633,6 @@ for (var i = 0; i < mobileLinks.length; i++) {
   });
 }
 </script>
-
-<script>
-/* INDEX DYNAMIQUE - JB EMERIC
-   Lit window.JBEMERIC_DATA et reconstruit les 4 sections */
-(function () {
-  if (!window.JBEMERIC_DATA) { return; }
-  var D = window.JBEMERIC_DATA;
-
-  function badge(text, gold) {
-    return '<span class="ov-card-badge' + (gold ? ' ov-card-badge-y' : '') + '">' + text + '</span>';
-  }
-  function tag(t) {
-    return '<span class="ov-tag' + (t.gold ? ' ov-tag-y' : '') + '">' + t.label + '</span>';
-  }
-  function card(cd) {
-    return '<a href="' + cd.href + '" class="ov-card">'
-      + '<div class="ov-card-img">'
-      + '<img src="' + cd.img + '" alt="' + cd.name + '" loading="lazy">'
-      + badge(cd.badge, cd.badgeGold)
-      + '</div>'
-      + '<div class="ov-card-body">'
-      + '<div class="ov-card-num">' + cd.num + '</div>'
-      + '<div class="ov-card-name">' + cd.name + '</div>'
-      + (cd.sub ? '<div class="ov-card-sub">' + cd.sub + '</div>' : '')
-      + (cd.price ? '<div class="ov-card-price' + (cd.priceGold ? ' y' : '') + '">' + cd.price + '</div>' : '')
-      + '</div></a>';
-  }
-
-  var secs = ['academie','coaching','track','paddock'];
-  for (var s = 0; s < secs.length; s++) {
-    var sec = secs[s];
-    var data = D[sec];
-    if (!data) continue;
-    var grid = document.getElementById('mirror-' + sec);
-    if (!grid) continue;
-    var html = '';
-    if (data.cards) {
-      for (var i = 0; i < data.cards.length; i++) html += card(data.cards[i]);
-    }
-    if (html) grid.innerHTML = html;
-    var titleEl = document.querySelector('#section-' + sec + ' .ov-title');
-    if (titleEl && data.title) titleEl.textContent = data.title;
-    var descEl = document.querySelector('#section-' + sec + ' .ov-desc');
-    if (descEl && data.desc) descEl.textContent = data.desc;
-    var tagsEl = document.querySelector('#section-' + sec + ' .ov-tags');
-    if (tagsEl && data.tags) {
-      var tagsHtml = '';
-      for (var j = 0; j < data.tags.length; j++) tagsHtml += tag(data.tags[j]);
-      tagsEl.innerHTML = tagsHtml;
-    }
-  }
-})();
-</script>
-
 <script type="module" src="assets/js/live-editor.js"></script>
+</body>
+</html>

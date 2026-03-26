@@ -16,6 +16,7 @@ var PAGE = (location.pathname.split('/').pop().replace('.html','')) || 'index'
 // Exclus : éléments contenant des <em>, <span>, <a>, <img> (HTML structurant)
 var SEL = [
   // Hero
+  '.hero-title', '.hero-lead',
   '.hero-kicker', '.hero-sub', '.hero-lead', '.hero-eyebrow',
   // Overview index
   '.ov-desc', '.ov-eyebrow',
@@ -89,9 +90,9 @@ function scanElements() {
     var el = all[i]
     // Exclure nav, footer, svg
     if (el.closest('nav') || el.closest('footer') || el.closest('svg')) continue
-    // Exclure si l'element contient des balises HTML structurantes
-    // (em, span, a, img, button → le CSS dépend d'elles)
-    if (el.querySelector('em,span,a,img,button,strong,b,i')) continue
+    // Exclure seulement si l'element contient des liens ou images
+    // (em, span autorisés → on editera uniquement les text nodes directs)
+    if (el.querySelector('a,img,button,input,select,textarea')) continue
     // Texte vide
     var txt = el.textContent.trim()
     if (!txt || txt.length < 2) continue
@@ -125,8 +126,37 @@ function loadTexts() {
 
 function applyTexts() {
   for (var i = 0; i < _els.length; i++) {
-    var key = PAGE + '__' + _els[i].id
-    if (_db[key]) _els[i].textContent = _db[key]
+    var el  = _els[i]
+    var key = PAGE + '__' + el.id
+    if (!_db[key]) continue
+    setTextPreserveChildren(el, _db[key])
+  }
+}
+
+// Remplace uniquement les text nodes directs de l'element
+// sans toucher aux <em>, <span> etc. qui portent du CSS
+function setTextPreserveChildren(el, newText) {
+  var children = el.childNodes
+  var hasStructural = false
+  for (var i = 0; i < children.length; i++) {
+    if (children[i].nodeType === 1) { hasStructural = true; break }
+  }
+  if (!hasStructural) {
+    // Element pur texte → remplacer directement
+    el.textContent = newText
+    return
+  }
+  // Element mixte (ex: "JB <em>EMERIC</em>")
+  // → remplacer uniquement le PREMIER text node direct
+  for (var i = 0; i < el.childNodes.length; i++) {
+    var node = el.childNodes[i]
+    if (node.nodeType === 3 && node.textContent.trim()) {
+      // Conserver les espaces autour
+      var before = node.textContent.match(/^\s*/)[0]
+      var after  = node.textContent.match(/\s*$/)[0]
+      node.textContent = before + newText + after
+      return
+    }
   }
 }
 
@@ -207,38 +237,88 @@ function startEdit(el) {
 
   el.classList.remove('jbe-hover')
   el.classList.add('jbe-editing')
-  el.contentEditable = 'true'
-  el.spellcheck      = false
-  el.style.cursor    = 'text'
+  el.style.cursor = 'text'
 
-  // Sélectionner tout le texte
-  el.focus()
-  try {
-    var r = document.createRange()
-    r.selectNodeContents(el)
-    var s = window.getSelection()
-    if (s) { s.removeAllRanges(); s.addRange(r) }
-  } catch (err) {}
+  // Determiner si l element a des enfants HTML (em, span...)
+  var hasChildren = !!el.querySelector('em,span,strong,b,i')
 
-  el._p = function (e) { onPaste(e) }
-  el._k = function (e) { onKey(e, el) }
-  el._i = function ()  { onInput(el) }
-
-  el.addEventListener('paste',   el._p)
-  el.addEventListener('keydown', el._k)
-  el.addEventListener('input',   el._i)
+  if (hasChildren) {
+    // Mode textNode : rendre editable seulement le premier text node direct
+    // Les <em>/<span> restent intacts → le CSS ne casse pas
+    var firstTextNode = null
+    for (var ci = 0; ci < el.childNodes.length; ci++) {
+      if (el.childNodes[ci].nodeType === 3 && el.childNodes[ci].textContent.trim()) {
+        firstTextNode = el.childNodes[ci]; break
+      }
+    }
+    // Creer un span editable autour du premier text node
+    if (firstTextNode) {
+      var wrapper = document.createElement('span')
+      wrapper.contentEditable = 'true'
+      wrapper.spellcheck      = false
+      wrapper.className       = 'jbe-text-edit'
+      wrapper.textContent     = firstTextNode.textContent.trim()
+      wrapper.style.outline   = 'none'
+      el.replaceChild(wrapper, firstTextNode)
+      el.setAttribute('data-has-wrapper', '1')
+      wrapper.focus()
+      try {
+        var r = document.createRange(); r.selectNodeContents(wrapper)
+        var s = window.getSelection(); if(s){s.removeAllRanges();s.addRange(r)}
+      } catch(err) {}
+      wrapper._p = function(e){ onPaste(e) }
+      wrapper._k = function(e){ onKey(e, el) }
+      wrapper._i = function(){ onInput(el) }
+      wrapper._b = function(){ stopEdit(el, true) }
+      wrapper.addEventListener('paste',   wrapper._p)
+      wrapper.addEventListener('keydown', wrapper._k)
+      wrapper.addEventListener('input',   wrapper._i)
+      wrapper.addEventListener('blur',    wrapper._b)
+      el._wrapper = wrapper
+    }
+  } else {
+    // Mode classique : element pur texte
+    el.contentEditable = 'true'
+    el.spellcheck      = false
+    el.focus()
+    try {
+      var r = document.createRange(); r.selectNodeContents(el)
+      var s = window.getSelection(); if(s){s.removeAllRanges();s.addRange(r)}
+    } catch(err){}
+    el._p = function(e){ onPaste(e) }
+    el._k = function(e){ onKey(e, el) }
+    el._i = function(){  onInput(el) }
+    el.addEventListener('paste',   el._p)
+    el.addEventListener('keydown', el._k)
+    el.addEventListener('input',   el._i)
+  }
 
   setStatus('\u270e Modifiez le texte \u00b7 Entr\u00e9e = sauvegarder \u00b7 \u00c9chap = annuler')
 }
 
 function stopEdit(el, doSave) {
-  el.contentEditable = 'false'
-  el.style.cursor    = 'default'
+  el.style.cursor = 'default'
   el.classList.remove('jbe-editing')
 
-  el.removeEventListener('paste',   el._p)
-  el.removeEventListener('keydown', el._k)
-  el.removeEventListener('input',   el._i)
+  // Si on avait un wrapper span, le decoller proprement
+  if (el._wrapper) {
+    var w   = el._wrapper
+    var txt = w.textContent
+    w.removeEventListener('paste',   w._p)
+    w.removeEventListener('keydown', w._k)
+    w.removeEventListener('input',   w._i)
+    w.removeEventListener('blur',    w._b)
+    // Remplacer le wrapper par un text node propre
+    var textNode = document.createTextNode(txt + ' ')
+    el.replaceChild(textNode, w)
+    el._wrapper = null
+    el.removeAttribute('data-has-wrapper')
+  } else {
+    el.contentEditable = 'false'
+    el.removeEventListener('paste',   el._p)
+    el.removeEventListener('keydown', el._k)
+    el.removeEventListener('input',   el._i)
+  }
 
   var key = PAGE + '__' + el.id
   if (doSave && _dirty[key]) saveEl(el)
@@ -319,8 +399,8 @@ function saveEl(el) {
   var content = getPlainText(el)
   if (!key || !content) return
 
-  // Remettre proprement le textContent (retire tout HTML résiduel)
-  el.textContent = content
+  // Remettre proprement — en preservant les enfants HTML (em, span...)
+  setTextPreserveChildren(el, content)
 
   setStatus('\u23f3 Sauvegarde...')
 

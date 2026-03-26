@@ -145,19 +145,13 @@ function updateNav(user, isAdmin) {
                : (user.email ? user.email.split('@')[0] : 'Admin')
   var desk = document.querySelector('.nav-auth')
   if (desk) {
-    desk.innerHTML = isAdmin
-      ? '<a class="nav-btn-admin" href="admin.html">\u2746 Admin</a>'
-        + '<button class="nav-btn-logout" onclick="window.__jbeOut()">D\u00e9connexion</button>'
-      : '<span class="nav-btn-user">' + prenom + '</span>'
-        + '<button class="nav-btn-logout" onclick="window.__jbeOut()">D\u00e9connexion</button>'
+    desk.innerHTML = '<span class="nav-btn-user">' + prenom + '</span>'
+      + '<button class="nav-btn-logout" onclick="window.__jbeOut()">D\u00e9connexion</button>'
   }
   var mob = document.querySelector('.nav-mobile-cta')
          || document.querySelector('.nav-mobile-auth')
   if (mob) {
-    mob.innerHTML = isAdmin
-      ? '<a class="nav-mobile-btn" href="admin.html">\u2746 Admin</a>'
-        + '<button class="nav-mobile-btn" onclick="window.__jbeOut()">D\u00e9connexion</button>'
-      : '<button class="nav-mobile-btn" onclick="window.__jbeOut()">D\u00e9connexion</button>'
+    mob.innerHTML = '<button class="nav-mobile-btn" onclick="window.__jbeOut()">D\u00e9connexion</button>'
   }
   window.__jbeOut = function () {
     sb.auth.signOut().then(function () { location.reload() })
@@ -396,33 +390,40 @@ function buildBar(user) {
   var prenom = (user.user_metadata && user.user_metadata.prenom)
                ? user.user_metadata.prenom
                : (user.email ? user.email.split('@')[0] : 'JB')
-  var bar    = document.createElement('div')
-  bar.id     = 'jbe-bar'
+  var bar = document.createElement('div')
+  bar.id  = 'jbe-bar'
   bar.innerHTML =
-    '<div class="jbe-l">'
-    + '<span class="jbe-dot"></span>'
-    + '<span class="jbe-title">Mode \u00c9dition</span>'
-    + '<span class="jbe-name">Bonjour, <b>' + prenom + '</b></span>'
+    '<div class="jbe-bar-inner">'
+    + '<div class="jbe-bar-left">'
+    +   '<span class="jbe-dot"></span>'
+    +   '<div class="jbe-bar-info">'
+    +     '<span class="jbe-bar-mode">Mode édition</span>'
+    +     '<span class="jbe-bar-user">Bonjour, <strong>' + prenom + '</strong></span>'
+    +   '</div>'
     + '</div>'
-    + '<div id="jbe-msg" class="jbe-m">'
-    + 'Double-cliquez sur un texte pour le modifier'
+    + '<div id="jbe-msg" class="jbe-bar-status">'
+    +   'Double-cliquez sur un texte pour le modifier'
     + '</div>'
-    + '<div class="jbe-r">'
-    + '<span class="jbe-cnt" id="jbe-cnt"></span>'
-    + '<button class="jbe-btn-save" onclick="window.__jbeSaveAll()">'
-    + 'Sauvegarder tout'
-    + '</button>'
-    + '<a class="jbe-btn-dash" href="admin.html">Dashboard</a>'
+    + '<div class="jbe-bar-right">'
+    +   '<span class="jbe-bar-cnt" id="jbe-cnt"></span>'
+    +   '<button class="jbe-btn-save" onclick="window.__jbeSaveAll()">✓ Sauvegarder</button>'
+    +   '<a class="jbe-btn-dash" href="admin.html">Dashboard →</a>'
     + '</div>'
-  document.body.insertBefore(bar, document.body.firstChild)
-  document.body.style.paddingTop = '44px'
+    + '</div>'
+  var nav = document.querySelector('nav.nav')
+  if (nav && nav.nextSibling) {
+    nav.parentNode.insertBefore(bar, nav.nextSibling)
+  } else {
+    document.body.insertBefore(bar, document.body.firstChild)
+  }
+  var navH = nav ? nav.offsetHeight : 56
+  bar.style.top = navH + 'px'
+  document.body.style.paddingTop = (navH + 42) + 'px'
   _bar = document.getElementById('jbe-msg')
   window.__jbeSaveAll = saveAll
-
-  // Afficher le nombre de zones
   var cntEl = document.getElementById('jbe-cnt')
-  if (cntEl) cntEl.textContent = _els.length + ' zones \u00e9ditables'
-  console.log('[JBE] Barre admin OK — ' + _els.length + ' zones')
+  if (cntEl) cntEl.textContent = _els.length + ' zones'
+  console.log('[JBE] Barre admin sous nav')
 }
 
 function setStatus(msg) {
@@ -452,23 +453,25 @@ function injectCSS() {
   var s = document.createElement('style')
   s.id  = 'jbe-css'
   var css = ''
-  css += '#jbe-bar{position:fixed;top:0;left:0;right:0;z-index:99998;height:44px;background:rgba(255,255,255,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.1);display:flex;align-items:center;padding:0 20px;gap:16px;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;font-size:13px;color:#1c1c1e;box-shadow:0 1px 0 rgba(0,0,0,.06)}'
-  css += '.jbe-l{display:flex;align-items:center;gap:10px;flex-shrink:0}'
-  css += '.jbe-dot{width:8px;height:8px;border-radius:50%;background:#34c759;flex-shrink:0;box-shadow:0 0 0 0 rgba(52,199,89,.4);animation:jbepulse 2.5s ease-in-out infinite}'
-  css += '@keyframes jbepulse{0%{box-shadow:0 0 0 0 rgba(52,199,89,.4)}70%{box-shadow:0 0 0 7px rgba(52,199,89,0)}100%{box-shadow:0 0 0 0 rgba(52,199,89,0)}}'
-  css += '.jbe-title{font-weight:600;font-size:13px;color:#1c1c1e}'
-  css += '.jbe-name{font-size:12px;color:#6e6e73}'
-  css += '.jbe-m{flex:1;font-size:12px;color:#8e8e93;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'
-  css += '.jbe-r{display:flex;align-items:center;gap:8px;flex-shrink:0}'
-  css += '.jbe-cnt{font-size:11px;color:#aeaeb2}'
-  css += '.jbe-btn-save{padding:5px 14px;background:#007aff;color:#fff;border:none;border-radius:14px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;transition:background .15s}'
-  css += '.jbe-btn-save:hover{background:#0066d6}'
-  css += '.jbe-btn-dash{padding:5px 14px;background:transparent;color:#007aff;border:1px solid rgba(0,122,255,.35);border-radius:14px;font-size:12px;font-weight:500;text-decoration:none;transition:all .15s}'
-  css += '.jbe-btn-dash:hover{background:rgba(0,122,255,.06)}'
-  css += '.jbe-hover{outline:2px solid rgba(0,122,255,.45)!important;outline-offset:3px;border-radius:3px;cursor:text!important}'
+  css += '#jbe-bar{position:fixed;left:0;right:0;z-index:999;background:#fff;border-bottom:1px solid rgba(0,0,0,.08);font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.06)}'
+  css += '.jbe-bar-inner{display:flex;align-items:center;height:42px;padding:0 20px;gap:16px}'
+  css += '.jbe-bar-left{display:flex;align-items:center;gap:10px;flex-shrink:0}'
+  css += '.jbe-dot{width:7px;height:7px;border-radius:50%;background:#34c759;flex-shrink:0;animation:jbepulse 2.5s ease-in-out infinite}'
+  css += '@keyframes jbepulse{0%,100%{box-shadow:0 0 0 0 rgba(52,199,89,.4)}70%{box-shadow:0 0 0 7px rgba(52,199,89,0)}}'
+  css += '.jbe-bar-info{display:flex;flex-direction:column;line-height:1.2}'
+  css += '.jbe-bar-mode{font-size:11px;font-weight:600;color:#1c1c1e;letter-spacing:.2px}'
+  css += '.jbe-bar-user{font-size:10px;color:#8e8e93}'
+  css += '.jbe-bar-user strong{color:#1c1c1e;font-weight:600}'
+  css += '.jbe-bar-status{flex:1;font-size:11px;color:#aeaeb2;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;padding:0 12px}'
+  css += '.jbe-bar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}'
+  css += '.jbe-bar-cnt{font-size:10px;color:#c7c7cc;white-space:nowrap}'
+  css += '.jbe-btn-save{padding:6px 15px;background:#1c1c1e;color:#fff;border:none;border-radius:20px;font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .15s}'
+  css += '.jbe-btn-save:hover{opacity:.75}'
+  css += '.jbe-btn-dash{padding:6px 15px;background:transparent;color:#007aff;border:1.5px solid rgba(0,122,255,.3);border-radius:20px;font-size:11px;font-weight:600;text-decoration:none;transition:all .15s}'
+  css += '.jbe-btn-dash:hover{background:rgba(0,122,255,.06);border-color:rgba(0,122,255,.5)}'
+  css += '.jbe-hover{outline:2px solid rgba(0,122,255,.4)!important;outline-offset:3px;border-radius:3px;cursor:text!important}'
   css += '.jbe-editing{outline:2px solid #007aff!important;outline-offset:3px;border-radius:3px;background:rgba(0,122,255,.04)!important;cursor:text!important}'
   css += '[contenteditable="true"]{caret-color:#007aff;user-select:text!important}'
-  css += '.nav-btn-admin{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;background:rgba(255,255,255,.9);color:#111;padding:6px 14px;border-radius:5px;text-decoration:none;box-shadow:0 1px 6px rgba(0,0,0,.2);display:inline-flex;align-items:center;gap:5px}'
   css += '.nav-btn-logout{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);background:transparent;padding:6px 13px;border-radius:5px;border:1px solid rgba(255,255,255,.2);cursor:pointer}'
   css += '.nav-btn-logout:hover{color:#fff;border-color:rgba(255,255,255,.5)}'
   css += '.nav-btn-user{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6)}'

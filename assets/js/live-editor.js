@@ -217,7 +217,17 @@ function startEdit(el) {
   el.focus()
   try {
     var r = document.createRange()
-    r.selectNodeContents(el)
+    // Si element mixte (em/span) : selectionner seulement le premier text node
+    // pour eviter que Ctrl+A efface le em
+    var firstTxt = null
+    for (var ci = 0; ci < el.childNodes.length; ci++) {
+      if (el.childNodes[ci].nodeType === 3) { firstTxt = el.childNodes[ci]; break }
+    }
+    if (firstTxt) {
+      r.selectNodeContents(firstTxt)
+    } else {
+      r.selectNodeContents(el)
+    }
     var s = window.getSelection()
     if (s) { s.removeAllRanges(); s.addRange(r) }
   } catch (err) {}
@@ -241,7 +251,12 @@ function stopEdit(el, doSave) {
   el.removeEventListener('input',   el._i)
   el.removeEventListener('blur',    el._b)
   el._wrapper = null
+  // Si element mixed et pas sauvegarde → restaurer l HTML original
   var key = PAGE + '__' + el.id
+  if (!_dirty[key] && el.getAttribute('data-orig-html')) {
+    var oh = el.getAttribute('data-orig-html')
+    if (el.innerHTML !== oh) el.innerHTML = oh
+  }
   if (doSave && _dirty[key]) saveEl(el)
   if (_active === el) _active = null
 }
@@ -268,10 +283,15 @@ function onKey(e, el) {
     stopEdit(el, true)
     return
   }
-  // Échap = annuler
+  // Échap = annuler sans casser le HTML
   if (e.key === 'Escape') {
     var key = PAGE + '__' + el.id
-    el.textContent = _db[key] || el.getAttribute('data-orig') || ''
+    var origHtml = el.getAttribute('data-orig-html')
+    if (origHtml) {
+      el.innerHTML = origHtml
+    } else {
+      el.textContent = _db[key] || el.getAttribute('data-orig') || ''
+    }
     delete _dirty[key]
     stopEdit(el, false)
   }

@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr" data-theme="paddock">
 <head>
-<meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Paddock — JB EMERIC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -946,8 +948,8 @@ body { background: var(--night) }
 
 <section class="hero">
   <div class="hero-bg" style="background:linear-gradient(135deg,#040a1e 0%,#0A3D91 60%,#1252C0 100%)">
-    <img src="https://jbemeric.com/wp-content/uploads/2022/01/KARTING-X-2-AV-768x512.jpg"
-         alt="Paddock JB EMERIC"
+    <img src="assets/images/karting-enfant-circuit.jpg"
+         alt="Enfant en karting sur circuit JB EMERIC"
          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;z-index:1">
   </div>
   <div class="hero-num">04</div>
@@ -982,7 +984,7 @@ body { background: var(--night) }
     <div class="nl-col nl-col-left">
       <div class="nl-event-poster">
         <div class="nl-event-bg">
-          <img src="https://jbemeric.com/wp-content/uploads/2026/02/B-M-W-325-I-HTCC-3-4-AVANT.jpg" alt="Challenge 2026">
+          <img src="assets/images/bmw-325i-htcc.jpg" alt="BMW 325i HTCC Challenge JB EMERIC">
           <div class="nl-event-overlay"></div>
         </div>
         <div class="nl-event-content">
@@ -1006,7 +1008,7 @@ body { background: var(--night) }
       <div class="nl-section-label">Dernier article technique</div>
       <a class="nl-article-card" href="paddock.html#blog">
         <div class="nl-article-img">
-          <img src="https://jbemeric.com/wp-content/uploads/2022/01/KARTING-X-2-AV-768x512.jpg" alt="Article">
+          <img src="assets/images/karting-enfant-circuit.jpg" alt="Enfant en karting sur circuit JB EMERIC">
           <div class="nl-article-cat">Freinage</div>
         </div>
         <div class="nl-article-body">
@@ -1017,7 +1019,7 @@ body { background: var(--night) }
       <div class="nl-section-label">Dernière vidéo YouTube</div>
       <a class="nl-yt-card" href="https://www.youtube.com/channel/UCMTQjYff8llakx2twVNH2SA" target="_blank">
         <div class="nl-yt-thumb">
-          <img src="https://jbemeric.com/wp-content/uploads/2022/05/Depart-avec-les-news-270cc-compresse-768x576.jpg" alt="YouTube">
+          <img src="assets/images/karting-adulte-depart.jpg" alt="Départ karting adulte JB EMERIC">
           <div class="nl-yt-play">▶</div>
         </div>
         <div class="nl-yt-info">
@@ -1611,9 +1613,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Articles depuis site-data.js
   var D=window.JBEMERIC_DATA;
   var ARTICLES=[
-    {revue:'TECH PILOTAGE',issue:'N°01',bg:'linear-gradient(150deg,#040a1e,#0D2F6E)',img:'https://jbemeric.com/wp-content/uploads/2022/01/KARTING-X-2-AV-768x512.jpg',cat:'Freinage',catBg:'linear-gradient(135deg,#F5D061,#C8860A)',catCol:'#000',title:'Pourquoi vous perdez 2 secondes au virage 3',kw:'Points de corde · Repères',rule:'#FFCF00',date:'12 Mars 2026',read:'6 min'},
-    {revue:'CHALLENGE AUTO',issue:'N°02',bg:'linear-gradient(150deg,#120800,#3d1800)',img:'https://jbemeric.com/wp-content/uploads/2026/02/B-M-W-325-I-HTCC-3-4-AVANT.jpg',cat:'Challenge',catBg:'linear-gradient(135deg,#F5D061,#C8860A)',catCol:'#000',title:'Du kart à la BMW HTCC — ce que personne ne dit',kw:'Transition · Course',rule:'#C8860A',date:'5 Mars 2026',read:'8 min'},
+    {revue:'TECH PILOTAGE',issue:'N°01',bg:'linear-gradient(150deg,#040a1e,#0D2F6E)',img:'assets/images/karting-enfant-circuit.jpg',cat:'Freinage',catBg:'linear-gradient(135deg,#F5D061,#C8860A)',catCol:'#000',title:'Pourquoi vous perdez 2 secondes au virage 3',kw:'Points de corde · Repères',rule:'#FFCF00',date:'12 Mars 2026',read:'6 min'},
+    {revue:'CHALLENGE AUTO',issue:'N°02',bg:'linear-gradient(150deg,#120800,#3d1800)',img:'assets/images/bmw-325i-htcc.jpg',cat:'Challenge',catBg:'linear-gradient(135deg,#F5D061,#C8860A)',catCol:'#000',title:'Du kart à la BMW HTCC — ce que personne ne dit',kw:'Transition · Course',rule:'#C8860A',date:'5 Mars 2026',read:'8 min'},
     {revue:'SIM RACING',issue:'N°03',bg:'linear-gradient(150deg,#071f5c,#040a1e)',img:'https://jbemeric.com/wp-content/uploads/2026/02/SIMULATEUR-1-768x480.png',cat:'Simulateur',catBg:'rgba(255,255,255,.15)',catCol:'#fff',title:'Le simulateur sert vraiment en circuit réel ?',kw:'World SIM RACER · Mémorisation',rule:'#4A9EFF',date:'28 Fév. 2026',read:'4 min'},
-    {revue:'CIRCUITS PACA',issue:'N°04',bg:'linear-gradient(150deg,#0f0f0f,#0A3D91)',img:'https://jbemeric.com/wp-content/uploads/2022/05/Depart-avec-les-news-270cc-compresse-768x576.jpg',cat:'Karting',catBg:'#0A3D91',catCol:'#fff',title:'Brignoles virage par virage — analyse complète',kw:'Apex · Freinage · Corde',rule:'#FFCF00',date:'20 Fév. 2026',read:'5 min'},
+    {revue:'CIRCUITS PACA',issue:'N°04',bg:'linear-gradient(150deg,#0f0f0f,#0A3D91)',img:'assets/images/karting-adulte-depart.jpg',cat:'Karting',catBg:'#0A3D91',catCol:'#fff',title:'Brignoles virage par virage — analyse complète',kw:'Apex · Freinage · Corde',rule:'#FFCF00',date:'20 Fév. 2026',read:'5 min'},
     {revue:'COACHING LAB',issue:'N°05',bg:'linear-gradient(150deg,#1a0a00,#3d2000)',img:'https://jbemeric.com/wp-content/uploads/2022/01/COACHING-CIRCUIT-compresse-768x576.jpg',cat:'Méthode',catBg:'linear-gradient(135deg,#F5D061,#C886
 <script type="module" src="assets/js/live-editor.js"></script>

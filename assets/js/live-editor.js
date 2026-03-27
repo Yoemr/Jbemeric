@@ -12,36 +12,24 @@ var sb      = createClient(SB_URL, SB_ANON)
 
 var PAGE = (location.pathname.split('/').pop().replace('.html','')) || 'index'
 
-// Sélecteurs stricts — TEXTES PURS SEULEMENT
-// Exclus : éléments contenant des <em>, <span>, <a>, <img> (HTML structurant)
+// Sélecteurs texte — textes purs uniquement
 var SEL = [
-  // Hero
-  '.hero-title', '.hero-lead',
-  '.hero-kicker', '.hero-sub', '.hero-lead', '.hero-eyebrow',
-  // Overview index
-  '.ov-desc', '.ov-eyebrow',
-  '.ov-card-name', '.ov-card-sub', '.ov-card-num', '.ov-card-price',
-  // Titres de section (sans span interne)
+  '.hero-title', '.hero-lead', '.hero-kicker', '.hero-sub', '.hero-eyebrow',
+  '.ov-desc', '.ov-eyebrow', '.ov-card-name', '.ov-card-sub', '.ov-card-num', '.ov-card-price',
   '.sh-kick',
-  // Coaching
   '.flyer-hook', '.flyer-pretitle', '.flyer-tag', '.flyer-cta',
-  // Académie
-  '.pc-lead', '.man-lead',
-  '.porte-tag', '.porte-body', '.porte-cta',
-  // Track
-  '.sr-lead', '.body-txt',
-  '.sr-circuit', '.sr-prix',
-  // Générique
+  '.pc-lead', '.man-lead', '.porte-tag', '.porte-body', '.porte-cta',
+  '.sr-lead', '.body-txt', '.sr-circuit', '.sr-prix',
   '.kicker', '.stat-key', '.stat-desc',
-  // Paddock
   '.nl-subtitle', '.art-title', '.art-desc'
 ].join(',')
 
-var _db     = {}
-var _els    = []
-var _dirty  = {}
-var _active = null
-var _bar    = null
+var _db      = {}
+var _els     = []
+var _imgs    = []
+var _dirty   = {}
+var _active  = null
+var _bar     = null
 
 // Anti-flash
 var _hs = document.createElement('style')
@@ -73,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (isAdmin) {
         injectCSS()
         activateEditing()
+        activateImages()
         buildBar(user)
       }
     })
@@ -80,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 // ─────────────────────────────────────────────
-//  SCAN — ne garde que les éléments sans HTML interne
+//  SCAN TEXTES
 // ─────────────────────────────────────────────
 function scanElements() {
   _els = []
@@ -89,7 +78,6 @@ function scanElements() {
   for (var i = 0; i < all.length; i++) {
     var el = all[i]
     if (el.closest('nav') || el.closest('footer') || el.closest('svg')) continue
-    // Exclure les éléments avec liens ou images (navigation, pas texte)
     if (el.querySelector('a,img,button,input,select,textarea')) continue
     var txt = el.textContent.trim()
     if (!txt || txt.length < 2) continue
@@ -99,7 +87,26 @@ function scanElements() {
     el.setAttribute('data-orig', txt)
     _els.push(el)
   }
-  console.log('[JBE] ' + _els.length + ' elements indexes (' + PAGE + ')')
+  console.log('[JBE] ' + _els.length + ' textes indexes (' + PAGE + ')')
+}
+
+// ─────────────────────────────────────────────
+//  SCAN IMAGES
+// ─────────────────────────────────────────────
+function scanImages() {
+  _imgs = []
+  var n = 1
+  var all = document.querySelectorAll('img')
+  for (var i = 0; i < all.length; i++) {
+    var img = all[i]
+    if (img.closest('nav') || img.closest('footer') || img.closest('svg')) continue
+    if (!img.src || img.width < 60) continue
+    if (!img.id) img.id = 'img-' + n
+    n++
+    img.setAttribute('data-orig-src', img.src)
+    _imgs.push(img)
+  }
+  console.log('[JBE] ' + _imgs.length + ' images indexees (' + PAGE + ')')
 }
 
 // ─────────────────────────────────────────────
@@ -115,7 +122,7 @@ function loadTexts() {
             _db[res.data[i].id] = res.data[i].content
           }
         }
-        console.log('[JBE] ' + res.data.length + ' texte(s) Supabase')
+        console.log('[JBE] ' + res.data.length + ' entree(s) Supabase')
       }
     })
     .catch(function (e) { console.warn('[JBE]', e.message) })
@@ -126,22 +133,23 @@ function applyTexts() {
     var el  = _els[i]
     var key = PAGE + '__' + el.id
     if (!_db[key]) continue
-    // Ne JAMAIS appliquer si l element contient du HTML structure (em, span...)
-    // car textContent efface le em/span et casse le style CSS
     var origHtml = el.getAttribute('data-orig-html') || ''
     var hasMixed = el.querySelector('em,span,strong,b,i')
                 || origHtml.indexOf('<em') >= 0
                 || origHtml.indexOf('<span') >= 0
-    if (hasMixed) {
-      console.log('[JBE] Skip mixed element:', key)
-      continue
-    }
+    if (hasMixed) { console.log('[JBE] Skip mixed:', key); continue }
     el.textContent = _db[key]
   }
 }
 
-// Remplace uniquement les text nodes directs de l'element
-// sans toucher aux <em>, <span> etc. qui portent du CSS
+function applyImages() {
+  for (var i = 0; i < _imgs.length; i++) {
+    var img = _imgs[i]
+    var key = PAGE + '__' + img.id
+    if (_db[key]) img.src = _db[key]
+  }
+}
+
 // ─────────────────────────────────────────────
 //  NAV
 // ─────────────────────────────────────────────
@@ -155,8 +163,7 @@ function updateNav(user, isAdmin) {
     desk.innerHTML = '<span class="nav-btn-user">' + prenom + '</span>'
       + '<button class="nav-btn-logout" onclick="window.__jbeOut()">D\u00e9connexion</button>'
   }
-  var mob = document.querySelector('.nav-mobile-cta')
-         || document.querySelector('.nav-mobile-auth')
+  var mob = document.querySelector('.nav-mobile-cta') || document.querySelector('.nav-mobile-auth')
   if (mob) {
     mob.innerHTML = '<button class="nav-mobile-btn" onclick="window.__jbeOut()">D\u00e9connexion</button>'
   }
@@ -166,13 +173,12 @@ function updateNav(user, isAdmin) {
 }
 
 // ─────────────────────────────────────────────
-//  ACTIVATION ÉDITION — double-clic + survol
+//  ÉDITION TEXTE — double-clic + survol
 // ─────────────────────────────────────────────
 function activateEditing() {
   for (var i = 0; i < _els.length; i++) {
     bindElement(_els[i])
   }
-  // Clic en dehors = quitter l'édition active
   document.addEventListener('click', function (e) {
     if (!_active) return
     if (!_active.contains(e.target)) stopEdit(_active, true)
@@ -180,14 +186,13 @@ function activateEditing() {
 }
 
 function bindElement(el) {
-  // Appliquer contenu Supabase
   var key = PAGE + '__' + el.id
-  if (_db[key]) el.textContent = _db[key]
-
-  // Curseur texte au survol pour indiquer l'éditabilité
+  if (_db[key]) {
+    var origHtml = el.getAttribute('data-orig-html') || ''
+    var hasMixed = origHtml.indexOf('<em') >= 0 || origHtml.indexOf('<span') >= 0
+    if (!hasMixed) el.textContent = _db[key]
+  }
   el.style.cursor = 'default'
-
-  // Survol : surbrillance subtile
   el.addEventListener('mouseenter', function () {
     if (_active === el) return
     el.classList.add('jbe-hover')
@@ -195,8 +200,6 @@ function bindElement(el) {
   el.addEventListener('mouseleave', function () {
     el.classList.remove('jbe-hover')
   })
-
-  // Double-clic : activer l'édition
   el.addEventListener('dblclick', function (e) {
     e.preventDefault()
     e.stopPropagation()
@@ -204,9 +207,6 @@ function bindElement(el) {
   })
 }
 
-// ─────────────────────────────────────────────
-//  ÉDITION
-// ─────────────────────────────────────────────
 function startEdit(el) {
   if (_active && _active !== el) stopEdit(_active, true)
   _active = el
@@ -218,17 +218,11 @@ function startEdit(el) {
   el.focus()
   try {
     var r = document.createRange()
-    // Si element mixte (em/span) : selectionner seulement le premier text node
-    // pour eviter que Ctrl+A efface le em
     var firstTxt = null
     for (var ci = 0; ci < el.childNodes.length; ci++) {
       if (el.childNodes[ci].nodeType === 3) { firstTxt = el.childNodes[ci]; break }
     }
-    if (firstTxt) {
-      r.selectNodeContents(firstTxt)
-    } else {
-      r.selectNodeContents(el)
-    }
+    if (firstTxt) { r.selectNodeContents(firstTxt) } else { r.selectNodeContents(el) }
     var s = window.getSelection()
     if (s) { s.removeAllRanges(); s.addRange(r) }
   } catch (err) {}
@@ -252,7 +246,6 @@ function stopEdit(el, doSave) {
   el.removeEventListener('input',   el._i)
   el.removeEventListener('blur',    el._b)
   el._wrapper = null
-  // Si element mixed et pas sauvegarde → restaurer l HTML original
   var key = PAGE + '__' + el.id
   if (!_dirty[key] && el.getAttribute('data-orig-html')) {
     var oh = el.getAttribute('data-orig-html')
@@ -262,67 +255,42 @@ function stopEdit(el, doSave) {
   if (_active === el) _active = null
 }
 
-// ─────────────────────────────────────────────
-//  ANTI-CASSE — texte brut absolu
-//  Aucun style, aucun HTML ne peut entrer
-// ─────────────────────────────────────────────
 function onPaste(e) {
   e.preventDefault()
-  // Lire uniquement text/plain — tout le reste est ignoré
   var raw = (e.clipboardData && e.clipboardData.getData('text/plain')) || ''
   document.execCommand('insertText', false, purify(raw))
 }
 
 function onKey(e, el) {
-  // Bloquer tous les raccourcis de formatage
   if ((e.ctrlKey || e.metaKey) && 'biukh'.indexOf(e.key.toLowerCase()) > -1) {
     e.preventDefault(); return
   }
-  // Entrée = sauvegarder
-  if (e.key === 'Enter') {
-    e.preventDefault()
-    stopEdit(el, true)
-    return
-  }
-  // Échap = annuler sans casser le HTML
+  if (e.key === 'Enter') { e.preventDefault(); stopEdit(el, true); return }
   if (e.key === 'Escape') {
     var key = PAGE + '__' + el.id
     var origHtml = el.getAttribute('data-orig-html')
-    if (origHtml) {
-      el.innerHTML = origHtml
-    } else {
-      el.textContent = _db[key] || el.getAttribute('data-orig') || ''
-    }
+    if (origHtml) { el.innerHTML = origHtml }
+    else { el.textContent = _db[key] || el.getAttribute('data-orig') || '' }
     delete _dirty[key]
     stopEdit(el, false)
   }
 }
 
 function onInput(el) {
-  // Si l element contient des enfants HTML (em, span) :
-  // surveiller que la structure n est pas cassee
   var hasChildren = el.querySelector('em,span,strong,b,i')
   if (hasChildren) {
-    // Verifier que les enfants existent encore
     var origHtml = el.getAttribute('data-orig-html') || ''
-    // Compter les balises dans l innerHTML actuel
-    var currentChildren = el.querySelectorAll('em,span,strong,b,i').length
-    var origChildren = (origHtml.match(/<em|<span|<strong|<b[^a]|<i[^m]/g) || []).length
-    if (currentChildren < origChildren) {
-      // Structure cassee → restaurer l HTML original et remettre le curseur
+    var cur  = el.querySelectorAll('em,span,strong,b,i').length
+    var orig = (origHtml.match(/<em|<span|<strong|<b[^a]|<i[^m]/g) || []).length
+    if (cur < orig) {
       el.innerHTML = origHtml
-      // Placer le curseur a la fin du premier text node
       try {
-        var r = document.createRange()
-        r.selectNodeContents(el)
-        r.collapse(false)
-        var s = window.getSelection()
-        if (s) { s.removeAllRanges(); s.addRange(r) }
+        var r = document.createRange(); r.selectNodeContents(el); r.collapse(false)
+        var s = window.getSelection(); if (s) { s.removeAllRanges(); s.addRange(r) }
       } catch(e2) {}
       return
     }
   }
-  // Nettoyage standard des balises de formatage parasites
   var TAGS = ['b','strong','i','em','u','s','font','mark','code']
   if (!hasChildren) {
     for (var t = 0; t < TAGS.length; t++) {
@@ -335,7 +303,7 @@ function onInput(el) {
     }
   }
   _dirty[PAGE + '__' + el.id] = true
-  setStatus('\u270e Modifi\u00e9 \u00b7 cliquez ailleurs ou Entr\u00e9e pour sauvegarder')
+  setStatus('\u270e Modifi\u00e9 \u00b7 Entr\u00e9e ou clic ailleurs pour sauvegarder')
 }
 
 function getPlainText(el) {
@@ -348,23 +316,99 @@ function purify(t) {
 }
 
 // ─────────────────────────────────────────────
-//  SAUVEGARDE — id + content seulement
+//  ÉDITION IMAGES
+// ─────────────────────────────────────────────
+function activateImages() {
+  scanImages()
+  applyImages()
+  for (var i = 0; i < _imgs.length; i++) {
+    bindImage(_imgs[i])
+  }
+}
+
+function bindImage(img) {
+  // Wrapper position:relative pour ancrer l'icône
+  var parent = img.parentNode
+  if (!parent) return
+
+  // Créer un wrapper si l'image n'est pas déjà dans un conteneur relatif
+  var wrapper = document.createElement('span')
+  wrapper.className = 'jbe-img-wrap'
+  parent.insertBefore(wrapper, img)
+  wrapper.appendChild(img)
+
+  // Icône "+" en bas à droite
+  var btn = document.createElement('button')
+  btn.className   = 'jbe-img-btn'
+  btn.type        = 'button'
+  btn.textContent = '+'
+  btn.title       = 'Changer l\'image'
+  wrapper.appendChild(btn)
+
+  // Hover sur l'image
+  wrapper.addEventListener('mouseenter', function () {
+    img.style.opacity = '.8'
+    img.style.outline = '2px solid #007aff'
+    btn.style.opacity = '1'
+    btn.style.transform = 'scale(1)'
+  })
+  wrapper.addEventListener('mouseleave', function () {
+    img.style.opacity = ''
+    img.style.outline = ''
+    btn.style.opacity = '0'
+    btn.style.transform = 'scale(.8)'
+  })
+
+  // Clic sur l'icône → prompt URL
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation()
+    var current = img.src || img.getAttribute('data-orig-src') || ''
+    var newUrl = window.prompt('URL de la nouvelle image :', current)
+    if (!newUrl || newUrl === current) return
+    newUrl = newUrl.trim()
+    img.src = newUrl
+    saveImage(img, newUrl)
+  })
+}
+
+function saveImage(img, url) {
+  var key = PAGE + '__' + img.id
+  setStatus('\u23f3 Sauvegarde image...')
+  sb.from('site_content')
+    .upsert({ id: key, content: url }, { onConflict: 'id' })
+    .then(function (res) {
+      if (res.error) throw res.error
+      _db[key] = url
+      setStatus('\u2705 Image sauvegard\u00e9e')
+      flashImg(img)
+      console.log('[JBE] Image OK:', key)
+    })
+    .catch(function (err) {
+      setStatus('\u274c ' + err.message)
+      console.error('[JBE]', err)
+    })
+}
+
+function flashImg(img) {
+  img.style.transition = 'outline .3s'
+  img.style.outline    = '3px solid #34c759'
+  setTimeout(function () { img.style.outline = ''; img.style.transition = '' }, 1200)
+}
+
+// ─────────────────────────────────────────────
+//  SAUVEGARDE TEXTE
 // ─────────────────────────────────────────────
 function saveEl(el) {
   var key     = PAGE + '__' + el.id
   var content = getPlainText(el)
   if (!key || !content) return
-
-  // Restaurer l HTML original si l element avait des enfants HTML
   var origHtml = el.getAttribute('data-orig-html')
   if (origHtml && el.querySelector('em,span,strong,b,i')) {
     el.innerHTML = origHtml
   } else {
     el.textContent = content
   }
-
   setStatus('\u23f3 Sauvegarde...')
-
   sb.from('site_content')
     .upsert({ id: key, content: content }, { onConflict: 'id' })
     .then(function (res) {
@@ -383,47 +427,31 @@ function saveEl(el) {
 
 function cleanBrokenEntries() {
   setStatus('\u23f3 Recherche des entr\u00e9es invalides...')
-
-  // Chercher dans Supabase toutes les entrées de cette page
   sb.from('site_content').select('*').like('id', PAGE + '__%')
     .then(function (res) {
       if (res.error) { setStatus('\u274c ' + res.error.message); return }
-      if (!res.data || !res.data.length) {
-        setStatus('\u2705 Aucune entr\u00e9e \u00e0 nettoyer')
-        return
-      }
-
+      if (!res.data || !res.data.length) { setStatus('\u2705 Aucune entr\u00e9e \u00e0 nettoyer'); return }
       var toDelete = []
       for (var i = 0; i < res.data.length; i++) {
-        var row = res.data[i]
-        // Trouver l'élément DOM correspondant
+        var row  = res.data[i]
         var elId = row.id.replace(PAGE + '__', '')
         var el   = document.getElementById(elId)
         if (!el) continue
-        // Si l'élément a des enfants HTML stylés → entrée invalide
         if (el.querySelector('em,span,strong,b,i')) {
           toDelete.push(row.id)
-          console.log('[JBE] Entrée invalide:', row.id, '=', row.content)
+          console.log('[JBE] Invalide:', row.id, '=', row.content)
         }
       }
-
-      if (!toDelete.length) {
-        setStatus('\u2705 Aucune entr\u00e9e invalide trouv\u00e9e')
-        return
-      }
-
+      if (!toDelete.length) { setStatus('\u2705 Aucune entr\u00e9e invalide'); return }
       setStatus('\u23f3 Suppression de ' + toDelete.length + ' entr\u00e9e(s)...')
-      var delPromises = []
+      var dels = []
       for (var j = 0; j < toDelete.length; j++) {
-        delPromises.push(sb.from('site_content').delete().eq('id', toDelete[j]))
+        dels.push(sb.from('site_content').delete().eq('id', toDelete[j]))
         delete _db[toDelete[j]]
       }
-      Promise.all(delPromises).then(function () {
+      Promise.all(dels).then(function () {
         setStatus('\u2705 ' + toDelete.length + ' entr\u00e9e(s) supprim\u00e9e(s) \u2014 rechargez')
-        console.log('[JBE] Nettoy\u00e9:', toDelete)
-      }).catch(function (err) {
-        setStatus('\u274c ' + err.message)
-      })
+      }).catch(function (err) { setStatus('\u274c ' + err.message) })
     })
 }
 
@@ -437,7 +465,7 @@ function saveAll() {
 }
 
 // ─────────────────────────────────────────────
-//  BARRE ADMIN — style Apple
+//  BARRE ADMIN
 // ─────────────────────────────────────────────
 function buildBar(user) {
   var prenom = (user.user_metadata && user.user_metadata.prenom)
@@ -455,7 +483,7 @@ function buildBar(user) {
     +   '</div>'
     + '</div>'
     + '<div id="jbe-msg" class="jbe-bar-status">'
-    +   'Double-cliquez sur un texte pour le modifier'
+    +   'Double-clic = texte \u00b7 Clic + = image'
     + '</div>'
     + '<div class="jbe-bar-right">'
     +   '<span class="jbe-bar-cnt" id="jbe-cnt"></span>'
@@ -464,24 +492,21 @@ function buildBar(user) {
     +   '<a class="jbe-btn-dash" href="admin.html">Dashboard \u2192</a>'
     + '</div>'
     + '</div>'
-
   var nav = document.querySelector('nav.nav')
   if (nav && nav.nextSibling) {
     nav.parentNode.insertBefore(bar, nav.nextSibling)
   } else {
     document.body.insertBefore(bar, document.body.firstChild)
   }
-
   var navH = nav ? nav.offsetHeight : 56
   bar.style.top = navH + 'px'
   var currentPad = parseInt(window.getComputedStyle(document.body).paddingTop) || 0
   document.body.style.paddingTop = (currentPad + 42) + 'px'
-
   _bar = document.getElementById('jbe-msg')
   window.__jbeSaveAll = saveAll
   window.__jbeClean   = cleanBrokenEntries
   var cntEl = document.getElementById('jbe-cnt')
-  if (cntEl) cntEl.textContent = _els.length + ' zones'
+  if (cntEl) cntEl.textContent = _els.length + ' textes \u00b7 ' + _imgs.length + ' images'
   console.log('[JBE] Barre admin OK')
 }
 
@@ -490,13 +515,13 @@ function setStatus(msg) {
   _bar.textContent = msg
   if (msg.charAt(0) === '\u2705') {
     setTimeout(function () {
-      if (_bar) _bar.textContent = 'Double-cliquez sur un texte pour le modifier'
+      if (_bar) _bar.textContent = 'Double-clic = texte \u00b7 Clic + = image'
     }, 2500)
   }
 }
 
 function flashEl(el) {
-  el.style.transition = 'background-color .3s'
+  el.style.transition      = 'background-color .3s'
   el.style.backgroundColor = 'rgba(34,197,94,.15)'
   setTimeout(function () {
     el.style.backgroundColor = ''
@@ -505,13 +530,14 @@ function flashEl(el) {
 }
 
 // ─────────────────────────────────────────────
-//  CSS — style Apple / minimaliste
+//  CSS
 // ─────────────────────────────────────────────
 function injectCSS() {
   if (document.getElementById('jbe-css')) return
   var s = document.createElement('style')
   s.id  = 'jbe-css'
   var css = ''
+  // Barre admin
   css += '#jbe-bar{position:fixed;left:0;right:0;z-index:999;background:#fff;border-bottom:1px solid rgba(0,0,0,.1);font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.08)}'
   css += '.jbe-bar-inner{display:flex;align-items:center;height:42px;padding:0 16px;gap:12px}'
   css += '.jbe-bar-left{display:flex;align-items:center;gap:8px;flex-shrink:0}'
@@ -530,9 +556,28 @@ function injectCSS() {
   css += '.jbe-btn-clean:hover{background:rgba(255,149,0,.1)}'
   css += '.jbe-btn-dash{padding:5px 13px;background:transparent;color:#007aff;border:1.5px solid rgba(0,122,255,.35);border-radius:20px;font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap;transition:all .15s}'
   css += '.jbe-btn-dash:hover{background:rgba(0,122,255,.06)}'
+  // Texte hover/edit
   css += '.jbe-hover{outline:2px solid rgba(0,122,255,.4)!important;outline-offset:3px;border-radius:3px;cursor:text!important}'
   css += '.jbe-editing{outline:2px solid #007aff!important;outline-offset:3px;border-radius:3px;background:rgba(0,122,255,.04)!important;cursor:text!important}'
   css += '[contenteditable="true"]{caret-color:#007aff;user-select:text!important}'
+  // Images — wrapper
+  css += '.jbe-img-wrap{display:inline-block;position:relative;line-height:0}'
+  css += '.jbe-img-wrap img{display:block;transition:opacity .2s,outline .2s}'
+  // Bouton "+" image
+  css += '.jbe-img-btn{'
+  css +=   'position:absolute;bottom:8px;right:8px;'
+  css +=   'width:32px;height:32px;border-radius:50%;'
+  css +=   'background:#fff;color:#555;'
+  css +=   'font-size:20px;font-weight:300;line-height:1;'
+  css +=   'border:none;cursor:pointer;'
+  css +=   'display:flex;align-items:center;justify-content:center;'
+  css +=   'box-shadow:0 2px 8px rgba(0,0,0,.3);'
+  css +=   'opacity:0;transform:scale(.8);'
+  css +=   'transition:opacity .2s,transform .2s;'
+  css +=   'z-index:10;pointer-events:auto;'
+  css += '}'
+  css += '.jbe-img-btn:hover{background:#007aff;color:#fff}'
+  // Nav connecté
   css += '.nav-btn-logout{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);background:transparent;padding:6px 13px;border-radius:5px;border:1px solid rgba(255,255,255,.2);cursor:pointer}'
   css += '.nav-btn-logout:hover{color:#fff;border-color:rgba(255,255,255,.5)}'
   css += '.nav-btn-user{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6)}'

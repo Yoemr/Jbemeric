@@ -1,0 +1,163 @@
+[
+  {
+    "fichier": "podium-paul-ricard-1994.jpg",
+    "chemin": "assets/images/podium-paul-ricard-1994.jpg",
+    "titre": "Podium Paul Ricard 1994",
+    "legende": "JB Emeric sur le podium du Circuit Paul Ricard — Championnat de France Formule Ford 1988.",
+    "alt": "JB Emeric sur le podium du Circuit Paul Ricard",
+    "pages": [
+      "index.html",
+      "track.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2025/12/PODIUM-RICARD-94-CHAMP-B-JB-GUIBBERT-TARRES-DANIEL-DELIEN-300x216-1.jpg"
+  },
+  {
+    "fichier": "karting-enfant-circuit.jpg",
+    "chemin": "assets/images/karting-enfant-circuit.jpg",
+    "titre": "Karting Enfant — Circuit PACA",
+    "legende": "Session karting enfant sur circuit partenaire JB EMERIC. Dès 7 ans.",
+    "alt": "Enfant en karting sur circuit JB EMERIC",
+    "pages": [
+      "academie-karting.html",
+      "academie.html",
+      "index.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2022/01/KARTING-X-2-AV-768x512.jpg"
+  },
+  {
+    "fichier": "karting-adulte-depart.jpg",
+    "chemin": "assets/images/karting-adulte-depart.jpg",
+    "titre": "Départ Karting Adulte",
+    "legende": "Départ d'une session karting adulte — SODI RX8 270cc. Programme C1→C5.",
+    "alt": "Départ karting adulte JB EMERIC",
+    "pages": [
+      "academie-adulte.html",
+      "paddock.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2022/05/Depart-avec-les-news-270cc-compresse-768x576.jpg"
+  },
+  {
+    "fichier": "jb-coaching-piste.jpg",
+    "chemin": "assets/images/jb-coaching-piste.jpg",
+    "titre": "JB Emeric — Coaching sur piste",
+    "legende": "Jean-Baptiste Emeric explique les trajectoires sur le Circuit Paul Ricard.",
+    "alt": "JB Emeric coach de pilotage sur le Circuit Paul Ricard",
+    "pages": [
+      "coaching.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2020/07/JB-EXPLIQUE-PISTE-A-LANDINI-RICARD-SUPERTOURISME-300x200.jpg"
+  },
+  {
+    "fichier": "bmw-325i-htcc.jpg",
+    "chemin": "assets/images/bmw-325i-htcc.jpg",
+    "titre": "BMW 325i HTCC — Challenge JB EMERIC",
+    "legende": "La BMW 325i engagée en HTCC — voiture officielle du Challenge Kart → Auto JB EMERIC.",
+    "alt": "BMW 325i HTCC Challenge JB EMERIC",
+    "pages": [
+      "academie-challenge.html",
+      "paddock.html",
+      "track.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2026/02/B-M-W-325-I-HTCC-3-4-AVANT.jpg"
+  },
+  {
+    "fichier": "bmw-325i-htcc-cote.jpg",
+    "chemin": "assets/images/bmw-325i-htcc-cote.jpg",
+    "titre": "BMW 325i HTCC — Vue latérale",
+    "legende": "Vue latérale de la BMW 325i HTCC du Challenge JB EMERIC.",
+    "alt": "BMW 325i HTCC vue de côté",
+    "pages": [
+      "academie-challenge.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2026/02/B-M-W-325-I-HTCC-COTE.jpg"
+  },
+  {
+    "fichier": "affiche-challenge-kart-auto.png",
+    "chemin": "assets/images/affiche-challenge-kart-auto.png",
+    "titre": "Affiche Challenge Du Kart à l'Auto",
+    "legende": "Affiche officielle du Challenge Du Kart à l'Auto JB EMERIC — saison 2026.",
+    "alt": "Affiche Challenge Du Kart à l'Auto JB EMERIC 2026",
+    "pages": [
+      "academie-challenge.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2026/02/AFFICHE-CASQU-CASQUETTE-COUPE-D-K-A-A-683x1024.png"
+  },
+  {
+    "fichier": "briefing-karting-enfant.jpg",
+    "chemin": "assets/images/briefing-karting-enfant.jpg",
+    "titre": "Briefing Karting Enfant",
+    "legende": "JB Emeric en briefing avec les jeunes pilotes avant la session sur circuit.",
+    "alt": "Briefing karting enfant JB EMERIC",
+    "pages": [
+      "academie-karting.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2022/01/KARTING-5-BRIEF-MIEUX-300x200.jpg"
+  },
+  {
+    "fichier": "karting-adulte-circuit.jpg",
+    "chemin": "assets/images/karting-adulte-circuit.jpg",
+    "titre": "Karting Adulte — Académie",
+    "legende": "Session karting adulte — Académie JB EMERIC, niveaux C1 à C5.",
+    "alt": "Karting adulte Académie JB EMERIC",
+    "pages": [
+      "academie.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2022/01/KARTING-X-5-ATTENTE-300x200.jpg"
+  },
+  {
+    "fichier": "karting-challenge-auto.jpg",
+    "chemin": "assets/images/karting-challenge-auto.jpg",
+    "titre": "Karting — Challenge Auto",
+    "legende": "Karting de compétition utilisé pour la sélection Challenge Kart → Auto.",
+    "alt": "Karting Challenge Auto JB EMERIC",
+    "pages": [
+      "academie.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2022/01/KARTING-08-3-4-300x200.jpg"
+  },
+  {
+    "fichier": "jb-emeric-pilote.jpg",
+    "chemin": "assets/images/jb-emeric-pilote.jpg",
+    "titre": "Jean-Baptiste Emeric — Pilote",
+    "legende": "Jean-Baptiste Emeric, Champion de France Formule Ford 1988, fondateur de l'École de Pilotage JB EMERIC.",
+    "alt": "Jean-Baptiste Emeric pilote de course",
+    "pages": [
+      "academie-adulte.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2022/01/JB-EMERIC-PILOTE-300x200.jpg"
+  },
+  {
+    "fichier": "salle-briefing.jpg",
+    "chemin": "assets/images/salle-briefing.jpg",
+    "titre": "Salle de Briefing",
+    "legende": "La salle de briefing — JB Emeric prépare ses pilotes avant chaque session.",
+    "alt": "Salle de briefing École de Pilotage JB EMERIC",
+    "pages": [
+      "academie-adulte.html",
+      "academie.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2022/01/photo-salle-briefing-300x225.jpg"
+  },
+  {
+    "fichier": "lotus-circuit-du-luc.jpg",
+    "chemin": "assets/images/lotus-circuit-du-luc.jpg",
+    "titre": "Lotus Elise — Circuit du Luc",
+    "legende": "Stage en Lotus Elise S Cup sur le Circuit du Luc — Track-Days JB EMERIC.",
+    "alt": "Lotus Elise sur le Circuit du Luc",
+    "pages": [
+      "track.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2022/01/LOTUS-AU-CIRCUIT-DU-LUC-LAURET9-300x194.jpg"
+  },
+  {
+    "fichier": "porsche-gt3-circuit-albi.jpg",
+    "chemin": "assets/images/porsche-gt3-circuit-albi.jpg",
+    "titre": "Porsche GT3 RS — Circuit d'Albi",
+    "legende": "Porsche 911 GT3 RS lors d'un Track-Day JB EMERIC sur le Circuit d'Albi.",
+    "alt": "Porsche GT3 RS sur le Circuit d'Albi",
+    "pages": [
+      "track.html"
+    ],
+    "source": "https://jbemeric.com/wp-content/uploads/2020/07/G-T-3-R-S-3-4-AVANT-JOELLE-LE-LUC-15-8-19-4-300x200.jpg"
+  }
+]

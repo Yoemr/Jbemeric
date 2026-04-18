@@ -1,0 +1,49 @@
+/*
+ * snap.css — JB EMERIC
+ * Système de scroll snap universel — défilement bloc par bloc
+ *
+ * USAGE : inclure ce fichier sur toute page qui veut le snap.
+ * Ajouter la classe `snap-section` sur chaque bloc plein écran.
+ * Le footer (#footer-root) est automatiquement un point d'ancrage.
+ *
+ * Compatible : index.html, academie.html, et toute future page.
+ */
+
+/* ── Activation sur html/body ─────────────────────────── */
+html, body {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100%;
+  scroll-padding-top: 56px; /* hauteur de la nav sticky */
+}
+
+/* ── Bloc snap générique ──────────────────────────────── */
+.snap-section {
+  scroll-snap-align: start;
+  position: relative;
+  height: calc(100svh - 56px);
+  overflow: hidden;
+}
+
+/* Hero — variante plein écran (min-height en plus) */
+.hero.snap-section {
+  min-height: calc(100svh - 56px);
+  height: calc(100svh - 56px);
+}
+
+/* Dernière section avant footer — scrollable en interne */
+.snap-fin {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Footer — point d'ancrage terminal */
+#footer-root {
+  scroll-snap-align: start;
+}
+
+/* ── Mobile : snap moins strict sous 500px ────────────── */
+@media(max-width:499px) {
+  html, body { scroll-snap-type: y proximity }
+}

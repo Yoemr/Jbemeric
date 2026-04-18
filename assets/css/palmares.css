@@ -1,0 +1,224 @@
+/*
+ * palmares.css — JB EMERIC
+ * Page Palmarès 1986 → 2026
+ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+html { scroll-behavior: smooth }
+body {
+  font-family: 'Outfit', sans-serif; font-weight: 300;
+  -webkit-font-smoothing: antialiased; overflow-x: clip;
+  background: #fff; color: #0a0a0a;
+}
+a { text-decoration: none; color: inherit }
+img { display: block; max-width: 100% }
+
+:root {
+  --bleu:   #0A3D91;
+  --nuit:   #040a1e;
+  --or:     #FFCF00;
+  --or-dk:  #C8860A;
+  --creme:  #f5f4f1;
+  --sep:    rgba(10,10,10,.1);
+  --pad-x:  clamp(20px, 5vw, 80px);
+}
+
+/* ── HERO ──────────────────────────────────────────────── */
+.pal-hero {
+  position: relative; min-height: 70svh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  overflow: hidden;
+}
+.pal-hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+}
+.pal-hero-bg img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+}
+.pal-hero-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(4,10,30,.97) 20%, rgba(4,10,30,.5) 70%, rgba(4,10,30,.2) 100%);
+}
+.pal-hero-content {
+  position: relative; z-index: 1;
+  padding: clamp(40px,6vw,72px) var(--pad-x) clamp(40px,5vw,64px);
+  max-width: 900px;
+}
+.pal-eyebrow {
+  font-family: 'DM Mono'; font-size: 10px; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--or); opacity: .8;
+  display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+}
+.pal-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--or) }
+.pal-hero-titre {
+  font-family: 'Bebas Neue'; font-size: clamp(52px,9vw,108px);
+  color: #fff; line-height: .84; margin-bottom: 20px;
+}
+.pal-hero-titre em { font-style: normal; color: var(--or) }
+.pal-hero-rule { width: 56px; height: 3px; background: linear-gradient(135deg,#F5D061,#C8860A); margin-bottom: 20px }
+.pal-hero-sub {
+  font-family: 'DM Mono'; font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(255,255,255,.4);
+  line-height: 1.8; margin-bottom: 32px;
+}
+.pal-stats {
+  display: flex; flex-wrap: wrap; gap: 32px;
+}
+.pal-stat { display: flex; flex-direction: column; gap: 4px }
+.pal-stat-n {
+  font-family: 'Bebas Neue'; font-size: clamp(28px,4vw,44px);
+  background: linear-gradient(135deg,#F5D061,#C8860A);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1;
+}
+.pal-stat-l {
+  font-family: 'DM Mono'; font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(255,255,255,.35);
+}
+
+/* ── FILTRES ───────────────────────────────────────────── */
+.pal-filtres {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding: clamp(20px,3vw,32px) var(--pad-x);
+  background: var(--nuit);
+  border-top: 1px solid rgba(255,207,0,.12);
+  position: sticky; top: 56px; z-index: 10;
+}
+.pal-filtre {
+  font-family: 'DM Mono'; font-size: 8px; letter-spacing: 2px;
+  text-transform: uppercase; padding: 7px 16px; border-radius: 3px;
+  cursor: pointer; border: 1px solid rgba(255,255,255,.15);
+  background: transparent; color: rgba(255,255,255,.45);
+  transition: all .18s;
+}
+.pal-filtre:hover { border-color: var(--or); color: var(--or) }
+.pal-filtre.active { background: var(--or); border-color: var(--or); color: #000; font-weight: 500 }
+
+/* ── TIMELINE ──────────────────────────────────────────── */
+.pal-timeline-wrap {
+  padding: clamp(48px,7vw,96px) var(--pad-x);
+  background: #fff;
+}
+.pal-timeline {
+  max-width: 900px; margin: 0 auto;
+  display: flex; flex-direction: column;
+  position: relative;
+}
+.pal-timeline::before {
+  content: ''; position: absolute;
+  top: 0; bottom: 0; left: 28px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--bleu) 0%, rgba(10,61,145,.15) 100%);
+}
+
+/* Chaque entrée */
+.pal-item {
+  display: flex; gap: clamp(20px,3vw,40px);
+  padding: clamp(20px,2.5vw,28px) 0;
+  border-bottom: 1px solid var(--sep);
+  position: relative; z-index: 1;
+  transition: opacity .18s;
+}
+.pal-item.hidden { display: none }
+.pal-item:last-child { border-bottom: none }
+
+/* Dot sur la ligne */
+.pal-dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: rgba(10,61,145,.2); border: 2px solid rgba(10,61,145,.35);
+  flex-shrink: 0; margin-top: 4px;
+  position: relative; left: 21px;
+}
+.pal-item--highlight .pal-dot {
+  background: var(--or); border-color: var(--or-dk);
+  box-shadow: 0 0 0 4px rgba(255,207,0,.15);
+}
+
+.pal-corps {
+  padding-left: clamp(16px,2vw,32px);
+  display: flex; flex-direction: column; gap: 6px; flex: 1;
+}
+
+/* Ligne highlight : bordure gauche or */
+.pal-item--highlight .pal-corps {
+  border-left: 3px solid var(--or);
+  padding-left: clamp(13px,2vw,29px);
+}
+
+.pal-meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+}
+.pal-annee {
+  font-family: 'Bebas Neue'; font-size: 22px;
+  background: linear-gradient(135deg,#F5D061,#C8860A);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1; min-width: 52px;
+}
+.pal-cat {
+  font-family: 'DM Mono'; font-size: 7px; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
+  background: rgba(10,61,145,.07); color: var(--bleu);
+}
+.pal-item--highlight .pal-cat {
+  background: rgba(255,207,0,.12); color: var(--or-dk);
+}
+.pal-badge-star {
+  font-family: 'DM Mono'; font-size: 7px; letter-spacing: 1px;
+  text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
+  background: var(--or); color: #000; font-weight: 500;
+}
+
+.pal-titre {
+  font-family: 'Bebas Neue'; font-size: clamp(18px,2vw,24px);
+  color: #0a0a0a; line-height: .9;
+}
+.pal-detail {
+  font-size: 13px; color: rgba(10,10,10,.5); line-height: 1.7;
+}
+
+.pal-loading {
+  font-family: 'DM Mono'; font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; color: rgba(10,10,10,.3);
+  text-align: center; padding: 48px 0;
+}
+
+/* Catégorie label map */
+.pal-cat[data-label="karting"]    { background: rgba(0,128,0,.08);    color: #1a6b1a }
+.pal-cat[data-label="monoplace"]  { background: rgba(10,61,145,.07);  color: var(--bleu) }
+.pal-cat[data-label="gt"]         { background: rgba(180,30,30,.07);  color: #8b1a1a }
+.pal-cat[data-label="prototype"]  { background: rgba(120,60,0,.07);   color: #7a3c00 }
+.pal-cat[data-label="tourisme"]   { background: rgba(60,60,180,.07);  color: #3c3cb4 }
+.pal-cat[data-label="montagne"]   { background: rgba(0,100,80,.07);   color: #006450 }
+.pal-cat[data-label="rallye"]     { background: rgba(140,0,140,.07);  color: #8c008c }
+.pal-cat[data-label="endurance"]  { background: rgba(10,61,145,.07);  color: var(--bleu) }
+.pal-cat[data-label="historique"] { background: rgba(80,60,20,.07);   color: #503c14 }
+.pal-cat[data-label="multi"]      { background: rgba(10,10,10,.05);   color: rgba(10,10,10,.5) }
+
+/* ── SECTION RETOUR / CTA ──────────────────────────────── */
+.pal-back {
+  background: var(--nuit); padding: clamp(36px,5vw,64px) var(--pad-x);
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 16px;
+  border-top: 1px solid rgba(255,207,0,.12);
+}
+.pal-back-btn {
+  font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(255,255,255,.4);
+  transition: color .18s;
+}
+.pal-back-btn:hover { color: #fff }
+.pal-back-cta {
+  display: inline-block; padding: 13px 28px;
+  background: var(--or); color: #000;
+  font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; font-weight: 700; border-radius: 4px;
+  transition: background .15s;
+}
+.pal-back-cta:hover { background: #e6b800 }
+
+/* ── RESPONSIVE ────────────────────────────────────────── */
+@media(max-width:599px) {
+  .pal-timeline::before { left: 15px }
+  .pal-dot { left: 7px }
+  .pal-stats { gap: 20px }
+}

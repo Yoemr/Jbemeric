@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Supabase__execute_sql",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "Bash(ls -la /d/OneDrive/Documents/'Documents Perso'/Jbemeric/*.html)",
+      "Bash(sed \"s/'//g\")",
+      "Bash(sed \"s/^[[:space:]]*\\\\.//\")",
+      "Bash(grep -rn \"data-jbe\\\\|data-orig\\\\|contenteditable\" *.html)",
+      "Bash(grep -rn 'data-' *.html)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__get_publishable_keys",
+      "Bash(dir \"D:\\\\OneDrive\\\\Documents\\\\Documents Perso\\\\Jbemeric\")",
+      "Bash(sort -k6,7)",
+      "Bash(grep:*)",
+      "Bash(node -e ':*)",
+      "Bash(node:*)",
+      "Bash(ls -1 /d/OneDrive/Documents/\"Documents Perso\"/Jbemeric/*.html)",
+      "Bash(ls -1 \"/d/OneDrive/Documents/Documents Perso/Jbemeric/\"*.html)",
+      "WebSearch",
+      "WebFetch(domain:jbemeric.com)",
+      "WebFetch(domain:www.youtube.com)"
+    ]
+  }
+}

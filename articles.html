@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/paddock.css">
+  <title>Articles Techniques — JB EMERIC École de Pilotage</title>
+  <meta name="description" content="Tous les articles techniques de JB EMERIC : pilotage, freinage, trajectoires, drift, réglages. 29 articles par un pilote de 40 ans d'expérience.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { background:#07080f; color:#fff; margin:0 }
+    .art-hero {
+      background:linear-gradient(135deg,#040a1e 0%,#071230 100%);
+      padding:clamp(60px,8vw,96px) clamp(20px,5vw,72px) clamp(36px,5vw,56px);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .art-hero-eyebrow {
+      font-family:'DM Mono'; font-size:9px; letter-spacing:4px;
+      text-transform:uppercase; color:rgba(255,207,0,.5);
+      display:flex; align-items:center; gap:10px; margin-bottom:12px;
+    }
+    .art-hero-eyebrow::before {
+      content:''; width:24px; height:2px;
+      background:linear-gradient(90deg,#F5D061,#C8860A); flex-shrink:0;
+    }
+    .art-hero-title {
+      font-family:'Bebas Neue'; font-size:clamp(42px,7vw,80px);
+      line-height:.9; letter-spacing:-1px; color:#fff; margin:0 0 6px;
+    }
+    .art-hero-title em { font-style:normal; color:#FFCF00 }
+    .art-hero-sub {
+      font-family:'DM Mono'; font-size:11px; color:rgba(255,255,255,.4);
+      letter-spacing:1px; margin-top:10px;
+    }
+    /* Grid articles — responsive */
+    .art-grid-wrap {
+      background:#07080f;
+      padding:clamp(32px,5vw,56px) clamp(20px,5vw,72px);
+    }
+    .art-controls {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:16px; flex-wrap:wrap; margin-bottom:20px;
+    }
+    .art-grid {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px; margin-bottom:28px;
+    }
+    @media(max-width:1100px){ .art-grid { grid-template-columns:repeat(2,1fr) } }
+    @media(max-width:580px){  .art-grid { grid-template-columns:1fr } }
+    .art-loadmore { text-align:center; padding:8px 0 4px }
+  </style>
+</head>
+<body>
+<div id="nav-root"></div>
+
+<!-- Hero -->
+<div class="art-hero">
+  <div class="art-hero-eyebrow">Pilotage · Technique · Actualités</div>
+  <h1 class="art-hero-title">ARTICLES <em>TECHNIQUES</em></h1>
+  <div class="art-hero-sub">29 articles · Du plus récent au plus ancien</div>
+</div>
+
+<!-- Grille -->
+<div class="art-grid-wrap">
+  <div class="art-controls">
+    <!-- Filtres -->
+    <div class="lib-tags" id="art-tag-filters">
+      <button class="lib-tag active" onclick="artFilter(this,'all')">Tout</button>
+      <button class="lib-tag lib-tag-coaching" onclick="artFilter(this,'coaching')">🎯 Coaching</button>
+      <button class="lib-tag lib-tag-actu"     onclick="artFilter(this,'actu')">📣 Actualités</button>
+      <button class="lib-tag lib-tag-meca"     onclick="artFilter(this,'meca')">🔧 Mécanique</button>
+      <button class="lib-tag lib-tag-regl"     onclick="artFilter(this,'regl')">⚙ Réglages</button>
+    </div>
+    <!-- Recherche -->
+    <div class="lib-search-bar">
+      <div class="lib-search">
+        <span class="lib-search-icon">🔍</span>
+        <input class="lib-search-input" type="text" id="art-search"
+          placeholder="Freinage, drift, trajectoire…"
+          oninput="artSearch(this.value)" autocomplete="off">
+      </div>
+      <div class="lib-count"><span id="art-count">—</span> articles</div>
+    </div>
+  </div>
+
+  <div class="art-grid" id="art-grid">
+    <div class="lib-empty"><span>📂</span>Chargement…</div>
+  </div>
+
+  <div class="art-loadmore" id="art-loadmore" style="display:none">
+    <button class="lib-btn lib-btn-view" onclick="artLoadMore()" style="font-size:9px;padding:9px 20px">
+      Charger plus →
+    </button>
+  </div>
+</div>
+
+<div id="footer-root"></div>
+
+<script type="module" src="assets/js/live-editor.js"></script>
+<script src="assets/js/nav.js"></script>
+<script src="assets/js/footer.js"></script>
+<script>
+const SB_URL = 'https://fyaybxamuabawerqzuud.supabase.co'
+const SB_KEY = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
+const SB_H   = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+const PER_PAGE = 12
+
+const CAT_MAP = {
+  meca:     { label:'Mécanique',  cls:'cat-meca',     icon:'🔧' },
+  elec:     { label:'Électronique',cls:'cat-elec',    icon:'⚡' },
+  chas:     { label:'Châssis',    cls:'cat-chas',     icon:'🏗' },
+  data:     { label:'Data',       cls:'cat-data',     icon:'📊' },
+  regl:     { label:'Réglages',   cls:'cat-regl',     icon:'⚙' },
+  coaching: { label:'Coaching',   cls:'cat-coaching', icon:'🎯' },
+  actu:     { label:'Actualités', cls:'cat-actu',     icon:'📣' },
+}
+
+let _allArticles = []
+let _filter = 'all'
+let _search = ''
+let _page = 0
+
+async function loadArticles() {
+  try {
+    const r = await fetch(
+      SB_URL + '/rest/v1/docs?visible=eq.true&order=published_at.desc.nullslast,created_at.desc&limit=200&select=id,title,category,slug,image_url,intro,published_at',
+      { headers: SB_H }
+    )
+    if (r.ok) {
+      const raw = await r.json()
+      _allArticles = raw.filter(a => a.slug)   // uniquement les articles avec slug
+      document.querySelector('.art-hero-sub').textContent =
+        _allArticles.length + ' articles · Du plus récent au plus ancien'
+      renderGrid()
+    }
+  } catch(e) {
+    console.error('Articles load error:', e)
+  }
+}
+
+function getFiltered() {
+  return _allArticles.filter(a => {
+    const matchTag = _filter === 'all' || a.category === _filter
+    const q = _search.toLowerCase()
+    const matchSearch = !q ||
+      (a.title || '').toLowerCase().includes(q) ||
+      (a.intro || '').toLowerCase().includes(q)
+    return matchTag && matchSearch
+  })
+}
+
+function renderGrid() {
+  const articles = getFiltered()
+  const grid = document.getElementById('art-grid')
+  const more = document.getElementById('art-loadmore')
+  const countEl = document.getElementById('art-count')
+  if (countEl) countEl.textContent = articles.length
+
+  const page = articles.slice(0, (_page + 1) * PER_PAGE)
+  if (more) more.style.display = articles.length > page.length ? '' : 'none'
+
+  if (!articles.length) {
+    grid.innerHTML = '<div class="lib-empty"><span>🔍</span>Aucun article pour ces critères.</div>'
+    return
+  }
+
+  grid.innerHTML = page.map(a => {
+    const cat = CAT_MAP[a.category] || { label: a.category, cls: 'cat-coaching', icon: '📁' }
+    const href = a.slug ? 'article.html#' + encodeURIComponent(a.slug) : '#'
+    const date = a.published_at ? new Date(a.published_at).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric' }) : ''
+    const imgHtml = a.image_url
+      ? '<img src="' + a.image_url + '" alt="' + (a.title||'').replace(/"/g,'') + '" loading="lazy">'
+      : '<div class="lib-card-img-placeholder">' + cat.icon + '</div>'
+
+    return (
+      '<a class="lib-card" href="' + href + '" data-cat="' + (a.category||'') + '">' +
+        '<div class="lib-card-img-wrap">' + imgHtml + '</div>' +
+        '<div class="lib-card-body">' +
+          '<span class="lib-card-cat ' + cat.cls + '">' + cat.icon + ' ' + cat.label + '</span>' +
+          '<div class="lib-card-title">' + (a.title||'') + '</div>' +
+          '<div class="lib-card-intro">' + (a.intro||'') + '</div>' +
+        '</div>' +
+        '<div class="lib-card-foot">' +
+          (date ? '<span style="font-family:\'DM Mono\';font-size:8px;color:rgba(255,255,255,.3);letter-spacing:1px">' + date + '</span>' : '') +
+          '<span class="lib-btn lib-btn-view" style="margin-left:auto">Lire &#8594;</span>' +
+        '</div>' +
+      '</a>'
+    )
+  }).join('')
+}
+
+window.artFilter = function(btn, tag) {
+  document.querySelectorAll('#art-tag-filters .lib-tag').forEach(b => b.classList.remove('active'))
+  btn.classList.add('active')
+  _filter = tag; _page = 0; renderGrid()
+}
+window.artSearch = function(q) { _search = q; _page = 0; renderGrid() }
+window.artLoadMore = function() { _page++; renderGrid() }
+
+loadArticles()
+</script>
+<script id="jbe-content-cache" type="application/json">{}</script>
+</body>
+</html>

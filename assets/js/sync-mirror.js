@@ -6,6 +6,12 @@
 (function () {
 'use strict'
 
+// Notifie live-editor.js qu'un mirror vient d'être injecté
+function notifyMirrorLoaded() {
+  document.dispatchEvent(new CustomEvent('jbe-mirror-loaded'))
+}
+
+
 // ─────────────────────────────────────────────────────────────
 //  INIT
 // ─────────────────────────────────────────────────────────────
@@ -13,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
   mirrorAcademie()
   mirrorCoaching()
   mirrorTrack()
+  mirrorPaddock()
 })
 
 // ─────────────────────────────────────────────────────────────
@@ -67,17 +74,26 @@ function injectSkeletonCSS() {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  ACADÉMIE — extrait les 3 portes de academie.html#portes
+//  ACADÉMIE — extrait les 3 portes + le parcours de academie.html
 // ─────────────────────────────────────────────────────────────
 function mirrorAcademie() {
   var target = getTarget('mirror-academie')
   if (!target) return
   setLoading(target)
 
-  fetchSection('academie.html', 'portes')
-    .then(function (section) {
-      var html = buildAcademieCards(section)
-      target.innerHTML = html
+  fetch('academie.html', { cache: 'no-store' })
+    .then(function(res) {
+      if (!res.ok) throw new Error('academie.html -> ' + res.status)
+      return res.text()
+    })
+    .then(function(html) {
+      var parser = new DOMParser()
+      var doc = parser.parseFromString(html, 'text/html')
+      var portesEl   = doc.getElementById('portes')
+      var parcoursEl = doc.getElementById('parcours')
+      if (!portesEl) throw new Error('#portes introuvable dans academie.html')
+      target.innerHTML = buildAcademieCards(portesEl, parcoursEl)
+      notifyMirrorLoaded()
     })
     .catch(function (err) {
       console.warn('[mirror] academie:', err.message)
@@ -85,48 +101,91 @@ function mirrorAcademie() {
     })
 }
 
-function buildAcademieCards(section) {
+function buildAcademieCards(section, parcours) {
   var portes = section.querySelectorAll('.porte')
   if (!portes.length) return ''
 
-  var cards = ''
+  // Extraire données des 3 portes
+  var data = []
+  var hrefs = ['academie-karting.html', 'academie-adulte.html', 'academie-challenge.html']
   for (var i = 0; i < portes.length; i++) {
-    var p     = portes[i]
-    var img   = p.querySelector('img')
-    var tag   = p.querySelector('.porte-tag')
-    var title = p.querySelector('.porte-title')
-    var body  = p.querySelector('.porte-body')
-    var cta   = p.querySelector('.porte-cta')
-    var badge = p.querySelector('.porte-badge')
-
-    // Extraire l'URL de destination depuis onclick
+    var p = portes[i]
     var onclick = p.getAttribute('onclick') || ''
     var hrefMatch = onclick.match(/'([^']+)'/)
-    var href = hrefMatch ? hrefMatch[1] : 'academie.html'
-
-    // Nettoyer le titre (retirer les <br>)
-    var titleText = title ? title.textContent.trim().replace(/\s+/g, ' ') : ''
-    var imgSrc    = img   ? img.src  : ''
-    var imgAlt    = img   ? img.alt  : titleText
-    var tagText   = tag   ? tag.textContent.trim()  : ''
-    var bodyText  = body  ? body.textContent.trim() : ''
-    var ctaText   = cta   ? cta.textContent.trim()  : 'Découvrir →'
-    var badgeText = badge ? badge.textContent.trim() : ''
-
-    cards += '<a href="' + href + '" class="ov-card">'
-    cards += '<div class="ov-card-img">'
-    if (imgSrc) cards += '<img src="' + imgSrc + '" alt="' + imgAlt + '" loading="lazy">'
-    if (badgeText) cards += '<span class="ov-card-badge ov-card-badge-y">' + badgeText + '</span>'
-    cards += '</div>'
-    cards += '<div class="ov-card-body">'
-    if (tagText)  cards += '<div class="ov-card-num">'  + tagText  + '</div>'
-    if (titleText) cards += '<div class="ov-card-name">' + titleText + '</div>'
-    if (bodyText)  cards += '<div class="ov-card-sub">'  + bodyText  + '</div>'
-    if (ctaText)   cards += '<div class="ov-card-price">' + ctaText  + '</div>'
-    cards += '</div></a>'
+    data.push({
+      href:  hrefMatch ? hrefMatch[1] : hrefs[i] || 'academie.html',
+      cls:   p.className,
+      inner: p.innerHTML
+    })
   }
 
-  return '<div class="ov-cards rv d1">' + cards + '</div>'
+  if (data.length < 2) return ''
+
+  // Layout B : grande porte gauche + 2 vignettes droite
+  var html = '<div class="acad-layout">'
+
+  // Grande porte principale (Karting Enfant)
+  html += '<a href="' + data[0].href + '" class="acad-main ' + data[0].cls + '">'
+  html += data[0].inner
+  html += '</a>'
+
+  // Deux vignettes droite
+  html += '<div class="acad-side">'
+  for (var j = 1; j < data.length; j++) {
+    html += '<a href="' + data[j].href + '" class="acad-side-item ' + data[j].cls + '">'
+    html += data[j].inner
+    html += '</a>'
+  }
+  html += '</div>'
+
+  // Bandeau parcours en bas — miroir de academie.html#parcours
+  html += buildParcoursBar(parcours)
+
+  html += '</div>'
+  return html
+}
+
+function buildParcoursBar(parcours) {
+  var html = '<div class="acad-parcours">'
+
+  if (parcours) {
+    var steps = parcours.querySelectorAll('.tl-step')
+    for (var i = 0; i < steps.length; i++) {
+      var step    = steps[i]
+      var numEl   = step.querySelector('.tl-num')
+      var badgeEl = step.querySelector('.tl-badge')
+      var nameEl  = step.querySelector('.tl-name')
+
+      var num      = numEl   ? numEl.textContent.trim()   : String(i + 1)
+      var badge    = badgeEl ? badgeEl.textContent.trim() : ''
+      var name     = nameEl  ? nameEl.textContent.trim()  : ''
+      var isFinale = step.classList.contains('tl-step--finale')
+      var stepCls  = isFinale ? 'acad-step acad-step-champion' : 'acad-step'
+      var numCls   = 'acad-step-n'
+      var numDisp  = num
+
+      if (i > 0) html += '<span class="acad-arrow">→</span>'
+      html += '<div class="' + stepCls + '">'
+      html += '<span class="' + numCls + '">' + numDisp + '</span>'
+      html += '<div class="acad-step-info">'
+      html += '<div class="acad-step-name">' + badge + '</div>'
+      if (name) html += '<div class="acad-step-sub">' + name + '</div>'
+      html += '</div></div>'
+    }
+  } else {
+    // Fallback si #parcours introuvable dans academie.html
+    html += '<div class="acad-step"><span class="acad-step-n">01</span><div class="acad-step-info"><div class="acad-step-name">Découverte</div><div class="acad-step-sub">Karting enfant · Brignoles · 1 journée</div></div></div>'
+    html += '<span class="acad-arrow">→</span>'
+    html += '<div class="acad-step"><span class="acad-step-n">02</span><div class="acad-step-info"><div class="acad-step-name">Progression</div><div class="acad-step-sub">5 niveaux · Évaluation JB sur circuit</div></div></div>'
+    html += '<span class="acad-arrow">→</span>'
+    html += '<div class="acad-step"><span class="acad-step-n">03</span><div class="acad-step-info"><div class="acad-step-name">Compétition</div><div class="acad-step-sub">BMW 325i HTCC · Licence FFSA · Sebring</div></div></div>'
+    html += '<span class="acad-arrow">→</span>'
+    html += '<div class="acad-step acad-step-champion"><span class="acad-step-n acad-step-star">★</span><div class="acad-step-info"><div class="acad-step-name">Champion</div><div class="acad-step-sub">France 1988 · JB EMERIC</div></div></div>'
+  }
+
+  html += '<a href="academie.html" class="acad-parcours-cta">Découvrir l\'Académie →</a>'
+  html += '</div>'
+  return html
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -139,8 +198,24 @@ function mirrorCoaching() {
 
   fetchSection('coaching.html', 'formules')
     .then(function (section) {
-      var html = buildCoachingCards(section)
-      target.innerHTML = html
+      var panels = section.querySelectorAll('.offer-card')
+      if (!panels.length) { setError(target, 'coaching.html'); return }
+
+      var hrefs = ['coaching.html#amateur', 'coaching.html#competition']
+      var wrap = document.createElement('div')
+      wrap.className = 'idx-coaching-panels'
+
+      for (var i = 0; i < panels.length && i < 2; i++) {
+        var a = document.createElement('a')
+        a.href = hrefs[i]
+        a.className = panels[i].className
+        a.innerHTML = panels[i].innerHTML
+        wrap.appendChild(a)
+      }
+
+      target.innerHTML = ''
+      target.appendChild(wrap)
+      notifyMirrorLoaded()
     })
     .catch(function (err) {
       console.warn('[mirror] coaching:', err.message)
@@ -149,7 +224,7 @@ function mirrorCoaching() {
 }
 
 function buildCoachingCards(section) {
-  var panels = section.querySelectorAll('.panel')
+  var panels = section.querySelectorAll('.offer-card')
   if (!panels.length) return ''
 
   var hrefs = ['coaching.html#amateur', 'coaching.html#competition']
@@ -170,6 +245,12 @@ function buildCoachingCards(section) {
     var hookText  = hook ? hook.textContent.trim() : ''
     var ctaText   = cta  ? cta.textContent.trim()  : 'En savoir plus →'
     var imgSrc    = img  ? img.src : ''
+    // Fallback images si pas d'image dans le panel
+    if (!imgSrc) {
+      imgSrc = i === 0
+        ? 'assets/images/podium-paul-ricard-1994.jpg'
+        : 'assets/images/bmw-325i-htcc.jpg'
+    }
     var isLight   = p.classList.contains('panel-l')
 
     cards += '<a href="' + hrefs[i] + '" class="ov-card" style="'
@@ -198,15 +279,53 @@ function mirrorTrack() {
   if (!target) return
   setLoading(target)
 
-  fetchSection('track.html', 'sr-grid')
-    .then(function (section) {
-      var html = buildTrackCards(section)
-      target.innerHTML = html
+  var SB_URL  = 'https://fyaybxamuabawerqzuud.supabase.co'
+  var SB_KEY  = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
+  var url = SB_URL + '/rest/v1/events?visible_site=eq.true&order=date_event.asc&limit=4&select=date_event,type,prix,status'
+
+  fetch(url, { headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY } })
+    .then(function(r) { return r.json() })
+    .then(function(events) {
+      console.log('[mirror] track events:', events ? events.length : 'null', events)
+      var html = buildTrackCardsFromEvents(events)
+      target.innerHTML = html || '<p style="opacity:.4;font-size:11px;padding:20px">Aucune session programmée.</p>'
     })
-    .catch(function (err) {
+    .catch(function(err) {
       console.warn('[mirror] track:', err.message)
       setError(target, 'track.html')
     })
+}
+
+function buildTrackCardsFromEvents(events) {
+  if (!events || !events.length) return ''
+  var months = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc']
+  var cards = ''
+  var max = Math.min(events.length, 3)
+  for (var i = 0; i < max; i++) {
+    var ev = events[i]
+    var d = new Date(ev.date_event)
+    var dateText = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear()
+    var isOpen = ev.status === 'Open' || ev.status === 'open'
+    var badgeCls = isOpen ? 'ov-card-badge ov-card-badge-y' : 'ov-card-badge'
+    var badgeText = isOpen ? 'Places disponibles' : 'Complet'
+    cards += '<a href="track.html" class="ov-card">'
+    cards += '<div class="ov-card-img">'
+    if (ev.image_url) cards += '<img src="' + ev.image_url + '" alt="' + (ev.circuit || '') + '" loading="lazy">'
+    cards += '<span class="' + badgeCls + '">' + badgeText + '</span>'
+    cards += '</div>'
+    cards += '<div class="ov-card-body">'
+    cards += '<div class="ov-card-num">' + dateText + '</div>'
+    cards += '<div class="ov-card-name">' + (ev.type || 'Track-Day') + '</div>'
+    // circuit non disponible sans jointure
+    if (ev.prix)    cards += '<div class="ov-card-price">' + ev.prix + ' €</div>'
+    cards += '</div></a>'
+  }
+  cards += '<a href="track.html" class="ov-card" style="justify-content:center;align-items:center;min-height:200px;opacity:.6">'
+  cards += '<div class="ov-card-body" style="text-align:center">'
+  cards += '<div class="ov-card-name">Voir toutes les dates 2026</div>'
+  cards += '<div class="ov-card-price">Track-Days &amp; Stages &rarr;</div>'
+  cards += '</div></a>'
+  return '<div class="ov-cards rv d1">' + cards + '</div>'
 }
 
 function buildTrackCards(section) {
@@ -260,5 +379,77 @@ function buildTrackCards(section) {
 
   return '<div class="ov-cards rv d1">' + cards + '</div>'
 }
+
+// ─────────────────────────────────────────────────────────────
+//  PADDOCK — threads forum + prochain événement depuis Supabase
+// ─────────────────────────────────────────────────────────────
+function mirrorPaddock() {
+  var target = getTarget('mirror-paddock')
+  if (!target) return
+  setLoading(target)
+
+  var SB_URL = 'https://fyaybxamuabawerqzuud.supabase.co'
+  var SB_KEY = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
+  var H = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+  var MONTHS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc']
+
+  // Charger threads + prochain événement en parallèle
+  Promise.all([
+    fetch(SB_URL + '/rest/v1/forum_threads?visible=eq.true&order=pinned.desc,reply_count.desc&limit=3&select=id,title,tag,author_name,reply_count', { headers: H }).then(function(r) { return r.json() }),
+    fetch(SB_URL + '/rest/v1/events?status=eq.Open&visible_site=eq.true&order=date_event.asc&limit=1&select=date_event,type,prix', { headers: H }).then(function(r) { return r.json() })
+  ]).then(function(results) {
+    var threads = results[0] || []
+    var events  = results[1] || []
+    var html    = buildPaddockCards(threads, events, MONTHS)
+    target.innerHTML = html || '<p style="opacity:.4;font-size:11px;padding:20px">Chargement…</p>'
+  }).catch(function(err) {
+    console.warn('[mirror] paddock:', err.message)
+    setError(target, 'paddock.html')
+  })
+}
+
+function buildPaddockCards(threads, events, MONTHS) {
+  var cards = ''
+
+  // Card prochain événement
+  if (events && events[0]) {
+    var ev = events[0]
+    var d  = new Date(ev.date_event)
+    var dateStr = d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear()
+    cards += '<a href="track.html" class="ov-card">'
+    cards += '<div class="ov-card-img" style="background:linear-gradient(135deg,#040a1e,#0A3D91);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">'
+    cards += '<div style="font-family:\'Bebas Neue\';font-size:42px;color:#FFCF00;line-height:1">' + d.getDate() + '</div>'
+    cards += '<div style="font-family:\'DM Mono\';font-size:9px;color:rgba(255,255,255,.6);letter-spacing:2px;text-transform:uppercase">' + MONTHS[d.getMonth()] + ' ' + d.getFullYear() + '</div>'
+    cards += '<span class="ov-card-badge ov-card-badge-y" style="position:static;margin-top:4px">Prochain</span>'
+    cards += '</div>'
+    cards += '<div class="ov-card-body">'
+    cards += '<div class="ov-card-num">' + dateStr + '</div>'
+    cards += '<div class="ov-card-name">' + ev.type + '</div>'
+    if (ev.prix) cards += '<div class="ov-card-price">' + ev.prix + ' €</div>'
+    cards += '</div></a>'
+  }
+
+  // Cards threads forum
+  var TAG_COLORS = { meca:'#E85D04', elec:'#3B82F6', chas:'#10B981', data:'#8B5CF6', regl:'#F59E0B', coaching:'#0A3D91' }
+  var max = Math.min(threads.length, 2)
+  for (var i = 0; i < max; i++) {
+    var t = threads[i]
+    var color = TAG_COLORS[t.tag] || '#666'
+    cards += '<a href="paddock.html#forum" class="ov-card">'
+    cards += '<div class="ov-card-img" style="background:#07080f;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px">'
+    cards += '<div style="font-family:\'DM Mono\';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:' + color + ';border:1px solid ' + color + ';padding:3px 10px;border-radius:20px">' + t.tag + '</div>'
+    cards += '<div style="font-family:\'DM Mono\';font-size:11px;color:rgba(255,255,255,.6);text-align:center;max-width:180px">' + (t.reply_count || 0) + ' réponse' + (t.reply_count !== 1 ? 's' : '') + '</div>'
+    cards += '</div>'
+    cards += '<div class="ov-card-body">'
+    cards += '<div class="ov-card-num">Forum Paddock</div>'
+    cards += '<div class="ov-card-name">' + t.title.substring(0, 50) + (t.title.length > 50 ? '…' : '') + '</div>'
+    cards += '<div class="ov-card-sub">' + (t.author_name || 'JB EMERIC') + '</div>'
+    cards += '</div></a>'
+  }
+
+  if (!cards) return ''
+  return '<div class="ov-cards ov-cards-3 rv d1">' + cards + '</div>'
+}
+
 
 })()

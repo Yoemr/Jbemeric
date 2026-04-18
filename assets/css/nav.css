@@ -1,3 +1,4 @@
+#nav-root { position: sticky; top: 0; z-index: 1000; background: rgba(4,10,30,.97) }
 /* ══════════════════════════════════════════════════════
    nav.css — JB EMERIC — Navigation unifiée
    Inclus dans toutes les pages. Ne pas modifier inline.
@@ -5,8 +6,8 @@
 
 /* ── Structure ── */
 .nav {
-  position: sticky; top: 0; z-index: 1000;
   height: 56px;
+  overflow: visible;
   background: rgba(4,10,30,.97);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -20,7 +21,7 @@
 /* ── Tabs desktop ── */
 .nav-tabs {
   display: none; gap: 2px; flex: 1;
-  margin-left: 8px; overflow-x: auto; scrollbar-width: none;
+  margin-left: 8px; overflow: visible; scrollbar-width: none;
 }
 .nav-tabs::-webkit-scrollbar { display: none }
 @media(min-width:700px) { .nav-tabs { display: flex } }
@@ -38,18 +39,24 @@
 .nav-tab:hover { background: rgba(255,215,0,.07); color: rgba(255,215,0,.9) }
 .nav-tab.active { background: #0A3D91; color: #fff; border-color: #0A3D91 }
 
-/* ── Sous-menu Paddock ── */
+/* ── Sous-menu ── */
 .nav-tab.has-sub { position: relative }
+/* Pont invisible : empêche le gap de couper le hover entre le tab et le sous-menu */
+.nav-tab.has-sub::before {
+  content: '';
+  position: absolute;
+  bottom: -8px; left: 0; right: 0;
+  height: 8px;
+}
 .nav-sub {
   display: none;
-  position: absolute; top: calc(100% + 6px); left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
   background: rgba(4,10,30,.99);
   border: 1px solid rgba(255,255,255,.08);
   border-top: 2px solid #FFCF00;
   border-radius: 0 0 8px 8px;
-  min-width: 160px; flex-direction: column;
-  z-index: 300; padding: 6px 0;
+  min-width: 180px; flex-direction: column;
+  z-index: 9999; padding: 6px 0;
   box-shadow: 0 16px 40px rgba(0,0,0,.5);
 }
 .nav-tab.has-sub:hover .nav-sub { display: flex }
@@ -248,7 +255,12 @@
   flex-wrap: wrap; gap: 8px;
 }
 .fb-copy { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.15) }
-.fb-badge { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.15); display: flex; align-items: center; gap: 8px }
+.fb-badge { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.15); display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
+.fb-badge a { color: rgba(255,255,255,.25); text-decoration: none; transition: color .15s }
+.fb-badge a:hover { color: rgba(255,207,0,.6) }
+.fb-links { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.15); display: flex; align-items: center; gap: 8px }
+.fb-links a { color: rgba(255,255,255,.25); text-decoration: none; transition: color .15s }
+.fb-links a:hover { color: rgba(255,207,0,.6) }
 .fb-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg,#F5D061,#C8860A); flex-shrink: 0 }
 
 /* ════════════════════════════════════════

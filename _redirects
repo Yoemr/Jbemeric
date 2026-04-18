@@ -1,0 +1,11 @@
+# Redirections JB EMERIC
+/stages          /track.html       301
+/karting         /academie-karting.html  301
+/coaching        /coaching.html    301
+/palmares        /academie.html    301
+/contact         /index.html#contact  301
+/inscription     /signup.html      301
+/connexion       /login.html       301
+/academie-pilotage  /academie.html  301
+/nos-voitures    /nos-voitures.html    301
+/voitures        /nos-voitures.html    301

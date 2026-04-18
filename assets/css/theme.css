@@ -175,3 +175,113 @@
 .nl-arrow {
   color: var(--next-em, var(--Y));
 }
+
+/* ═══════════════════════════════════════════════════════
+   FAQ UNIVERSELLE — JB EMERIC
+   Fond blanc, accordion uniforme, toutes les pages
+   ════════════════════════════════════════════════════ */
+
+.jbe-faq {
+  background: #fff;
+  padding: clamp(48px,6vw,80px) clamp(20px,5vw,72px);
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+.jbe-faq .rubrik {
+  color: rgba(0,0,0,.3);
+}
+
+.jbe-faq .sh {
+  color: #040a1e;
+}
+
+.jbe-faq .sh em {
+  color: #FFCF00;
+}
+
+.faq-list {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 720px;
+}
+
+.fq {
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.fq:first-child {
+  border-top: 1px solid rgba(0,0,0,.08);
+}
+
+.fq-q {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #0A3D91;
+  user-select: none;
+}
+
+.fq-q::before {
+  content: '?';
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: #FFCF00;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.fq-q::after {
+  content: '+';
+  margin-left: auto;
+  font-size: 22px;
+  font-weight: 300;
+  color: #FFCF00;
+  flex-shrink: 0;
+  transition: transform .25s;
+}
+
+.fq.open .fq-q::after {
+  transform: rotate(45deg);
+}
+
+.fq-a {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height .35s ease, opacity .25s, padding .25s;
+  font-size: 14px;
+  line-height: 1.78;
+  color: rgba(4,10,30,.6);
+  padding-left: 32px;
+}
+
+.fq.open .fq-a {
+  max-height: 600px;
+  opacity: 1;
+  padding-top: 0;
+  padding-bottom: 18px;
+}
+
+/* ─── CASSE PARAGRAPHES ──────────────────────────────────────────── */
+/* Force l'affichage en sentence case indépendamment de la saisie.   */
+/* Les titres/badges en uppercase sont gérés dans leur propre CSS.   */
+.hero-lead, .hero-sub, .ov-desc, .body-txt,
+.stat-desc, .sr-lead, .pc-lead, .man-lead, .art-desc {
+  text-transform: lowercase;
+}
+.hero-lead::first-letter, .hero-sub::first-letter,
+.ov-desc::first-letter, .body-txt::first-letter,
+.stat-desc::first-letter, .sr-lead::first-letter,
+.pc-lead::first-letter, .man-lead::first-letter,
+.art-desc::first-letter {
+  text-transform: uppercase;
+}

@@ -1,0 +1,133 @@
+/*
+ * nos-voitures.css — JB EMERIC
+ * CSS complet extrait de nos-voitures.html (source: zip original)
+ */
+
+:root {
+  --B: #0A3D91; --B2: #1252C0; --B3: #1a6fd4;
+  --G: #FFCF00; --G2: #F5D061; --G3: rgba(245,208,97,.12);
+  --ink: #0d0d0d; --night: #07080f; --night2: #0b1120;
+  --sep: rgba(255,255,255,.08);
+}
+
+/* ── HERO ──────────────────────────────── */
+.hero { position:relative; min-height:420px; display:flex; align-items:flex-end; overflow:hidden }
+.hero-bg { position:absolute; inset:0 }
+.hero-bg img { width:100%; height:100%; object-fit:cover; object-position:center 35% }
+.hero-overlay { position:absolute; inset:0; background:linear-gradient(180deg,rgba(4,10,30,.4) 0%,rgba(4,10,30,.85) 100%) }
+.hero-content { position:relative; z-index:1; padding:clamp(40px,6vw,72px) clamp(20px,5vw,72px) clamp(40px,5vw,60px) }
+.hero-eyebrow { font-family:'DM Mono'; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:rgba(255,207,0,.6); margin-bottom:10px }
+.hero-title { font-family:'Bebas Neue'; font-size:clamp(42px,8vw,80px); color:#fff; line-height:.9; margin-bottom:16px }
+.hero-title em { color:#FFCF00; font-style:normal }
+.hero-rule { width:40px; height:3px; background:#FFCF00; margin-bottom:16px }
+.hero-sub { font-family:'DM Mono'; font-size:12px; color:rgba(255,255,255,.65); max-width:560px; line-height:1.7 }
+.hero-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:18px }
+
+/* ── SECTION INTRO ─────────────────────── */
+.sec-intro { padding:clamp(40px,5vw,64px) clamp(20px,5vw,72px) }
+.sec-intro .rv { max-width:700px }
+.sh-kick { font-family:'DM Mono'; font-size:9px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:8px }
+.sh-title { font-family:'Bebas Neue'; font-size:clamp(28px,5vw,48px); color:#fff; line-height:.95; margin-bottom:16px }
+.sh-title .b { color:#FFCF00 }
+
+/* ── GRILLE VOITURES ───────────────────── */
+.voitures-grid {
+  padding: 0 clamp(20px,5vw,72px) clamp(40px,5vw,64px);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2px;
+  background: rgba(255,255,255,.06);
+}
+.vcard {
+  background: #07080f;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  transition: background .2s;
+}
+.vcard:hover { background: #0b1120 }
+.vcard-img {
+  position: relative; height: 200px; overflow: hidden;
+  background: #040a1e;
+  flex-shrink: 0;
+}
+.vcard-img img { width:100%; height:100%; object-fit:cover; transition:transform .4s }
+.vcard:hover .vcard-img img { transform:scale(1.04) }
+.vcard-badge {
+  position: absolute; top:12px; left:12px;
+  font-family:'DM Mono'; font-size:8px; letter-spacing:2px; text-transform:uppercase;
+  background:rgba(255,207,0,.15); color:#FFCF00;
+  border:1px solid rgba(255,207,0,.3); padding:3px 8px; border-radius:3px;
+}
+.vcard-prix {
+  position: absolute; bottom:12px; right:12px;
+  font-family:'Bebas Neue'; font-size:24px; color:#fff;
+  background:rgba(4,10,30,.8); padding:4px 10px; border-radius:4px;
+  letter-spacing:.5px;
+}
+.vcard-prix span { font-size:13px; color:rgba(255,255,255,.5) }
+.vcard-body { padding:20px; flex:1; display:flex; flex-direction:column; gap:8px }
+.vcard-tag { font-family:'DM Mono'; font-size:8px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,207,0,.55) }
+.vcard-nom { font-family:'Bebas Neue'; font-size:22px; color:#fff; letter-spacing:.5px; line-height:1 }
+.vcard-specs { font-family:'DM Mono'; font-size:9px; color:rgba(255,255,255,.4); line-height:1.6 }
+.vcard-desc { font-family:'DM Mono'; font-size:10px; color:rgba(255,255,255,.65); line-height:1.6; flex:1 }
+.vcard-circuit { font-family:'DM Mono'; font-size:8px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.3); margin-top:4px }
+.vcard-foot { padding:0 20px 20px; display:flex; gap:8px }
+.vcard-btn {
+  flex:1; padding:10px; text-align:center; text-decoration:none;
+  font-family:'DM Mono'; font-size:9px; letter-spacing:1.5px; text-transform:uppercase;
+  border-radius:5px; transition:all .15s; font-weight:600;
+}
+.vcard-btn-pri { background:#FFCF00; color:#000 }
+.vcard-btn-pri:hover { background:#e8c000 }
+.vcard-btn-sec { background:rgba(255,255,255,.07); color:rgba(255,255,255,.7); border:1px solid rgba(255,255,255,.12) }
+.vcard-btn-sec:hover { background:rgba(255,255,255,.12); color:#fff }
+
+/* ── VOITURE PERSONNELLE ───────────────── */
+.section { padding:clamp(40px,5vw,64px) clamp(20px,5vw,72px) }
+.section-title { font-family:'Bebas Neue'; font-size:clamp(24px,4vw,38px); color:#fff; margin-bottom:8px }
+.section-sub { font-family:'DM Mono'; font-size:11px; color:rgba(255,255,255,.5); margin-bottom:28px; max-width:560px; line-height:1.6 }
+
+.perso-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; margin-bottom:24px }
+.perso-card {
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+  border-radius:8px; padding:20px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.perso-circuit { font-family:'Bebas Neue'; font-size:18px; color:#FFCF00; line-height:1 }
+.perso-prix { font-family:'DM Mono'; font-size:10px; color:rgba(255,255,255,.8) }
+.perso-desc { font-family:'DM Mono'; font-size:9px; color:rgba(255,255,255,.4); line-height:1.5; flex:1 }
+.perso-cta {
+  display:block; text-align:center; padding:8px;
+  background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+  border-radius:5px; color:rgba(255,255,255,.7); text-decoration:none;
+  font-family:'DM Mono'; font-size:9px; letter-spacing:1.5px; text-transform:uppercase;
+  margin-top:4px; transition:all .15s;
+}
+.perso-cta:hover { background:rgba(255,207,0,.12); color:#FFCF00; border-color:rgba(255,207,0,.3) }
+
+/* ── BOUTIQUE BAND ─────────────────────── */
+.boutique-band {
+  background:linear-gradient(135deg,#040a1e 0%,#0A3D91 100%);
+  padding:clamp(32px,5vw,56px) clamp(20px,5vw,72px);
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:20px;
+}
+.boutique-text .kicker { font-family:'DM Mono'; font-size:8px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,207,0,.6); margin-bottom:8px }
+.boutique-text .title { font-family:'Bebas Neue'; font-size:clamp(24px,4vw,42px); color:#fff; line-height:.95 }
+.boutique-text .sub { font-family:'DM Mono'; font-size:11px; color:rgba(255,255,255,.55); margin-top:8px; max-width:480px; line-height:1.6 }
+.boutique-cta {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:14px 28px; background:#FFCF00; color:#000;
+  font-family:'DM Mono'; font-size:10px; letter-spacing:2px; text-transform:uppercase;
+  font-weight:700; text-decoration:none; border-radius:6px;
+  white-space:nowrap; transition:filter .15s; flex-shrink:0;
+}
+.boutique-cta:hover { filter:brightness(1.08) }
+
+/* ── CHALLENGE BAND ────────────────────── */
+.challenge-band {
+  background:#040a1e; border-top:1px solid rgba(255,255,255,.06);
+  padding:clamp(32px,5vw,56px) clamp(20px,5vw,72px);
+  display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center;
+}
+@media (max-width:600px) { .challenge-band { grid-template-columns:1fr } }

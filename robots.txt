@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin.html
+Disallow: /login.html
+Disallow: /signup.html
+Disallow: /mot-de-passe-oublie.html
+Disallow: /coming-soon.html
+
+Sitemap: https://jbemeric.netlify.app/sitemap.xml
+
+Disallow: /_data/

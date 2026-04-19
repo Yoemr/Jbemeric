@@ -8,7 +8,7 @@ var http = require('http')
 var fs   = require('fs')
 var path = require('path')
 
-var PORT = 3000
+var PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000
 var ROOT = __dirname
 
 var MIME = {
@@ -113,8 +113,10 @@ http.createServer(function (req, res) {
   fs.createReadStream(resolved).pipe(res)
 
 }).listen(PORT, function () {
+  var addr = this.address()
+  var finalPort = addr && addr.port ? addr.port : PORT
   console.log('─────────────────────────────────────────')
-  console.log('  Serveur JBE : http://localhost:' + PORT)
+  console.log('  Serveur JBE : http://localhost:' + finalPort)
   console.log('  /save-html  : actif (màj HTML auto)')
   console.log('─────────────────────────────────────────')
 })

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="assets/css/nav.css">
   <link rel="stylesheet" href="assets/css/palmares.css">
   <title>Palmarès JB EMERIC — 40 ans de compétition · 1986-2026</title>
-  <meta name="description" content="Le palmarès complet de Jean-Baptiste Emeric : Champion de France Formule Ford 1988, Formule Renault, GT, Sport Prototype, Courses de côte. 40 ans de compétition.">
+  <meta name="description" content="Le palmarès complet de Jean-Baptiste Emeric : Champion de France Formule Ford 1988, Formule Renault, GT, Sport Prototype, Courses de côte. 40 ans de compétition, 10+ disciplines, 15+ véhicules de course, 20+ circuits.">
   <meta property="og:title" content="Palmarès JB EMERIC — 40 ans de compétition">
   <meta property="og:description" content="Champion de France 1988. 40 ans de résultats en Formule Ford, Renault, GT, Sport Proto, Courses de côte.">
   <meta property="og:image" content="https://jbemeric.netlify.app/assets/images/podium-paul-ricard-1994.jpg">
@@ -28,42 +28,108 @@
   </div>
   <div class="pal-hero-content">
     <div class="pal-eyebrow">Palmarès · 1986 → 2026</div>
-    <h1 class="pal-hero-titre">40 ans de<br><em>Compétition</em></h1>
+    <h1 class="pal-hero-titre">40 ans de<em>Compétition</em></h1>
     <div class="pal-hero-rule"></div>
-    <p class="pal-hero-sub">Karting · Formule Ford · Formule Renault · Sport Prototype · GT · Supertourisme · Courses de côte · Rallye · Endurance</p>
-    <div class="pal-stats">
-      <div class="pal-stat"><span class="pal-stat-n">1986</span><span class="pal-stat-l">Première victoire</span></div>
-      <div class="pal-stat"><span class="pal-stat-n">1988</span><span class="pal-stat-l">Champion de France</span></div>
-      <div class="pal-stat"><span class="pal-stat-n">41</span><span class="pal-stat-l">Résultats référencés</span></div>
-      <div class="pal-stat"><span class="pal-stat-n">10+</span><span class="pal-stat-l">Disciplines</span></div>
+    <p class="pal-hero-sub">Karting · Formule Ford · Formule Renault · Formule 3 · Sport Prototype · GT · Supertourisme · Courses de côte · Rallye · Endurance · VHRS</p>
+    <div class="pal-stats" id="pal-hero-stats">
+      <!-- Rendu par palmares.js -->
     </div>
   </div>
 </section>
 
-<!-- ═══ FILTRES ══════════════════════════════════════════════ -->
-<div class="pal-filtres" id="pal-filtres">
-  <button class="pal-filtre active" data-cat="all" onclick="filterPalmares('all', this)">Tout</button>
-  <button class="pal-filtre" data-cat="karting" onclick="filterPalmares('karting', this)">Karting</button>
-  <button class="pal-filtre" data-cat="monoplace" onclick="filterPalmares('monoplace', this)">Monoplaces</button>
-  <button class="pal-filtre" data-cat="gt" onclick="filterPalmares('gt', this)">GT / Tourisme</button>
-  <button class="pal-filtre" data-cat="prototype" onclick="filterPalmares('prototype', this)">Sport Prototype</button>
-  <button class="pal-filtre" data-cat="montagne" onclick="filterPalmares('montagne', this)">Courses de côte</button>
-  <button class="pal-filtre" data-cat="rallye" onclick="filterPalmares('rallye', this)">Rallye</button>
-  <button class="pal-filtre" data-cat="endurance" onclick="filterPalmares('endurance', this)">Endurance</button>
+<!-- ═══ INTRO / CITATION ══════════════════════════════════════ -->
+<section class="pal-intro">
+  <div class="pal-intro-inner">
+    <div class="pal-intro-eyebrow">Portrait · Jean-Baptiste Emeric</div>
+    <div class="pal-intro-text" id="pal-intro-text">
+      <!-- Rendu par palmares.js -->
+    </div>
+    <div class="pal-intro-source" id="pal-intro-source"></div>
+  </div>
+</section>
+
+<!-- ═══ FILTRES STICKY ═════════════════════════════════════════ -->
+<div class="pal-filtres-wrap">
+  <div class="pal-filtres" id="pal-filtres">
+    <button class="pal-filtre active" data-cat="all" onclick="filterPalmares('all', this)">Tout</button>
+    <button class="pal-filtre" data-cat="karting" onclick="filterPalmares('karting', this)">Karting</button>
+    <button class="pal-filtre" data-cat="monoplace" onclick="filterPalmares('monoplace', this)">Monoplaces</button>
+    <button class="pal-filtre" data-cat="gt" onclick="filterPalmares('gt', this)">GT</button>
+    <button class="pal-filtre" data-cat="prototype" onclick="filterPalmares('prototype', this)">Sport Proto</button>
+    <button class="pal-filtre" data-cat="tourisme" onclick="filterPalmares('tourisme', this)">Tourisme</button>
+    <button class="pal-filtre" data-cat="montagne" onclick="filterPalmares('montagne', this)">Courses de côte</button>
+    <button class="pal-filtre" data-cat="rallye" onclick="filterPalmares('rallye', this)">Rallye</button>
+    <button class="pal-filtre" data-cat="endurance" onclick="filterPalmares('endurance', this)">Endurance</button>
+    <button class="pal-filtre" data-cat="historique" onclick="filterPalmares('historique', this)">Historique</button>
+  </div>
 </div>
 
 <!-- ═══ TIMELINE ═════════════════════════════════════════════ -->
 <div class="pal-timeline-wrap">
   <div class="pal-timeline" id="palmares-timeline">
-    <!-- Rendu par palmares.js -->
     <div class="pal-loading">Chargement du palmarès…</div>
   </div>
 </div>
+
+<!-- ═══ RENCONTRES MARQUANTES ══════════════════════════════════ -->
+<section class="pal-section pal-section--alt">
+  <div class="pal-section-inner">
+    <div class="pal-section-head">
+      <div class="pal-section-eyebrow">Hors piste</div>
+      <h2 class="pal-section-titre">Rencontres <em>marquantes</em></h2>
+      <p class="pal-section-sub">40 ans de paddock : des légendes F1, des coéquipiers, des élèves devenus pilotes.</p>
+    </div>
+    <div class="pal-rencontres" id="pal-rencontres"></div>
+  </div>
+</section>
+
+<!-- ═══ VOITURES PILOTÉES ═════════════════════════════════════ -->
+<section class="pal-section">
+  <div class="pal-section-inner">
+    <div class="pal-section-head">
+      <div class="pal-section-eyebrow">Flotte carrière</div>
+      <h2 class="pal-section-titre">Voitures de <em>course</em></h2>
+      <p class="pal-section-sub">Du kart National 1 à la Caterham — 15+ véhicules pilotés en compétition.</p>
+    </div>
+    <div class="pal-voitures" id="pal-voitures"></div>
+  </div>
+</section>
+
+<!-- ═══ MUR DE PRESSE ═══════════════════════════════════════════ -->
+<section class="pal-section pal-section--alt">
+  <div class="pal-section-inner">
+    <div class="pal-section-head">
+      <div class="pal-section-eyebrow">Archives</div>
+      <h2 class="pal-section-titre">Mur de <em>presse</em></h2>
+      <p class="pal-section-sub">40 ans de couverture médiatique — Échappement, Bitume, Var Matin, La Marseillaise, Sport Mag, Businews…</p>
+    </div>
+    <div class="pal-mur-presse" id="pal-mur-presse"></div>
+  </div>
+</section>
+
+<!-- ═══ SPONSORS HISTORIQUES ════════════════════════════════════ -->
+<section class="pal-section">
+  <div class="pal-section-inner">
+    <div class="pal-section-head">
+      <div class="pal-section-eyebrow">Partenaires</div>
+      <h2 class="pal-section-titre">Sponsors <em>historiques</em></h2>
+      <p class="pal-section-sub">France Boulon 35 ans de fidélité. Ville d'Aubagne depuis les débuts. 25+ partenaires au fil des saisons.</p>
+    </div>
+    <div class="pal-sponsors-hl" id="pal-sponsors-hl"></div>
+    <div class="pal-sponsors-wall" id="pal-sponsors-wall"></div>
+  </div>
+</section>
 
 <!-- ═══ CTA RETOUR ════════════════════════════════════════════ -->
 <div class="pal-back">
   <a href="academie.html" class="pal-back-btn">← Retour à l'Académie</a>
   <a href="academie-challenge.html" class="pal-back-cta">Rejoindre l'Académie →</a>
+</div>
+
+<!-- Lightbox -->
+<div class="pal-lightbox" id="pal-lightbox" onclick="closeLightbox()">
+  <button class="pal-lightbox-close" onclick="closeLightbox()">×</button>
+  <img id="pal-lightbox-img" src="" alt="">
 </div>
 
 <div id="footer-root"></div>

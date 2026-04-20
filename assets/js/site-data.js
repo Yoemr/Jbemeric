@@ -70,13 +70,12 @@ window.JBEMERIC_DATA = {
       categorie: 'karting',
       highlight: true,
       voiture: 'Karting National 1',
-      coequipiers: ['Sandrine Nahon (adversaire)'],
+      adversaires: ['Sandrine Nahon'],
       circuits: ['La Châtre', 'Nice', 'Ganges'],
       images: ['assets/images/palmares/annees/1986-karting-avia.jpg', 'assets/images/palmares/annees/1986-karting-nice.jpg'],
       presse: [
         'assets/images/palmares/presse/1986-140-pilotes-nice.jpg',
         'assets/images/palmares/presse/1986-articles-pages-1.jpg',
-        'assets/images/palmares/presse/1986-le-merite.jpg',
         'assets/images/palmares/presse/1986-articles-pages-8.jpg',
         'assets/images/palmares/presse/1986-articles-pages-14.jpg'
       ],
@@ -198,7 +197,6 @@ window.JBEMERIC_DATA = {
         'assets/images/palmares/presse/1991-1ere-victoire-f3.jpg',
         'assets/images/palmares/presse/1991-article.jpg',
         'assets/images/palmares/presse/1991-premiere-emeric.jpg',
-        'assets/images/palmares/presse/1991-grignote-places.jpg',
         'assets/images/palmares/presse/1991-240-kmh.jpg',
         'assets/images/palmares/presse/1991-podium-final.jpg'
       ],
@@ -454,7 +452,6 @@ window.JBEMERIC_DATA = {
         { circuit: 'Lédenon', place: '2ème général · victoire FR' }
       ],
       images: ['assets/images/palmares/annees/2012-fr-martini-dijon.jpg'],
-      presse: ['assets/images/palmares/presse/2012-resultats-f3-fr.jpg'],
       citations: [
         { texte: 'La plus belle course du palmarès de JB EMERIC', source: 'Val de Vienne 2012' }
       ]
@@ -487,7 +484,6 @@ window.JBEMERIC_DATA = {
         { circuit: 'Paul Ricard', place: '10ème endurance · 11ème sprint' }
       ],
       images: [
-        'assets/images/palmares/annees/2014-mitjet-grille.jpg',
         'assets/images/palmares/annees/2014-yvan-muller-vigeant.jpg'
       ],
       presse: [

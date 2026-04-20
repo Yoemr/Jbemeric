@@ -57,7 +57,14 @@
       "Bash(curl -s -o /dev/null -w \"CSS: %{http_code}\\\\n\" http://localhost:3000/assets/css/palmares.css)",
       "Bash(curl -s -o /dev/null -w \"JS palmares: %{http_code}\\\\n\" http://localhost:3000/assets/js/palmares.js)",
       "Bash(curl -s -o /dev/null -w \"JS site-data: %{http_code}\\\\n\" http://localhost:3000/assets/js/site-data.js)",
-      "Bash(curl -s -o /dev/null -w \"IMG 1986 karting: %{http_code}\\\\n\" \"http://localhost:3000/assets/images/palmares/annees/1986-karting-avia.jpg\")"
+      "Bash(curl -s -o /dev/null -w \"IMG 1986 karting: %{http_code}\\\\n\" \"http://localhost:3000/assets/images/palmares/annees/1986-karting-avia.jpg\")",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "WebFetch(domain:jbemeric.netlify.app)",
+      "mcp__430eb100-f6c1-4e85-80df-4ec07a8fb82c__netlify-project-services-reader",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://jbemeric.netlify.app/assets/images/palmares/annees/1986-karting-avia.jpg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://jbemeric.netlify.app/assets/css/palmares.css\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://jbemeric.netlify.app/assets/images/palmares/sponsors/france-boulon.png\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://jbemeric.netlify.app/assets/images/podium-paul-ricard-1994.jpg\")"
     ]
   }
 }

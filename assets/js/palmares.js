@@ -123,6 +123,7 @@
       var metaItems = []
       if (e.voiture)      metaItems.push({ label: 'Voiture',       val: e.voiture })
       if (e.coequipiers && e.coequipiers.length) metaItems.push({ label: 'Coéquipier' + (e.coequipiers.length > 1 ? 's' : ''), val: e.coequipiers.join(' · ') })
+      if (e.adversaires && e.adversaires.length) metaItems.push({ label: 'Adversaire' + (e.adversaires.length > 1 ? 's' : ''), val: e.adversaires.join(' · ') })
       if (e.circuits && e.circuits.length)       metaItems.push({ label: 'Circuit' + (e.circuits.length > 1 ? 's' : ''),       val: e.circuits.join(' · ') })
       if (metaItems.length) {
         meta = '<div class="pal-meta-grid">' +

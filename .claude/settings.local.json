@@ -64,7 +64,21 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://jbemeric.netlify.app/assets/images/palmares/annees/1986-karting-avia.jpg\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://jbemeric.netlify.app/assets/css/palmares.css\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://jbemeric.netlify.app/assets/images/palmares/sponsors/france-boulon.png\")",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://jbemeric.netlify.app/assets/images/podium-paul-ricard-1994.jpg\")"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://jbemeric.netlify.app/assets/images/podium-paul-ricard-1994.jpg\")",
+      "Bash(tasklist //FI \"IMAGENAME eq node.exe\")",
+      "PowerShell(Move-Item \"D:\\\\OneDrive\\\\Documents\\\\Documents Perso\\\\Jbemeric\\\\assets\\\\images\\\\palmares\\\\annees\\\\1995-triumph.jpg\" \"D:\\\\OneDrive\\\\Documents\\\\Documents Perso\\\\Jbemeric\\\\assets\\\\images\\\\palmares\\\\presse\\\\1995-triumph-ricard-article.jpg\" -Force)",
+      "PowerShell(Move-Item \"D:\\\\OneDrive\\\\Documents\\\\Documents Perso\\\\Jbemeric\\\\assets\\\\images\\\\palmares\\\\annees\\\\1998-dedours-hommell.jpg\" \"D:\\\\OneDrive\\\\Documents\\\\Documents Perso\\\\Jbemeric\\\\assets\\\\images\\\\palmares\\\\presse\\\\1998-dedours-hommell-retour.jpg\" -Force)",
+      "PowerShell(Move-Item \"D:\\\\OneDrive\\\\Documents\\\\Documents Perso\\\\Jbemeric\\\\assets\\\\images\\\\palmares\\\\annees\\\\1998-hommell-ricard.jpg\" \"D:\\\\OneDrive\\\\Documents\\\\Documents Perso\\\\Jbemeric\\\\assets\\\\images\\\\palmares\\\\presse\\\\1998-hommell-ricard-article.jpg\" -Force)",
+      "Bash(powershell.exe -Command 'Get-ChildItem '\\\\''D:\\\\OneDrive\\\\Documents\\\\Documents Perso\\\\Jbemeric\\\\assets\\\\images\\\\palmares\\\\presse\\\\'\\\\'' | Where-Object { $_.Name -match '\\\\''1995|1998'\\\\'' } | Select-Object -ExpandProperty Name')",
+      "Bash(powershell.exe -Command 'Get-ChildItem '\\\\''D:\\\\OneDrive\\\\Documents\\\\Documents Perso\\\\Jbemeric\\\\assets\\\\images\\\\palmares\\\\annees\\\\'\\\\'' | Where-Object { $_.Name -match '\\\\''1995|1998'\\\\'' } | Select-Object -ExpandProperty Name')",
+      "PowerShell($files = @\\('1987-formule-ford','1988-ff-albi','1992-portrait-2e-place','1986-pilote-hydra','2006-camaro-en-feu','2013-book-vainqueur','2014-yvan-muller-vigeant','2014-mitjet-grille','1993-4x3-sponsors'\\); $base = 'D:\\\\OneDrive\\\\Documents\\\\Documents Perso\\\\Jbemeric\\\\assets\\\\images\\\\palmares\\\\annees\\\\'; $files | ForEach-Object { $path = $base + $_ + '.jpg'; if\\(Test-Path $path\\) { Write-Output \\('OK: ' + $_\\) } else { Write-Output \\('MISSING: ' + $_\\) } })",
+      "Bash(curl -L -s -o \"2003-ferrari-360-modena.jpg\" \"https://jbemeric.com/wp-content/uploads/2021/12/PHOTO-FERRARI-360-detouree1-scaled.jpg\")",
+      "Bash(curl -L -s -o \"2026-caterham-420-r.jpg\" \"https://jbemeric.com/wp-content/uploads/2020/10/420-R-AV.jpg\")",
+      "Bash(curl -L -s -o \"2022-porsche-911-carrera-27.jpg\" \"https://jbemeric.com/wp-content/uploads/2019/11/RALLYCIRCUIT-3-4-AVANT-XAVIER-2.jpg\")",
+      "Bash(curl -L -s -o \"2001-hommell-rs2-martinez.jpg\" \"https://jbemeric.com/wp-content/uploads/2022/01/HOMMELL-MARTINEZ-2-001.jpg\")",
+      "WebFetch(domain:emericjb.unblog.fr)",
+      "WebFetch(domain:www.instagram.com)",
+      "WebFetch(domain:www.facebook.com)"
     ]
   }
 }

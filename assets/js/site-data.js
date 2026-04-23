@@ -42,17 +42,15 @@ window.JBEMERIC_DATA = {
 
   /* ── INTRO PALMARÈS ───────────────────────────────────────────── */
   palmaresIntro: {
-    accroche: 'Le palmarès de JB EMERIC commence en 1986. Depuis, c\'est 40 ans de compétition sur dix disciplines différentes.',
+    accroche: 'Le palmarès de JB EMERIC commence en 1986. Depuis, c\'est 40 ans de compétition sur dix disciplines différentes — aubagnais de naissance, pilote depuis le karting, fondateur de l\'école de pilotage JB EMERIC (1989) et président de l\'association Promotion Sport Auto.',
     citation: {
-      texte: 'Jean-Baptiste, c\'est l\'amour de la course automobile qu\'il sait communiquer à tous, la volonté de progresser. Hier la Formule 3, aujourd\'hui le Sport Prototype, demain le Tourisme. Jean-Baptiste n\'a qu\'un seul but : <em>GAGNER !</em>',
+      texte: 'L\'amour de la course automobile qu\'il sait communiquer à tous. Hier la Formule 3, aujourd\'hui le Sport Prototype, demain le Tourisme. JB n\'a qu\'un seul but : <em>GAGNER !</em>',
       source: 'Présentation officielle JB EMERIC'
     },
     chiffres: [
-      { n: '40',  l: 'Années de compétition', suffix: ' ans' },
-      { n: '1988', l: 'Champion de France FF' },
-      { n: '10',  l: 'Disciplines', suffix: '+' },
-      { n: '15',  l: 'Véhicules de course', suffix: '+' },
-      { n: '20',  l: 'Circuits internationaux', suffix: '+' }
+      { n: '40', l: 'Années de compétition', suffix: ' ans' },
+      { n: '1986', l: 'Débuts en karting', prefix: 'Depuis ' },
+      { n: '10', l: 'disciplines différentes', prefix: 'Plus de ', suffix: '' }
     ]
   },
 
@@ -88,8 +86,10 @@ window.JBEMERIC_DATA = {
       categorie: 'monoplace',
       voiture: 'Rondeau FF 1984',
       circuits: ['Lédenon'],
-      images: ['assets/images/palmares/annees/1987-formule-ford.jpg', 'assets/images/palmares/annees/1987-volant-palmyr.jpg'],
+      images: ['assets/images/palmares/annees/1987-formule-ford.jpg'],
       presse: [
+        'assets/images/palmares/presse/1987-le-merite.jpg',
+        'assets/images/palmares/presse/1987-volant-palmyr-equipe.jpg',
         'assets/images/palmares/presse/1987-publi-toulouse.jpg',
         'assets/images/palmares/presse/1987-var-matin-defferre.jpg',
         'assets/images/palmares/presse/1987-loin-devant.jpg',
@@ -103,17 +103,19 @@ window.JBEMERIC_DATA = {
     {
       annee: 1988,
       titre: 'Champion de France Formule Ford',
-      detail: '9ème au Championnat de France de Formule Ford. Premiers essais en Van Diemen remarqués. Finit meilleur pilote de l\'équipe PALMYR. Revue Échappement couvre la saison.',
+      detail: '9ème au classement général du Championnat de France de Formule Ford. À Paul Ricard : à 4 centièmes de la pôle. Finit meilleur pilote de l\'équipe PALMYR en fin de saison. Diplôme Marlboro. Revue Échappement couvre la saison.',
       categorie: 'monoplace',
       highlight: true,
       voiture: 'Van Diemen FF',
-      circuits: ['Pau-Arnos', 'Paul Ricard', 'Albi'],
+      circuits: ['Nogaro', 'Pau-Arnos', 'Paul Ricard', 'Albi'],
       resultats: [
-        { circuit: 'Pau-Arnos', place: '9ème' },
-        { circuit: 'Paul Ricard', place: '7ème' }
+        { circuit: 'Classement général', place: '9ème' },
+        { circuit: 'Paul Ricard', place: '7ème (à 4 centièmes pôle)' },
+        { circuit: 'Nogaro', place: 'La revanche de JB Emeric' }
       ],
-      images: ['assets/images/palmares/annees/1988-van-diemen.jpg', 'assets/images/palmares/annees/1988-ff-albi.jpg'],
+      images: ['assets/images/palmares/annees/1988-ff-albi.jpg'],
       presse: [
+        'assets/images/palmares/presse/1988-van-diemen-marseillaise.jpg',
         'assets/images/palmares/presse/1988-emeric-indiscutablement.jpg',
         'assets/images/palmares/presse/1988-en-piste-marseillaise.jpg',
         'assets/images/palmares/presse/1988-points-prometteurs.jpg',
@@ -126,17 +128,20 @@ window.JBEMERIC_DATA = {
         'assets/images/palmares/presse/1988-malchance-mars.jpg'
       ],
       citations: [
-        { texte: 'Un pilote à suivre', source: 'Presse nationale' }
-      ]
+        { texte: 'Un pilote à suivre', source: 'Presse nationale' },
+        { texte: 'JB Emeric à l\'ombre des dieux', source: 'Échappement Magazine' }
+      ],
+      anecdote: 'Presse compare JB à Alain Prost ("Prost roi du karting et JB Emeric dernier volant"). Diplôme Marlboro remis en fin de saison.'
     },
     {
       annee: 1989,
       titre: 'Entrée en Formule Renault — Fondation École JB EMERIC',
-      detail: 'Saison stoppée après départ de Malcolm Hill. Fin de saison avec team DAS Racing d\'Yves Déchaume. Voiture : Reynard. Création de l\'école de pilotage JB EMERIC à Aubagne.',
+      detail: 'Saison stoppée après le départ de Malcolm Hill avec la caisse de l\'entreprise et le matériel. Fin de saison sauvée avec le team DAS Racing d\'Yves Déchaume. Voiture : Reynard. Création de l\'école de pilotage JB EMERIC à Aubagne — 35 ans d\'enseignement en 2024.',
       categorie: 'monoplace',
       voiture: 'Reynard FR',
-      coequipiers: ['Yves Déchaume (team DAS Racing)', 'Malcolm Hill'],
+      coequipiers: ['Pierre Derode', 'Yves Déchaume (team DAS Racing)', 'Malcolm Hill'],
       circuits: ['Magny-Cours'],
+      anecdote: 'Malcolm Hill part avec la caisse et le matériel : Pierre Derode et JB se retrouvent à pied. Yves Déchaume sauve la saison — partenariat qui débouchera sur la superbe saison 1990.',
       images: ['assets/images/palmares/annees/1989-formule-renault.jpg', 'assets/images/palmares/annees/1989-fr-reynard.jpg'],
       presse: [
         'assets/images/palmares/presse/1989-fr-magny.jpg',
@@ -176,19 +181,22 @@ window.JBEMERIC_DATA = {
     {
       annee: 1991,
       titre: '3ème Championnat de France B de Formule 3',
-      detail: '1ère victoire en F3 B à Magny-Cours (Grand Prix de France). Podium avec Bouilon et Lagorce. Présent régulièrement sur podiums — discipline reine en monoplace.',
+      detail: '1ère victoire en F3 B à Magny-Cours, le jour du Grand Prix de France F1. 3ème sur le circuit de Nogaro. Départ sur les chapeaux de roues. Podium final au Championnat de France de Formule 3 B. Présence sur tous les médias — article "240 km/h".',
       categorie: 'monoplace',
       highlight: true,
       voiture: 'Formule 3',
+      adversaires: ['Daniel-Delien (F3-B Magny-Cours)'],
       coequipiers: ['Bouilon', 'Lagorce', 'Bouchut'],
-      circuits: ['Magny-Cours', 'Croix-en-Ternois'],
+      circuits: ['Magny-Cours', 'Nogaro', 'Croix-en-Ternois'],
       resultats: [
-        { circuit: 'Magny-Cours', place: '1ère victoire F3 B' }
+        { circuit: 'Magny-Cours', place: '1ère victoire F3 B (jour du GP F1)' },
+        { circuit: 'Nogaro', place: '3ème' },
+        { circuit: 'Championnat final', place: '3ème au général F3 B' }
       ],
       images: [
-        'assets/images/palmares/annees/1991-podium-magny-cours.jpg',
         'assets/images/palmares/annees/1991-f3-magny.jpg',
-        'assets/images/palmares/annees/1991-f3-croix.jpg'
+        'assets/images/palmares/annees/1991-f3-croix.jpg',
+        'assets/images/palmares/annees/1991-podium-magny-cours.jpg'
       ],
       presse: [
         'assets/images/palmares/presse/1991-bon-debuts.jpg',
@@ -197,6 +205,7 @@ window.JBEMERIC_DATA = {
         'assets/images/palmares/presse/1991-1ere-victoire-f3.jpg',
         'assets/images/palmares/presse/1991-article.jpg',
         'assets/images/palmares/presse/1991-premiere-emeric.jpg',
+        'assets/images/palmares/presse/1991-grignote-places.jpg',
         'assets/images/palmares/presse/1991-240-kmh.jpg',
         'assets/images/palmares/presse/1991-podium-final.jpg'
       ],
@@ -222,11 +231,11 @@ window.JBEMERIC_DATA = {
         'assets/images/palmares/annees/1992-hydra-ricard-pole.jpg',
         'assets/images/palmares/annees/1992-hydra-sport-proto.jpg',
         'assets/images/palmares/annees/1992-sport-proto-alfa.jpg',
-        'assets/images/palmares/annees/1992-portrait-2e-place.jpg',
         'assets/images/palmares/annees/1986-pilote-hydra.jpg'
       ],
       presse: [
-        'assets/images/palmares/presse/1992-pole-ricard.jpg'
+        'assets/images/palmares/presse/1992-pole-ricard.jpg',
+        'assets/images/palmares/annees/1992-portrait-2e-place.jpg'
       ],
       anecdote: 'Autre pilote sur la même voiture : Arturo Merzario (légende F1).'
     },
@@ -252,9 +261,9 @@ window.JBEMERIC_DATA = {
         { circuit: '2 Tours d\'Horloge', place: '15ème général (Triumph Spitfire)' }
       ],
       images: [
-        'assets/images/palmares/annees/1994-podium-ricard.jpg',
         'assets/images/palmares/annees/1994-proto-gache.jpg',
-        'assets/images/palmares/annees/1994-spider-905-pau.jpg'
+        'assets/images/palmares/annees/1994-spider-905-pau.jpg',
+        'assets/images/palmares/annees/1994-podium-ricard.jpg'
       ],
       citations: [
         { texte: '2 Tours d\'Horloge la nuit en Triumph Spitfire, 15ème au général — un pur plaisir !', source: 'JB EMERIC' }
@@ -268,8 +277,10 @@ window.JBEMERIC_DATA = {
       voiture: 'Alfa Romeo 145 · Triumph Spitfire',
       circuits: ['Paul Ricard'],
       images: [
-        'assets/images/palmares/annees/1995-triumph.jpg',
         'assets/images/palmares/annees/1995-triumph-stands.jpg'
+      ],
+      presse: [
+        'assets/images/palmares/presse/1995-triumph-ricard-article.jpg'
       ]
     },
     {
@@ -299,9 +310,11 @@ window.JBEMERIC_DATA = {
         { circuit: 'Paul Ricard', place: '1er Vainqueur Coupe' }
       ],
       images: [
-        'assets/images/palmares/annees/1998-hommell-ricard.jpg',
-        'assets/images/palmares/annees/1998-barquette-hommell.jpg',
-        'assets/images/palmares/annees/1998-dedours-hommell.jpg'
+        'assets/images/palmares/annees/1998-barquette-hommell.jpg'
+      ],
+      presse: [
+        'assets/images/palmares/presse/1998-hommell-ricard-article.jpg',
+        'assets/images/palmares/presse/1998-dedours-hommell-retour.jpg'
       ]
     },
     {
@@ -320,11 +333,12 @@ window.JBEMERIC_DATA = {
     {
       annee: 2000,
       titre: '1er Coupe HOMMELL RS avec Frédéric Dedours',
-      detail: 'Victoire en Coupe HOMMELL RS avec Frédéric Dedours. Victoire Porsche 964 RS avec Laurent Gremmel.',
+      detail: 'Victoire en Coupe HOMMELL RS avec Frédéric Dedours — vainqueur dès ses premières courses sous les couleurs du Team JB EMERIC. Victoire de la Porsche 964 RS avec Laurent Gremmel.',
       categorie: 'gt',
       highlight: true,
       voiture: 'Hommell RS · Porsche 964 RS',
-      coequipiers: ['Frédéric Dedours', 'Laurent Gremmel']
+      coequipiers: ['Frédéric Dedours', 'Laurent Gremmel'],
+      anecdote: 'Frédéric Dedours "à peine arrivé dans l\'équipe JB EMERIC qu\'il gagne des courses".'
     },
     {
       annee: 2001,
@@ -334,7 +348,10 @@ window.JBEMERIC_DATA = {
       voiture: 'Hommell RS2 · VW Fun Cup',
       coequipiers: ['Franck Martinez', 'Laurent Gremmel'],
       circuits: ['Lédenon', 'Sebring (USA)'],
-      images: ['assets/images/palmares/annees/2001-fun-cup-ledenon.jpg']
+      images: [
+        'assets/images/palmares/annees/2001-fun-cup-ledenon.jpg',
+        'assets/images/palmares/annees/2001-hommell-rs2-martinez.jpg'
+      ]
     },
     {
       annee: 2002,
@@ -352,7 +369,8 @@ window.JBEMERIC_DATA = {
       detail: '2ème en Coupe HOMMELL RS2 avec Franck Martinez. Participation à la SUPER SÉRIE FFSA en Ferrari 360 Modena GT.',
       categorie: 'gt',
       voiture: 'Hommell RS2 · Ferrari 360 Modena',
-      coequipiers: ['Franck Martinez']
+      coequipiers: ['Franck Martinez'],
+      images: ['assets/images/palmares/annees/2003-ferrari-360-modena.jpg']
     },
     {
       annee: 2004,
@@ -384,11 +402,11 @@ window.JBEMERIC_DATA = {
     {
       annee: 2007,
       titre: 'Sport Prototype Norma M20 — Podium Dijon',
-      detail: 'Sport Prototype Norma M20 à Jarama avec Richard Mori. Podium Sport Proto à Dijon. Chevrolet Camaro à Paul Ricard & Spa. Courses de côte Gémenos : 23ème général, 2ème classe.',
+      detail: 'Sport Prototype Norma M20 à Jarama avec Richard Mori (sous les couleurs PID). Podium Sport Proto à Dijon. Chevrolet Camaro à Paul Ricard & Spa. VW Fun Cup également engagée. Courses de côte Gémenos en Formule Renault : 23ème général, 2ème classe.',
       categorie: 'prototype',
-      voiture: 'Norma M20 · Chevrolet Camaro',
+      voiture: 'Norma M20 · Chevrolet Camaro · VW Fun Cup · Formule Renault',
       coequipiers: ['Richard Mori'],
-      circuits: ['Jarama', 'Dijon', 'Paul Ricard', 'Spa', 'Gémenos'],
+      circuits: ['Jarama', 'Dijon', 'Paul Ricard', 'Spa-Francorchamps', 'Gémenos'],
       images: [
         'assets/images/palmares/annees/2007-proto-jarama.jpg',
         'assets/images/palmares/annees/2007-podium-dijon-proto.jpg'
@@ -452,6 +470,9 @@ window.JBEMERIC_DATA = {
         { circuit: 'Lédenon', place: '2ème général · victoire FR' }
       ],
       images: ['assets/images/palmares/annees/2012-fr-martini-dijon.jpg'],
+      presse: [
+        'assets/images/palmares/presse/2012-resultats-f3-fr.jpg'
+      ],
       citations: [
         { texte: 'La plus belle course du palmarès de JB EMERIC', source: 'Val de Vienne 2012' }
       ]
@@ -484,6 +505,7 @@ window.JBEMERIC_DATA = {
         { circuit: 'Paul Ricard', place: '10ème endurance · 11ème sprint' }
       ],
       images: [
+        'assets/images/palmares/annees/2014-mitjet-grille.jpg',
         'assets/images/palmares/annees/2014-yvan-muller-vigeant.jpg'
       ],
       presse: [
@@ -510,8 +532,8 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2016,
-      titre: 'Décathlonien du sport auto',
-      detail: 'Couverture presse importante : Échappement Magazine, Businews. "Le décathlonien du sport auto" par René Martorell. Développement de l\'offre "JB EMERIC vous prête sa Ferrari" et le "Pilotage au féminin".',
+      titre: 'Décathlonien du sport auto — Ferrari & Pilotage au féminin',
+      detail: 'Année communication majeure. "Le décathlonien du sport auto" par René Martorell (Échappement Magazine). Businews octobre : "JB EMERIC vous prête sa Ferrari". Échappement septembre : reportage pilotage au féminin. Coaching Ferrari pour clients privés. Développement de l\'offre école.',
       categorie: 'multi',
       presse: [
         'assets/images/palmares/presse/2016-decathlonien.jpg',
@@ -540,7 +562,7 @@ window.JBEMERIC_DATA = {
       titre: 'Courses de côte FR2000 — 1er Rallycircuit VHRS',
       detail: 'Formule Renault FR2000 : Côte Saint-Savournin 18ème général + 2ème classe, Côte Barcelonnette 20ème général + 3ème classe. Rallycircuit VHRS Porsche 911 RS : 5ème — première en VHRS pour le palmarès.',
       categorie: 'montagne',
-      voiture: 'Formule Renault FR2000 · Porsche 911 RS',
+      voiture: 'Formule Renault FR2000 · Porsche 911 RS (VHRS)',
       circuits: ['Saint-Savournin', 'Barcelonnette', 'Rallycircuit VHRS'],
       images: [
         'assets/images/palmares/annees/2019-fr2000-ste-savournin.jpg',
@@ -561,8 +583,8 @@ window.JBEMERIC_DATA = {
       resultats: [
         { circuit: 'Circuit du Luc', place: '12ème général · 7ème groupe · 1er classe' }
       ],
-      images: ['assets/images/palmares/annees/2020-fr-le-luc.jpg'],
-      presse: ['assets/images/palmares/presse/2020-le-luc-resultats.jpg']
+      images: ['assets/images/palmares/annees/2020-fr-le-luc.jpg']
+      // presse retirée : l'image "2020-le-luc-resultats" ne correspondait pas (photo karting, pas un article)
     },
     {
       annee: 2021,
@@ -581,7 +603,8 @@ window.JBEMERIC_DATA = {
       categorie: 'endurance',
       voiture: 'Porsche 911 Carrera 2.7L',
       coequipiers: ['Pierre Setti'],
-      circuits: ['Paul Ricard']
+      circuits: ['Paul Ricard'],
+      images: ['assets/images/palmares/annees/2022-porsche-911-carrera-27.jpg']
     },
     {
       annee: 2023,
@@ -616,7 +639,8 @@ window.JBEMERIC_DATA = {
       detail: 'Saison centrée sur le coaching karting enfants (dès 4 ans) et coaching adultes sur différents circuits. Sainte-Baume Rallycircuit 13-15 novembre 2025 — Ferrari et voitures école.',
       categorie: 'rallye',
       voiture: 'Ferrari · Voitures école',
-      circuits: ['Sainte-Baume']
+      circuits: ['Sainte-Baume'],
+      images: ['assets/images/ferrari-f8-tributo.jpg']
     },
     {
       annee: 2026,
@@ -624,7 +648,8 @@ window.JBEMERIC_DATA = {
       detail: 'Caterham, Peugeot 206 S16, voitures personnelles. 12 circuits actifs dont Spa, Barcelone, Monza. Interséries 2026 : Paul Ricard (8 mai), Brands Hatch (29 mai), Zandvoort (19 juin), Dijon-Prenois (11 sept), Mugello (2 oct).',
       categorie: 'multi',
       voiture: 'Caterham · Peugeot 206 S16',
-      circuits: ['Paul Ricard', 'Brands Hatch', 'Zandvoort', 'Dijon-Prenois', 'Mugello']
+      circuits: ['Paul Ricard', 'Brands Hatch', 'Zandvoort', 'Dijon-Prenois', 'Mugello'],
+      images: ['assets/images/palmares/annees/2026-caterham-420-r.jpg']
     }
   ],
 
@@ -632,7 +657,12 @@ window.JBEMERIC_DATA = {
   rencontres: [
     { nom: 'Yvan Muller',       discipline: 'WTCC · 4× Champion du Monde',  contexte: 'Paddock Vigeant 2014',    annee: 2014 },
     { nom: 'Valtteri Bottas',   discipline: 'F1 · Mercedes · Alfa Romeo',   contexte: 'Sainte-Baume Rallycircuit 2021', annee: 2021 },
-    { nom: 'Arturo Merzario',   discipline: 'Légende F1 · Ferrari',         contexte: 'Partage de Sport Proto Alfa Hydra', annee: 1992 },
+    { nom: 'Arturo Merzario',   discipline: 'Légende F1 · Ferrari 312',     contexte: 'Partage de Sport Proto Alfa Hydra', annee: 1992 },
+    { nom: 'Paul Belmondo',     discipline: 'F1 · Le Mans · Paul Belmondo Racing', contexte: 'Chrysler Viper LMES à Spa', annee: 2005 },
+    { nom: 'Lionel Régal',      discipline: 'Champion de France Course de Côte', contexte: 'F3000 Gémenos-la-Baume', annee: 2009 },
+    { nom: 'René Martorell',    discipline: 'Journaliste Échappement Magazine', contexte: 'Article "Le décathlonien du sport auto"', annee: 2016 },
+    { nom: 'Philippe Haezebrouck', discipline: 'Pilote endurance',           contexte: 'Série FFSA Dijon',  annee: 2006 },
+    { nom: 'Patrick Caldentey', discipline: 'Préparateur moteur',           contexte: 'Préparation Chevrolet Camaro', annee: 2006 },
     { nom: 'Pierre Setti',      discipline: 'Élève école JB EMERIC',        contexte: '2 Tours d\'Horloge · Rallycircuit', annee: 2021 }
   ],
 

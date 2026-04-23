@@ -5,11 +5,11 @@
   <link rel="shortcut icon" href="favicon.svg">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="assets/css/theme.css?v=3">
-  <link rel="stylesheet" href="assets/css/nav.css?v=3">
-  <link rel="stylesheet" href="assets/css/palmares.css?v=3">
+  <link rel="stylesheet" href="assets/css/theme.css?v=21">
+  <link rel="stylesheet" href="assets/css/nav.css?v=21">
+  <link rel="stylesheet" href="assets/css/palmares.css?v=21">
   <title>Palmarès JB EMERIC — 40 ans de compétition · 1986-2026</title>
-  <meta name="description" content="Le palmarès complet de Jean-Baptiste Emeric : Champion de France Formule Ford 1988, Formule Renault, GT, Sport Prototype, Courses de côte. 40 ans de compétition, 10+ disciplines, 15+ véhicules de course, 20+ circuits.">
+  <meta name="description" content="Le palmarès complet de Jean-Baptiste Emeric : 40 ans de compétition, début en karting en 1986, Champion de France Formule Ford 1988, puis Formule Renault, F3, Sport Prototype, GT, Courses de côte, Rallye. Des courses dans plus de 10 disciplines.">
   <meta property="og:title" content="Palmarès JB EMERIC — 40 ans de compétition">
   <meta property="og:description" content="Champion de France 1988. 40 ans de résultats en Formule Ford, Renault, GT, Sport Proto, Courses de côte.">
   <meta property="og:image" content="https://jbemeric.netlify.app/assets/images/podium-paul-ricard-1994.jpg">
@@ -24,33 +24,39 @@
 <!-- ═══ HERO ══════════════════════════════════════════════════ -->
 <section class="pal-hero">
   <div class="pal-hero-bg">
+    <!-- Emplacement pour vidéo de carrière en arrière-plan (future) -->
     <img src="assets/images/podium-paul-ricard-1994.jpg" alt="Podium JB Emeric Paul Ricard 1994">
   </div>
   <div class="pal-hero-content">
-    <div class="pal-eyebrow">Palmarès · 1986 → 2026</div>
-    <h1 class="pal-hero-titre">40 ans de<em>Compétition</em></h1>
-    <div class="pal-hero-rule"></div>
-    <p class="pal-hero-sub">Karting · Formule Ford · Formule Renault · Formule 3 · Sport Prototype · GT · Supertourisme · Courses de côte · Rallye · Endurance · VHRS</p>
-    <div class="pal-stats" id="pal-hero-stats">
-      <!-- Rendu par palmares.js -->
+    <div class="pal-hero-top">
+      <div class="pal-eyebrow">Palmarès · 1986 → 2026</div>
+      <h1 class="pal-hero-titre">40 ans de<em>Compétition</em></h1>
+      <div class="pal-hero-rule"></div>
+      <p class="pal-hero-sub">Karting · Formule Ford · Formule Renault · Formule 3 · Sport Prototype · GT · Supertourisme · Courses de côte · Rallye · Endurance · VHRS</p>
+    </div>
+    <div class="pal-hero-bottom">
+      <div class="pal-stats" id="pal-hero-stats">
+        <!-- Rendu par palmares.js -->
+      </div>
+      <div class="pal-hero-citation">
+        <div class="pal-hero-citation-texte" id="pal-intro-text"><!-- Rendu par palmares.js --></div>
+        <div class="pal-hero-citation-source" id="pal-intro-source"></div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ INTRO / CITATION ══════════════════════════════════════ -->
-<section class="pal-intro">
-  <div class="pal-intro-inner">
-    <div class="pal-intro-eyebrow">Portrait · Jean-Baptiste Emeric</div>
-    <div class="pal-intro-text" id="pal-intro-text">
-      <!-- Rendu par palmares.js -->
-    </div>
-    <div class="pal-intro-source" id="pal-intro-source"></div>
+<!-- ═══ TIMELINE ═════════════════════════════════════════════ -->
+<div class="pal-timeline-wrap">
+  <div class="pal-timeline" id="palmares-timeline">
+    <div class="pal-loading">Chargement du palmarès…</div>
   </div>
-</section>
+</div>
 
-<!-- ═══ FILTRES STICKY ═════════════════════════════════════════ -->
-<div class="pal-filtres-wrap">
-  <div class="pal-filtres" id="pal-filtres">
+<!-- ═══ FILTRES — DOCK FLOTTANT (bottom-right) ══════════════ -->
+<div class="pal-filtres-dock">
+  <div class="pal-filtres-panel" id="pal-filtres-panel">
+    <div class="pal-filtres-titre">Filtrer par catégorie</div>
     <button class="pal-filtre active" data-cat="all" onclick="filterPalmares('all', this)">Tout</button>
     <button class="pal-filtre" data-cat="karting" onclick="filterPalmares('karting', this)">Karting</button>
     <button class="pal-filtre" data-cat="monoplace" onclick="filterPalmares('monoplace', this)">Monoplaces</button>
@@ -62,26 +68,10 @@
     <button class="pal-filtre" data-cat="endurance" onclick="filterPalmares('endurance', this)">Endurance</button>
     <button class="pal-filtre" data-cat="historique" onclick="filterPalmares('historique', this)">Historique</button>
   </div>
+  <button class="pal-filtres-toggle" onclick="toggleFiltresPanel()" aria-label="Filtres catégories">⋯ Filtres</button>
 </div>
 
-<!-- ═══ TIMELINE ═════════════════════════════════════════════ -->
-<div class="pal-timeline-wrap">
-  <div class="pal-timeline" id="palmares-timeline">
-    <div class="pal-loading">Chargement du palmarès…</div>
-  </div>
-</div>
-
-<!-- ═══ RENCONTRES MARQUANTES ══════════════════════════════════ -->
-<section class="pal-section pal-section--alt">
-  <div class="pal-section-inner">
-    <div class="pal-section-head">
-      <div class="pal-section-eyebrow">Hors piste</div>
-      <h2 class="pal-section-titre">Rencontres <em>marquantes</em></h2>
-      <p class="pal-section-sub">40 ans de paddock : des légendes F1, des coéquipiers, des élèves devenus pilotes.</p>
-    </div>
-    <div class="pal-rencontres" id="pal-rencontres"></div>
-  </div>
-</section>
+<!-- Les rencontres marquantes sont intégrées directement dans la timeline -->
 
 <!-- ═══ VOITURES PILOTÉES ═════════════════════════════════════ -->
 <section class="pal-section">
@@ -89,7 +79,7 @@
     <div class="pal-section-head">
       <div class="pal-section-eyebrow">Flotte carrière</div>
       <h2 class="pal-section-titre">Voitures de <em>course</em></h2>
-      <p class="pal-section-sub">Du kart National 1 à la Caterham — 15+ véhicules pilotés en compétition.</p>
+      <p class="pal-section-sub">Du kart National 1 à la Caterham — monoplaces, protos, GT, tourisme et voitures de côte.</p>
     </div>
     <div class="pal-voitures" id="pal-voitures"></div>
   </div>
@@ -113,32 +103,35 @@
     <div class="pal-section-head">
       <div class="pal-section-eyebrow">Partenaires</div>
       <h2 class="pal-section-titre">Sponsors <em>historiques</em></h2>
-      <p class="pal-section-sub">France Boulon 35 ans de fidélité. Ville d'Aubagne depuis les débuts. 25+ partenaires au fil des saisons.</p>
+      <p class="pal-section-sub">France Boulon, 35 ans de fidélité. La Ville d'Aubagne depuis les débuts. Et tous les partenaires qui ont accompagné la carrière au fil des saisons.</p>
     </div>
     <div class="pal-sponsors-hl" id="pal-sponsors-hl"></div>
     <div class="pal-sponsors-wall" id="pal-sponsors-wall"></div>
   </div>
 </section>
 
-<!-- ═══ CTA RETOUR ════════════════════════════════════════════ -->
-<div class="pal-back">
-  <a href="academie.html" class="pal-back-btn">← Retour à l'Académie</a>
-  <a href="academie-challenge.html" class="pal-back-cta">Rejoindre l'Académie →</a>
-</div>
-
-<!-- Lightbox -->
-<div class="pal-lightbox" id="pal-lightbox" onclick="closeLightbox()">
-  <button class="pal-lightbox-close" onclick="closeLightbox()">×</button>
-  <img id="pal-lightbox-img" src="" alt="">
+<!-- Lightbox magazine : navigation + zoom + caption -->
+<div class="pal-lightbox" id="pal-lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button class="pal-lightbox-close" onclick="closeLightbox()" aria-label="Fermer">×</button>
+  <button class="pal-lightbox-prev" id="pal-lightbox-prev" onclick="prevLightbox()" aria-label="Précédent">‹</button>
+  <button class="pal-lightbox-next" id="pal-lightbox-next" onclick="nextLightbox()" aria-label="Suivant">›</button>
+  <div class="pal-lightbox-stage">
+    <img id="pal-lightbox-img" src="" alt="" onclick="toggleZoom()">
+  </div>
+  <div class="pal-lightbox-bottom">
+    <span class="pal-lightbox-counter" id="pal-lightbox-counter">1 / 1</span>
+    <span class="pal-lightbox-caption" id="pal-lightbox-caption"></span>
+    <span class="pal-lightbox-hint">← → Naviguer · Clic image : zoom · ESC : fermer</span>
+  </div>
 </div>
 
 <div id="footer-root"></div>
 
-<script src="assets/js/site-data.js?v=3"></script>
-<script src="assets/js/palmares.js?v=3"></script>
-<script type="module" src="assets/js/live-editor.js?v=3"></script>
-<script src="assets/js/nav.js?v=3"></script>
-<script src="assets/js/footer.js?v=3"></script>
+<script src="assets/js/site-data.js?v=21"></script>
+<script src="assets/js/palmares.js?v=21"></script>
+<script type="module" src="assets/js/live-editor.js?v=21"></script>
+<script src="assets/js/nav.js?v=21"></script>
+<script src="assets/js/footer.js?v=21"></script>
 <script id="jbe-content-cache" type="application/json">{}</script>
 </body>
 </html>

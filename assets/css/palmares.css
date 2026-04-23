@@ -37,38 +37,61 @@ a { text-decoration: none; color: inherit; }
 /* ═══ HERO ══════════════════════════════════════════════════════ */
 .pal-hero {
   position: relative;
-  min-height: 100vh;
+  /* Même pattern que les slides année : viewport moins nav sticky */
+  min-height: calc(100svh - 56px);
+  max-height: calc(100svh - 56px);
+  height: calc(100svh - 56px);
   overflow: hidden;
   display: flex;
-  align-items: flex-end;
-  padding: 0 clamp(20px, 5vw, 80px) clamp(40px, 8vh, 80px);
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(40px, 6vh, 80px) clamp(20px, 5vw, 80px) clamp(30px, 5vh, 60px);
 }
 .pal-hero-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
 }
-.pal-hero-bg img {
+.pal-hero-bg img,
+.pal-hero-bg video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
-  filter: grayscale(.2) contrast(1.1) brightness(.65);
+  object-position: center 35%;
+  /* Moins sombre pour laisser la future vidéo respirer */
+  filter: grayscale(.1) contrast(1.05) brightness(.55);
 }
 .pal-hero-bg::after {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(4,6,15,.3) 0%, rgba(4,6,15,.5) 40%, rgba(4,6,15,.95) 100%),
-    linear-gradient(90deg, rgba(4,6,15,.6) 0%, rgba(4,6,15,0) 60%);
+    linear-gradient(180deg, rgba(4,6,15,.35) 0%, rgba(4,6,15,.25) 30%, rgba(4,6,15,.55) 65%, rgba(4,6,15,.92) 100%),
+    linear-gradient(90deg, rgba(4,6,15,.45) 0%, rgba(4,6,15,0) 55%);
 }
 .pal-hero-content {
   position: relative;
   z-index: 2;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1400px;
   width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  gap: clamp(40px, 8vh, 80px);
+}
+.pal-hero-top {
+  display: flex;
+  flex-direction: column;
+}
+.pal-hero-bottom {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: end;
+  padding-top: clamp(20px, 3vh, 32px);
+  border-top: 1px solid var(--pal-line);
 }
 .pal-eyebrow {
   font-family: 'DM Mono', monospace;
@@ -76,15 +99,16 @@ a { text-decoration: none; color: inherit; }
   letter-spacing: 4px;
   text-transform: uppercase;
   color: var(--pal-gold);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   opacity: .9;
 }
 .pal-hero-titre {
+  /* Plus petit qu'avant pour laisser respirer la future vidéo de fond */
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(64px, 14vw, 200px);
-  line-height: .85;
+  font-size: clamp(48px, 8vw, 112px);
+  line-height: .88;
   color: var(--pal-ink);
-  margin: 0 0 24px;
+  margin: 0 0 20px;
   letter-spacing: 1px;
   font-weight: 400;
 }
@@ -94,27 +118,25 @@ a { text-decoration: none; color: inherit; }
   display: block;
 }
 .pal-hero-rule {
-  width: 120px;
-  height: 3px;
+  width: 100px;
+  height: 2px;
   background: var(--pal-gold);
-  margin: 0 0 28px;
+  margin: 0 0 22px;
 }
 .pal-hero-sub {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(14px, 1.6vw, 18px);
+  font-size: clamp(13px, 1.3vw, 15px);
   color: var(--pal-ink-soft);
-  max-width: 720px;
-  line-height: 1.5;
-  margin: 0 0 48px;
+  max-width: 820px;
+  line-height: 1.55;
+  margin: 0;
   font-weight: 300;
 }
 .pal-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 28px;
-  padding-top: 32px;
-  border-top: 1px solid var(--pal-line);
-  max-width: 1000px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: clamp(16px, 2.5vw, 28px);
+  max-width: 680px;
 }
 .pal-stat {
   display: flex;
@@ -123,10 +145,19 @@ a { text-decoration: none; color: inherit; }
 }
 .pal-stat-n {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(36px, 4.5vw, 56px);
+  font-size: clamp(28px, 3.4vw, 42px);
   color: var(--pal-gold);
   line-height: 1;
   letter-spacing: 1px;
+}
+.pal-stat-n .pal-stat-prefix {
+  font-family: 'DM Mono', monospace;
+  font-size: .35em;
+  letter-spacing: 2px;
+  color: var(--pal-ink-mute);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 2px;
 }
 .pal-stat-l {
   font-family: 'DM Mono', monospace;
@@ -136,10 +167,50 @@ a { text-decoration: none; color: inherit; }
   color: var(--pal-ink-mute);
 }
 
+/* ── Citation intégrée au hero ─────────────────────────────── */
+.pal-hero-citation {
+  position: relative;
+  padding: 0 0 0 clamp(16px, 2vw, 24px);
+  border-left: 2px solid var(--pal-gold);
+  max-width: 520px;
+  justify-self: end;
+}
+.pal-hero-citation-texte {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(13px, 1.4vw, 16px);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--pal-ink);
+  font-weight: 300;
+  margin: 0 0 10px;
+  quotes: "«\00A0" "\00A0»";
+}
+.pal-hero-citation-texte::before {
+  content: open-quote;
+  color: var(--pal-gold);
+}
+.pal-hero-citation-texte::after {
+  content: close-quote;
+  color: var(--pal-gold);
+}
+.pal-hero-citation-texte em {
+  display: inline;
+  font-style: italic;
+  color: var(--pal-gold);
+  font-weight: 500;
+}
+.pal-hero-citation-source {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pal-ink-mute);
+}
+
 .pal-hero::after {
   content: '↓ SCROLL';
   position: absolute;
-  bottom: 20px;
+  bottom: 14px;
   left: 50%;
   transform: translateX(-50%);
   font-family: 'DM Mono', monospace;
@@ -154,91 +225,91 @@ a { text-decoration: none; color: inherit; }
   50%      { transform: translateX(-50%) translateY(8px); opacity: 1; }
 }
 
-/* ═══ INTRO / CITATION ══════════════════════════════════════════ */
-.pal-intro {
-  padding: clamp(60px, 10vw, 140px) clamp(20px, 5vw, 80px);
-  background: var(--pal-bg);
-  text-align: center;
+/* ── Mobile : hero en colonne simple ─────────────────────── */
+@media (max-width: 900px) {
+  .pal-hero-bottom {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .pal-hero-citation {
+    justify-self: stretch;
+    max-width: none;
+  }
 }
-.pal-intro-inner {
-  max-width: 900px;
-  margin: 0 auto;
+
+/* ═══ FILTRES — DOCK FLOTTANT ═══════════════════════════════════ */
+.pal-filtres-dock {
+  position: fixed;
+  bottom: clamp(16px, 3vh, 28px);
+  right: clamp(16px, 3vw, 28px);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
 }
-.pal-intro-eyebrow {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--pal-gold);
-  margin-bottom: 32px;
-  opacity: .8;
-}
-.pal-intro-text {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(22px, 3vw, 38px);
-  font-weight: 300;
-  font-style: oblique 14deg;
-  line-height: 1.35;
-  color: var(--pal-ink);
-  margin: 0 0 40px;
-  position: relative;
-}
-.pal-intro-text::before {
-  content: '\201C';
-  font-size: 2em;
-  color: var(--pal-gold);
-  line-height: 0;
-  margin-right: 8px;
-  vertical-align: -.15em;
-}
-.pal-intro-text::after {
-  content: '\201D';
-  font-size: 2em;
-  color: var(--pal-gold);
-  line-height: 0;
-  margin-left: 4px;
-  vertical-align: -.15em;
-}
-.pal-intro-text em {
-  display: inline;
-  font-style: oblique 14deg;
-  color: var(--pal-gold);
-  font-weight: 500;
-}
-.pal-intro-source {
+.pal-filtres-toggle,
+.pal-filtres-panel { pointer-events: auto; }
+.pal-filtres-toggle {
   font-family: 'DM Mono', monospace;
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--pal-ink-mute);
-}
-
-/* ═══ FILTRES STICKY ═══════════════════════════════════════════ */
-.pal-filtres-wrap {
-  position: sticky;
-  top: 60px;
-  z-index: 50;
-  background: rgba(4,6,15,.92);
+  padding: 12px 18px;
+  border: 1px solid var(--pal-gold);
+  background: rgba(4,6,15,.88);
+  color: var(--pal-gold);
+  cursor: pointer;
+  border-radius: 28px;
+  transition: all .2s ease;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid var(--pal-line);
-  border-bottom: 1px solid var(--pal-line);
-  padding: 16px clamp(20px, 5vw, 80px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  font-weight: 500;
 }
-.pal-filtres {
-  max-width: 1400px;
-  margin: 0 auto;
+.pal-filtres-toggle:hover {
+  background: var(--pal-gold);
+  color: #000;
+}
+.pal-filtres-panel {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
+  gap: 6px;
+  max-width: 320px;
+  padding: 16px;
+  background: rgba(4,6,15,.95);
+  border: 1px solid var(--pal-line);
+  border-radius: 8px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+  opacity: 0;
+  transform: translateY(8px) scale(.96);
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.pal-filtres-panel.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.pal-filtres-titre {
+  flex: 1 0 100%;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pal-gold);
+  opacity: .7;
+  margin-bottom: 4px;
 }
 .pal-filtre {
   font-family: 'DM Mono', monospace;
   font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  padding: 8px 16px;
+  padding: 7px 12px;
   border: 1px solid var(--pal-line);
   background: transparent;
   color: var(--pal-ink-soft);
@@ -258,42 +329,186 @@ a { text-decoration: none; color: inherit; }
   font-weight: 500;
 }
 
-/* ═══ TIMELINE ═════════════════════════════════════════════════ */
+/* ═══ TIMELINE — SCROLL-SNAP VERTICAL ═════════════════════════════ */
 .pal-timeline-wrap {
-  padding: clamp(40px, 6vw, 80px) clamp(20px, 5vw, 80px) clamp(60px, 10vw, 120px);
   background: var(--pal-bg);
+  /* Conteneur simple — le snap est sur les articles directement via scroll-snap-align */
 }
 .pal-timeline {
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
+  /* Chaque enfant .pal-year est un slide 100vh — snap sur l'ancrage body */
+}
+
+/* ═══ SCROLL-SNAP UNIVERSEL ═══════════════════════════════════════
+   Pattern identique à snap.css (index.html, academie.html) :
+   molette = bascule plein écran sur le bloc suivant.
+   html+body forment le conteneur scroll mandatory. */
+html, body {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100%;
+  scroll-padding-top: 56px;    /* hauteur de la nav sticky */
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html, body { scroll-snap-type: none; scroll-behavior: auto; }
+}
+
+/* Tous les blocs plein écran deviennent des points d'ancrage */
+.pal-hero,
+.pal-section,
+#footer-root {
+  scroll-snap-align: start;
 }
 
 .pal-year {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: clamp(32px, 5vw, 80px);
-  padding: clamp(40px, 6vw, 80px) 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;     /* Force l'arrêt sur chaque année — pas de saut */
+  /* Pas de scroll-margin-top : le scroll-padding-top:56px sur html/body suffit
+     et évite le double-décalage asymétrique observé au scroll descendant. */
+  /* Hauteur = viewport moins nav sticky (56px). Le contenu DOIT tenir dans
+     cette enveloppe, sinon on laisse l'overflow interne scroller (contenu riche
+     type 1986 : diplôme AVIA + articles presse). */
+  min-height: calc(100svh - 56px);
+  max-height: calc(100svh - 56px);
+  height: calc(100svh - 56px);
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(20px, 3vh, 40px) clamp(20px, 5vw, 80px) clamp(20px, 3vh, 40px);
   border-bottom: 1px solid var(--pal-line);
   position: relative;
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity .8s ease, transform .8s ease;
-}
-.pal-year.pal-visible {
-  opacity: 1;
-  transform: translateY(0);
+  overflow: hidden;
+  background: radial-gradient(ellipse at 30% 20%, rgba(255,207,0,.025) 0%, transparent 55%), var(--pal-bg);
 }
 .pal-year:last-child { border-bottom: none; }
 .pal-year.hidden { display: none; }
 
-.pal-year-left {
-  position: sticky;
-  top: 140px;
-  align-self: start;
+.pal-year-inner {
+  display: grid;
+  grid-template-columns: minmax(240px, 300px) 1fr;
+  gap: clamp(24px, 3.5vw, 56px);
+  width: 100%;
+  max-width: 1400px;
+  height: 100%;                   /* remplit le slide pour que les enfants flex grandissent */
+  align-items: stretch;
+}
+
+.pal-year-side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: flex-start;
+  padding-top: 6px;
+}
+.pal-year-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--pal-ink-mute);
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--pal-line);
+}
+/* HERO : image principale SOUS la date, dans la sidebar — style "polaroid éditorial" */
+.pal-year-hero {
+  width: 100%;
+  aspect-ratio: 4/3;
+  max-height: 48vh;
+  min-height: 180px;
+  overflow: hidden;
+  background: #0c0c0c;
+  cursor: zoom-in;
+  border-radius: 4px;
+  position: relative;
+  /* Double cadre : liseré or subtil + ombre profonde pour détacher de la page */
+  box-shadow:
+    0 0 0 1px rgba(255,207,0,.18),
+    0 2px 0 rgba(255,255,255,.03) inset,
+    0 20px 40px -12px rgba(0,0,0,.65),
+    0 8px 16px -6px rgba(0,0,0,.5);
+  border: none;
+  margin-top: 8px;
+  transform: translateZ(0);
+  transition: box-shadow .4s ease, transform .4s ease;
+}
+.pal-year-hero::before {
+  /* Coin doré en haut à gauche — accent éditorial */
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 28px; height: 28px;
+  background:
+    linear-gradient(135deg, var(--pal-gold) 0%, var(--pal-gold) 50%, transparent 50%);
+  opacity: .85;
+  z-index: 3;
+  pointer-events: none;
+}
+.pal-year-hero::after {
+  /* Vignettage doux + ombre bas */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.25) 100%),
+    linear-gradient(180deg, transparent 0%, transparent 70%, rgba(4,6,15,.5) 100%);
+  pointer-events: none;
+  transition: opacity .3s ease;
+  z-index: 2;
+}
+.pal-year-hero:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(255,207,0,.35),
+    0 2px 0 rgba(255,255,255,.05) inset,
+    0 28px 56px -16px rgba(0,0,0,.75),
+    0 12px 24px -8px rgba(255,207,0,.12);
+}
+.pal-year-hero:hover::after { opacity: .6; }
+.pal-year-hero img {
+  width: 100%;
+  height: 100%;
+  /* contain au lieu de cover : on préserve tout le contenu de la photo,
+     fini les cadrages qui coupent la tête ou la voiture. Le fond noir du
+     conteneur sert de matte propre pour les formats non-standards. */
+  object-fit: contain;
+  object-position: center;
+  transition: transform .8s cubic-bezier(.2,.7,.2,1), filter .5s ease;
+  filter: saturate(1.05) contrast(1.02);
+}
+.pal-year-hero:hover img {
+  transform: scale(1.03);
+  filter: saturate(1.15) contrast(1.05) brightness(1.04);
+}
+/* Badge "voir" qui apparaît au hover */
+.pal-year-hero > .pal-hero-badge {
+  position: absolute;
+  bottom: 10px; right: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pal-gold);
+  background: rgba(0,0,0,.72);
+  padding: 5px 10px;
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .3s ease, transform .3s ease;
+  backdrop-filter: blur(6px);
+  z-index: 4;
+  pointer-events: none;
+  border: 1px solid rgba(255,207,0,.25);
+}
+.pal-year-hero:hover > .pal-hero-badge {
+  opacity: 1;
+  transform: translateY(0);
 }
 .pal-year-num {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(80px, 13vw, 180px);
+  font-size: clamp(64px, 8vw, 110px);
   color: var(--pal-ink);
   line-height: .85;
   letter-spacing: 2px;
@@ -326,24 +541,38 @@ a { text-decoration: none; color: inherit; }
   border-radius: 2px;
 }
 
-.pal-year-right { min-width: 0; }
+.pal-year-main {
+  min-width: 0;
+  min-height: 0;                  /* permet aux enfants flex de rétrécir */
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1vh, 14px);
+  justify-content: flex-start;
+  padding-top: 6px;
+  max-height: 100%;
+  overflow: hidden;               /* rien ne doit dépasser le slide */
+}
 .pal-year-titre {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(28px, 3.5vw, 48px);
+  font-size: clamp(26px, 3vw, 42px);
   color: var(--pal-ink);
   line-height: 1;
-  margin: 0 0 20px;
+  margin: 0;
   letter-spacing: .5px;
   font-weight: 400;
 }
 .pal-year-detail {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(15px, 1.4vw, 17px);
-  line-height: 1.6;
+  font-size: clamp(13px, 1.1vw, 15px);
+  line-height: 1.5;
   color: var(--pal-ink-soft);
   font-weight: 300;
-  margin: 0 0 24px;
-  max-width: 720px;
+  margin: 0;
+  max-width: 820px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .pal-meta-grid {
@@ -410,11 +639,46 @@ a { text-decoration: none; color: inherit; }
   margin-right: 8px;
 }
 
+/* ── IMAGE HERO DE L'ANNÉE (pleine largeur, premier plan) ── */
+.pal-hero-img {
+  width: 100%;
+  max-height: 40svh;
+  aspect-ratio: 16/9;
+  margin-bottom: 14px;
+  overflow: hidden;
+  background: #0c0c0c;
+  cursor: zoom-in;
+  border-radius: 2px;
+  position: relative;
+  border: 1px solid var(--pal-line);
+}
+.pal-hero-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, transparent 70%, rgba(4,6,15,.35) 100%);
+  pointer-events: none;
+}
+.pal-hero-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  transition: transform .8s ease, filter .5s ease;
+  filter: saturate(1);
+}
+.pal-hero-img:hover img {
+  transform: scale(1.04);
+  filter: saturate(1.15) brightness(1.05);
+}
+
+/* ── GALERIE SECONDAIRE (grille symétrique) ──────────────── */
 .pal-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 8px;
-  margin-bottom: 24px;
+  gap: 10px;
+  margin-bottom: 16px;
+  max-height: 18svh;                /* garde la galerie compacte pour tenir en 100svh */
+  /* grid-template-columns défini inline par JS pour symétrie */
 }
 .pal-gallery-item {
   aspect-ratio: 4/3;
@@ -423,51 +687,163 @@ a { text-decoration: none; color: inherit; }
   cursor: zoom-in;
   border-radius: 2px;
   position: relative;
+  min-height: 0;
+  max-height: 18svh;
 }
 .pal-gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform .6s ease, filter .4s ease;
-  filter: saturate(.9);
+  filter: saturate(.95);
 }
 .pal-gallery-item:hover img {
-  transform: scale(1.08);
-  filter: saturate(1.1);
+  transform: scale(1.06);
+  filter: saturate(1.15);
 }
 
-.pal-presse { margin-bottom: 24px; }
+/* ── PRESSE : grille symétrique, vignettes readable ─────── */
+.pal-presse { margin-bottom: 28px; }
 .pal-presse-titre {
   font-family: 'DM Mono', monospace;
   font-size: 10px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--pal-ink-mute);
-  margin-bottom: 10px;
+  color: var(--pal-gold);
+  margin-bottom: 14px;
+  opacity: .8;
 }
 .pal-presse-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 6px;
+  gap: 10px;
+  /* grid-template-columns défini inline par JS pour symétrie parfaite */
 }
 .pal-presse-item {
   aspect-ratio: 3/4;
   overflow: hidden;
   background: #0c0c0c;
   cursor: zoom-in;
-  border-radius: 1px;
+  border-radius: 2px;
   position: relative;
+  min-height: 280px;
+  border: 1px solid var(--pal-line);
+  transition: border-color .3s ease, transform .3s ease;
 }
+.pal-presse-item::after {
+  content: '🔍';
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background: rgba(0,0,0,.7);
+  color: var(--pal-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.pal-presse-item:hover { border-color: var(--pal-gold); }
+.pal-presse-item:hover::after { opacity: 1; }
 .pal-presse-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(.6) brightness(.95);
+  object-position: top center;
+  /* Lisibilité restaurée : ni grayscale, ni dimming au repos */
+  filter: brightness(1) contrast(1.02);
   transition: filter .3s ease, transform .5s ease;
 }
 .pal-presse-item:hover img {
-  filter: grayscale(0) brightness(1);
+  filter: brightness(1.08) contrast(1.1);
+  transform: scale(1.03);
+}
+.pal-presse-phantom {
+  /* Cellule vide invisible pour parfaire la symétrie de la grille */
+  aspect-ratio: 3/4;
+  min-height: 280px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ── VIDÉOS YOUTUBE ATTACHÉES À L'ANNÉE ─────────────────── */
+.pal-videos { margin: 8px 0 4px; }
+.pal-videos-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pal-gold);
+  margin-bottom: 10px;
+  opacity: .8;
+}
+.pal-videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+.pal-video-item {
+  position: relative;
+  display: block;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--pal-line);
+  border-radius: 3px;
+  text-decoration: none;
+  transition: border-color .3s ease, transform .3s ease;
+}
+.pal-video-item:hover {
+  border-color: var(--pal-gold);
+  transform: translateY(-2px);
+}
+.pal-video-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s ease, filter .3s ease;
+  filter: brightness(.82);
+}
+.pal-video-item:hover img {
   transform: scale(1.04);
+  filter: brightness(1);
+}
+.pal-video-play {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 0, 0, .88);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  padding-left: 4px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.45);
+  transition: transform .3s ease, background .3s ease;
+  z-index: 2;
+}
+.pal-video-item:hover .pal-video-play {
+  transform: translate(-50%, -50%) scale(1.12);
+  background: #ff0000;
+}
+.pal-video-title {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 10px 12px 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  color: #fff;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.85) 90%);
+  line-height: 1.3;
+  max-height: 50%;
+  overflow: hidden;
+  z-index: 1;
 }
 
 .pal-year-cite {
@@ -509,6 +885,65 @@ a { text-decoration: none; color: inherit; }
   content: '⚑  ';
   color: var(--pal-gold);
   opacity: .6;
+}
+
+/* ── RENCONTRES INLINE (intégrées dans la timeline) ─────── */
+.pal-rencs-inline {
+  margin: 24px 0;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(255,207,0,.06) 0%, rgba(255,207,0,.02) 100%);
+  border: 1px solid var(--pal-line-s);
+  border-radius: 4px;
+  position: relative;
+}
+.pal-rencs-inline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--pal-gold);
+  border-radius: 4px 0 0 4px;
+}
+.pal-rencs-inline-titre {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--pal-gold);
+  margin-bottom: 16px;
+  opacity: .9;
+}
+.pal-renc-inline {
+  padding: 12px 0;
+  border-top: 1px dashed var(--pal-line);
+}
+.pal-renc-inline:first-of-type { border-top: none; padding-top: 0; }
+.pal-renc-inline-nom {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--pal-ink);
+  line-height: 1;
+  margin: 0 0 6px;
+  letter-spacing: 1px;
+  font-weight: 400;
+}
+.pal-renc-inline-disc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: var(--pal-gold);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.pal-renc-inline-ctx {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: var(--pal-ink-soft);
+  font-style: italic;
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 300;
 }
 
 /* ═══ SECTIONS GLOBALES ═══════════════════════════════════════ */
@@ -627,10 +1062,16 @@ a { text-decoration: none; color: inherit; }
   background: rgba(255,207,0,.1);
 }
 .pal-sp-hl-logo {
-  max-height: 70px;
+  max-height: 80px;
+  max-width: 240px;
   width: auto;
-  filter: brightness(0) invert(1);
-  opacity: .95;
+  /* Tuile blanche forcée pour lisibilité universelle */
+  background: #ffffff !important;
+  padding: 14px 20px;
+  border-radius: 3px;
+  filter: none !important;
+  opacity: 1 !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,.35);
 }
 .pal-sp-hl-nom {
   font-family: 'Bebas Neue', sans-serif;
@@ -654,23 +1095,30 @@ a { text-decoration: none; color: inherit; }
 }
 
 .pal-sponsors-wall {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 2px;
   background: var(--pal-line);
   border: 1px solid var(--pal-line);
 }
 .pal-sp-cell {
+  flex: 0 0 calc((100% - 2px * 9) / 10);  /* 10 colonnes desktop, dernière ligne centrée */
+  max-width: 160px;
+  min-width: 110px;
   aspect-ratio: 3/2;
-  background: var(--pal-bg-alt);
+  /* Fond blanc forcé : indispensable pour la lisibilité des logos PNG
+     transparents ou JPG à fond clair (sinon invisibles sur fond sombre). */
+  background: #ffffff !important;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 14px;
-  transition: background .3s ease;
+  transition: background .3s ease, transform .3s ease;
 }
 .pal-sp-cell:hover {
-  background: var(--pal-bg-soft);
+  background: #fffef5 !important;
+  transform: scale(1.02);
 }
 .pal-sp-cell img {
   max-width: 100%;
@@ -678,32 +1126,67 @@ a { text-decoration: none; color: inherit; }
   width: auto;
   height: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: .45;
-  transition: opacity .3s ease, filter .3s ease;
+  /* Aucun filtre : logo affiché à sa couleur réelle en permanence */
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal;
+  transition: transform .3s ease;
 }
 .pal-sp-cell:hover img {
-  opacity: 1;
-  filter: none;
+  transform: scale(1.04);
 }
 
-/* ═══ VOITURES MARQUANTES ═════════════════════════════════════ */
+/* ═══ VOITURES MARQUANTES (avec image auto depuis palmares) ══ */
 .pal-voitures {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
 .pal-voit {
-  padding: 24px 20px;
   background: rgba(255,255,255,.03);
   border: 1px solid var(--pal-line);
-  border-top: 3px solid var(--pal-gold);
-  border-radius: 2px;
+  border-radius: 4px;
+  overflow: hidden;
   transition: all .3s ease;
+  display: flex;
+  flex-direction: column;
 }
 .pal-voit:hover {
   background: rgba(255,207,0,.04);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  border-color: var(--pal-gold);
+  box-shadow: 0 12px 40px rgba(255,207,0,.08);
+}
+.pal-voit-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: #0c0c0c;
+  border-bottom: 2px solid var(--pal-gold);
+}
+.pal-voit-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .6s ease;
+}
+.pal-voit:hover .pal-voit-img img {
+  transform: scale(1.05);
+}
+.pal-voit-img--noimg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--pal-bg-alt), var(--pal-bg-soft));
+}
+.pal-voit-img--noimg::after {
+  content: '⚙';
+  font-size: 48px;
+  color: var(--pal-ink-mute);
+  opacity: .4;
+}
+.pal-voit-body {
+  padding: 20px 20px 24px;
 }
 .pal-voit-annee {
   font-family: 'DM Mono', monospace;
@@ -729,11 +1212,14 @@ a { text-decoration: none; color: inherit; }
 
 /* ═══ MUR DE PRESSE GLOBAL ═══════════════════════════════════ */
 .pal-mur-presse {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
 }
 .pal-mur-item {
+  flex: 0 0 calc((100% - 8px * 7) / 8);   /* 8 colonnes desktop, dernière ligne centrée */
+  max-width: 180px;
   aspect-ratio: 3/4;
   overflow: hidden;
   background: #0c0c0c;
@@ -745,84 +1231,167 @@ a { text-decoration: none; color: inherit; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(1) brightness(.9);
+  /* Lisibilité restaurée — on voit les articles du mur au repos */
+  filter: brightness(.95) contrast(1.02);
   transition: filter .4s ease, transform .6s ease;
 }
 .pal-mur-item:hover img {
-  filter: grayscale(0) brightness(1);
+  filter: brightness(1.08) contrast(1.08);
   transform: scale(1.06);
 }
 
-/* ═══ LIGHTBOX ═════════════════════════════════════════════════ */
+/* ═══ LIGHTBOX MAGAZINE ════════════════════════════════════════ */
 .pal-lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.96);
+  background: rgba(0,0,0,.97);
   z-index: 9999;
   display: none;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-  cursor: zoom-out;
+  padding: 0;                  /* plein écran : pas de bordure morte */
 }
 .pal-lightbox.open { display: flex; }
-.pal-lightbox img {
-  max-width: 95vw;
-  max-height: 90vh;
-  object-fit: contain;
+
+.pal-lightbox-stage {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  position: relative;
+  padding: 0;                  /* l'image prend toute la place dispo */
 }
+.pal-lightbox-stage img {
+  /* Plein écran : prend quasi tout l'écran en gardant les proportions natives.
+     Idéal pour articles scannés (portrait tall) : 98vh lisible sans zoom 2x. */
+  max-width: 98vw;
+  max-height: 98vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  cursor: zoom-in;
+  transition: transform .4s cubic-bezier(.2,.7,.2,1);
+  transform-origin: center center;
+  user-select: none;
+  /* Image nette, pas déformée, halo doré subtil */
+  image-rendering: auto;
+  box-shadow:
+    0 30px 120px rgba(0,0,0,.75),
+    0 0 0 1px rgba(255,207,0,.15);
+  border-radius: 2px;
+}
+.pal-lightbox-stage img[style*="scale(2)"] {
+  cursor: zoom-out;
+}
+
 .pal-lightbox-close {
   position: absolute;
-  top: 20px;
-  right: 30px;
-  font-size: 32px;
+  top: 18px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  font-size: 28px;
   color: #fff;
   cursor: pointer;
   font-family: 'DM Mono', monospace;
-  background: none;
-  border: none;
-  line-height: 1;
-}
-
-/* ═══ CTA BACK ═════════════════════════════════════════════════ */
-.pal-back {
-  padding: clamp(40px, 6vw, 80px) clamp(20px, 5vw, 80px);
-  background: var(--pal-bg);
-  text-align: center;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
-  border-top: 1px solid var(--pal-line);
-}
-.pal-back-btn, .pal-back-cta {
-  padding: 14px 28px;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: 500;
-  text-decoration: none;
-  border-radius: 2px;
-  transition: all .2s ease;
-  display: inline-block;
-}
-.pal-back-btn {
-  color: var(--pal-ink-soft);
+  background: rgba(255,255,255,.05);
   border: 1px solid var(--pal-line);
+  line-height: 1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .2s ease;
+  z-index: 10;
 }
-.pal-back-btn:hover {
-  border-color: var(--pal-gold);
-  color: var(--pal-gold);
-}
-.pal-back-cta {
+.pal-lightbox-close:hover {
   background: var(--pal-gold);
   color: #000;
-  font-weight: 700;
+  border-color: var(--pal-gold);
 }
-.pal-back-cta:hover {
-  background: #fff;
-  transform: translateY(-2px);
+
+.pal-lightbox-prev,
+.pal-lightbox-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--pal-line);
+  color: #fff;
+  font-size: 30px;
+  font-family: 'DM Mono', monospace;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .2s ease;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.pal-lightbox-prev { left: clamp(10px, 3vw, 40px); }
+.pal-lightbox-next { right: clamp(10px, 3vw, 40px); }
+.pal-lightbox-prev:hover,
+.pal-lightbox-next:hover {
+  background: var(--pal-gold);
+  color: #000;
+  border-color: var(--pal-gold);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.pal-lightbox-bottom {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  font-family: 'DM Mono', monospace;
+  color: var(--pal-ink-soft);
+  letter-spacing: 1.5px;
+  font-size: 10px;
+  text-transform: uppercase;
+  pointer-events: none;
+  padding: 8px 18px;
+  background: rgba(0,0,0,.55);
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  max-width: 90vw;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,.08);
+}
+.pal-lightbox-counter {
+  color: var(--pal-gold);
+  font-weight: 500;
+  font-size: 12px;
+}
+.pal-lightbox-caption {
+  color: var(--pal-ink);
+  font-size: 11px;
+}
+.pal-lightbox-hint {
+  color: var(--pal-ink-mute);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  opacity: .7;
+}
+
+@media (max-width: 600px) {
+  .pal-lightbox-prev,
+  .pal-lightbox-next { width: 44px; height: 44px; font-size: 24px; }
+  .pal-lightbox-stage img { max-width: 98vw; max-height: 88vh; }
+  .pal-lightbox-bottom { font-size: 9px; padding: 6px 12px; gap: 8px; }
+  .pal-lightbox-hint { display: none; }  /* trop long sur mobile */
 }
 
 /* ═══ LOADING ══════════════════════════════════════════════════ */
@@ -836,27 +1405,744 @@ a { text-decoration: none; color: inherit; }
   text-transform: uppercase;
 }
 
+/* ═══ COMPACT VIEW — contenus slide année ════════════════════ */
+.pal-year-star {
+  display: inline-block;
+  padding: 5px 10px;
+  background: var(--pal-gold);
+  color: #000;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 2px;
+  align-self: flex-start;
+}
+.pal-year-cat {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--pal-ink-mute);
+  padding-top: 10px;
+  border-top: 1px solid var(--pal-line);
+}
+.pal-year[data-highlight="1"] .pal-year-num { color: var(--pal-gold); }
+.pal-year[data-highlight="1"] .pal-year-cat { color: var(--pal-gold); }
+
+/* Hero image compacte dans le slide (click = lightbox) */
+.pal-compact-hero {
+  width: 100%;
+  aspect-ratio: 16/9;
+  max-height: 42vh;
+  overflow: hidden;
+  background: #0c0c0c;
+  cursor: zoom-in;
+  border-radius: 3px;
+  position: relative;
+  border: 1px solid var(--pal-line);
+  flex-shrink: 1;
+  min-height: 180px;
+}
+.pal-compact-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, transparent 75%, rgba(4,6,15,.35) 100%);
+  pointer-events: none;
+}
+.pal-compact-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform .8s ease, filter .5s ease;
+}
+.pal-compact-hero:hover img {
+  transform: scale(1.04);
+  filter: saturate(1.1) brightness(1.05);
+}
+
+/* Meta compact : 2-3 lignes max */
+.pal-compact-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px 20px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,.025);
+  border: 1px solid var(--pal-line);
+  border-left: 3px solid var(--pal-gold);
+  border-radius: 2px;
+}
+.pal-compact-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.pal-compact-meta-item span {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pal-gold);
+  opacity: .7;
+}
+.pal-compact-meta-item strong {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: var(--pal-ink);
+  font-weight: 400;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badges (compteurs) */
+.pal-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pal-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 5px 10px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--pal-line);
+  color: var(--pal-ink-soft);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.pal-badge--gold {
+  background: rgba(255,207,0,.12);
+  border-color: var(--pal-gold);
+  color: var(--pal-gold);
+  font-weight: 500;
+}
+
+/* CTA "Voir tout le détail" */
+.pal-compact-cta {
+  align-self: flex-start;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 11px 20px;
+  background: transparent;
+  color: var(--pal-gold);
+  border: 1px solid var(--pal-gold);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all .25s ease;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.pal-compact-cta:hover {
+  background: var(--pal-gold);
+  color: #000;
+  transform: translateX(4px);
+}
+.pal-compact-cta-arrow {
+  transition: transform .25s ease;
+}
+.pal-compact-cta:hover .pal-compact-cta-arrow {
+  transform: translateX(3px);
+}
+
+/* ═══ DRAWER — détail complet année ═════════════════════════════ */
+.pal-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(4,6,15,.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(12px, 3vh, 40px);
+}
+.pal-drawer.open { display: flex; animation: palDrawerFade .3s ease; }
+@keyframes palDrawerFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.pal-drawer-stage {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  max-height: 92vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--pal-bg);
+  border: 1px solid var(--pal-line);
+  border-radius: 6px;
+  padding: clamp(24px, 4vw, 56px);
+  box-shadow: 0 24px 80px rgba(0,0,0,.6);
+  animation: palDrawerSlide .35s cubic-bezier(.2,.8,.3,1);
+}
+@keyframes palDrawerSlide {
+  from { opacity: 0; transform: translateY(20px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.pal-drawer-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--pal-line);
+  background: rgba(4,6,15,.85);
+  color: var(--pal-ink);
+  font-size: 22px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all .2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.pal-drawer-close:hover {
+  background: var(--pal-gold);
+  color: #000;
+  border-color: var(--pal-gold);
+  transform: rotate(90deg);
+}
+.pal-drawer-head {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--pal-line);
+}
+.pal-drawer-year {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 7vw, 96px);
+  color: var(--pal-gold);
+  line-height: .85;
+  letter-spacing: 2px;
+  margin: 0;
+}
+.pal-drawer-cat {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--pal-ink-mute);
+  margin-top: 10px;
+}
+.pal-drawer-star {
+  color: var(--pal-gold);
+  font-weight: 700;
+}
+.pal-drawer-titre {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(32px, 4vw, 56px);
+  color: var(--pal-ink);
+  line-height: 1;
+  margin: 16px 0 10px;
+  letter-spacing: .5px;
+  font-weight: 400;
+}
+.pal-drawer-detail {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.6;
+  color: var(--pal-ink-soft);
+  font-weight: 300;
+  margin: 0;
+  max-width: 820px;
+}
+
+/* Styles identiques à ceux de l'ancienne timeline — réutilisés dans le drawer */
+.pal-drawer-content .pal-hero-img     { margin-bottom: 24px; }
+.pal-drawer-content .pal-meta-grid    { margin-bottom: 20px; }
+.pal-drawer-content .pal-resultats    { margin-bottom: 24px; }
+.pal-drawer-content .pal-gallery      { margin-bottom: 24px; }
+.pal-drawer-content .pal-presse       { margin-bottom: 24px; }
+
+/* Scrollbar stylisée pour le drawer */
+.pal-drawer-stage::-webkit-scrollbar        { width: 10px; }
+.pal-drawer-stage::-webkit-scrollbar-track  { background: transparent; }
+.pal-drawer-stage::-webkit-scrollbar-thumb  { background: rgba(255,207,0,.25); border-radius: 5px; }
+.pal-drawer-stage::-webkit-scrollbar-thumb:hover { background: rgba(255,207,0,.4); }
+
+/* ═══ CAROUSEL — photos secondaires (auto-slide horizontal) ═══ */
+.pal-carousel {
+  position: relative;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 260px;          /* hauteur minimum confortable pour la photo principale */
+  max-height: 54svh;          /* plafonné pour laisser place au press row + banderole */
+  overflow: hidden;
+  border-radius: 4px;
+  background: #0a0a0a;
+  border: none;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.06),
+    0 18px 36px -12px rgba(0,0,0,.6),
+    0 6px 14px -4px rgba(0,0,0,.45);
+}
+.pal-carousel-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.pal-carousel-track::-webkit-scrollbar { display: none; }
+.pal-carousel-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  position: relative;
+  cursor: zoom-in;
+  overflow: hidden;
+}
+.pal-carousel-slide img {
+  width: 100%;
+  height: 100%;
+  /* contain : chaque photo du carrousel est visible en entier, pas de recadrage agressif */
+  object-fit: contain;
+  object-position: center;
+  background: #06080f;
+  transition: transform .7s cubic-bezier(.2,.7,.2,1), filter .4s ease;
+  filter: saturate(1.05) contrast(1.02);
+}
+.pal-carousel-slide::after {
+  /* Vignette douce pour uniformiser les photos hétérogènes */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,.18) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.08) 0%, transparent 25%, transparent 75%, rgba(0,0,0,.22) 100%);
+  pointer-events: none;
+  opacity: .9;
+  transition: opacity .3s ease;
+}
+.pal-carousel-slide:hover::after { opacity: .5; }
+.pal-carousel-slide:hover img {
+  transform: scale(1.04);
+  filter: saturate(1.15) contrast(1.04) brightness(1.03);
+}
+
+.pal-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(4,6,15,.7);
+  color: var(--pal-ink);
+  border: 1px solid var(--pal-line);
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .2s ease;
+  backdrop-filter: blur(6px);
+  opacity: .5;
+}
+.pal-carousel:hover .pal-carousel-btn { opacity: 1; }
+.pal-carousel-btn:hover {
+  background: var(--pal-gold);
+  color: #000;
+  border-color: var(--pal-gold);
+}
+.pal-carousel-prev { left: 10px; }
+.pal-carousel-next { right: 10px; }
+
+.pal-carousel-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 3;
+}
+.pal-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.3);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all .2s ease;
+}
+.pal-carousel-dot.active {
+  background: var(--pal-gold);
+  transform: scale(1.25);
+}
+.pal-carousel-dot:hover { background: rgba(255,255,255,.6); }
+
+/* ═══ BANDEROLE — légende voiture/circuits/équipiers ═══════════ */
+.pal-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 11px 18px;
+  background: linear-gradient(90deg, rgba(255,207,0,.08) 0%, rgba(255,207,0,.02) 100%);
+  border-left: 3px solid var(--pal-gold);
+  border-radius: 2px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: var(--pal-ink);
+  line-height: 1.3;
+}
+.pal-band-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pal-gold);
+  opacity: .75;
+  margin-right: 6px;
+}
+.pal-band-val {
+  font-weight: 400;
+  color: var(--pal-ink);
+}
+.pal-band-sep {
+  color: var(--pal-ink-mute);
+  opacity: .5;
+}
+
+/* Rencontres inline (1 ligne) */
+.pal-year-rencs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.pal-year-renc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  color: var(--pal-ink-soft);
+  padding: 5px 10px;
+  background: rgba(255,255,255,.03);
+  border: 1px dashed var(--pal-line);
+  border-radius: 999px;
+}
+.pal-year-renc em {
+  color: var(--pal-gold);
+  font-style: normal;
+  opacity: .85;
+}
+
+/* ═══ PRESSE ROW — grille compacte clickable ═══════════════════ */
+.pal-pressrow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.pal-pressrow-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pal-gold);
+  opacity: .7;
+}
+.pal-pressrow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+  gap: 8px;
+  max-height: 18svh;
+  overflow: hidden;
+}
+.pal-pressrow-item {
+  aspect-ratio: 3/4;
+  max-height: 18svh;
+  overflow: hidden;
+  background: #0c0c0c;
+  cursor: zoom-in;
+  border-radius: 3px;
+  position: relative;
+  border: none;
+  /* Effet "coupure de presse" : fond papier jauni, ombre accentuée */
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.06),
+    0 6px 12px -4px rgba(0,0,0,.55),
+    0 2px 4px -2px rgba(0,0,0,.4);
+  transition: all .3s cubic-bezier(.2,.7,.2,1);
+  /* Micro-rotation aléatoire via :nth-child pour effet naturel */
+}
+.pal-pressrow-item:nth-child(3n+1) { transform: rotate(-.8deg); }
+.pal-pressrow-item:nth-child(3n+2) { transform: rotate(.5deg); }
+.pal-pressrow-item:nth-child(3n+3) { transform: rotate(-.3deg); }
+.pal-pressrow-item:hover {
+  transform: translateY(-4px) rotate(0deg) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,207,0,.3),
+    0 14px 24px -8px rgba(0,0,0,.7),
+    0 4px 8px -2px rgba(255,207,0,.12);
+  z-index: 2;
+}
+.pal-pressrow-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  /* Lisibilité restaurée : on voit les articles dès le repos */
+  filter: brightness(1) contrast(1.02);
+  transition: filter .3s ease, transform .5s ease;
+}
+.pal-pressrow-item:hover img {
+  filter: brightness(1.08) contrast(1.1);
+  transform: scale(1.04);
+}
+.pal-pressrow-item::after {
+  content: '🔍';
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  background: rgba(0,0,0,.7);
+  color: var(--pal-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.pal-pressrow-item:hover::after { opacity: 1; }
+
+.pal-pressrow-item--more::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4,6,15,.2) 0%, rgba(4,6,15,.8) 100%);
+  z-index: 1;
+}
+.pal-pressrow-more {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--pal-gold);
+  z-index: 2;
+  letter-spacing: 1px;
+}
+
+/* ═══ PACKED — plusieurs années sparses dans un slide ═════════ */
+.pal-year--packed {
+  align-items: center;
+}
+.pal-packed-wrap {
+  width: 100%;
+  max-width: 1400px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vh, 40px);
+}
+.pal-packed-head-big {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--pal-line);
+}
+.pal-packed-range {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(44px, 6vw, 80px);
+  color: var(--pal-gold);
+  line-height: .85;
+  letter-spacing: 2px;
+}
+.pal-packed-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--pal-ink-mute);
+}
+.pal-packed-count {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--pal-ink-mute);
+}
+.pal-packed-grid {
+  display: grid;
+  gap: clamp(16px, 2.5vw, 32px);
+}
+.pal-packed-grid--1 { grid-template-columns: 1fr; max-width: 820px; }
+.pal-packed-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.pal-packed-grid--3 { grid-template-columns: repeat(3, 1fr); }
+
+.pal-packed-card {
+  padding: 20px 22px;
+  background: rgba(255,255,255,.025);
+  border: 1px solid var(--pal-line);
+  border-left: 3px solid var(--pal-line);
+  border-radius: 3px;
+  transition: all .3s ease;
+  min-width: 0;
+}
+.pal-packed-card:hover {
+  background: rgba(255,255,255,.04);
+  border-left-color: var(--pal-gold);
+}
+.pal-packed-card--highlight {
+  border-left-color: var(--pal-gold);
+  background: rgba(255,207,0,.04);
+}
+.pal-packed-card.hidden { display: none; }
+.pal-packed-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.pal-packed-year {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: var(--pal-ink);
+  line-height: 1;
+  letter-spacing: 1px;
+}
+.pal-packed-card--highlight .pal-packed-year { color: var(--pal-gold); }
+.pal-packed-cat {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pal-ink-mute);
+}
+.pal-packed-star {
+  color: var(--pal-gold);
+  font-size: 14px;
+}
+.pal-packed-titre {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: var(--pal-ink);
+  line-height: 1.1;
+  margin: 0 0 8px;
+  letter-spacing: .5px;
+  font-weight: 400;
+}
+.pal-packed-detail {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--pal-ink-soft);
+  font-weight: 300;
+  margin: 0 0 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pal-packed-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  color: var(--pal-ink-soft);
+  padding-top: 8px;
+  border-top: 1px dashed var(--pal-line);
+}
+.pal-packed-meta b {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--pal-gold);
+  font-weight: 400;
+  margin-right: 4px;
+  opacity: .8;
+}
+
 /* ═══ RESPONSIVE ═══════════════════════════════════════════════ */
 @media (max-width: 900px) {
   .pal-year {
+    /* Mobile : hauteur min, pas de clipping — scroll libre dans la page */
+    max-height: none;
+    min-height: calc(100svh - 56px);
+    height: auto;
+    padding: 40px 18px 30px;
+    overflow: visible;
+  }
+  .pal-hero {
+    min-height: calc(100svh - 56px);
+    max-height: none;
+    height: auto;
+  }
+  .pal-year-inner {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
   }
-  .pal-year-left {
-    position: relative;
-    top: 0;
+  .pal-year-side {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 12px;
   }
+  .pal-year-count { margin-top: 0; padding-top: 0; border-top: none; }
   .pal-year-num {
-    font-size: clamp(64px, 18vw, 100px);
+    font-size: clamp(56px, 14vw, 88px);
   }
-  .pal-filtres { justify-content: flex-start; overflow-x: auto; }
-  .pal-filtre { flex-shrink: 0; }
+  .pal-year-cat {
+    padding-top: 0;
+    border-top: none;
+  }
+  .pal-year-hero { max-height: 32vh; aspect-ratio: 3/2; }
+  .pal-year-detail { -webkit-line-clamp: 2; }
+  .pal-carousel { max-height: 32vh; }
+  .pal-pressrow-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)) !important; }
+  .pal-packed-grid--2,
+  .pal-packed-grid--3 { grid-template-columns: 1fr; }
+  .pal-filtres-dock {
+    bottom: 12px;
+    right: 12px;
+  }
+  .pal-drawer-stage { padding: 24px 16px; max-height: 94vh; }
 }
 
 @media (max-width: 600px) {
   .pal-hero-titre { font-size: clamp(54px, 16vw, 84px); }
-  .pal-gallery { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-  .pal-presse-grid, .pal-mur-presse { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+  /* Galerie et presse : max 2 cols mobile, l'inline style JS sera écrasé */
+  .pal-gallery { grid-template-columns: repeat(2, 1fr) !important; }
+  .pal-gallery-item { min-height: 140px; }
+  .pal-presse-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .pal-presse-item { min-height: 220px; }
+  .pal-presse-phantom { min-height: 220px; }
+  .pal-mur-presse { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
   .pal-sponsors-wall { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
   .pal-hero { min-height: 85vh; }
+  .pal-hero-img { aspect-ratio: 3/2; }
+  .pal-rencs-inline { padding: 16px 18px; }
+  .pal-renc-inline-nom { font-size: 22px; }
+  .pal-compact-meta { grid-template-columns: 1fr; }
+  .pal-compact-hero { aspect-ratio: 3/2; max-height: 28vh; }
+  .pal-badge { font-size: 9px; padding: 4px 8px; }
+  html, body { scroll-snap-type: none; } /* mobile : scroll libre, trop contraint sinon */
 }

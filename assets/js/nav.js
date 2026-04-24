@@ -18,9 +18,8 @@
     { type:'link', href:'index.html',    key:'index',    label:'Accueil' },
     { type:'sub',  href:'academie.html', key:'academie', label:'Acad&eacute;mie',
       subs:[
-        { href:'academie-karting.html',   label:'Karting Enfant' },
-        { href:'academie-adulte.html',    label:'Karting Adulte' },
-        { href:'academie-challenge.html', label:'Challenge Auto' },
+        { href:'academie-karting.html',          label:'Formation Karting' },
+        { href:'academie-competition.html',      label:'Vers la Comp&eacute;tition' },
       ]
     },
     { type:'link', href:'coaching.html', key:'coaching', label:'Coaching' },
@@ -47,8 +46,8 @@
   // ── Détecter la page active ─────────────────────────────────────
   var PAGE_KEYS = {
     'index.html': 'index', 'academie.html': 'academie',
-    'academie-karting.html': 'academie', 'academie-adulte.html': 'academie',
-    'academie-challenge.html': 'academie', 'coaching.html': 'coaching',
+    'academie-karting.html': 'academie', 'academie-competition.html': 'academie',
+    'coaching.html': 'coaching',
     'track.html': 'track', 'paddock.html': 'paddock',
   }
   var pathname = window.location.pathname.split('/').pop() || 'index.html'

@@ -107,7 +107,7 @@ function buildAcademieCards(section, parcours) {
 
   // Extraire données des 3 portes
   var data = []
-  var hrefs = ['academie-karting.html', 'academie-adulte.html', 'academie-challenge.html']
+  var hrefs = ['academie-karting.html', 'academie-competition.html']
   for (var i = 0; i < portes.length; i++) {
     var p = portes[i]
     var onclick = p.getAttribute('onclick') || ''

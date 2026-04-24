@@ -16,25 +16,25 @@
     paddock:    '/paddock.html',
 
     // ── Académie ───────────────────────────────────────────────────
-    karting:    '/academie-karting.html',
-    competition:'/academie-competition.html',
+    karting:    '/academie/karting.html',
+    competition:'/academie/competition.html',
 
     // ── Paddock ────────────────────────────────────────────────────
-    palmares:   '/palmares.html',
-    voitures:   '/nos-voitures.html',
-    articles:   '/articles.html',
-    article:    '/article.html',
+    palmares:   '/paddock/palmares.html',
+    voitures:   '/paddock/nos-voitures.html',
+    articles:   '/paddock/articles.html',
+    article:    '/paddock/article.html',
 
     // ── Admin ──────────────────────────────────────────────────────
-    login:      '/login.html',
-    signup:     '/signup.html',
-    dashboard:  '/admin.html',
-    motDePasse: '/mot-de-passe-oublie.html',
+    login:      '/admin/login.html',
+    signup:     '/admin/signup.html',
+    dashboard:  '/admin/dashboard.html',
+    motDePasse: '/admin/mot-de-passe-oublie.html',
 
     // ── Légal ──────────────────────────────────────────────────────
-    contact:       '/contact.html',
-    mentionsLegales:'/mentions-legales.html',
-    confidentialite:'/confidentialite.html',
+    contact:       '/admin/legal/contact.html',
+    mentionsLegales:'/admin/legal/mentions-legales.html',
+    confidentialite:'/admin/legal/confidentialite.html',
 
     // ── Externes ───────────────────────────────────────────────────
     boutique:   'https://pilotage-jbemeric-marseille.fr',
@@ -59,4 +59,20 @@
   }
 
   window.ROUTES = ROUTES
+
+  // ── Fix <base href="/"> : les liens fragment-only (#anchor) doivent
+  //    scroller dans la page courante, pas naviguer vers la racine.
+  document.addEventListener('click', function(e) {
+    var a = e.target && e.target.closest && e.target.closest('a[href^="#"]')
+    if (!a) return
+    var href = a.getAttribute('href')
+    if (!href || href.length < 2) return
+    var el = document.getElementById(href.slice(1))
+    if (el) {
+      e.preventDefault()
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      history.replaceState(null, '', href)
+    }
+  })
 })()
+

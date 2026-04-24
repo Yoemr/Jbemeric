@@ -9,7 +9,7 @@ var fs   = require('fs')
 var path = require('path')
 
 var PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000
-var ROOT = __dirname
+var ROOT = path.resolve(__dirname, '..')  // racine projet (outil-dev/ est un sous-dossier)
 
 var MIME = {
   '.html':  'text/html; charset=utf-8',

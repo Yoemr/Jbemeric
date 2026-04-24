@@ -63,7 +63,7 @@
       <div class="auth-box-title">Se <em>connecter</em></div>
       <p class="auth-box-sub">Pas encore membre ? <a href="signup.html">Créer un compte →</a></p>
 
-      <form action="#" method="POST" onsubmit="return false">
+      <form id="login-form" action="#" method="POST">
 
         <div class="form-group">
           <label class="form-label" for="email">Email</label>
@@ -79,7 +79,8 @@
           <a href="mot-de-passe-oublie.html">Mot de passe oublié ?</a>
         </div>
 
-        <button class="form-submit" type="submit">Se connecter →</button>
+        <button class="form-submit" type="submit" id="login-submit">Se connecter →</button>
+        <div id="login-error" style="display:none;margin-top:14px;padding:10px 14px;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.35);border-radius:4px;color:#ff6b7a;font-family:'DM Mono';font-size:11px;letter-spacing:1px"></div>
 
         <div class="form-sep">
           <span class="form-sep-txt">ou continuer avec</span>

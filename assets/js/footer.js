@@ -5,6 +5,8 @@
  */
 (function() {
 
+  var R = window.ROUTES || {}
+
   var footerHTML =
     '<footer class="footer">' +
     '<div class="footer-top">' +
@@ -24,19 +26,19 @@
     // Nav footer
     '<div class="ft-col">' +
       '<div class="ft-col-title">Navigation</div>' +
-      '<a href="index.html">Accueil</a>' +
-      '<a href="academie.html">Académie</a>' +
-      '<a href="coaching.html">Coaching</a>' +
-      '<a href="track.html">Stages &amp; Track-Days</a>' +
-      '<a href="paddock.html">Paddock</a>' +
+      '<a href="' + R.index + '">Accueil</a>' +
+      '<a href="' + R.academie + '">Académie</a>' +
+      '<a href="' + R.coaching + '">Coaching</a>' +
+      '<a href="' + R.track + '">Stages &amp; Track-Days</a>' +
+      '<a href="' + R.paddock + '">Paddock</a>' +
     '</div>' +
 
     // Académie
     '<div class="ft-col">' +
       '<div class="ft-col-title">Académie</div>' +
-      '<a href="academie-karting.html">Formation Karting</a>' +
-      '<a href="academie-competition.html">Vers la Compétition</a>' +
-      '<a href="coaching.html">Coaching vidéo</a>' +
+      '<a href="' + R.karting + '">Formation Karting</a>' +
+      '<a href="' + R.competition + '">Vers la Compétition</a>' +
+      '<a href="' + R.coaching + '">Coaching vidéo</a>' +
     '</div>' +
 
     // Contact
@@ -56,7 +58,7 @@
       '</div>' +
       '<div class="ft-contact-item">' +
         '<span class="ft-contact-label">Contact</span>' +
-        '<a class="ft-contact-val" href="contact.html">Formulaire de contact</a>' +
+        '<a class="ft-contact-val" href="' + R.contact + '">Formulaire de contact</a>' +
       '</div>' +
     '</div>' +
 
@@ -65,11 +67,11 @@
     '<div class="footer-bottom">' +
       '<span class="fb-copy">&copy; 2026 JB EMERIC &middot; Tous droits réservés</span>' +
       '<div class="fb-badge">' +
-        '<a href="contact.html">Contact</a>' +
+        '<a href="' + R.contact + '">Contact</a>' +
         '<span>&middot;</span>' +
-        '<a href="mentions-legales.html">Mentions légales</a>' +
+        '<a href="' + R.mentionsLegales + '">Mentions légales</a>' +
         '<span>&middot;</span>' +
-        '<a href="confidentialite.html">Confidentialité</a>' +
+        '<a href="' + R.confidentialite + '">Confidentialité</a>' +
       '</div>' +
     '</div>' +
 

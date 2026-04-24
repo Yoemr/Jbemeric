@@ -6,6 +6,9 @@
 (function () {
 'use strict'
 
+// Routes centralisées (routes.js). Permet de déplacer les fichiers sans toucher ce fichier.
+var R = (typeof window !== 'undefined' && window.ROUTES) || {}
+
 // Notifie live-editor.js qu'un mirror vient d'être injecté
 function notifyMirrorLoaded() {
   document.dispatchEvent(new CustomEvent('jbe-mirror-loaded'))
@@ -107,7 +110,7 @@ function buildAcademieCards(section, parcours) {
 
   // Extraire données des 3 portes
   var data = []
-  var hrefs = ['academie-karting.html', 'academie-competition.html']
+  var hrefs = [R.karting || 'academie-karting.html', R.competition || 'academie-competition.html']
   for (var i = 0; i < portes.length; i++) {
     var p = portes[i]
     var onclick = p.getAttribute('onclick') || ''

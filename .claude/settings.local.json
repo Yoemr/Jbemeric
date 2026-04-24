@@ -78,7 +78,8 @@
       "Bash(curl -L -s -o \"2001-hommell-rs2-martinez.jpg\" \"https://jbemeric.com/wp-content/uploads/2022/01/HOMMELL-MARTINEZ-2-001.jpg\")",
       "WebFetch(domain:emericjb.unblog.fr)",
       "WebFetch(domain:www.instagram.com)",
-      "WebFetch(domain:www.facebook.com)"
+      "WebFetch(domain:www.facebook.com)",
+      "Bash(find . -name \"*.html\" -not -path \"./node_modules/*\" -exec sed -i '/<link rel=\"icon\"[^>]*favicon\\\\.svg[^>]*>/d; /<link rel=\"shortcut icon\"[^>]*favicon\\\\.svg[^>]*>/d' {} \\\\;)"
     ]
   }
 }

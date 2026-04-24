@@ -60,6 +60,17 @@
 
   window.ROUTES = ROUTES
 
+  // ── Favicon centralisée (déclarée une seule fois) ───────────────
+  var FAVICON = '/assets/favicon.svg'
+  if (!document.querySelector('link[rel="icon"]')) {
+    var l1 = document.createElement('link')
+    l1.rel = 'icon'; l1.type = 'image/svg+xml'; l1.href = FAVICON
+    document.head.appendChild(l1)
+    var l2 = document.createElement('link')
+    l2.rel = 'shortcut icon'; l2.href = FAVICON
+    document.head.appendChild(l2)
+  }
+
   // ── Fix <base href="/"> : les liens fragment-only (#anchor) doivent
   //    scroller dans la page courante, pas naviguer vers la racine.
   document.addEventListener('click', function(e) {

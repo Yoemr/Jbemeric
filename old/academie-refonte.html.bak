@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="academie">
+<head>
+<base href="/">
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Académie JB EMERIC — Formation Pilotage Karting & Auto · PACA</title>
+  <meta name="description" content="De karting enfant à la compétition BMW HTCC. 5 niveaux progressifs encadrés par JB Emeric, Champion de France 1988. Brignoles, Cuges, Trets, Hyères, KIP.">
+  <meta property="og:title" content="Académie JB EMERIC — Formation Pilotage Karting & Auto · PACA">
+  <meta property="og:description" content="De karting enfant à la compétition BMW HTCC. 5 niveaux progressifs encadrés par JB Emeric, Champion de France 1988. Brignoles, Cuges, Trets, Hyères, KIP.">
+  <meta property="og:image" content="https://jbemeric.netlify.app/assets/images/karting-adulte-circuit.jpg">
+  <meta property="og:url" content="https://jbemeric.netlify.app/academie.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JB EMERIC École de Pilotage">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Académie JB EMERIC — Formation Pilotage Karting & Auto · PACA">
+  <meta name="twitter:description" content="De karting enfant à la compétition BMW HTCC. 5 niveaux progressifs encadrés par JB Emeric, Champion de France 1988. Brignoles, Cuges, Trets, Hyères, KIP.">
+  <meta name="twitter:image" content="https://jbemeric.netlify.app/assets/images/karting-adulte-circuit.jpg">
+  <link rel="canonical" href="https://jbemeric.netlify.app/academie.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&family=Russo+One&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:1000;height:56px;background:rgba(4,10,30,.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;padding:0 20px;gap:12px}
+.nav-logo{display:flex;align-items:center;flex-shrink:0}
+.nav-tabs{display:none;gap:2px;flex:1;margin-left:8px}
+.nav-cta-desk{display:none;flex-shrink:0;font-family:'DM Mono';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 18px;border-radius:7px;font-weight:500;white-space:nowrap;transition:all .2s}
+@media(min-width:700px){.nav-tabs{display:flex}.nav-cta-desk{display:block}}
+.nav-tab{flex-shrink:0;font-family:'DM Mono';font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,215,0,.55);padding:7px 12px;border-radius:6px;border:1px solid transparent;transition:all .2s}
+.nav-tab:hover{background:rgba(255,215,0,.07);color:rgba(255,215,0,.9)}
+.nav-tab.active{background:#0A3D91;color:#fff;border-color:#0A3D91}
+.nav-burger{display:flex;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;margin-left:auto;flex-shrink:0;padding:4px}
+.nav-burger span{display:block;height:2px;background:rgba(255,215,0,.8);border-radius:2px;transition:all .3s}
+.nav-burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(min-width:700px){.nav-burger{display:none}}
+.nav-mobile{display:none;position:fixed;top:56px;left:0;right:0;background:rgba(4,10,30,.99);z-index:999;padding:12px 16px 20px;flex-direction:column;gap:4px;border-bottom:2px solid var(--accent,#FFCF00)}
+.nav-mobile.open{display:flex}
+@media(min-width:700px){.nav-mobile{display:none !important}}
+.nav-mobile .nav-tab{font-size:13px;padding:12px 16px;border-radius:8px;border:1px solid rgba(255,255,255,.06)}
+.nav-mobile-cta{margin-top:8px;padding:13px;border-radius:8px;font-family:'DM Mono';font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;text-align:center;display:block}
+
+/* HERO — plein écran, photo fond, biais couleur à droite */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+@media(max-width:699px){.hero{min-height:88svh}}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 35%}
+/* overlay défini par page via --hero-overlay */
+.hero-bg::after{content:'';position:absolute;inset:0;z-index:2;background:var(--hero-overlay)}
+.hero-num{position:absolute;top:50%;right:3vw;transform:translateY(-50%);font-family:'Bebas Neue';font-size:clamp(160px,26vw,340px);line-height:1;color:rgba(255,255,255,.03);z-index:2;pointer-events:none;user-select:none}
+.hero-content{position:relative;z-index:3;padding:clamp(40px,6vw,80px) clamp(20px,5vw,72px) clamp(36px,5vw,64px);max-width:760px}
+.hero-back{font-family:'DM Mono';font-size:9px;letter-spacing:3px;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;transition:opacity .2s;opacity:.5}
+.hero-back:hover{opacity:1}
+.hero-back::before{content:'←';font-size:12px}
+.hero-eyebrow{font-family:'DM Mono';font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';width:24px;height:2px;flex-shrink:0}
+.hero-title{font-family:'Bebas Neue';font-size:clamp(52px,10vw,120px);line-height:.82;letter-spacing:.5px;margin-bottom:20px}
+.hero-title em{font-style:normal;display:inline}
+.hero-rule{width:64px;height:3px;margin-bottom:20px}
+.hero-lead{font-size:clamp(14px,1.8vw,17px);line-height:1.75;max-width:500px;margin-bottom:28px}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:20px;border:1px solid currentColor;opacity:.7}
+.chip-solid{opacity:1;font-weight:500}
+
+/* CORPS — fond dominant clair, bandes alternées */
+/* bande légère — fond dominant de la page */
+.band{padding:clamp(48px,6vw,88px) clamp(20px,5vw,72px)}
+/* fond primaire clair */
+.band-base{background:var(--bg-base,#f0f4ff);color:var(--ink-base,#111)}
+/* fond légèrement plus marqué — couleur principale diluée */
+.band-tint{background:var(--bg-tint,#e6edff);color:var(--ink-base,#111)}
+/* accent plein — la couleur principale saturée */
+.band-accent{background:var(--accent,#0a1a4a);color:var(--ink-accent,#fff)}
+/* très sombre pour les blocs hero/cta */
+.band-dark{background:#08080f;color:#fff}
+
+/* GRILLES */
+.g2{display:grid;grid-template-columns:1fr;gap:clamp(32px,5vw,72px);align-items:start}
+@media(min-width:800px){.g2{grid-template-columns:3fr 2fr}}
+.g2r{display:grid;grid-template-columns:1fr;gap:clamp(32px,5vw,72px);align-items:start}
+@media(min-width:800px){.g2r{grid-template-columns:2fr 3fr}}
+
+/* étiquette rubrique */
+.rubrik{font-family:'DM Mono';font-size:9px;letter-spacing:3.5px;text-transform:uppercase;opacity:.4;display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.rubrik::after{content:'';flex:1;height:1px;background:currentColor;opacity:.2;max-width:80px}
+
+/* titre section */
+.sh{font-family:'Bebas Neue';font-size:clamp(38px,5.5vw,68px);line-height:.88;margin-bottom:16px}
+.sh em{font-style:normal;color:var(--accent,#0a1a4a)}
+.band-accent .sh em,.band-dark .sh em{color:var(--accent-em,#FFCF00)}
+
+/* corps */
+.sb{font-size:15px;line-height:1.8;opacity:.65;max-width:640px}
+.sb p+p{margin-top:14px}
+.sb strong{font-weight:500;opacity:1}
+.band-base .sb,.band-tint .sb{color:var(--ink-base,#111)}
+.band-accent .sb,.band-dark .sb{color:rgba(255,255,255,.7)}
+
+/* BANDE PRIX — fond accent plein */
+.prix-band{background:var(--accent,#0a1a4a);color:var(--ink-accent,#fff);padding:clamp(28px,4vw,52px) clamp(20px,5vw,72px);display:flex;flex-wrap:wrap;gap:32px;align-items:center;justify-content:space-between}
+.prix-val{font-family:'Bebas Neue';font-size:clamp(80px,13vw,150px);line-height:.82;letter-spacing:-2px}
+.prix-label{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;opacity:.5}
+.prix-list{display:flex;flex-direction:column;gap:8px;flex:1;min-width:220px}
+.prix-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;opacity:.8}
+.prix-item::before{content:'✓';font-weight:700;opacity:1;flex-shrink:0;margin-top:1px}
+.prix-cta{display:inline-flex;font-family:'DM Mono';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:14px 24px;border-radius:8px;transition:all .2s;flex-shrink:0;background:var(--prix-cta-bg,rgba(255,255,255,.12));color:var(--prix-cta-fg,#fff);border:1px solid var(--prix-cta-border,rgba(255,255,255,.2))}
+.prix-cta:hover{transform:translateY(-2px)}
+
+/* LISTES NUMÉROTÉES */
+.fi-list{display:flex;flex-direction:column}
+.fi{display:grid;grid-template-columns:48px 1fr;gap:0;border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.fi:last-child{border-bottom:1px solid var(--sep,rgba(0,0,0,.08))}
+.band-accent .fi,.band-dark .fi{border-color:rgba(255,255,255,.07)}
+.band-accent .fi:last-child,.band-dark .fi:last-child{border-color:rgba(255,255,255,.07)}
+.fi-n{font-family:'Bebas Neue';font-size:44px;color:var(--accent,#0a1a4a);line-height:1;padding:20px 0;opacity:.5}
+.band-accent .fi-n,.band-dark .fi-n{color:var(--accent-em,#FFCF00);opacity:.7}
+.fi-body{padding:20px 0 20px 20px;border-left:1px solid var(--sep,rgba(0,0,0,.08))}
+.band-accent .fi-body,.band-dark .fi-body{border-color:rgba(255,255,255,.07)}
+.fi-title{font-size:15px;font-weight:500;margin-bottom:5px;color:var(--ink-base,#111)}
+.band-base .fi-title,.band-tint .fi-title{color:var(--ink-base,#111)}
+.band-accent .fi-title,.band-dark .fi-title{color:#fff}
+.fi-desc{font-size:13px;line-height:1.7;opacity:.6}
+
+/* NIVEAUX */
+.lv-row{display:grid;grid-template-columns:54px 1fr;border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.lv-row:last-child{border-bottom:1px solid var(--sep,rgba(0,0,0,.08))}
+.lv-code{font-family:'Bebas Neue';font-size:20px;color:var(--accent,#0a1a4a);padding:20px 0;line-height:1}
+.lv-body{padding:20px 0 20px 20px;border-left:1px solid var(--sep,rgba(0,0,0,.08))}
+.lv-name{font-size:15px;font-weight:500;margin-bottom:4px;color:var(--ink-base,#111)}
+.lv-desc{font-size:13px;line-height:1.65;opacity:.6}
+.lv-tag{display:inline-block;margin-top:8px;font-family:'DM Mono';font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid var(--accent,#0a1a4a);color:var(--accent,#0a1a4a)}
+
+/* PROGRAMME */
+.sched-row{display:grid;grid-template-columns:56px 1fr;border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.sched-row:last-child{border-bottom:1px solid var(--sep,rgba(0,0,0,.08))}
+.sched-t{font-family:'DM Mono';font-size:10px;color:var(--accent,#0a1a4a);padding:18px 0;line-height:1.2;font-weight:500;opacity:.8}
+.sched-body{padding:18px 0 18px 20px;border-left:1px solid var(--sep,rgba(0,0,0,.08))}
+.sched-name{font-size:14px;font-weight:500;margin-bottom:3px;color:var(--ink-base,#111)}
+.sched-info{font-size:12px;opacity:.45;line-height:1.5}
+
+/* CIRCUITS */
+.circ-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.circ-grid{grid-template-columns:1fr}}
+.circ{padding:16px 18px;border:1px solid var(--sep,rgba(0,0,0,.1));border-radius:10px;transition:border-color .2s}
+.circ:hover{border-color:var(--accent,#0a1a4a)}
+.circ-name{font-family:'Bebas Neue';font-size:22px;line-height:1;margin-bottom:2px;color:var(--ink-base,#111)}
+.circ-dept{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent,#0a1a4a);margin-bottom:7px}
+.circ-info{font-size:12px;opacity:.5;line-height:1.55}
+
+/* BMW BLOC */
+.bmw{display:grid;grid-template-columns:1fr;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.08)}
+@media(min-width:700px){.bmw{grid-template-columns:1fr 1fr}}
+.bmw-img{overflow:hidden;min-height:260px}
+.bmw-img img{width:100%;height:100%;object-fit:cover}
+.bmw-info{background:#0a1a4a;padding:clamp(24px,4vw,44px);display:flex;flex-direction:column;justify-content:center}
+.bmw-badge{display:inline-block;font-family:'DM Mono';font-size:8px;letter-spacing:2px;text-transform:uppercase;background:#FFCF00;color:#000;padding:4px 12px;border-radius:20px;margin-bottom:14px}
+.bmw-name{font-family:'Bebas Neue';font-size:clamp(44px,6vw,72px);color:#fff;line-height:.88;margin-bottom:6px}
+.bmw-spec{font-family:'DM Mono';font-size:9px;color:rgba(255,255,255,.3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px}
+.bmw-facts{display:flex;flex-direction:column;gap:7px}
+.bmw-f{font-size:13px;color:rgba(255,255,255,.6);display:flex;gap:9px}
+.bmw-f::before{content:'·';color:#FFCF00;font-size:16px;line-height:1.1;flex-shrink:0}
+
+/* VOIES */
+.voie-row{display:grid;grid-template-columns:52px 1fr;border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.voie-row:last-child{border-bottom:1px solid var(--sep,rgba(0,0,0,.08))}
+.voie-n{font-family:'Bebas Neue';font-size:44px;color:var(--accent,#0a1a4a);line-height:1;padding:20px 0;opacity:.6}
+.voie-body{padding:20px 0 20px 20px;border-left:1px solid var(--sep,rgba(0,0,0,.08))}
+.voie-title{font-size:15px;font-weight:500;margin-bottom:4px;color:var(--ink-base,#111)}
+.voie-desc{font-size:13px;line-height:1.7;opacity:.6}
+
+/* FINALES */
+.finales{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(min-width:700px){.finales{grid-template-columns:repeat(4,1fr)}}
+.fin{padding:clamp(20px,3vw,36px);border-right:1px solid rgba(255,255,255,.08);position:relative}
+.fin:last-child{border-right:none}
+@media(max-width:699px){.fin{border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}}
+.fin::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-em,#FFCF00);opacity:.4}
+.fin.active::before{opacity:1}
+.fin-n{font-family:'DM Mono';font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:12px}
+.fin-date{font-family:'Bebas Neue';font-size:clamp(24px,3.5vw,36px);color:var(--accent-em,#FFCF00);line-height:1;margin-bottom:4px}
+.fin-circuit{font-family:'Bebas Neue';font-size:clamp(18px,2.5vw,24px);color:#fff;line-height:1;margin-bottom:8px}
+.fin-info{font-size:12px;color:rgba(255,255,255,.4);line-height:1.5}
+
+/* STATS sidebar */
+.stat-col{display:flex;flex-direction:column}
+.stat-row{padding:18px 0;border-bottom:1px solid var(--sep,rgba(0,0,0,.08))}
+.stat-row:first-child{border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.stat-val{font-family:'Bebas Neue';font-size:clamp(44px,7vw,72px);line-height:.85;color:var(--accent,#0a1a4a);letter-spacing:-1px}
+.stat-lbl{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;opacity:.4}
+
+/* WIDGET */
+.widget{padding-top:28px;margin-top:28px;border-top:2px solid var(--accent,#0a1a4a)}
+.widget-label{font-family:'DM Mono';font-size:9px;letter-spacing:3px;text-transform:uppercase;opacity:.4;margin-bottom:10px}
+.widget-title{font-family:'Bebas Neue';font-size:26px;line-height:.9;margin-bottom:8px;color:var(--ink-base,#111)}
+.widget-body{font-size:13px;line-height:1.7;opacity:.55;margin-bottom:14px}
+.widget-link{font-family:'DM Mono';font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent,#0a1a4a);display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
+.widget-link:hover{gap:10px}
+
+/* FAQ */
+.faq{display:flex;flex-direction:column}
+.fq{padding:18px 0;border-bottom:1px solid var(--sep,rgba(0,0,0,.08))}
+.fq:first-child{border-top:1px solid var(--sep,rgba(0,0,0,.08))}
+.band-accent .fq,.band-dark .fq{border-color:rgba(255,255,255,.08)}
+.band-accent .fq:first-child,.band-dark .fq:first-child{border-color:rgba(255,255,255,.08)}
+.fq-q{font-family:'DM Mono';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent,#0a1a4a);margin-bottom:8px}
+.band-accent .fq-q,.band-dark .fq-q{color:var(--accent-em,#FFCF00)}
+.fq-a{font-size:14px;line-height:1.75;opacity:.65}
+
+/* CTA final */
+.cta-band{background:#08080f;color:#fff;padding:clamp(44px,7vw,88px) clamp(20px,5vw,72px);display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between}
+.cta-title{font-family:'Bebas Neue';font-size:clamp(44px,7vw,96px);line-height:.85}
+.cta-sub{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-top:6px}
+.cta-btns{display:flex;gap:12px;flex-wrap:wrap;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;font-family:'DM Mono';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:14px 22px;border-radius:8px;font-weight:500;transition:all .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-accent{background:var(--accent,#0a1a4a);color:#fff}
+.btn-y{background:#FFCF00;color:#000}.btn-y:hover{background:#C8A000}
+.btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}.btn-ghost:hover{background:rgba(255,255,255,.14)}
+
+/* FOOTER */
+.footer-sep{width:1px;height:22px;background:currentColor;opacity:.12;display:none}
+@media(min-width:600px){.footer-sep{display:block}}
+.footer-links{display:flex;gap:12px;flex-wrap:wrap}
+.footer-lnk{font-family:'DM Mono';font-size:9px;letter-spacing:1.5px;text-transform:uppercase;opacity:.3;transition:opacity .2s}
+.footer-lnk:hover{opacity:.8}
+.footer-email{font-family:'DM Mono';font-size:10px;color:var(--accent,#0a1a4a);opacity:.7}
+.footer-email:hover{opacity:1}
+/* ── THÈME PORTAIL ACADÉMIE ─────────── */
+:root{
+  --accent:#0A3D91;
+  --accent-dark:#040a1e;
+  --accent-em:#FFCF00;
+  --bg-base:#f4f6fb;
+  --bg-white:#ffffff;
+  --ink:#0d0d0d;
+  --ink-soft:rgba(13,13,13,.5);
+  --sep:rgba(10,61,145,.09);
+  --hero-overlay:linear-gradient(110deg,rgba(7,31,92,.0) 20%,rgba(7,31,92,.55) 52%,rgba(7,31,92,.97) 100%);
+}
+body{background:var(--bg-base)}
+@media(max-width:699px){
+  .hero-bg::after{background:linear-gradient(to bottom,rgba(7,31,92,0) 18%,rgba(7,31,92,.97) 62%)}
+}
+.nav-cta-desk,.nav-mobile-cta{background:#FFCF00;color:#000}
+.nav-cta-desk:hover{background:#e6c200}
+.hero-back{color:rgba(255,255,255,.45)}
+.hero-eyebrow{color:#FFCF00}.hero-eyebrow::before{background:#FFCF00}
+.hero-title{color:#fff}.hero-title em{color:#FFCF00}
+.hero-rule{background:linear-gradient(135deg,#F5D061,#C8860A)}
+.hero-lead{color:rgba(255,255,255,.75)}
+.chip{color:rgba(255,255,255,.65);border-color:rgba(255,255,255,.22)}
+.chip-solid{background:#FFCF00;border-color:#FFCF00;color:#000}
+
+/* ── MANIFESTE ─────────────────────────────────────────
+   Bande pleine largeur — le "pourquoi JB" en 3 colonnes
+   ──────────────────────────────────────────────────── */
+.manifeste{background:#040a1e;background:linear-gradient(135deg,rgba(4,10,30,1) 0%,rgba(10,35,85,.93) 60%,rgba(16,56,128,.88) 100%);padding:clamp(56px,8vw,104px) clamp(20px,5vw,72px)}
+.man-intro{max-width:680px;margin-bottom:clamp(44px,6vw,72px)}
+.man-kicker{font-family:'DM Mono';font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:16px}
+.man-title{font-family:'Bebas Neue';font-size:clamp(38px,6vw,68px);color:#fff;line-height:.88}
+.man-title em{color:var(--accent-em);font-style:normal}
+.man-lead{font-size:clamp(15px,1.8vw,17px);color:rgba(255,255,255,.55);line-height:1.8;margin-top:20px}
+/* 3 piliers */
+.man-piliers{display:grid;grid-template-columns:1fr;gap:2px}
+@media(min-width:700px){.man-piliers{grid-template-columns:repeat(3,1fr)}}
+.pilier{background:rgba(255,255,255,.04);padding:clamp(28px,3.5vw,44px);border-top:2px solid rgba(255,255,255,.06);transition:background .22s}
+.pilier:hover{background:rgba(255,255,255,.08)}
+.pilier-n{font-family:'Bebas Neue';font-size:64px;color:rgba(255,255,255,.06);line-height:1;margin-bottom:16px;transition:color .22s}
+.pilier:hover .pilier-n{color:var(--accent-em)}
+.pilier-title{font-size:15px;font-weight:600;color:#fff;margin-bottom:10px;line-height:1.25}
+.pilier-body{font-size:13px;color:rgba(255,255,255,.42);line-height:1.8}
+
+/* ── JB PORTRAIT ──────────────────────────────────────
+   Split : photo gauche, biographie + palmarès droite
+   ──────────────────────────────────────────────────── */
+.jb-split{display:grid;grid-template-columns:1fr;background:var(--bg-white)}
+@media(min-width:900px){.jb-split{grid-template-columns:5fr 7fr;min-height:600px}}
+.jb-img{position:relative;overflow:hidden;min-height:420px}
+.jb-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;transition:transform .7s ease}
+.jb-split:hover .jb-img img{transform:scale(1.03)}
+.jb-body{padding:clamp(44px,6vw,80px) clamp(28px,5vw,64px);display:flex;flex-direction:column;justify-content:center}
+.jb-kicker{font-family:'DM Mono';font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--accent-em);background:#040a1e;background:linear-gradient(135deg,rgba(4,10,30,1) 0%,rgba(10,35,85,.93) 60%,rgba(16,56,128,.88) 100%);display:inline-block;padding:4px 14px;border-radius:3px;margin-bottom:28px;align-self:flex-start}
+.jb-name{font-family:'Bebas Neue';font-size:clamp(44px,6vw,72px);color:var(--ink);line-height:.88;margin-bottom:6px}
+.jb-sub{font-family:'DM Mono';font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:24px}
+.jb-quote{font-size:clamp(16px,2vw,19px);color:var(--ink);line-height:1.65;font-weight:300;border-left:3px solid var(--accent-em);padding-left:24px;margin-bottom:32px;font-style:italic}
+/* palmarès compact */
+.palm-row{display:flex;align-items:baseline;gap:16px;padding:14px 0;border-top:1px solid var(--sep)}
+.palm-row:last-child{border-bottom:1px solid var(--sep)}
+.palm-yr{font-family:'Bebas Neue';font-size:22px;color:var(--accent);line-height:1;min-width:56px;flex-shrink:0}
+.palm-info{display:flex;flex-direction:column;gap:2px}
+.palm-name{font-size:13px;font-weight:600;color:var(--ink)}
+.palm-detail{font-size:12px;color:var(--ink-soft)}
+
+/* ── PARCOURS — timeline horizontale ─────────────────
+   5 étapes numérotées avec connecteur visuel
+   ──────────────────────────────────────────────────── */
+.parcours{padding:clamp(60px,8vw,100px) clamp(20px,5vw,72px);background:var(--bg-base)}
+.parcours-head{max-width:600px;margin-bottom:clamp(44px,6vw,72px)}
+.pc-kicker{font-family:'DM Mono';font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
+.pc-title{font-family:'Bebas Neue';font-size:clamp(38px,5.5vw,64px);color:var(--ink);line-height:.9}
+.pc-title em{color:var(--accent)}
+.pc-lead{font-size:15px;color:var(--ink-soft);line-height:1.75;margin-top:16px}
+/* timeline */
+.timeline{display:grid;grid-template-columns:1fr;gap:0;position:relative}
+@media(min-width:780px){.timeline{grid-template-columns:repeat(5,1fr)}}
+/* ligne de connexion desktop */
+@media(min-width:780px){
+  .timeline::before{content:'';position:absolute;top:28px;left:calc(10% + 20px);right:calc(10% + 20px);height:2px;background:linear-gradient(to right,var(--accent-em),var(--accent));opacity:.3;z-index:0}
+}
+.tl-step{position:relative;z-index:1;padding:0 clamp(12px,2vw,24px) clamp(28px,3vw,40px);display:flex;flex-direction:column;align-items:flex-start}
+@media(min-width:780px){.tl-step{align-items:center;text-align:center}}
+/* mobile: ligne verticale */
+@media(max-width:779px){
+  .tl-step{padding:clamp(20px,4vw,32px) 0 clamp(20px,4vw,32px) 72px;border-left:2px solid var(--sep);margin-left:24px}
+  .tl-step:last-child{border-left-color:transparent}
+}
+.tl-dot{width:56px;height:56px;border-radius:50%;background:var(--bg-white);border:2px solid var(--sep);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s;box-shadow:0 2px 12px rgba(10,61,145,.08)}
+.tl-step:hover .tl-dot{background:#FFCF00;border-color:#FFCF00;box-shadow:0 4px 20px rgba(255,215,0,.3)}
+@media(max-width:779px){.tl-dot{position:absolute;left:-29px;top:clamp(20px,4vw,32px)}}
+.tl-num{font-family:'Bebas Neue';font-size:20px;color:var(--accent);transition:color .25s}
+.tl-step:hover .tl-num{color:#000}
+.tl-badge{font-family:'DM Mono';font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid var(--sep);color:var(--ink-soft);margin:14px 0 10px;transition:all .25s}
+.tl-step:hover .tl-badge{border-color:#FFCF00;color:#000;background:#FFCF00}
+.tl-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px;line-height:1.25}
+.tl-desc{font-size:12px;color:var(--ink-soft);line-height:1.7}
+.tl-link{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-top:14px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;opacity:0;transition:opacity .2s}
+.tl-link::after{content:'→'}
+.tl-step:hover .tl-link{opacity:1}
+
+/* ── 3 PORTES D'ENTRÉE ─────────────────────────────────
+   Cards grandes avec photo, fond couleur, CTA
+   ──────────────────────────────────────────────────── */
+.portes{display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:700px){.portes{grid-template-columns:repeat(3,1fr)}}
+.porte{position:relative;overflow:hidden;min-height:clamp(440px,55vw,600px);display:flex;flex-direction:column;justify-content:flex-end;text-decoration:none;cursor:pointer}
+.porte-bg{position:absolute;inset:0;z-index:0}
+.porte-bg img{width:100%;height:100%;object-fit:cover;transition:transform .65s ease}
+.porte:hover .porte-bg img{transform:scale(1.06)}
+.porte-overlay{position:absolute;inset:0;z-index:1;transition:opacity .4s}
+/* couleur overlay par porte */
+.porte.enfant .porte-overlay{background:linear-gradient(to top,rgba(10,26,74,.96) 0%,rgba(10,26,74,.6) 50%,rgba(10,26,74,0) 100%)}
+.porte.adulte .porte-overlay{background:linear-gradient(to top,rgba(10,61,145,.96) 0%,rgba(10,61,145,.6) 50%,rgba(10,61,145,0) 100%)}
+.porte.challenge .porte-overlay{background:linear-gradient(to top,rgba(100,80,0,.97) 0%,rgba(160,120,0,.55) 50%,rgba(180,140,0,0) 100%)}
+.porte:hover .porte-overlay{opacity:.85}
+.porte-content{position:relative;z-index:2;padding:clamp(28px,4vw,48px)}
+.porte-tag{font-family:'DM Mono';font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:12px}
+.porte-title{font-family:'Bebas Neue';font-size:clamp(32px,5vw,52px);color:#fff;line-height:.9;margin-bottom:14px}
+.porte.challenge .porte-title{color:var(--accent-em)}
+.porte-body{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;max-width:280px;margin-bottom:24px;opacity:0;transform:translateY(8px);transition:all .35s}
+.porte:hover .porte-body{opacity:1;transform:translateY(0)}
+.porte-cta{display:inline-block;font-family:'DM Mono';font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:13px 24px;border-radius:3px;transition:all .2s;transform:translateY(4px);opacity:.85}
+.porte:hover .porte-cta{transform:translateY(0);opacity:1}
+.porte.enfant .porte-cta,.porte.adulte .porte-cta{background:#fff;color:var(--accent-dark)}
+.porte.challenge .porte-cta{background:var(--accent-em);color:#000}
+.porte.enfant .porte-cta:hover,.porte.adulte .porte-cta:hover{background:var(--accent-em);color:#000}
+.porte.challenge .porte-cta:hover{background:#fff;color:#000}
+
+/* ── CITATION FINALE ──────────────────────────────── */
+.citation-finale{background:#040a1e;background:linear-gradient(135deg,rgba(4,10,30,1) 0%,rgba(10,35,85,.93) 60%,rgba(16,56,128,.88) 100%);padding:clamp(56px,8vw,96px) clamp(20px,5vw,72px);text-align:center}
+.cf-mark{font-family:'Bebas Neue';font-size:clamp(80px,14vw,160px);color:rgba(255,215,0,.07);line-height:.7;margin-bottom:-8px}
+.cf-text{font-family:'Bebas Neue';font-size:clamp(26px,4vw,46px);color:#fff;line-height:1.05;max-width:760px;margin:0 auto 24px}
+.cf-text em{color:var(--accent-em);font-style:normal}
+.cf-source{font-family:'DM Mono';font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.28)}
+
+/* nav → voir nav.css */
+
+/* ══ NAV ADDITIONS ══════════════════════════════════
+   Sous-menu Paddock · Socials · Auth buttons
+   ════════════════════════════════════════════════ */
+
+/* Socials dans la nav */
+.nav-socials {
+  display: none;
+  align-items: center;
+  gap: 14px;
+  padding: 0 14px;
+  border-left: 1px solid rgba(255,255,255,.08);
+  border-right: 1px solid rgba(255,255,255,.08);
+  flex-shrink: 0;
+}
+@media(min-width:1000px){ .nav-socials { display: flex } }
+.nav-social {
+  color: rgba(255,255,255,.28);
+  text-decoration: none;
+  transition: color .18s;
+  display: flex; align-items: center;
+}
+.nav-social:hover { color: #FFCF00 }
+.nav-social svg { width:13px;height:13px;fill:currentColor;display:block }
+
+/* Auth buttons */
+.nav-auth {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+@media(min-width:1000px){ .nav-auth { display: flex } }
+.nav-btn-login {
+  font-family: 'DM Mono';
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,.12);
+  transition: all .18s;
+  white-space: nowrap;
+}
+.nav-btn-login:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,.3);
+}
+.nav-btn-signup {
+  font-family: 'DM Mono';
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #000;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  background: #FFCF00;
+  transition: background .18s;
+  white-space: nowrap;
+}
+.nav-btn-signup:hover { background: #C8A000 }
+
+/* Sous-menu Paddock */
+.nav-tab.has-sub {
+  position: relative;
+}
+.nav-sub {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(4,10,30,.99);
+  border: 1px solid rgba(255,255,255,.08);
+  border-top: 2px solid #FFCF00;
+  border-radius: 0 0 8px 8px;
+  min-width: 160px;
+  flex-direction: column;
+  z-index: 200;
+  padding: 6px 0;
+  box-shadow: 0 16px 40px rgba(0,0,0,.5);
+}
+.nav-tab.has-sub:hover .nav-sub { display: flex }
+/* Flèche indicateur */
+.nav-tab.has-sub > a::after,
+.nav-tab.has-sub::after {
+  content: ' ▾';
+  font-size: 8px;
+  opacity: .4;
+  margin-left: 2px;
+}
+.nav-sub-item {
+  display: block;
+  padding: 10px 18px;
+  font-family: 'DM Mono';
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  text-decoration: none;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.nav-sub-item:hover {
+  color: #FFCF00;
+  background: rgba(255,215,0,.05);
+  padding-left: 22px;
+}
+.nav-sub-item::before {
+  content: '› ';
+  color: rgba(255,215,0,.3);
+}
+
+/* Mobile — auth + socials */
+.nav-mobile-auth {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.nav-mobile-auth a {
+  flex: 1;
+  text-align: center;
+  padding: 11px;
+  border-radius: 6px;
+  font-family: 'DM Mono';
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  text-decoration: none; transition: all .18s;
+}
+.nav-mobile-auth .mob-login {
+  border: 1px solid rgba(255,255,255,.12);
+  color: rgba(255,255,255,.55);
+}
+.nav-mobile-auth .mob-signup {
+  background: #FFCF00; color: #000;
+}
+.nav-mobile-socials {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 12px 0 4px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  margin-top: 8px;
+}
+.nav-mobile-socials a {
+  color: rgba(255,255,255,.3);
+  text-decoration: none; transition: color .18s;
+  display: flex; align-items: center;
+}
+.nav-mobile-socials a:hover { color: #FFCF00 }
+.nav-mobile-socials svg { width:16px;height:16px;fill:currentColor }
+
+
+/* ══ FOOTER UNIFIÉ ══ */
+@media(min-width:640px){ }
+@media(min-width:960px){ }
+.footer-nav a:hover { color:#FFCF00 }
+.footer-contact a:hover { color:#FFCF00 }
+/* ══ MANIFESTE — refonte ══ */
+.manifeste {
+  background: #040a1e;
+  padding: clamp(72px,9vw,112px) clamp(20px,5vw,72px);
+  position: relative; overflow: hidden;
+}
+.manifeste::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg,transparent,rgba(255,207,0,.3),transparent);
+}
+.man-intro { max-width: 720px; margin-bottom: clamp(52px,7vw,88px) }
+.man-kicker {
+  font-family: 'DM Mono'; font-size: 10px; letter-spacing: 4px;
+  text-transform: uppercase; color: rgba(255,207,0,.5);
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.man-kicker::before {
+  content: ''; width: 32px; height: 1px;
+  background: linear-gradient(90deg,#F5D061,#C8860A);
+}
+.man-title {
+  font-family: 'Bebas Neue';
+  font-size: clamp(42px,6.5vw,80px);
+  color: #fff; line-height: .88; margin-bottom: 24px;
+}
+.man-title em { font-style: normal; color: #FFCF00; display: block }
+.man-lead {
+  font-size: clamp(16px,1.8vw,19px); line-height: 1.78;
+  color: rgba(255,255,255,.55); max-width: 580px;
+}
+/* Grille 3 piliers */
+.man-piliers {
+  display: grid; grid-template-columns: 1fr;
+  gap: 2px;
+}
+@media(min-width:700px) { .man-piliers { grid-template-columns: repeat(3,1fr) } }
+.pilier {
+  background: rgba(255,255,255,.03);
+  padding: clamp(32px,4vw,52px) clamp(24px,3vw,40px);
+  border-top: 3px solid rgba(255,255,255,.06);
+  position: relative; overflow: hidden;
+  transition: background .22s;
+}
+.pilier:hover { background: rgba(255,255,255,.06) }
+.pilier:hover { border-top-color: #FFCF00 }
+.pilier::after {
+  content: attr(data-n);
+  position: absolute; bottom: -20px; right: -10px;
+  font-family: 'Bebas Neue'; font-size: 120px;
+  color: rgba(255,255,255,.025); line-height: 1;
+  pointer-events: none;
+}
+.pilier-n {
+  font-family: 'Bebas Neue'; font-size: 48px;
+  background: linear-gradient(135deg,#F5D061,#C8860A);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1; margin-bottom: 14px;
+}
+.pilier-title {
+  font-family: 'Bebas Neue'; font-size: clamp(22px,2.5vw,30px);
+  color: #fff; line-height: .92; margin-bottom: 14px; letter-spacing: .5px;
+}
+.pilier-body {
+  font-size: 14px; color: rgba(255,255,255,.45); line-height: 1.75;
+}
+
+/* ══ JB-SPLIT — refonte ══ */
+.jb-split {
+  display: grid; grid-template-columns: 1fr;
+  background: #f0f4ff;
+  border-top: 4px solid;
+  border-image: linear-gradient(90deg,#F5D061,#C8860A) 1;
+}
+@media(min-width:860px) { .jb-split { grid-template-columns: 5fr 7fr; min-height: 560px } }
+.jb-img {
+  position: relative; overflow: hidden; min-height: 360px;
+  background: #040a1e;
+}
+.jb-img img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+  transition: transform .7s;
+  z-index: 1;
+}
+.jb-split:hover .jb-img img { transform: scale(1.04) }
+.jb-img::after {
+  content: ''; position: absolute; inset: 0; z-index: 2;
+  background: linear-gradient(to right,transparent 50%,#f0f4ff 100%);
+}
+.jb-body {
+  padding: clamp(44px,6vw,80px) clamp(28px,5vw,64px);
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; z-index: 1;
+}
+.jb-kicker {
+  font-family: 'DM Mono'; font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg,#F5D061,#C8860A);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border: 1px solid rgba(245,208,97,.3);
+  -webkit-text-fill-color: unset;
+  color: #C8860A;
+  display: inline-block; padding: 5px 14px;
+  border-radius: 2px; margin-bottom: 20px; align-self: flex-start;
+}
+.jb-name {
+  font-family: 'Bebas Neue'; font-size: clamp(40px,5.5vw,62px);
+  color: #040a1e; line-height: .88; margin-bottom: 6px;
+}
+.jb-sub {
+  font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(4,10,30,.4); margin-bottom: 22px;
+}
+.jb-quote {
+  font-size: clamp(15px,1.8vw,18px); color: #040a1e;
+  line-height: 1.78; font-weight: 300; font-style: italic;
+  border-left: 3px solid;
+  border-image: linear-gradient(180deg,#F5D061,#C8860A) 1;
+  padding-left: 22px; margin-bottom: 32px; max-width: 480px;
+}
+.palm-row {
+  display: flex; align-items: baseline; gap: 16px;
+  padding: 14px 0; border-top: 1px solid rgba(4,10,30,.08);
+}
+.palm-row:last-child { border-bottom: 1px solid rgba(4,10,30,.08) }
+.palm-yr {
+  font-family: 'Bebas Neue'; font-size: 18px;
+  background: linear-gradient(135deg,#F5D061,#C8860A);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1; min-width: 80px; flex-shrink: 0;
+}
+.palm-name { font-size: 13px; font-weight: 700; color: #040a1e; margin-bottom: 3px; display: block }
+.palm-detail { font-size: 12px; color: rgba(4,10,30,.45) }
+
+
+
+</style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "Académie JB EMERIC — Formation Pilotage",
+    "description": "Formation pilotage automobile complète du karting enfant à la compétition BMW HTCC. 5 niveaux progressifs encadrés par JB Emeric, Champion de France Formule Ford 1988.",
+    "url": "https://jbemeric.netlify.app/academie.html",
+    "parentOrganization": {
+      "@type": "Organization",
+      "name": "JB EMERIC École de Pilotage"
+    },
+    "hasProgram": [
+      {"@type": "EducationalOccupationalProgram", "name": "Karting Enfant — Dès 7 ans"},
+      {"@type": "EducationalOccupationalProgram", "name": "Karting Adulte C1→C5"},
+      {"@type": "EducationalOccupationalProgram", "name": "Challenge Kart → Auto BMW HTCC"}
+    ]
+  }
+  </script>
+</head>
+<body>
+<div id="nav-root"></div>
+
+</div>
+
+<section class="hero" id="hero-academie">
+  <div class="hero-bg" style="background:linear-gradient(135deg,#040a1e 0%,#0A3D91 60%,#1252C0 100%)">
+    <img src="assets/images/karting-adulte-circuit.jpg" alt="Karting adulte Académie JB EMERIC" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 50%;z-index:1">
+  </div>
+  <div class="hero-num">01</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Académie · Formation · PACA</div>
+    <h1 class="hero-title">L'ACADÉMIE <em>JB EMERIC</em></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-lead">Sur un circuit, on ne peut pas tricher. Pas de pilote automatique, pas de talent supposé. Seulement ce que vous savez faire — et ce que vous allez apprendre.</p>
+    <div class="hero-chips">
+      <span class="chip chip-solid">Depuis 1989</span>
+      <span class="chip">Champion de France FF 1988</span>
+      <span class="chip">Plusieurs voies · Tous profils</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MANIFESTE — les 3 piliers de l'enseignement ═══ -->
+<section class="manifeste">
+  <div class="man-intro">
+    <div class="man-kicker">La méthode JB EMERIC</div>
+    <h2 class="man-title">Sur un circuit,<em>on ne peut pas tricher.</em></h2>
+    <p class="man-lead">Champion de France Formule Ford 1988. Sebring. Spa. Paul Belmondo Racing. Ce que JB enseigne, il l'a construit tour après tour — pas dans un manuel, sur la piste, sous pression, avec un chrono.</p>
+  </div>
+  <div class="man-piliers">
+    <div class="pilier" data-n="01">
+      <div class="pilier-n">01</div>
+      <div class="pilier-title">La lecture du circuit</div>
+      <div class="pilier-body">Chaque circuit a une logique. JB vous l'explique avant même de monter dans le kart — trajectoires, points de corde, zones de freinage. Ce que 90% des pilotes ne comprennent jamais.</div>
+    </div>
+    <div class="pilier" data-n="02">
+      <div class="pilier-n">02</div>
+      <div class="pilier-title">Le debrief individuel</div>
+      <div class="pilier-body">Après chaque sortie, JB vous dit exactement ce qu'il a vu. Pas "freine plus tôt en général" — virage 3, à 80 mètres du plot, tu relâches trop tôt. C'est ça la différence.</div>
+    </div>
+    <div class="pilier" data-n="03">
+      <div class="pilier-n">03</div>
+      <div class="pilier-title">La progression mesurable</div>
+      <div class="pilier-body">Chrono en début de journée, chrono en fin de journée. La progression n'est pas une impression — elle est sur l'écran. Chaque journée avec JB se mesure en secondes gagnées.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PORTRAIT JB ════════════════════════════════════ -->
+<div class="jb-split">
+  <div class="jb-img">
+    <img src="assets/images/salle-briefing.jpg" alt="Salle de briefing École de Pilotage JB EMERIC">
+  </div>
+  <div class="jb-body">
+    <span class="jb-kicker">Le formateur</span>
+    <div class="jb-name">Jean-Baptiste Emeric</div>
+    <div class="jb-sub">Pilote depuis 1986 · Formateur depuis 1989</div>
+    <blockquote class="jb-quote">Ce que j'enseigne, je l'ai vécu en compétition. Pas dans un manuel — sur la piste, sous pression, avec un chrono qui tourne.</blockquote>
+    <div class="palm-row">
+      <div class="palm-yr">1986</div>
+      <div class="palm-info">
+        <div class="palm-name">1ère victoire</div>
+        <div class="palm-detail">Karting National 1 — les débuts</div>
+      </div>
+    </div>
+    <div class="palm-row">
+      <div class="palm-yr">1988</div>
+      <div class="palm-info">
+        <div class="palm-name">Champion de France Formule Ford</div>
+        <div class="palm-detail">Titre national — discipline de formation des grands pilotes</div>
+      </div>
+    </div>
+    <div class="palm-row">
+      <div class="palm-yr">1994</div>
+      <div class="palm-info">
+        <div class="palm-name">1er Championnat B Sport Prototype</div>
+        <div class="palm-detail">Alfa Romeo · Grand Prix de Pau — 5ème sur Peugeot Spider 905</div>
+      </div>
+    </div>
+    <div class="palm-row">
+      <div class="palm-yr">1998</div>
+      <div class="palm-info">
+        <div class="palm-name">Vainqueur Coupe Hommell</div>
+        <div class="palm-detail">Barquette Hommell — 1 victoire, 5 podiums, 2× 1er de classe montagne</div>
+      </div>
+    </div>
+    <div class="palm-row">
+      <div class="palm-yr">1999</div>
+      <div class="palm-info">
+        <div class="palm-name">Motorola Cup USA</div>
+        <div class="palm-detail">Circuit de Sebring — Chevrolet Camaro, déplacement aux États-Unis</div>
+      </div>
+    </div>
+    <div class="palm-row">
+      <div class="palm-yr">2000</div>
+      <div class="palm-info">
+        <div class="palm-name">1er Coupe Hommell RS</div>
+        <div class="palm-detail">Victoire avec Frédéric Dedours</div>
+      </div>
+    </div>
+    <div class="palm-row">
+      <div class="palm-yr">2008</div>
+      <div class="palm-info">
+        <div class="palm-name">3× 1er de classe</div>
+        <div class="palm-detail">Norma M20 courses de côte — Bouc-Bel-Air, Barcelonnette, Gémenos</div>
+      </div>
+    </div>
+    <div class="palm-row">
+      <div class="palm-yr">2012</div>
+      <div class="palm-info">
+        <div class="palm-name">Vainqueur général Formule Renault</div>
+        <div class="palm-detail">Élu meilleure équipe — victoires à Dijon, Ricard, Charade, Nogaro, Lédenon</div>
+      </div>
+    </div>
+    <div class="palm-row">
+      <div class="palm-yr">2013</div>
+      <div class="palm-info">
+        <div class="palm-name">6 podiums · 2 records du tour</div>
+        <div class="palm-detail">Formule Renault Classic — Dijon, Spa, Le Mans, Paul Ricard</div>
+      </div>
+    </div>
+    <div class="palm-row">
+      <div class="palm-yr">2023</div>
+      <div class="palm-info">
+        <div class="palm-name">1er de classe</div>
+        <div class="palm-detail">Circuit du Luc FR2000 — 12ème général, 7ème groupe</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VOIES D'ACCÈS — 4 chemins parallèles ═══════════ -->
+<section class="parcours" id="parcours" data-mirror="academie-voies">
+  <div class="parcours-head">
+    <div class="pc-kicker">Les voies d'accès</div>
+    <h2 class="pc-title">Plusieurs chemins<em>pour devenir pilote.</em></h2>
+    <p class="pc-lead">Il n'existe pas un cursus unique. Certains passent par le karting dès l'enfance. D'autres démarrent adulte, directement à la voiture. Chaque voie a ses exigences, son budget, son public. JB vous aide à choisir celle qui vous correspond.</p>
+  </div>
+  <div class="timeline">
+
+    <div class="tl-step">
+      <div class="tl-dot"><div class="tl-num">1</div></div>
+      <span class="tl-badge">Formation Karting</span>
+      <div class="tl-name">La voie classique</div>
+      <div class="tl-desc">Dès 7 ans pour les enfants, accessible aux adultes débutants. Apprentissage structuré en trois étapes, avec niveaux C1 à C5. La voie la plus pédagogique — celle qui construit les fondations.</div>
+      <a class="tl-link" href="academie-karting.html">Découvrir la formation karting</a>
+    </div>
+
+    <div class="tl-step">
+      <div class="tl-dot"><div class="tl-num">2</div></div>
+      <span class="tl-badge">Formation Voiture</span>
+      <div class="tl-name">Directement à la voiture</div>
+      <div class="tl-desc">Pour les adultes motivés qui veulent passer à la voiture sans nécessairement être passés par le karting. Sessions sur circuit avec voiture d'école, encadrées par JB. Progression mesurable, objectifs clairs.</div>
+      <a class="tl-link" href="academie-competition.html#voiture">Voir la voie voiture</a>
+    </div>
+
+    <div class="tl-step">
+      <div class="tl-dot"><div class="tl-num">3</div></div>
+      <span class="tl-badge">Le Challenge</span>
+      <div class="tl-name">Voie sélective</div>
+      <div class="tl-desc">Sessions qualificatives ouvertes aux pilotes confirmés. Un pilote est sélectionné et reçoit la dotation complète : BMW 325i HTCC, mécanique, licence FFSA, inscriptions en championnat. Zéro frais.</div>
+      <a class="tl-link" href="academie-competition.html#challenge">Voir le Challenge</a>
+    </div>
+
+    <div class="tl-step">
+      <div class="tl-dot"><div class="tl-num">4</div></div>
+      <span class="tl-badge">Disciplines Compétition</span>
+      <div class="tl-name">Pour tous les budgets</div>
+      <div class="tl-desc">Karting compétition, Mitjet 1.6, Clio Cup et autres formats accessibles. JB vous aide à identifier la discipline adaptée à votre profil et à votre budget, puis vous accompagne dans l'engagement.</div>
+      <a class="tl-link" href="academie-competition.html#disciplines">Voir les disciplines</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ 3 PORTES D'ENTRÉE ══════════════════════════════ -->
+<div class="portes" id="portes" data-mirror="academie-portes">
+
+  <div class="porte enfant" onclick="location.href='academie-karting.html'" role="link" tabindex="0">
+    <div class="porte-bg">
+      <img src="assets/images/karting-enfant-circuit.jpg" alt="Enfant en karting sur circuit JB EMERIC">
+    </div>
+    <div class="porte-overlay"></div>
+    <div class="porte-content">
+      <div class="porte-tag">Dès 7 ans · Tous niveaux</div>
+      <div class="porte-title">Formation<br>Karting</div>
+      <div class="porte-body">Enfant et adulte. La voie pédagogique classique. Cursus en trois étapes, niveaux C1 à C5, évaluation par JB.</div>
+      <span class="porte-cta">Découvrir la formation →</span>
+    </div>
+  </div>
+
+  <div class="porte adulte" onclick="location.href='academie-competition.html'" role="link" tabindex="0">
+    <div class="porte-bg">
+      <img src="assets/images/bmw-325i-htcc.jpg" alt="Voitures de compétition JB EMERIC">
+    </div>
+    <div class="porte-overlay"></div>
+    <div class="porte-content">
+      <div class="porte-tag">Adultes · Voiture · Compétition</div>
+      <div class="porte-title">Vers la<br>Compétition</div>
+      <div class="porte-body">Formation voiture, Challenge BMW HTCC, disciplines accessibles, simulateur. Plusieurs voies vers la course, adaptées au profil et au budget.</div>
+      <span class="porte-cta">Voir les voies d'accès →</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ CITATION FINALE ════════════════════════════════ -->
+<div class="citation-finale">
+  <div class="cf-mark">"</div>
+  <div class="cf-text">Un pilote ne s'invente pas.<em>Il se construit — session après session,</em>virage après virage, debrief après debrief.</div>
+  <div class="cf-source">Jean-Baptiste Emeric · Champion de France 1988 · Formateur depuis 1989</div>
+</div>
+
+
+<!-- ═══ FAQ ══════════════════════════════════════════════ -->
+<div class="jbe-faq">
+  <div class="rubrik">Questions fréquentes</div>
+  <h2 class="sh">L'<em>Académie</em> en détail</h2>
+  <div class="faq-list">
+    <div class="fq">
+      <div class="fq-q">Par où commencer si je n'ai jamais fait de karting ?</div>
+      <div class="fq-a">Par le karting adulte niveau C1. JB vous observe sur les premiers tours et calibre le programme en temps réel. Pas besoin de déclaration de niveau — c'est lui qui évalue, pas vous qui vous placez.</div>
+    </div>
+    <div class="fq">
+      <div class="fq-q">L'Académie est-elle ouverte aux enfants ?</div>
+      <div class="fq-a">Oui. Le programme karting enfant commence dès 7 ans (1m30 minimum) sur les circuits partenaires en PACA. Les enfants ont leur propre cursus adapté, avec les mêmes exigences de progression que les adultes.</div>
+    </div>
+    <div class="fq">
+      <div class="fq-q">Combien de temps pour passer du karting à la compétition ?</div>
+      <div class="fq-a">Ça dépend de la régularité et du niveau de départ. En pratiquant 6 à 10 journées par an, certains pilotes atteignent le niveau C5 en 2 à 3 saisons. JB valide chaque étape — pas de raccourci.</div>
+    </div>
+    <div class="fq">
+      <div class="fq-q">Le Challenge Auto est-il vraiment accessible à tous ?</div>
+      <div class="fq-a">La sélection est ouverte à tous les pilotes ayant validé le niveau C5. JB sélectionne un pilote par saison selon ses qualités de pilotage, sa régularité et son comportement en piste. BMW, mécanique et licence FFSA sont offerts au vainqueur — zéro frais.</div>
+    </div>
+    <div class="fq">
+      <div class="fq-q">Peut-on faire une journée sans engagement sur le cursus complet ?</div>
+      <div class="fq-a">Oui. Chaque journée est indépendante et vaut 195€ tout compris. Il n'y a aucun engagement de parcours. Le cursus C1→C5 existe pour ceux qui souhaitent progresser structurellement — pas comme obligation.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ BOUTIQUE CTA ══════════════════════════════════════════ -->
+<div style="background:linear-gradient(135deg,#040a1e 0%,#0A3D91 100%);
+            padding:clamp(28px,4vw,44px) clamp(20px,5vw,72px);
+            display:flex;align-items:center;justify-content:space-between;
+            flex-wrap:wrap;gap:16px">
+  <div>
+    <div style="font-family:'DM Mono';font-size:8px;letter-spacing:3px;text-transform:uppercase;
+                color:rgba(255,207,0,.6);margin-bottom:6px">Réservation · Paiement 4x sans frais</div>
+    <div style="font-family:'Bebas Neue';font-size:clamp(20px,3.5vw,34px);color:#fff;line-height:.95">
+      Inscrivez-vous directement en ligne</div>
+    <p style="font-family:'DM Mono';font-size:10px;color:rgba(255,255,255,.5);
+              margin-top:6px;line-height:1.6">
+      Toutes les prestations disponibles sur la boutique officielle — karting, stages voiture, coaching, loges.</p>
+  </div>
+  <a href="https://pilotage-jbemeric-marseille.fr" target="_blank" rel="noopener"
+     style="padding:13px 26px;background:#FFCF00;color:#000;
+            font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;
+            font-weight:700;text-decoration:none;border-radius:6px;white-space:nowrap;
+            transition:filter .15s;flex-shrink:0">
+    Accéder à la boutique →
+  </a>
+</div>
+
+<div id="footer-root"></div>
+
+<script src="assets/js/faq.js"></script>
+<script type="module" src="assets/js/live-editor.js"></script>
+<script src="assets/js/routes.js"></script>
+<script src="assets/js/nav.js"></script>
+<script src="assets/js/footer.js"></script>

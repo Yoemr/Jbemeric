@@ -68,5 +68,30 @@
 <script src="assets/js/nav.js"></script>
 <script src="assets/js/footer.js"></script>
 <script id="jbe-content-cache" type="application/json">{}</script>
+
+<script type="module">
+  import { resetPassword, humanError } from '/assets/js/auth.js'
+
+  var form  = document.getElementById('reset-form')
+  var input = document.getElementById('reset-email')
+  var btn   = document.getElementById('reset-btn')
+  var msg   = document.getElementById('reset-msg')
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault()
+    msg.style.color = 'rgba(255,255,255,.6)'
+    msg.textContent = 'Envoi en cours…'
+    btn.disabled = true
+    try {
+      await resetPassword(input.value.trim())
+      msg.style.color = '#5fd97e'
+      msg.textContent = 'Lien envoyé. Vérifiez votre boîte mail.'
+    } catch (err) {
+      msg.style.color = '#ff6b7a'
+      msg.textContent = humanError(err)
+      btn.disabled = false
+    }
+  })
+</script>
 </body>
 </html>

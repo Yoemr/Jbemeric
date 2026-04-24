@@ -71,7 +71,7 @@
       <div class="auth-box-title">Créer <em>votre compte</em></div>
       <p class="auth-box-sub">Déjà membre ? <a href="login.html">Se connecter →</a></p>
 
-      <form action="#" method="POST" onsubmit="return false">
+      <form id="signup-form" action="#" method="POST">
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="prenom">Prénom</label>
@@ -114,7 +114,9 @@
           <input class="form-input" type="password" id="password2" name="password2" placeholder="Répéter le mot de passe" autocomplete="new-password" required>
         </div>
 
-        <button class="form-submit" type="submit">Créer mon compte →</button>
+        <button class="form-submit" type="submit" id="signup-submit">Créer mon compte →</button>
+        <div id="signup-error" style="display:none;margin-top:14px;padding:10px 14px;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.35);border-radius:4px;color:#ff6b7a;font-family:'DM Mono';font-size:11px;letter-spacing:1px"></div>
+        <div id="signup-success" style="display:none;margin-top:14px;padding:10px 14px;background:rgba(40,167,69,.12);border:1px solid rgba(40,167,69,.35);border-radius:4px;color:#5fd97e;font-family:'DM Mono';font-size:11px;letter-spacing:1px"></div>
 
         <p class="form-cgu">En créant un compte, vous acceptez les <a href="contact.html">Contact</a> · <a href="mentions-legales.html">Conditions d'utilisation</a> et la <a href="confidentialite.html">Politique de confidentialité</a> de JB EMERIC.</p>
       </form>
@@ -197,5 +199,52 @@
 <script src="assets/js/footer.js"></script>
 
 <script id="jbe-content-cache" type="application/json">{}</script>
+
+<script type="module">
+  import { signUp, consumeReturnUrl, humanError } from '/assets/js/auth.js'
+
+  var form = document.getElementById('signup-form')
+  var btn  = document.getElementById('signup-submit')
+  var errBox = document.getElementById('signup-error')
+  var okBox  = document.getElementById('signup-success')
+
+  function showError(msg) { okBox.style.display='none'; errBox.textContent = msg; errBox.style.display = 'block' }
+  function showSuccess(msg) { errBox.style.display='none'; okBox.textContent = msg; okBox.style.display = 'block' }
+  function clearMsgs() { errBox.style.display='none'; okBox.style.display='none' }
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault()
+    clearMsgs()
+
+    var prenom = document.getElementById('prenom').value.trim()
+    var nom    = document.getElementById('nom').value.trim()
+    var email  = document.getElementById('email').value.trim()
+    var tel    = document.getElementById('tel').value.trim()
+    var niveau = document.getElementById('niveau').value
+    var pwd    = document.getElementById('password').value
+    var pwd2   = document.getElementById('password2').value
+
+    if (pwd !== pwd2)   { showError('Les mots de passe ne correspondent pas.'); return }
+    if (pwd.length < 8) { showError('Mot de passe trop court (8 caractères minimum).'); return }
+
+    btn.disabled = true
+    var label = btn.textContent
+    btn.textContent = 'Création…'
+    try {
+      var res = await signUp(email, pwd, { prenom: prenom, nom: nom, telephone: tel, niveau: niveau })
+      // Si Supabase impose la confirmation par mail, pas de session immédiate
+      if (res && res.session) {
+        location.href = consumeReturnUrl()
+      } else {
+        showSuccess('Compte créé. Vérifiez votre email pour confirmer votre adresse.')
+        btn.textContent = label
+      }
+    } catch (err) {
+      showError(humanError(err))
+      btn.disabled = false
+      btn.textContent = label
+    }
+  })
+</script>
 </body>
 </html>

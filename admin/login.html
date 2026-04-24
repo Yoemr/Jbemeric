@@ -178,5 +178,37 @@
 <script src="assets/js/footer.js"></script>
 
 <script id="jbe-content-cache" type="application/json">{}</script>
+
+<script type="module">
+  import { signIn, consumeReturnUrl, humanError } from '/assets/js/auth.js'
+
+  var form    = document.getElementById('login-form')
+  var btn     = document.getElementById('login-submit')
+  var errBox  = document.getElementById('login-error')
+  var emailEl = document.getElementById('email')
+  var pwdEl   = document.getElementById('password')
+
+  function showError(msg) {
+    errBox.textContent = msg
+    errBox.style.display = 'block'
+  }
+  function clearError() { errBox.style.display = 'none'; errBox.textContent = '' }
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault()
+    clearError()
+    btn.disabled = true
+    var originalLabel = btn.textContent
+    btn.textContent = 'Connexion…'
+    try {
+      await signIn(emailEl.value.trim(), pwdEl.value)
+      location.href = consumeReturnUrl()
+    } catch (err) {
+      showError(humanError(err))
+      btn.disabled = false
+      btn.textContent = originalLabel
+    }
+  })
+</script>
 </body>
 </html>

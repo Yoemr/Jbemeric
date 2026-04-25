@@ -4,7 +4,7 @@
     {
       "name": "JBE Dev Server (Node custom)",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["dev-server.js"],
+      "runtimeArgs": ["outil-dev/dev-server.js"],
       "port": 3000,
       "autoPort": true
     }

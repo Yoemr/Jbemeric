@@ -153,7 +153,22 @@ body { background: var(--bg-base) }
 @media(min-width:1100px) {
   .jb-pal-wrap { flex-direction: row }
   .jb-pal-wrap .jb-split { flex: 0 0 65%; min-height: unset }
-  .jb-pal-wrap .ac-pal { flex: 1; padding: clamp(36px,5vw,60px) clamp(20px,3vw,44px); overflow-y: auto }
+  .jb-pal-wrap .ac-pal {
+    flex: 1;
+    padding: clamp(28px,3vw,44px) clamp(20px,3vw,40px);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .jb-pal-wrap .ac-pal-head { margin-bottom: clamp(16px,2vw,24px) }
+  .jb-pal-wrap .ac-pal-list { flex: 1; min-height: 0; justify-content: space-between }
+  .jb-pal-wrap .ac-pal-item { padding: clamp(8px,1.2vw,12px) 0; gap: clamp(14px,2vw,24px) }
+  .jb-pal-wrap .ac-pal-yr { font-size: clamp(22px,2.4vw,30px); min-width: 56px }
+  .jb-pal-wrap .ac-pal-titre { font-size: clamp(14px,1.3vw,17px) }
+  .jb-pal-wrap .ac-pal-detail { font-size: 11px; line-height: 1.5; margin-top: 2px }
+  .jb-pal-wrap .ac-pal-cat { font-size: 7px; margin-bottom: 1px }
+  .jb-pal-wrap .ac-pal-cta { margin-top: clamp(14px,2vw,22px); padding: 10px 22px; font-size: 9px; align-self: flex-start }
+  .jb-pal-wrap .ac-pal .sh { font-size: clamp(28px,3.2vw,42px) }
+  .jb-pal-wrap .ac-pal .sb { font-size: 12px; line-height: 1.55 }
 }
 
 /* ═══════════════════════════════════════════════════════

@@ -22,7 +22,7 @@ var SEL = [
   '.nl-subtitle', '.art-title', '.art-desc',
   '.ac-title', '.rp-title', '.nv-title', '.r-title', '.cf-text', '.ttl',
   '.man-kicker', '.man-title', '.pc-kicker', '.pc-title', '.pc-body', '.pc-text',
-  '.jb-kicker', '.jb-name', '.jb-sub', '.jb-body',
+  '.jb-kicker', '.jb-name', '.jb-sub', '.jb-quote',
   '.voie-title', '.voie-desc', '.pilier-title', '.pilier-body',
   '.nv-kicker', '.nv-desc', '.nv-sub', '.nv-name',
   '.promesse-title', '.promesse-sub',

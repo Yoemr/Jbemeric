@@ -426,6 +426,20 @@ Plus une 5ème voie en construction : le **Simulateur**.
 
 ---
 
+### Décision — Ne pas installer gstack pour l'instant (avril 2026)
+
+**Contexte** : on a envisagé d'installer la GStack de Garry Tan (skills Claude Code, repo `github.com/garrytan/gstack`). Le `CLAUDE.md` qui existait dans le projet contenait une version simplifiée et incomplète — adaptation française par Oussama Ammar/Antoine Blanco — pas la vraie GStack.
+
+**Décision** : pas d'installation pour l'instant. Le `CLAUDE.md` simplifié a été supprimé.
+
+**Raisons** :
+- Le projet est un site statique HTML/CSS/JS, travaillé en solo, sans workflow lourd
+- Les skills gstack (`/qa` browser, `/ship` PR, `/land-and-deploy` CI/CD) ne s'appliquent pas à un site statique Netlify
+- Claude Opus 4.7 fait déjà naturellement ce que les principaux skills gstack codifient (questions avant d'agir, retours critiques, planification structurée)
+- Ajouter une couche de prompts pré-écrits et de commandes à mémoriser apporterait plus d'overhead que de bénéfice
+
+**À reconsidérer si** : démarrage d'un vrai projet logiciel sérieux (SaaS, app collaborative, équipe), où les workflows répétitifs et l'orchestration multi-sessions deviennent un vrai besoin.
+
 ## 9. TÂCHES RESTANTES
 
 ### Court terme — à faire rapidement
@@ -497,6 +511,16 @@ Plus une 5ème voie en construction : le **Simulateur**.
 ---
 
 ## 11. ANTI-PATTERNS — CE QU'ON NE FAIT PAS
+
+### Gouvernance — Yoan reste seul décisionnaire
+
+> **Ces règles sont strictes et non négociables.**
+
+- 🛑 **Modification du MEMOIRE.md** — Claude n'a pas le droit de modifier ce fichier sans avoir d'abord expliqué explicitement à Yoan **ce qui va changer, pourquoi, et où dans le fichier**. Yoan doit valider chaque modification avant qu'elle soit écrite. Pas de modification silencieuse. Pas d'amélioration "pour clarifier". Le MEMOIRE est la source de vérité, et seul Yoan en pilote l'évolution.
+
+- 🛑 **Déploiement** — Claude n'a aucun droit de pusher sur Netlify, sur Git, ou sur quelque environnement de production que ce soit. Les livraisons se font exclusivement sous forme de zips que Yoan télécharge et déploie lui-même. Toute action de déploiement, mise en ligne, ou mise à jour publique est une décision exclusive de Yoan.
+
+- 🛑 **Modifications de fichiers du projet** — Avant de modifier un fichier existant, Claude doit confirmer auprès de Yoan **quelle version est la plus récente** (les fichiers dans `/uploads/` peuvent être obsolètes). En cas de doute, demander.
 
 ### Éditorial
 

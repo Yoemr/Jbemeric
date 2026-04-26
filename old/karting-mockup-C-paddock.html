@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup C · Paddock pro — JB EMERIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Outfit',sans-serif;font-weight:300;
+  background:#040a1e;color:#fff;
+  -webkit-font-smoothing:antialiased;overflow-x:clip;
+}
+:root{
+  --bg:#040a1e;
+  --bg-deep:#020612;
+  --bg-elev:#0a1028;
+  --bg-grid:#0d1530;
+  --ink:#fff;
+  --ink-soft:rgba(255,255,255,.7);
+  --ink-mute:rgba(255,255,255,.45);
+  --or:#FFCF00;
+  --or-soft:rgba(255,207,0,.15);
+  --rule:rgba(255,255,255,.08);
+  --rule-or:rgba(255,207,0,.25);
+}
+
+/* ══ NAV ══ */
+.mock-nav{
+  position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1000;
+  display:flex;gap:6px;background:rgba(2,6,18,.85);backdrop-filter:blur(12px);
+  padding:6px;border:1px solid var(--rule);border-radius:999px;
+}
+.mock-nav a{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-soft);text-decoration:none;
+  padding:8px 14px;border-radius:999px;transition:all .2s;
+}
+.mock-nav a.active{background:var(--or);color:#000}
+.mock-nav a:not(.active):hover{color:var(--ink)}
+
+/* ══ DATA BAR (top, comme une F1) ══ */
+.databar{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  background:var(--bg-deep);border-bottom:1px solid var(--or-soft);
+  padding:8px 24px;display:flex;justify-content:space-between;align-items:center;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-mute);
+}
+.databar-l,.databar-r{display:flex;gap:24px}
+.databar strong{color:var(--or);font-weight:500}
+.databar .live::before{
+  content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:#ff3b3b;margin-right:6px;animation:pulse 1.6s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ══ HERO ══ */
+.hero{
+  position:relative;min-height:100vh;
+  padding:60px 0 0;display:flex;flex-direction:column;
+  background:var(--bg-deep);overflow:hidden;
+}
+.hero-img{
+  position:absolute;inset:60px 0 0 0;
+  background:url('assets/images/karting-adulte-circuit.jpg') center/cover;
+  z-index:0;
+}
+.hero-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(2,6,18,.4) 0%,rgba(4,10,30,.85) 80%,var(--bg) 100%);
+}
+.hero-overlay-grid{
+  position:absolute;inset:60px 0 0 0;
+  background-image:
+    linear-gradient(rgba(255,207,0,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,207,0,.04) 1px,transparent 1px);
+  background-size:80px 80px;z-index:1;
+}
+
+.hero-inner{
+  position:relative;z-index:2;flex:1;
+  display:grid;grid-template-rows:1fr auto;
+  padding:80px clamp(24px,4vw,60px) 0;
+}
+.hero-tags{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:48px;
+}
+.hero-tag{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--or);
+  border:1px solid var(--rule-or);padding:6px 12px;
+  background:rgba(255,207,0,.05);
+}
+.hero-headline{
+  display:grid;grid-template-columns:1fr auto;align-items:end;gap:60px;
+  margin-bottom:60px;
+}
+@media(max-width:900px){.hero-headline{grid-template-columns:1fr}}
+.hero-h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(72px,12vw,180px);line-height:.82;
+  letter-spacing:-2px;color:var(--ink);
+}
+.hero-h1 em{font-style:normal;color:var(--or)}
+
+.hero-telemetry{
+  display:flex;flex-direction:column;gap:14px;min-width:220px;
+}
+.tel-line{
+  display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1px solid var(--rule-or);padding-bottom:8px;
+}
+.tel-key{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-mute);
+}
+.tel-val{
+  font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--or);line-height:1;
+}
+
+.hero-bottom{
+  border-top:1px solid var(--rule-or);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  background:rgba(2,6,18,.6);backdrop-filter:blur(10px);
+}
+@media(max-width:768px){.hero-bottom{grid-template-columns:repeat(2,1fr)}}
+.hero-bot-cell{
+  padding:24px;border-right:1px solid var(--rule-or);
+}
+.hero-bot-cell:last-child{border-right:none}
+.hero-bot-key{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ink-mute);margin-bottom:8px;
+}
+.hero-bot-val{
+  font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--ink);
+  line-height:1;
+}
+.hero-bot-val em{color:var(--or);font-style:normal}
+
+/* ══ SECTION TITRES COMMUNS ══ */
+.section{padding:clamp(80px,10vw,140px) clamp(24px,4vw,60px)}
+.section-head{
+  display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:end;
+  max-width:1300px;margin:0 auto 64px;
+}
+@media(max-width:768px){.section-head{grid-template-columns:1fr;gap:14px}}
+.sec-tag{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--or);
+  border:1px solid var(--rule-or);padding:8px 14px;justify-self:start;
+  background:var(--or-soft);
+}
+.sec-h{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,72px);line-height:.9;
+  letter-spacing:-1px;color:var(--ink);
+}
+.sec-h em{font-style:normal;color:var(--or)}
+
+/* ══ LES 4 FONDAMENTAUX ══ */
+.fundamentals{border-top:1px solid var(--rule);background:var(--bg)}
+.fund-grid{
+  max-width:1300px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--rule-or);border:1px solid var(--rule-or);
+}
+@media(max-width:900px){.fund-grid{grid-template-columns:repeat(2,1fr)}}
+.fund-cell{
+  background:var(--bg);padding:36px 28px;
+  display:flex;flex-direction:column;gap:14px;
+  position:relative;min-height:280px;
+}
+.fund-cell::before{
+  content:attr(data-num);
+  position:absolute;top:14px;right:18px;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  color:var(--or);
+}
+.fund-icon{
+  width:48px;height:48px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--rule-or);background:var(--or-soft);
+}
+.fund-icon svg{width:24px;height:24px;stroke:var(--or);fill:none;stroke-width:1.5}
+.fund-h{
+  font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--ink);line-height:1;
+}
+.fund-p{font-size:13px;line-height:1.7;color:var(--ink-soft)}
+.fund-ref{
+  margin-top:auto;padding-top:18px;border-top:1px solid var(--rule);
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  color:var(--or);text-transform:uppercase;
+}
+
+/* ══ TIMELINE CURSUS ══ */
+.cursus{border-top:1px solid var(--rule);background:var(--bg-deep)}
+.timeline{
+  max-width:1300px;margin:0 auto;position:relative;
+}
+.timeline::before{
+  content:'';position:absolute;top:60px;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--or) 0%,var(--or-soft) 33%,var(--or) 33%,var(--or-soft) 66%,var(--or) 66%,var(--or-soft) 100%);
+}
+.timeline-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+  position:relative;
+}
+@media(max-width:900px){.timeline-grid{grid-template-columns:1fr;gap:24px}.timeline::before{display:none}}
+.tl-step{
+  padding:0 24px;position:relative;
+}
+.tl-marker{
+  width:120px;height:120px;
+  border:1px solid var(--rule-or);background:var(--bg-deep);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  margin-bottom:32px;
+}
+.tl-marker-num{
+  font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--or);line-height:1;
+}
+.tl-marker-lab{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  color:var(--ink-mute);text-transform:uppercase;margin-top:4px;
+}
+.tl-tag{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--or);margin-bottom:14px;
+}
+.tl-h{
+  font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--ink);
+  line-height:1;margin-bottom:18px;
+}
+.tl-p{font-size:14px;line-height:1.7;color:var(--ink-soft);margin-bottom:24px}
+.tl-data{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--rule);border:1px solid var(--rule);
+}
+.tl-data-cell{background:var(--bg);padding:14px}
+.tl-data-key{
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-mute);margin-bottom:4px;
+}
+.tl-data-val{
+  font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--or);line-height:1;
+}
+
+/* ══ FICHE D'ÉVALUATION (table FFSA) ══ */
+.fiche{border-top:1px solid var(--rule);background:var(--bg)}
+.fiche-frame{
+  max-width:1100px;margin:0 auto;
+  border:1px solid var(--rule-or);background:var(--bg-elev);
+}
+.fiche-head{
+  background:var(--bg-deep);padding:18px 24px;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid var(--rule-or);
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--or);
+}
+.fiche-head-r{color:var(--ink-mute)}
+.fiche-row{
+  display:grid;grid-template-columns:80px 1fr 2fr 1fr 80px;
+  gap:0;border-bottom:1px solid var(--rule);
+  align-items:center;
+}
+.fiche-row:last-child{border-bottom:none}
+.fiche-row.head{background:var(--bg-deep)}
+.fiche-row.head .fiche-cell{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-mute);
+  padding:14px 18px;
+}
+.fiche-cell{padding:18px}
+.fiche-code{
+  font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--or);line-height:1;
+}
+.fiche-lab{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink);
+}
+.fiche-desc{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+.fiche-chrono{
+  font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ink);
+}
+.fiche-status{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--or);
+}
+.fiche-row.elite{background:linear-gradient(90deg,transparent 0%,var(--or-soft) 100%)}
+@media(max-width:768px){
+  .fiche-row,.fiche-row.head{grid-template-columns:60px 1fr;gap:0}
+  .fiche-cell:nth-child(3),.fiche-cell:nth-child(4),.fiche-cell:nth-child(5){grid-column:1/-1;padding-top:0}
+}
+
+/* ══ CTA INSCRIPTION ══ */
+.inscription{
+  padding:clamp(80px,10vw,140px) clamp(24px,4vw,60px);
+  background:
+    linear-gradient(135deg,var(--bg-deep) 0%,var(--bg) 70%);
+  border-top:1px solid var(--rule);position:relative;overflow:hidden;
+}
+.inscription::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,207,0,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,207,0,.04) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+.ins-inner{
+  position:relative;max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1.4fr 1fr;gap:64px;align-items:center;
+}
+@media(max-width:900px){.ins-inner{grid-template-columns:1fr}}
+.ins-tag{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--or);margin-bottom:18px;
+  display:flex;align-items:center;gap:12px;
+}
+.ins-tag::before{content:'';width:32px;height:1px;background:var(--or)}
+.ins-h{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,7vw,96px);
+  line-height:.85;letter-spacing:-1px;color:var(--ink);margin-bottom:24px;
+}
+.ins-h em{font-style:normal;color:var(--or)}
+.ins-p{
+  font-size:15px;line-height:1.75;color:var(--ink-soft);max-width:520px;margin-bottom:32px;
+}
+.ins-cta{
+  display:inline-flex;align-items:center;gap:14px;
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;font-weight:500;
+  color:#000;background:var(--or);padding:18px 32px;
+  text-decoration:none;transition:all .2s;
+}
+.ins-cta:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.ins-side{
+  border:1px solid var(--rule-or);background:var(--bg-elev);
+  padding:32px;
+}
+.ins-side-h{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--or);
+  margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--rule);
+}
+.ins-side-line{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 0;border-bottom:1px solid var(--rule);
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;
+}
+.ins-side-line:last-child{border-bottom:none}
+.ins-side-key{color:var(--ink-mute);text-transform:uppercase;letter-spacing:1.5px;font-size:10px}
+.ins-side-val{color:var(--ink);font-weight:500}
+.ins-side-val.acc{color:var(--or);font-weight:700}
+</style>
+</head>
+<body>
+
+<nav class="mock-nav">
+  <a href="karting-mockup-A-elite.html">A · Élite</a>
+  <a href="karting-mockup-B-atelier.html">B · Atelier</a>
+  <a href="karting-mockup-C-paddock.html" class="active">C · Paddock</a>
+</nav>
+
+<div class="databar">
+  <div class="databar-l">
+    <span class="live">SAISON <strong>2026</strong></span>
+    <span>BPJEPS · <strong>FFSA</strong></span>
+    <span>TEMP. PISTE <strong>22°C</strong></span>
+  </div>
+  <div class="databar-r">
+    <span>SECT. <strong>S1 — KARTING</strong></span>
+    <span>VERS. <strong>v3.5</strong></span>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-img"></div>
+  <div class="hero-overlay-grid"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-tags">
+        <span class="hero-tag">Cursus C1 → C5</span>
+        <span class="hero-tag">Champion de France 1988</span>
+        <span class="hero-tag">5 circuits · Sud France</span>
+        <span class="hero-tag">BMW 325i HTCC</span>
+      </div>
+      <div class="hero-headline">
+        <h1 class="hero-h1">Du <em>volant</em><br>à la <em>course.</em></h1>
+        <div class="hero-telemetry">
+          <div class="tel-line"><span class="tel-key">Best lap</span><span class="tel-val">1:23.456</span></div>
+          <div class="tel-line"><span class="tel-key">Pilotes formés</span><span class="tel-val">350+</span></div>
+          <div class="tel-line"><span class="tel-key">Niveaux</span><span class="tel-val">5</span></div>
+          <div class="tel-line"><span class="tel-key">Saison active</span><span class="tel-val">2026</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-bottom">
+      <div class="hero-bot-cell"><div class="hero-bot-key">Étape 01 · Découverte</div><div class="hero-bot-val">185 <em>€</em></div></div>
+      <div class="hero-bot-cell"><div class="hero-bot-key">Étape 02 · Progression</div><div class="hero-bot-val">195 <em>€</em></div></div>
+      <div class="hero-bot-cell"><div class="hero-bot-key">Étape 03 · Performance</div><div class="hero-bot-val">195 <em>€</em></div></div>
+      <div class="hero-bot-cell"><div class="hero-bot-key">Validation C5</div><div class="hero-bot-val"><em>↗ Challenge</em></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LES 4 FONDAMENTAUX ══ -->
+<section class="section fundamentals">
+  <div class="section-head">
+    <div class="sec-tag">§01 · Fondamentaux techniques</div>
+    <h2 class="sec-h">Quatre paramètres. <em>Tout le pilotage.</em></h2>
+  </div>
+  <div class="fund-grid">
+    <div class="fund-cell" data-num="01/04">
+      <div class="fund-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="6" r="3"/><path d="M12 9v6m-4 6l4-6 4 6"/></svg>
+      </div>
+      <h3 class="fund-h">Position</h3>
+      <p class="fund-p">Le corps avant le volant. Les mauvaises habitudes commencent à l'arrêt — bras tendus, dos décollé, pieds mal placés.</p>
+      <div class="fund-ref">Réf. C1 · validation visuelle</div>
+    </div>
+    <div class="fund-cell" data-num="02/04">
+      <div class="fund-icon">
+        <svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <h3 class="fund-h">Regard</h3>
+      <p class="fund-p">Là où vous regardez, le kart va. Le pilotage commence dans les yeux. Anticipation, point de mire, tour suivant.</p>
+      <div class="fund-ref">Réf. C2 · vidéo embarquée</div>
+    </div>
+    <div class="fund-cell" data-num="03/04">
+      <div class="fund-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 18 C 3 8, 12 8, 21 18"/><circle cx="3" cy="18" r="2"/><circle cx="21" cy="18" r="2"/></svg>
+      </div>
+      <h3 class="fund-h">Trajectoire</h3>
+      <p class="fund-p">Pas la plus courte — la plus rapide. Et ce n'est pas la même chose. Corde tardive, sortie large, transfert d'appui.</p>
+      <div class="fund-ref">Réf. C3 · chronos stables</div>
+    </div>
+    <div class="fund-cell" data-num="04/04">
+      <div class="fund-icon">
+        <svg viewBox="0 0 24 24"><path d="M4 12h12m-4-4l4 4-4 4"/><circle cx="20" cy="12" r="2"/></svg>
+      </div>
+      <h3 class="fund-h">Freinage</h3>
+      <p class="fund-p">Là où la majorité des amateurs perdent une seconde par tour. Trail braking, dégressif, point de freinage tardif.</p>
+      <div class="fund-ref">Réf. C4 · technique avancée</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TIMELINE CURSUS ══ -->
+<section class="section cursus">
+  <div class="section-head">
+    <div class="sec-tag">§02 · Cursus en 3 étapes</div>
+    <h2 class="sec-h">Trois étapes. <em>Une progression mesurée.</em></h2>
+  </div>
+  <div class="timeline">
+    <div class="timeline-grid">
+      <div class="tl-step">
+        <div class="tl-marker">
+          <div class="tl-marker-num">01</div>
+          <div class="tl-marker-lab">Découverte</div>
+        </div>
+        <div class="tl-tag">Dès 7 ans · adulte débutant</div>
+        <h3 class="tl-h">Les bases<br>du pilotage</h3>
+        <p class="tl-p">Position, regard, trajectoire. Briefing à pied, sessions courtes, debriefs immédiats. Évaluation honnête en fin de journée.</p>
+        <div class="tl-data">
+          <div class="tl-data-cell"><div class="tl-data-key">Tarif enfant</div><div class="tl-data-val">185 €</div></div>
+          <div class="tl-data-cell"><div class="tl-data-key">Tarif adulte</div><div class="tl-data-val">195 €</div></div>
+        </div>
+      </div>
+
+      <div class="tl-step">
+        <div class="tl-marker">
+          <div class="tl-marker-num">02</div>
+          <div class="tl-marker-lab">Progression</div>
+        </div>
+        <div class="tl-tag">Niveaux C1 → C3</div>
+        <h3 class="tl-h">Comprendre<br>sa conduite</h3>
+        <p class="tl-p">Vidéo embarquée systématique. Diagnostic JB (sous-virage, survirage, regard court). Validation par chronos et critères techniques.</p>
+        <div class="tl-data">
+          <div class="tl-data-cell"><div class="tl-data-key">Vidéo</div><div class="tl-data-val">incluse</div></div>
+          <div class="tl-data-cell"><div class="tl-data-key">Debrief</div><div class="tl-data-val">individuel</div></div>
+        </div>
+      </div>
+
+      <div class="tl-step">
+        <div class="tl-marker">
+          <div class="tl-marker-num">03</div>
+          <div class="tl-marker-lab">Performance</div>
+        </div>
+        <div class="tl-tag">Niveaux C4 → C5</div>
+        <h3 class="tl-h">Pousser<br>les limites</h3>
+        <p class="tl-p">Trail braking, transfert de charge, pneumatiques en dégradation. Simulations de course, départs lancés, gestion stratégique.</p>
+        <div class="tl-data">
+          <div class="tl-data-cell"><div class="tl-data-key">Validation C5</div><div class="tl-data-val">↗ Challenge</div></div>
+          <div class="tl-data-cell"><div class="tl-data-key">Voiture</div><div class="tl-data-val">BMW HTCC</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FICHE D'ÉVALUATION ══ -->
+<section class="section fiche">
+  <div class="section-head">
+    <div class="sec-tag">§03 · Fiche d'évaluation officielle</div>
+    <h2 class="sec-h">Cinq niveaux. <em>Critères mesurables.</em></h2>
+  </div>
+  <div class="fiche-frame">
+    <div class="fiche-head">
+      <div>FICHE D'ÉVALUATION · CURSUS JB EMERIC</div>
+      <div class="fiche-head-r">RÉF. C1→C5 · ÉD. 2026</div>
+    </div>
+    <div class="fiche-row head">
+      <div class="fiche-cell">CODE</div>
+      <div class="fiche-cell">NIVEAU</div>
+      <div class="fiche-cell">CRITÈRE TECHNIQUE</div>
+      <div class="fiche-cell">CHRONO</div>
+      <div class="fiche-cell">STATUT</div>
+    </div>
+    <div class="fiche-row">
+      <div class="fiche-cell"><span class="fiche-code">C1</span></div>
+      <div class="fiche-cell"><span class="fiche-lab">Débutant</span></div>
+      <div class="fiche-cell"><span class="fiche-desc">Position, trajectoires, régularité 5 tours.</span></div>
+      <div class="fiche-cell"><span class="fiche-chrono">— référence</span></div>
+      <div class="fiche-cell"><span class="fiche-status">ouvert</span></div>
+    </div>
+    <div class="fiche-row">
+      <div class="fiche-cell"><span class="fiche-code">C2</span></div>
+      <div class="fiche-cell"><span class="fiche-lab">Amateur</span></div>
+      <div class="fiche-cell"><span class="fiche-desc">Freinage à la corde, regard, chronos ±0.5s.</span></div>
+      <div class="fiche-cell"><span class="fiche-chrono">±0.5s</span></div>
+      <div class="fiche-cell"><span class="fiche-status">validation piste</span></div>
+    </div>
+    <div class="fiche-row">
+      <div class="fiche-cell"><span class="fiche-code">C3</span></div>
+      <div class="fiche-cell"><span class="fiche-lab">Confirmé</span></div>
+      <div class="fiche-cell"><span class="fiche-desc">Diagnostic autonome, dégradation pneumatique.</span></div>
+      <div class="fiche-cell"><span class="fiche-chrono">±0.3s</span></div>
+      <div class="fiche-cell"><span class="fiche-status">vidéo + debrief</span></div>
+    </div>
+    <div class="fiche-row">
+      <div class="fiche-cell"><span class="fiche-code">C4</span></div>
+      <div class="fiche-cell"><span class="fiche-lab">Avancé</span></div>
+      <div class="fiche-cell"><span class="fiche-desc">Compétition, gestion course longue durée.</span></div>
+      <div class="fiche-cell"><span class="fiche-chrono">±0.2s</span></div>
+      <div class="fiche-cell"><span class="fiche-status">validation JB</span></div>
+    </div>
+    <div class="fiche-row elite">
+      <div class="fiche-cell"><span class="fiche-code">C5</span></div>
+      <div class="fiche-cell"><span class="fiche-lab">Compétiteur</span></div>
+      <div class="fiche-cell"><span class="fiche-desc">Niveau d'entrée Challenge. Référence atteinte.</span></div>
+      <div class="fiche-cell"><span class="fiche-chrono">référence</span></div>
+      <div class="fiche-cell"><span class="fiche-status">↗ Challenge</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ INSCRIPTION ══ -->
+<section class="inscription">
+  <div class="ins-inner">
+    <div>
+      <div class="ins-tag">§04 · Saison 2026 — inscriptions ouvertes</div>
+      <h2 class="ins-h">Démarrer <em>maintenant.</em></h2>
+      <p class="ins-p">Une journée d'évaluation suffit. On adapte le programme à votre niveau réel. Équipement complet inclus, vous arrivez avec des chaussures fermées.</p>
+      <a href="contact.html" class="ins-cta">Réserver une journée →</a>
+    </div>
+    <div class="ins-side">
+      <div class="ins-side-h">— Saison 2026 · ouverture</div>
+      <div class="ins-side-line"><span class="ins-side-key">Inscriptions</span><span class="ins-side-val acc">ouvertes</span></div>
+      <div class="ins-side-line"><span class="ins-side-key">Tarif enfant</span><span class="ins-side-val">185 €</span></div>
+      <div class="ins-side-line"><span class="ins-side-key">Tarif adulte</span><span class="ins-side-val">195 €</span></div>
+      <div class="ins-side-line"><span class="ins-side-key">Circuits</span><span class="ins-side-val">5 (Sud)</span></div>
+      <div class="ins-side-line"><span class="ins-side-key">Équipement</span><span class="ins-side-val">inclus</span></div>
+      <div class="ins-side-line"><span class="ins-side-key">Licence journée</span><span class="ins-side-val">incluse</span></div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

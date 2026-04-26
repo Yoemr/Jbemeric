@@ -79,7 +79,9 @@
       "WebFetch(domain:emericjb.unblog.fr)",
       "WebFetch(domain:www.instagram.com)",
       "WebFetch(domain:www.facebook.com)",
-      "Bash(find . -name \"*.html\" -not -path \"./node_modules/*\" -exec sed -i '/<link rel=\"icon\"[^>]*favicon\\\\.svg[^>]*>/d; /<link rel=\"shortcut icon\"[^>]*favicon\\\\.svg[^>]*>/d' {} \\\\;)"
+      "Bash(find . -name \"*.html\" -not -path \"./node_modules/*\" -exec sed -i '/<link rel=\"icon\"[^>]*favicon\\\\.svg[^>]*>/d; /<link rel=\"shortcut icon\"[^>]*favicon\\\\.svg[^>]*>/d' {} \\\\;)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

@@ -22,11 +22,20 @@ img { display: block; max-width: 100% }
 .parcours.snap-section .timeline { flex: 1; min-height: 0 }
 .parcours.snap-section .tl-step { min-height: 0 }
 
-/* Formateur — jb-split remplit la hauteur du wrapper */
-.jb-pal-wrap.snap-section { min-height: unset }
-.jb-pal-wrap.snap-section .jb-split { min-height: 0; flex: 1 }
+/* Formateur — jb-split remplit la hauteur du wrapper (desktop uniquement) */
 @media(min-width:1100px) {
-  .jb-pal-wrap.snap-section .jb-split { flex: 0 0 65% }
+  .jb-pal-wrap.snap-section { min-height: unset }
+  .jb-pal-wrap.snap-section .jb-split { min-height: 0; flex: 0 0 65% }
+}
+
+/* Mobile / tablette — laisser respirer la section formateur+palmarès
+   (override de la contrainte universelle .snap-section { height: ...; overflow: hidden }) */
+@media(max-width:1099px) {
+  .jb-pal-wrap.snap-section {
+    height: auto;
+    min-height: calc(100svh - 56px);
+    overflow: visible;
+  }
 }
 
 /* Portes+citation — override min-height pour que les cartes se contractent */
@@ -247,8 +256,9 @@ body { background: var(--bg-base) }
 
 /* Mobile — bloc texte en statique sous l'image */
 @media(max-width:699px) {
-  .jb-split { min-height: 320px; display: flex; flex-direction: column }
+  .jb-split { min-height: 320px; display: flex; flex-direction: column; overflow: visible; height: auto }
   .jb-img { position: relative; flex: 0 0 320px }
+  .jb-img::after { display: none }
   .jb-body {
     position: static;
     max-width: 100%;
@@ -392,10 +402,10 @@ body { background: var(--bg-base) }
 }
 
 /* ═══════════════════════════════════════════════════════
-   PORTES — 3 entrées (cartes photo plein format)
+   PORTES — 2 entrées (cartes photo plein format)
    ═══════════════════════════════════════════════════════ */
 .portes { display: grid; grid-template-columns: 1fr }
-@media(min-width:700px) { .portes { grid-template-columns: repeat(3,1fr) } }
+@media(min-width:700px) { .portes { grid-template-columns: repeat(2,1fr) } }
 
 .porte {
   position: relative; overflow: hidden;
@@ -430,20 +440,21 @@ body { background: var(--bg-base) }
 .porte.challenge:hover .porte-overlay { background: linear-gradient(to top, rgba(4,10,30,.98) 30%, rgba(200,160,0,.32) 100%) }
 .porte-content {
   position: relative; z-index: 2;
-  padding: clamp(28px,4vw,48px) clamp(24px,3.5vw,40px);
-  display: flex; flex-direction: column; gap: 10px;
+  padding: clamp(36px,5vw,72px) clamp(32px,5vw,72px);
+  display: flex; flex-direction: column; gap: 16px;
+  max-width: 640px;
 }
 .porte-tag {
-  font-family: 'DM Mono'; font-size: 8px; letter-spacing: 2px;
-  text-transform: uppercase; color: #FFCF00; opacity: .85;
+  font-family: 'DM Mono'; font-size: 10px; letter-spacing: 2.5px;
+  text-transform: uppercase; color: #FFCF00; opacity: .9;
 }
-.porte-title { font-family: 'Bebas Neue'; font-size: clamp(38px,5vw,58px); color: #fff; line-height: .88 }
-.porte-body { font-size: 13px; color: rgba(255,255,255,.58); line-height: 1.72; max-width: 260px }
+.porte-title { font-family: 'Bebas Neue'; font-size: clamp(52px,7vw,96px); color: #fff; line-height: .86; letter-spacing: .5px }
+.porte-body { font-size: clamp(14px,1.2vw,16px); color: rgba(255,255,255,.7); line-height: 1.7; max-width: 480px }
 .porte-cta {
-  font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1.5px;
+  font-family: 'DM Mono'; font-size: 11px; letter-spacing: 2px;
   text-transform: uppercase; color: #fff;
-  display: inline-flex; align-items: center; gap: 8px;
-  margin-top: 12px; padding: 11px 20px; border-radius: 6px;
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-top: 18px; padding: 14px 26px; border-radius: 6px;
   background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.28);
   transition: background .22s, border-color .22s, gap .22s;
   align-self: flex-start;
@@ -463,7 +474,7 @@ body { background: var(--bg-base) }
 }
 .portes-citation-wrap .portes {
   flex: 1; min-height: 0;
-  grid-template-columns: repeat(3,1fr);
+  grid-template-columns: repeat(2,1fr);
   grid-auto-rows: 1fr;
 }
 .portes-citation-wrap .porte { min-height: 0 }
@@ -507,7 +518,8 @@ body { background: var(--bg-base) }
    PALMARÈS HIGHLIGHTS
    ═══════════════════════════════════════════════════════ */
 .ac-pal { background: #040a1e; padding: clamp(64px,8vw,100px) clamp(20px,5vw,72px) }
-.ac-pal .rubrik { color: rgba(255,255,255,.3) }
+.ac-pal .rubrik { color: rgba(255,207,0,.85); opacity: 1 }
+.ac-pal .rubrik::after { background: rgba(255,207,0,.4); opacity: 1 }
 .ac-pal .sh { color: #fff }
 .ac-pal .sh em { color: #FFCF00 }
 .ac-pal .sb { color: rgba(255,255,255,.45) }

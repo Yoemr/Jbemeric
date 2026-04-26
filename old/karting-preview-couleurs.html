@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aperçu couleurs — karting.html · A vs B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;font-weight:300;background:#222;color:#fff;-webkit-font-smoothing:antialiased}
+
+/* Bandeau de navigation entre les options */
+.nav-preview{
+  position:sticky;top:0;z-index:100;
+  background:#000;padding:14px 24px;
+  display:flex;gap:12px;align-items:center;
+  border-bottom:1px solid #333;
+}
+.nav-preview h1{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:#FFCF00;flex:1;
+}
+.nav-preview a{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1.5px;
+  text-transform:uppercase;color:#fff;text-decoration:none;
+  padding:8px 14px;border:1px solid #444;border-radius:3px;
+  transition:all .2s;
+}
+.nav-preview a:hover{border-color:#FFCF00;color:#FFCF00}
+
+.divider{
+  padding:60px 24px;text-align:center;
+  background:#000;color:#fff;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;
+}
+.divider strong{
+  display:block;font-family:'Bebas Neue',sans-serif;
+  font-size:48px;letter-spacing:0;color:#FFCF00;margin-bottom:8px;
+}
+.divider p{
+  font-family:'Outfit',sans-serif;font-size:14px;
+  color:rgba(255,255,255,.6);max-width:560px;margin:18px auto 0;
+  line-height:1.6;text-transform:none;letter-spacing:0;
+}
+
+/* ═══════════════════════════════════════════════════════════ */
+/* OPTION B+ — fonds variés (sombres ET clairs alternés)       */
+/* ═══════════════════════════════════════════════════════════ */
+.option-a{
+  --bleu-nuit:#040a1e;       /* hero uniquement */
+  --anthracite:#1A1B22;      /* parcours — sombre neutre, asphalte */
+  --bordeaux:#2D0F11;        /* chiffres — sombre chaud, héritage */
+  --prune:#1A0E2E;            /* gradient CTA */
+  --creme:#F5F1E8;            /* manifeste, FAQ */
+  --creme-deep:#EDE6D6;       /* niveaux */
+  --ink:#fff;
+  --ink-dark:#040a1e;
+  --ink-soft:rgba(255,255,255,.65);
+  --ink-soft-dark:rgba(4,10,30,.65);
+  --rule:rgba(255,255,255,.08);
+  --rule-dark:rgba(4,10,30,.1);
+  --accent:#FFCF00;
+  --or-fonce:#B8860B;         /* accent sur fonds clairs */
+}
+/* Hero — bleu nuit (vidéo, atmosphère, on garde) */
+.option-a .hero{padding:80px 32px;background:var(--bleu-nuit);border-bottom:1px solid var(--rule)}
+.option-a .hero-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.option-a .hero-title{font-family:'Bebas Neue',sans-serif;font-size:84px;line-height:.85;color:var(--ink)}
+.option-a .hero-title em{font-style:normal;color:var(--accent)}
+
+/* Manifest — CRÈME (respiration claire) */
+.option-a .manifest{padding:80px 32px;background:var(--creme);color:var(--ink-dark)}
+.option-a .manifest-kicker{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--or-fonce);margin-bottom:20px}
+.option-a .manifest-title{font-family:'Bebas Neue',sans-serif;font-size:48px;line-height:.95;color:var(--ink-dark);margin-bottom:24px}
+.option-a .manifest-title em{font-style:normal;color:var(--or-fonce)}
+.option-a .manifest p{font-size:15px;line-height:1.7;color:var(--ink-soft-dark);max-width:680px;margin-bottom:14px}
+
+/* Parcours — ANTHRACITE (sombre neutre, vibes asphalte) */
+.option-a .parcours{padding:80px 32px;background:var(--anthracite)}
+.option-a .pc-title{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--ink);margin-bottom:36px}
+.option-a .pc-title em{font-style:normal;color:var(--accent)}
+.option-a .etape{padding:28px 0;border-bottom:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:160px 1fr;gap:40px}
+.option-a .etape-num{font-family:'Bebas Neue',sans-serif;font-size:120px;line-height:.85;color:rgba(255,207,0,.15)}
+.option-a .etape-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.option-a .etape-title{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--ink);margin-bottom:14px}
+.option-a .etape p{font-size:14px;line-height:1.7;color:var(--ink-soft);max-width:600px}
+
+/* Niveaux — CRÈME PROFOND (clair) */
+.option-a .niveaux{padding:80px 32px;background:var(--creme-deep);color:var(--ink-dark)}
+.option-a .nv-kicker{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--or-fonce);margin-bottom:18px}
+.option-a .nv-title{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--ink-dark);margin-bottom:24px}
+.option-a .nv-title em{font-style:normal;color:var(--or-fonce)}
+.option-a .nv-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;background:rgba(4,10,30,.1);border:1px solid rgba(4,10,30,.1)}
+.option-a .nv-card{background:#FAF7F0;padding:24px}
+.option-a .nv-card:nth-child(5){background:linear-gradient(180deg,#FAF7F0 0%,rgba(255,207,0,.18) 100%);border:1px solid var(--accent)}
+.option-a .nv-code{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:.9;color:var(--or-fonce);display:block;margin-bottom:10px}
+.option-a .nv-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-dark);display:block;margin-bottom:10px}
+.option-a .nv-desc{font-size:12px;line-height:1.6;color:var(--ink-soft-dark)}
+
+/* Chiffres — BORDEAUX (sombre chaud, vibes héritage / FFSA) */
+.option-a .chiffres{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.06);padding:1px 0;background-color:var(--bordeaux)}
+.option-a .chiffre{background:var(--bordeaux);padding:48px 28px}
+.option-a .chiffre-val{font-family:'Bebas Neue',sans-serif;font-size:56px;line-height:1;color:var(--accent);margin-bottom:8px}
+.option-a .chiffre-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.7);line-height:1.5}
+
+/* FAQ — CRÈME (lecture confortable) */
+.option-a .faq-section{padding:80px 32px;background:var(--creme);color:var(--ink-dark)}
+.option-a .faq-kicker{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--or-fonce);margin-bottom:18px}
+.option-a .faq-title{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--ink-dark);margin-bottom:36px}
+.option-a .faq-title em{font-style:normal;color:var(--or-fonce)}
+.option-a .fq{border-top:1px solid var(--rule-dark);padding:22px 0}
+.option-a .fq:last-child{border-bottom:1px solid var(--rule-dark)}
+.option-a .fq-q{font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;color:var(--ink-dark);margin-bottom:10px}
+.option-a .fq-a{font-size:14px;line-height:1.7;color:var(--ink-soft-dark)}
+
+/* CTA — gradient BLEU NUIT → PRUNE PROFOND (climax) */
+.option-a .cta-final{padding:100px 32px;background:linear-gradient(135deg,var(--bleu-nuit) 0%,#1a1745 50%,var(--prune) 100%);text-align:center}
+.option-a .cta-title{font-family:'Bebas Neue',sans-serif;font-size:60px;color:var(--ink);margin-bottom:18px}
+.option-a .cta-lead{font-size:15px;line-height:1.7;color:var(--ink-soft);max-width:560px;margin:0 auto 28px}
+.option-a .btn-primary{display:inline-block;background:var(--accent);color:#000;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:500;padding:16px 28px;border-radius:3px;text-decoration:none}
+
+/* ═══════════════════════════════════════════════════════════ */
+/* OPTION B — différencier les sections (palette inchangée)    */
+/* ═══════════════════════════════════════════════════════════ */
+.option-b{
+  --bg:#040a1e;
+  --bg-deep:#020612;
+  --bg-elev:#0a1028;
+  --bg-cream:#F5F1E8;     /* nouveau : fond clair */
+  --bg-cream-deep:#EDE6D6; /* variante crème */
+  --ink:#fff;
+  --ink-dark:#040a1e;
+  --ink-soft:rgba(255,255,255,.65);
+  --ink-soft-dark:rgba(4,10,30,.65);
+  --ink-mute:rgba(255,255,255,.4);
+  --ink-mute-dark:rgba(4,10,30,.45);
+  --rule:rgba(255,255,255,.08);
+  --rule-dark:rgba(4,10,30,.1);
+  --accent:#FFCF00;
+}
+
+/* Hero — sombre (inchangé) */
+.option-b .hero{padding:80px 32px;background:var(--bg);border-bottom:1px solid var(--rule)}
+.option-b .hero-eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.option-b .hero-title{font-family:'Bebas Neue',sans-serif;font-size:84px;line-height:.85;color:var(--ink)}
+.option-b .hero-title em{font-style:normal;color:var(--accent)}
+
+/* Manifest — CRÈME (NOUVEAU — pause de respiration) */
+.option-b .manifest{padding:80px 32px;background:var(--bg-cream);color:var(--ink-dark)}
+.option-b .manifest-kicker{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#B8860B;margin-bottom:20px}
+.option-b .manifest-title{font-family:'Bebas Neue',sans-serif;font-size:48px;line-height:.95;color:var(--ink-dark);margin-bottom:24px}
+.option-b .manifest-title em{font-style:normal;color:#B8860B}
+.option-b .manifest p{font-size:15px;line-height:1.7;color:var(--ink-soft-dark);max-width:680px;margin-bottom:14px}
+
+/* Parcours — sombre */
+.option-b .parcours{padding:80px 32px;background:var(--bg)}
+.option-b .pc-title{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--ink);margin-bottom:36px}
+.option-b .pc-title em{font-style:normal;color:var(--accent)}
+.option-b .etape{padding:28px 0;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:160px 1fr;gap:40px}
+.option-b .etape-num{font-family:'Bebas Neue',sans-serif;font-size:120px;line-height:.85;color:rgba(255,207,0,.15)}
+.option-b .etape-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.option-b .etape-title{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--ink);margin-bottom:14px}
+.option-b .etape p{font-size:14px;line-height:1.7;color:var(--ink-soft);max-width:600px}
+
+/* Niveaux — CRÈME PROFOND (NOUVEAU) */
+.option-b .niveaux{padding:80px 32px;background:var(--bg-cream-deep);color:var(--ink-dark)}
+.option-b .nv-kicker{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#B8860B;margin-bottom:18px}
+.option-b .nv-title{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--ink-dark);margin-bottom:24px}
+.option-b .nv-title em{font-style:normal;color:#B8860B}
+.option-b .nv-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;background:rgba(4,10,30,.1);border:1px solid rgba(4,10,30,.1)}
+.option-b .nv-card{background:#FAF7F0;padding:24px}
+.option-b .nv-card:nth-child(5){background:linear-gradient(180deg,#FAF7F0 0%,rgba(255,207,0,.18) 100%);border:1px solid var(--accent)}
+.option-b .nv-code{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:.9;color:#B8860B;display:block;margin-bottom:10px}
+.option-b .nv-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-dark);display:block;margin-bottom:10px}
+.option-b .nv-desc{font-size:12px;line-height:1.6;color:var(--ink-soft-dark)}
+
+/* Chiffres — bleu très profond (contraste maximum) */
+.option-b .chiffres{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.06);padding:1px 0;background-color:var(--bg-deep)}
+.option-b .chiffre{background:var(--bg-deep);padding:48px 28px}
+.option-b .chiffre-val{font-family:'Bebas Neue',sans-serif;font-size:56px;line-height:1;color:var(--accent);margin-bottom:8px}
+.option-b .chiffre-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);line-height:1.5}
+
+/* FAQ — CRÈME (lecture confortable) */
+.option-b .faq-section{padding:80px 32px;background:var(--bg-cream);color:var(--ink-dark)}
+.option-b .faq-kicker{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#B8860B;margin-bottom:18px}
+.option-b .faq-title{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--ink-dark);margin-bottom:36px}
+.option-b .faq-title em{font-style:normal;color:#B8860B}
+.option-b .fq{border-top:1px solid var(--rule-dark);padding:22px 0}
+.option-b .fq:last-child{border-bottom:1px solid var(--rule-dark)}
+.option-b .fq-q{font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;color:var(--ink-dark);margin-bottom:10px}
+.option-b .fq-a{font-size:14px;line-height:1.7;color:var(--ink-soft-dark)}
+
+/* CTA — gradient sombre dramatique */
+.option-b .cta-final{padding:100px 32px;background:linear-gradient(135deg,var(--bg-deep) 0%,#1a1745 60%,#3d1d4f 100%);text-align:center}
+.option-b .cta-title{font-family:'Bebas Neue',sans-serif;font-size:60px;color:var(--ink);margin-bottom:18px}
+.option-b .cta-lead{font-size:15px;line-height:1.7;color:var(--ink-soft);max-width:560px;margin:0 auto 28px}
+.option-b .btn-primary{display:inline-block;background:var(--accent);color:#000;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:500;padding:16px 28px;border-radius:3px;text-decoration:none}
+
+/* Annotation latérale */
+.section-note{
+  position:relative;
+}
+.section-note::after{
+  content:attr(data-note);
+  position:absolute;top:14px;right:14px;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;
+  background:rgba(0,0,0,.6);color:#FFCF00;
+  padding:6px 10px;border-radius:2px;
+  pointer-events:none;
+}
+.option-b .section-note.light::after{
+  background:rgba(255,255,255,.85);color:#040a1e;
+}
+</style>
+</head>
+<body>
+
+<nav class="nav-preview">
+  <h1>Aperçu karting.html — comparaison couleurs</h1>
+  <a href="#option-a">Option B+ (révisée)</a>
+  <a href="#option-b">Option B (initiale)</a>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- OPTION A                                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="divider" id="option-a">
+  <strong>OPTION B+ (RÉVISÉE)</strong>
+  Fonds variés — sombres ET clairs alternés
+  <p>On garde la respiration crème de l'Option B, mais cette fois les sections sombres ne sont PLUS toutes en bleu nuit. Parcours = anthracite asphalte. Chiffres = bordeaux héritage. CTA = gradient bleu→prune. Chaque couleur a un sens lié à son contenu.</p>
+</div>
+
+<div class="option-a">
+  <section class="hero section-note" data-note="hero · BLEU NUIT (vidéo)">
+    <div class="hero-eyebrow">— Le Cursus JB EMERIC</div>
+    <h1 class="hero-title">Du <em>volant</em><br>à la <em>course.</em></h1>
+  </section>
+
+  <section class="manifest section-note light" data-note="manifest · CRÈME">
+    <div class="manifest-kicker">— Pourquoi un cursus</div>
+    <h2 class="manifest-title">La plupart des écoles vendent <em>des journées.</em><br>Nous enseignons <em>un métier.</em></h2>
+    <p>Une journée de karting isolée, ça existe partout. On vous met dans un siège, on vous donne un casque, on vous regarde tourner. Ce n'est pas ce qu'on fait ici.</p>
+    <p>Chez JB EMERIC, chaque journée s'inscrit dans un parcours. On évalue, on corrige, on valide.</p>
+  </section>
+
+  <section class="parcours section-note" data-note="parcours · ANTHRACITE ★ (asphalte)">
+    <h2 class="pc-title">Chaque étape prépare <em>la suivante.</em></h2>
+    <article class="etape">
+      <div class="etape-num">01</div>
+      <div>
+        <div class="etape-tag">Découverte · Enfant dès 7 ans</div>
+        <h3 class="etape-title">Les bases du pilotage</h3>
+        <p>Position, regard, trajectoire. Les trois fondations.</p>
+      </div>
+    </article>
+    <article class="etape">
+      <div class="etape-num">02</div>
+      <div>
+        <div class="etape-tag">Progression · Niveaux C1 → C3</div>
+        <h3 class="etape-title">Comprendre sa conduite</h3>
+        <p>Identifier ce qu'on fait. Et surtout pourquoi.</p>
+      </div>
+    </article>
+    <article class="etape">
+      <div class="etape-num">03</div>
+      <div>
+        <div class="etape-tag">Performance · Niveaux C4 → C5</div>
+        <h3 class="etape-title">Pousser les limites</h3>
+        <p>Le kart cesse d'être une contrainte. Il devient un outil.</p>
+      </div>
+    </article>
+  </section>
+
+  <section class="niveaux section-note light" data-note="niveaux · CRÈME">
+    <div class="nv-kicker">— La grille d'évaluation</div>
+    <h2 class="nv-title">Cinq niveaux. <em>Aucun raccourci.</em></h2>
+    <div class="nv-grid">
+      <div class="nv-card"><span class="nv-code">C1</span><span class="nv-label">Débutant</span><div class="nv-desc">Position, trajectoires, régularité.</div></div>
+      <div class="nv-card"><span class="nv-code">C2</span><span class="nv-label">Amateur</span><div class="nv-desc">Freinage à la corde, regard.</div></div>
+      <div class="nv-card"><span class="nv-code">C3</span><span class="nv-label">Confirmé</span><div class="nv-desc">Diagnostic autonome.</div></div>
+      <div class="nv-card"><span class="nv-code">C4</span><span class="nv-label">Avancé</span><div class="nv-desc">Techniques de compétition.</div></div>
+      <div class="nv-card"><span class="nv-code">C5</span><span class="nv-label">Compétiteur</span><div class="nv-desc">Niveau d'entrée Challenge.</div></div>
+    </div>
+  </section>
+
+  <section class="chiffres section-note" data-note="chiffres · BORDEAUX ★ (héritage)">
+    <div class="chiffre"><div class="chiffre-val">1988</div><div class="chiffre-lbl">Champion de France<br>JB EMERIC</div></div>
+    <div class="chiffre"><div class="chiffre-val">35+</div><div class="chiffre-lbl">Années<br>d'enseignement</div></div>
+    <div class="chiffre"><div class="chiffre-val">5</div><div class="chiffre-lbl">Circuits<br>partenaires</div></div>
+    <div class="chiffre"><div class="chiffre-val">BPJEPS</div><div class="chiffre-lbl">Diplôme<br>d'État</div></div>
+  </section>
+
+  <section class="faq-section section-note light" data-note="faq · CRÈME">
+    <div class="faq-kicker">— Les vraies questions</div>
+    <h2 class="faq-title">Ce qu'on nous demande <em>avant de s'inscrire.</em></h2>
+    <div class="fq">
+      <div class="fq-q">Faut-il suivre tout le cursus ?</div>
+      <div class="fq-a">Non. Chaque journée est indépendante, à 185€ ou 195€ tout compris.</div>
+    </div>
+    <div class="fq">
+      <div class="fq-q">À partir de quel âge pour les enfants ?</div>
+      <div class="fq-a">7 ans, avec une taille minimum de 1,30 m.</div>
+    </div>
+  </section>
+
+  <section class="cta-final section-note" data-note="cta · GRADIENT BLEU→PRUNE ★">
+    <h2 class="cta-title">Commencer par où ?</h2>
+    <p class="cta-lead">Si vous n'avez jamais piloté : étape 01. Sinon contactez-nous, on évalue votre niveau.</p>
+    <a href="#" class="btn-primary">Réserver une journée →</a>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- OPTION B                                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="divider" id="option-b">
+  <strong>OPTION B (INITIALE — pour comparaison)</strong>
+  Crème + bleu nuit uniquement
+  <p>Version précédente : seules les sections claires changent. Toutes les sections sombres restent en bleu nuit. Tu trouvais ça encore monotone — c'est ce qu'on a corrigé en B+.</p>
+</div>
+
+<div class="option-b">
+  <section class="hero section-note" data-note="hero · bleu nuit">
+    <div class="hero-eyebrow">— Le Cursus JB EMERIC</div>
+    <h1 class="hero-title">Du <em>volant</em><br>à la <em>course.</em></h1>
+  </section>
+
+  <section class="manifest section-note light" data-note="manifest · CRÈME ★">
+    <div class="manifest-kicker">— Pourquoi un cursus</div>
+    <h2 class="manifest-title">La plupart des écoles vendent <em>des journées.</em><br>Nous enseignons <em>un métier.</em></h2>
+    <p>Une journée de karting isolée, ça existe partout. On vous met dans un siège, on vous donne un casque, on vous regarde tourner. Ce n'est pas ce qu'on fait ici.</p>
+    <p>Chez JB EMERIC, chaque journée s'inscrit dans un parcours. On évalue, on corrige, on valide.</p>
+  </section>
+
+  <section class="parcours section-note" data-note="parcours · bleu nuit">
+    <h2 class="pc-title">Chaque étape prépare <em>la suivante.</em></h2>
+    <article class="etape">
+      <div class="etape-num">01</div>
+      <div>
+        <div class="etape-tag">Découverte · Enfant dès 7 ans</div>
+        <h3 class="etape-title">Les bases du pilotage</h3>
+        <p>Position, regard, trajectoire. Les trois fondations.</p>
+      </div>
+    </article>
+    <article class="etape">
+      <div class="etape-num">02</div>
+      <div>
+        <div class="etape-tag">Progression · Niveaux C1 → C3</div>
+        <h3 class="etape-title">Comprendre sa conduite</h3>
+        <p>Identifier ce qu'on fait. Et surtout pourquoi.</p>
+      </div>
+    </article>
+    <article class="etape">
+      <div class="etape-num">03</div>
+      <div>
+        <div class="etape-tag">Performance · Niveaux C4 → C5</div>
+        <h3 class="etape-title">Pousser les limites</h3>
+        <p>Le kart cesse d'être une contrainte. Il devient un outil.</p>
+      </div>
+    </article>
+  </section>
+
+  <section class="niveaux section-note light" data-note="niveaux · CRÈME ★">
+    <div class="nv-kicker">— La grille d'évaluation</div>
+    <h2 class="nv-title">Cinq niveaux. <em>Aucun raccourci.</em></h2>
+    <div class="nv-grid">
+      <div class="nv-card"><span class="nv-code">C1</span><span class="nv-label">Débutant</span><div class="nv-desc">Position, trajectoires, régularité.</div></div>
+      <div class="nv-card"><span class="nv-code">C2</span><span class="nv-label">Amateur</span><div class="nv-desc">Freinage à la corde, regard.</div></div>
+      <div class="nv-card"><span class="nv-code">C3</span><span class="nv-label">Confirmé</span><div class="nv-desc">Diagnostic autonome.</div></div>
+      <div class="nv-card"><span class="nv-code">C4</span><span class="nv-label">Avancé</span><div class="nv-desc">Techniques de compétition.</div></div>
+      <div class="nv-card"><span class="nv-code">C5</span><span class="nv-label">Compétiteur</span><div class="nv-desc">Niveau d'entrée Challenge.</div></div>
+    </div>
+  </section>
+
+  <section class="chiffres section-note" data-note="chiffres · bleu très profond ★">
+    <div class="chiffre"><div class="chiffre-val">1988</div><div class="chiffre-lbl">Champion de France<br>JB EMERIC</div></div>
+    <div class="chiffre"><div class="chiffre-val">35+</div><div class="chiffre-lbl">Années<br>d'enseignement</div></div>
+    <div class="chiffre"><div class="chiffre-val">5</div><div class="chiffre-lbl">Circuits<br>partenaires</div></div>
+    <div class="chiffre"><div class="chiffre-val">BPJEPS</div><div class="chiffre-lbl">Diplôme<br>d'État</div></div>
+  </section>
+
+  <section class="faq-section section-note light" data-note="faq · CRÈME ★">
+    <div class="faq-kicker">— Les vraies questions</div>
+    <h2 class="faq-title">Ce qu'on nous demande <em>avant de s'inscrire.</em></h2>
+    <div class="fq">
+      <div class="fq-q">Faut-il suivre tout le cursus ?</div>
+      <div class="fq-a">Non. Chaque journée est indépendante, à 185€ ou 195€ tout compris. Le cursus existe pour ceux qui veulent progresser structurellement.</div>
+    </div>
+    <div class="fq">
+      <div class="fq-q">À partir de quel âge pour les enfants ?</div>
+      <div class="fq-a">7 ans, avec une taille minimum de 1,30 m.</div>
+    </div>
+  </section>
+
+  <section class="cta-final section-note" data-note="cta · gradient bleu→pourpre ★">
+    <h2 class="cta-title">Commencer par où ?</h2>
+    <p class="cta-lead">Si vous n'avez jamais piloté : étape 01. Si vous avez déjà roulé en location : contactez-nous.</p>
+    <a href="#" class="btn-primary">Réserver une journée →</a>
+  </section>
+</div>
+
+<div class="divider">
+  <p style="text-transform:none;letter-spacing:0">★ = nouveau fond sombre (différent du bleu nuit actuel)</p>
+</div>
+
+</body>
+</html>

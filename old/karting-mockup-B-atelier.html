@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup B · Atelier du maître — JB EMERIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;700&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Outfit',sans-serif;font-weight:300;
+  background:#040a1e;color:#fff;
+  -webkit-font-smoothing:antialiased;overflow-x:clip;
+}
+:root{
+  --bg:#040a1e;
+  --bg-deep:#020612;
+  --bg-elev:#0a1028;
+  --ink:#fff;
+  --ink-soft:rgba(255,255,255,.75);
+  --ink-mute:rgba(255,255,255,.45);
+  --or:#FFCF00;
+  --or-soft:rgba(255,207,0,.12);
+  --rule:rgba(255,255,255,.1);
+}
+
+/* ══ NAV ══ */
+.mock-nav{
+  position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1000;
+  display:flex;gap:6px;background:rgba(2,6,18,.85);backdrop-filter:blur(12px);
+  padding:6px;border:1px solid var(--rule);border-radius:999px;
+}
+.mock-nav a{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-soft);text-decoration:none;
+  padding:8px 14px;border-radius:999px;transition:all .2s;
+}
+.mock-nav a.active{background:var(--or);color:#000}
+.mock-nav a:not(.active):hover{color:var(--ink)}
+
+/* ══ HERO — citation + portrait ══ */
+.hero{
+  min-height:100vh;
+  display:grid;grid-template-columns:1.2fr 1fr;
+  background:var(--bg);position:relative;
+}
+@media(max-width:900px){.hero{grid-template-columns:1fr}}
+
+.hero-text{
+  padding:120px clamp(32px,6vw,100px) 80px clamp(32px,6vw,100px);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.hero-eyebrow{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--or);margin-bottom:36px;
+  display:flex;align-items:center;gap:14px;
+}
+.hero-eyebrow::before{content:'';width:32px;height:1px;background:var(--or)}
+
+.hero-quote{
+  font-family:'Fraunces',serif;font-style:italic;font-weight:300;
+  font-size:clamp(38px,5vw,68px);line-height:1.05;
+  color:var(--ink);margin-bottom:36px;
+  position:relative;
+}
+.hero-quote::before{
+  content:'«';font-size:1.4em;color:var(--or);font-style:normal;
+  margin-right:8px;line-height:0;
+}
+.hero-quote::after{
+  content:'»';color:var(--or);font-style:normal;
+  margin-left:6px;
+}
+.hero-attribution{
+  display:flex;align-items:center;gap:18px;margin-top:8px;
+}
+.hero-sig{
+  font-family:'Caveat',cursive;font-weight:700;
+  font-size:42px;color:var(--or);line-height:1;
+  transform:rotate(-3deg);
+}
+.hero-attr-text{
+  border-left:1px solid var(--rule);padding-left:18px;
+}
+.hero-attr-name{
+  font-family:'Outfit',sans-serif;font-weight:500;font-size:15px;
+  color:var(--ink);margin-bottom:2px;
+}
+.hero-attr-role{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-mute);
+}
+
+.hero-portrait{
+  position:relative;background:var(--bg-elev);overflow:hidden;
+}
+.hero-portrait img{
+  width:100%;height:100%;object-fit:cover;
+}
+.hero-portrait::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 0%,rgba(4,10,30,.4) 100%);
+}
+.hero-stamp{
+  position:absolute;bottom:32px;right:32px;
+  font-family:'Caveat',cursive;font-weight:500;font-size:18px;
+  color:var(--or);transform:rotate(-4deg);
+  opacity:.85;line-height:1.2;text-align:right;
+}
+
+/* ══ SECTION ÉDITORIALE ══ */
+.section{padding:clamp(100px,12vw,180px) clamp(24px,5vw,80px)}
+.section-grid{max-width:1100px;margin:0 auto;display:grid;gap:60px}
+.section-kicker{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--or);margin-bottom:18px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-kicker::before{content:'';width:32px;height:1px;background:var(--or)}
+.section-h{
+  font-family:'Fraunces',serif;font-weight:300;
+  font-size:clamp(40px,5.5vw,80px);line-height:1;
+  color:var(--ink);margin-bottom:32px;
+  letter-spacing:-1px;
+}
+.section-h em{
+  font-style:italic;color:var(--or);font-weight:400;
+}
+
+/* ══ JE VOUS APPRENDS ══ */
+.method{
+  border-top:1px solid var(--rule);
+  background:linear-gradient(180deg,var(--bg) 0%,var(--bg-elev) 100%);
+}
+.method-grid{grid-template-columns:1fr 1.4fr;gap:80px}
+@media(max-width:900px){.method-grid{grid-template-columns:1fr;gap:40px}}
+
+.method-aside{
+  position:relative;border-left:2px solid var(--or);padding:8px 0 8px 28px;
+}
+.method-aside-quote{
+  font-family:'Fraunces',serif;font-style:italic;font-size:22px;
+  line-height:1.5;color:var(--ink);margin-bottom:18px;
+}
+.method-aside-attr{
+  font-family:'Caveat',cursive;font-weight:500;font-size:24px;
+  color:var(--or);transform:rotate(-2deg);display:inline-block;
+}
+
+.method-body p{
+  font-family:'Outfit',sans-serif;font-size:17px;line-height:1.85;
+  color:var(--ink-soft);margin-bottom:22px;
+}
+.method-body p strong{color:var(--ink);font-weight:500}
+.method-body p em{
+  font-family:'Fraunces',serif;font-style:italic;
+  color:var(--or);font-weight:400;
+}
+
+.method-pillars{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:24px;
+  margin-top:48px;padding-top:48px;border-top:1px solid var(--rule);
+}
+@media(max-width:600px){.method-pillars{grid-template-columns:1fr}}
+.pillar{}
+.pillar-num{
+  font-family:'Fraunces',serif;font-style:italic;font-weight:300;
+  font-size:38px;color:var(--or);line-height:1;margin-bottom:8px;
+}
+.pillar-title{
+  font-family:'Outfit',sans-serif;font-weight:500;font-size:17px;
+  color:var(--ink);margin-bottom:8px;
+}
+.pillar-text{
+  font-size:14px;line-height:1.65;color:var(--ink-soft);
+}
+
+/* ══ CURSUS — récit ══ */
+.cursus{
+  border-top:1px solid var(--rule);background:var(--bg);
+}
+.cursus-intro{
+  max-width:720px;margin:0 auto 80px;text-align:center;
+}
+.cursus-intro p{
+  font-family:'Fraunces',serif;font-style:italic;font-size:22px;
+  line-height:1.6;color:var(--ink-soft);
+}
+
+.etapes{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:80px}
+.etape{
+  display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:start;
+  position:relative;
+}
+.etape:nth-child(even){grid-template-columns:1.3fr 1fr}
+.etape:nth-child(even) .etape-text{order:-1}
+@media(max-width:800px){
+  .etape,.etape:nth-child(even){grid-template-columns:1fr;gap:24px}
+  .etape:nth-child(even) .etape-text{order:0}
+}
+
+.etape-img{
+  aspect-ratio:5/4;background:var(--bg-elev);overflow:hidden;
+  position:relative;
+}
+.etape-img img{width:100%;height:100%;object-fit:cover}
+.etape-img::after{
+  content:attr(data-num);
+  position:absolute;top:20px;left:24px;
+  font-family:'Fraunces',serif;font-style:italic;font-weight:300;
+  font-size:64px;color:var(--or);line-height:1;
+}
+
+.etape-tag{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--or);margin-bottom:14px;
+}
+.etape-h{
+  font-family:'Fraunces',serif;font-weight:400;font-size:38px;
+  line-height:1.05;color:var(--ink);margin-bottom:18px;
+}
+.etape-h em{font-style:italic;color:var(--or);font-weight:400}
+.etape-text p{
+  font-size:15px;line-height:1.8;color:var(--ink-soft);margin-bottom:14px;
+}
+.etape-quote{
+  margin-top:24px;padding:18px 22px;
+  border-left:2px solid var(--or);
+  font-family:'Fraunces',serif;font-style:italic;
+  font-size:16px;color:var(--ink);line-height:1.5;
+}
+.etape-quote-sig{
+  display:block;margin-top:10px;
+  font-family:'Caveat',cursive;font-weight:500;font-size:20px;
+  color:var(--or);font-style:normal;transform:rotate(-2deg);
+}
+
+/* ══ NIVEAUX — livret manuscrit ══ */
+.niveaux{
+  border-top:1px solid var(--rule);
+  background:linear-gradient(180deg,var(--bg-elev) 0%,var(--bg) 100%);
+}
+.niveaux-list{max-width:840px;margin:0 auto}
+.niv-line{
+  display:grid;grid-template-columns:80px 1fr auto;gap:36px;
+  align-items:start;padding:32px 0;
+  border-bottom:1px dashed var(--rule);
+}
+.niv-line:last-child{border-bottom:none}
+.niv-code{
+  font-family:'Fraunces',serif;font-style:italic;font-weight:400;
+  font-size:48px;color:var(--or);line-height:1;
+}
+.niv-content h3{
+  font-family:'Outfit',sans-serif;font-weight:500;font-size:18px;
+  color:var(--ink);margin-bottom:8px;
+}
+.niv-content p{
+  font-size:14px;line-height:1.7;color:var(--ink-soft);
+}
+.niv-mark{
+  font-family:'Caveat',cursive;font-weight:500;font-size:20px;
+  color:var(--or);transform:rotate(-3deg);
+  display:flex;align-items:center;
+}
+
+/* ══ INVITATION ══ */
+.invitation{
+  padding:clamp(100px,12vw,180px) clamp(32px,6vw,80px);
+  background:var(--bg-deep);border-top:1px solid var(--rule);
+  text-align:center;position:relative;overflow:hidden;
+}
+.invitation::before{
+  content:'';position:absolute;
+  top:0;left:50%;transform:translateX(-50%);
+  width:1px;height:64px;background:var(--or);
+}
+.inv-tag{
+  font-family:'Caveat',cursive;font-weight:500;font-size:24px;
+  color:var(--or);margin-top:48px;margin-bottom:24px;
+  transform:rotate(-2deg);display:inline-block;
+}
+.inv-h{
+  font-family:'Fraunces',serif;font-style:italic;font-weight:300;
+  font-size:clamp(44px,6vw,84px);line-height:1.05;
+  color:var(--ink);margin-bottom:32px;letter-spacing:-1px;
+}
+.inv-h em{color:var(--or);font-style:italic;font-weight:400}
+.inv-lead{
+  font-family:'Outfit',sans-serif;font-size:17px;line-height:1.75;
+  color:var(--ink-soft);max-width:560px;margin:0 auto 48px;
+}
+.inv-cta{
+  display:inline-flex;align-items:center;gap:14px;
+  font-family:'Outfit',sans-serif;font-weight:500;font-size:15px;
+  color:#000;background:var(--or);padding:18px 36px;
+  text-decoration:none;border-radius:999px;transition:all .2s;
+}
+.inv-cta:hover{filter:brightness(1.1);transform:translateY(-2px)}
+
+.inv-signature{
+  margin-top:64px;padding-top:32px;
+  border-top:1px solid var(--rule);
+  display:flex;align-items:center;justify-content:center;gap:18px;
+  max-width:380px;margin-left:auto;margin-right:auto;
+}
+.inv-sig-text{
+  font-family:'Caveat',cursive;font-weight:700;font-size:36px;
+  color:var(--or);transform:rotate(-3deg);line-height:1;
+}
+.inv-sig-name{
+  text-align:left;
+}
+.inv-sig-name-1{
+  font-family:'Outfit',sans-serif;font-weight:400;font-size:14px;
+  color:var(--ink);
+}
+.inv-sig-name-2{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-mute);margin-top:2px;
+}
+</style>
+</head>
+<body>
+
+<nav class="mock-nav">
+  <a href="karting-mockup-A-elite.html">A · Élite</a>
+  <a href="karting-mockup-B-atelier.html" class="active">B · Atelier</a>
+  <a href="karting-mockup-C-paddock.html">C · Paddock</a>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">JB EMERIC · École de pilotage</div>
+    <p class="hero-quote">Apprendre à piloter, ça n'a rien à voir avec rouler vite.</p>
+    <div class="hero-attribution">
+      <div class="hero-sig">JBE</div>
+      <div class="hero-attr-text">
+        <div class="hero-attr-name">Jean-Baptiste EMERIC</div>
+        <div class="hero-attr-role">Champion de France 1988 · BPJEPS</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-portrait">
+    <img src="assets/images/Jb emeric enfant breafing.png" alt="JB EMERIC en briefing">
+    <div class="hero-stamp">— Briefing matinal,<br>circuit de Brignoles</div>
+  </div>
+</section>
+
+<!-- ══ LA MÉTHODE ══ -->
+<section class="section method">
+  <div class="section-grid method-grid">
+    <div>
+      <div class="section-kicker">— La méthode</div>
+      <h2 class="section-h">Trente-cinq ans à transmettre <em>un métier.</em></h2>
+      <div class="method-aside">
+        <p class="method-aside-quote">Une journée de karting isolée, ça existe partout. Ce n'est pas ce qu'on fait ici.</p>
+        <span class="method-aside-attr">— JB</span>
+      </div>
+    </div>
+
+    <div class="method-body">
+      <p>Quand on me demande comment j'enseigne, je réponds toujours pareil : <strong>je regarde, je corrige, je valide.</strong> C'est aussi simple que ça. Et c'est ce qui change tout.</p>
+      <p>La plupart des écoles de pilotage vendent des journées : on vous met dans un siège, on vous donne un casque, on vous regarde tourner. Vous repartez content. C'est <em>une expérience.</em></p>
+      <p>Moi, je ne vends pas une expérience. <strong>Je transmets un métier.</strong> Chaque journée s'inscrit dans un parcours. On évalue, on corrige, on valide. Cinq niveaux d'évaluation, des critères chronométrés, et la possibilité — pour ceux qui atteignent le sommet — d'entrer en compétition réelle.</p>
+
+      <div class="method-pillars">
+        <div class="pillar">
+          <div class="pillar-num">i</div>
+          <div class="pillar-title">Position</div>
+          <div class="pillar-text">Le corps avant le volant. Les mauvaises habitudes commencent à l'arrêt.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">ii</div>
+          <div class="pillar-title">Regard</div>
+          <div class="pillar-text">Là où tu regardes, le kart va. Le pilotage commence dans les yeux.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">iii</div>
+          <div class="pillar-title">Trajectoire</div>
+          <div class="pillar-text">Pas la plus courte. La plus rapide. Et ce n'est pas la même chose.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">iv</div>
+          <div class="pillar-title">Freinage</div>
+          <div class="pillar-text">Là où la majorité des pilotes amateurs perdent une seconde par tour.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LE CURSUS ══ -->
+<section class="section cursus">
+  <div class="section-grid">
+    <div style="text-align:center;max-width:680px;margin:0 auto">
+      <div class="section-kicker" style="justify-content:center">— Le cursus</div>
+      <h2 class="section-h">Trois étapes. <em>Une progression.</em></h2>
+      <div class="cursus-intro">
+        <p>Le cursus est le même pour les enfants dès 7 ans et pour les adultes. La méthode, les exigences, la progression — identiques.</p>
+      </div>
+    </div>
+
+    <div class="etapes">
+      <article class="etape">
+        <div class="etape-img" data-num="i">
+          <img src="assets/images/karting-enfant-circuit.jpg" alt="Étape 1">
+        </div>
+        <div class="etape-text">
+          <div class="etape-tag">Découverte · dès 7 ans · adulte débutant</div>
+          <h3 class="etape-h">Les <em>bases</em> du pilotage.</h3>
+          <p>Position, regard, trajectoire. Les trois fondations que les pilotes professionnels n'ont jamais oubliées, et que 90 % des amateurs n'ont jamais vraiment apprises.</p>
+          <p>Je commence toujours pareil : on lit le circuit ensemble, à pied. Je vous montre les points de corde, les zones de freinage, les pièges. Avant de démarrer.</p>
+          <div class="etape-quote">
+            « Piloter à l'aveugle, c'est tricher avec soi-même. »
+            <span class="etape-quote-sig">— JBE</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="etape">
+        <div class="etape-img" data-num="ii">
+          <img src="assets/images/karting-adulte-circuit.jpg" alt="Étape 2">
+        </div>
+        <div class="etape-text">
+          <div class="etape-tag">Progression · niveaux C1 → C3</div>
+          <h3 class="etape-h">Comprendre <em>sa conduite.</em></h3>
+          <p>Identifier ce qu'on fait. Et surtout : pourquoi on le fait. La différence entre un pilote qui progresse et un qui stagne, c'est la capacité à diagnostiquer soi-même ses erreurs.</p>
+          <p>On filme chaque session. On repasse, on commente. Ce que vous sentez dans le kart n'est pas toujours ce qu'il se passe — la vidéo ne ment jamais.</p>
+        </div>
+      </article>
+
+      <article class="etape">
+        <div class="etape-img" data-num="iii">
+          <img src="assets/images/karting-adulte-depart.jpg" alt="Étape 3">
+        </div>
+        <div class="etape-text">
+          <div class="etape-tag">Performance · niveaux C4 → C5</div>
+          <h3 class="etape-h">Pousser <em>les limites.</em></h3>
+          <p>Le kart cesse d'être une contrainte. Il devient un outil. Freinage tardif, gestion du transfert de charge, anticipation : c'est ici qu'on prépare l'entrée en compétition.</p>
+          <div class="etape-quote">
+            « C5 n'est pas donné. Et ce n'est pas le but. »
+            <span class="etape-quote-sig">— JBE</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NIVEAUX — livret ══ -->
+<section class="section niveaux">
+  <div class="section-grid">
+    <div style="text-align:center;max-width:680px;margin:0 auto 48px">
+      <div class="section-kicker" style="justify-content:center">— Le livret</div>
+      <h2 class="section-h">Cinq niveaux. <em>Aucun raccourci.</em></h2>
+    </div>
+
+    <div class="niveaux-list">
+      <div class="niv-line">
+        <div class="niv-code">C1</div>
+        <div class="niv-content">
+          <h3>Débutant</h3>
+          <p>Position correcte, trajectoires respectées, régularité sur 5 tours.</p>
+        </div>
+        <div class="niv-mark">— ouvert</div>
+      </div>
+      <div class="niv-line">
+        <div class="niv-code">C2</div>
+        <div class="niv-content">
+          <h3>Amateur</h3>
+          <p>Freinage à la corde, gestion du regard, chronos stables à ±0.5s.</p>
+        </div>
+        <div class="niv-mark">— validé sur piste</div>
+      </div>
+      <div class="niv-line">
+        <div class="niv-code">C3</div>
+        <div class="niv-content">
+          <h3>Confirmé</h3>
+          <p>Diagnostic autonome des erreurs, gestion de la dégradation pneumatique.</p>
+        </div>
+        <div class="niv-mark">— vidéo + chronos</div>
+      </div>
+      <div class="niv-line">
+        <div class="niv-code">C4</div>
+        <div class="niv-content">
+          <h3>Avancé</h3>
+          <p>Techniques de compétition, gestion stratégique sur la durée.</p>
+        </div>
+        <div class="niv-mark">— par JB</div>
+      </div>
+      <div class="niv-line">
+        <div class="niv-code">C5</div>
+        <div class="niv-content">
+          <h3>Compétiteur · porte du Challenge</h3>
+          <p>Niveau d'entrée en sélection. Chronos de référence atteints.</p>
+        </div>
+        <div class="niv-mark">— ↗ Challenge</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ INVITATION ══ -->
+<section class="invitation">
+  <div class="inv-tag">— Pour finir</div>
+  <h2 class="inv-h">Venez <em>me rencontrer.</em></h2>
+  <p class="inv-lead">Une première journée suffit pour évaluer où vous en êtes et adapter le programme. Pas besoin d'avoir déjà piloté. Pas besoin d'avoir un projet. Juste de venir.</p>
+  <a href="contact.html" class="inv-cta">Réserver une journée →</a>
+
+  <div class="inv-signature">
+    <div class="inv-sig-text">JBE</div>
+    <div class="inv-sig-name">
+      <div class="inv-sig-name-1">Jean-Baptiste EMERIC</div>
+      <div class="inv-sig-name-2">Fondateur · 1988</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -224,6 +224,22 @@ function loadTexts() {
     .catch(function (e) { console.warn('[JBE]', e.message); _loadFromCache() })
 }
 
+// Auto-capitalisation : majuscule en début de phrase (règle française)
+// Appliquée au load et au save pour assainir le contenu DB (et éviter
+// que de futures éditions perdent les majuscules après ". ", "! ", "? ").
+function autoCapitalizeSentences(text) {
+  if (!text || typeof text !== 'string') return text
+  // 1. Première lettre du texte
+  var first = text.charAt(0)
+  if (first && first !== first.toUpperCase()) {
+    text = first.toUpperCase() + text.slice(1)
+  }
+  // 2. Après .!? + espace(s), capitaliser la lettre suivante (latine + accentués lowercase)
+  return text.replace(/([.!?])(\s+)([a-zà-ÿ])/g, function(_, p, sp, c) {
+    return p + sp + c.toUpperCase()
+  })
+}
+
 function applyTexts() {
   for (var i = 0; i < _els.length; i++) {
     var el  = _els[i]
@@ -231,7 +247,9 @@ function applyTexts() {
     if (!_db[key]) continue
     var origHtmlTemplate = el.getAttribute('data-orig-html') || ''
     var hasStructure = /<(em|span|b|strong|i|br)\b/i.test(origHtmlTemplate)
-    var rebuilt = rebuildHTML(el, _db[key])
+    // Sanitize la valeur DB avant de l'appliquer
+    var dbValue = autoCapitalizeSentences(_db[key])
+    var rebuilt = rebuildHTML(el, dbValue)
     if (hasStructure && !/<(em|span|b|strong|i|br)\b/i.test(rebuilt)) {
       console.log('[JBE] Corruption detectee, ignoree:', key)
       continue
@@ -668,6 +686,7 @@ function startEditOverlay(el) {
 
 function saveElWithText(el, content) {
   var key = PAGE + '__' + el.id
+  content = autoCapitalizeSentences(content)
   // Remplacer les sauts de ligne par un marqueur temporaire avant rebuildHTML
   // puis les restituer en <br> après reconstruction
   var BR_MARKER = '\u0001BR\u0001'
@@ -1414,7 +1433,7 @@ function rebuildHTML(el, newText) {
 // ─── SAUVEGARDE TEXTE ────────────────────────
 function saveEl(el) {
   var key     = PAGE + '__' + el.id
-  var content = getPlainText(el)
+  var content = autoCapitalizeSentences(getPlainText(el))
   if (!key || !content) return
   var rebuilt = rebuildHTML(el, content)
   el.innerHTML = rebuilt

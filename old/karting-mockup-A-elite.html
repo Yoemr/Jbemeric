@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup A · Élite institutionnelle — JB EMERIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Outfit',sans-serif;font-weight:300;
+  background:#040a1e;color:#fff;
+  -webkit-font-smoothing:antialiased;overflow-x:clip;
+}
+:root{
+  --bg:#040a1e;
+  --bg-deep:#020612;
+  --bg-elev:#0a1028;
+  --ink:#fff;
+  --ink-soft:rgba(255,255,255,.65);
+  --ink-mute:rgba(255,255,255,.4);
+  --or:#FFCF00;
+  --or-soft:rgba(255,207,0,.15);
+  --or-line:rgba(255,207,0,.35);
+  --rule:rgba(255,255,255,.12);
+}
+
+/* ══ NAV INTER-MOCKUPS ══ */
+.mock-nav{
+  position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1000;
+  display:flex;gap:6px;background:rgba(2,6,18,.85);backdrop-filter:blur(12px);
+  padding:6px;border:1px solid var(--rule);border-radius:999px;
+}
+.mock-nav a{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-soft);text-decoration:none;
+  padding:8px 14px;border-radius:999px;transition:all .2s;
+}
+.mock-nav a.active{background:var(--or);color:#000}
+.mock-nav a:not(.active):hover{color:var(--ink)}
+
+/* ══ HERO ══ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 32px;
+  background:
+    radial-gradient(ellipse at center,#0a1738 0%,var(--bg) 60%,var(--bg-deep) 100%);
+  text-align:center;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url('assets/images/Jb emeric enfant breafing.png') center/cover;
+  opacity:.18;mix-blend-mode:luminosity;
+  filter:grayscale(.4);
+}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,transparent 0%,var(--bg) 70%);
+}
+.hero-inner{position:relative;z-index:2;max-width:1000px}
+
+.eyebrow-top{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--or);
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin-bottom:48px;
+}
+.eyebrow-top::before,.eyebrow-top::after{
+  content:'';width:48px;height:1px;background:var(--or-line);
+}
+
+.crest{
+  width:88px;height:88px;margin:0 auto 36px;
+  border:2px solid var(--or);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  position:relative;
+}
+.crest::before,.crest::after{
+  content:'';position:absolute;width:6px;height:6px;
+  background:var(--or);border-radius:50%;
+  top:50%;transform:translateY(-50%);
+}
+.crest::before{left:-14px}
+.crest::after{right:-14px}
+.crest-letters{
+  font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--or);line-height:1;
+}
+.crest-year{
+  font-family:'DM Mono',monospace;font-size:9px;color:var(--or);
+  letter-spacing:1px;margin-top:2px;
+}
+
+.hero-supra{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(16px,1.6vw,22px);color:var(--or);
+  margin-bottom:14px;letter-spacing:.5px;
+}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(64px,11vw,180px);
+  line-height:.85;letter-spacing:-1px;
+  color:var(--ink);margin-bottom:28px;
+}
+.hero-title em{font-style:normal;color:var(--or)}
+
+.devise{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(18px,2vw,28px);color:var(--ink-soft);
+  max-width:600px;margin:0 auto 56px;line-height:1.5;
+  position:relative;padding:0 40px;
+}
+.devise::before,.devise::after{
+  content:'';position:absolute;top:50%;width:24px;height:1px;
+  background:var(--or-line);
+}
+.devise::before{left:0}
+.devise::after{right:0}
+
+.hero-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  border-top:1px solid var(--or-line);
+  border-bottom:1px solid var(--or-line);
+  max-width:780px;margin:0 auto;
+}
+.hero-stat{padding:22px 16px;border-right:1px solid var(--or-line)}
+.hero-stat:last-child{border-right:none}
+.hero-stat-val{
+  font-family:'Bebas Neue',sans-serif;font-size:30px;
+  color:var(--or);line-height:1;
+}
+.hero-stat-key{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-mute);margin-top:6px;
+}
+
+.scroll-cue{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--ink-mute);margin-top:64px;
+}
+.scroll-cue::after{content:' ↓'}
+
+/* ══ L'INSTITUTION ══ */
+.institution{
+  padding:clamp(80px,10vw,140px) clamp(20px,5vw,80px);
+  border-top:1px solid var(--rule);background:var(--bg);
+}
+.section-tag{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--or);
+  text-align:center;margin-bottom:24px;
+  display:flex;align-items:center;justify-content:center;gap:14px;
+}
+.section-tag::before,.section-tag::after{
+  content:'';width:32px;height:1px;background:var(--or-line);
+}
+.section-num{
+  font-family:'Bebas Neue',sans-serif;font-size:14px;
+  color:var(--or);letter-spacing:2px;text-align:center;
+  margin-bottom:8px;
+}
+.section-h{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,72px);line-height:.95;
+  text-align:center;margin-bottom:64px;
+  color:var(--ink);
+}
+.section-h em{font-style:normal;color:var(--or)}
+
+.inst-grid{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;
+}
+@media(max-width:800px){.inst-grid{grid-template-columns:1fr}}
+
+.inst-archive{
+  position:relative;aspect-ratio:4/5;
+  background:var(--bg-elev);overflow:hidden;
+}
+.inst-archive img{
+  width:100%;height:100%;object-fit:cover;
+  filter:grayscale(1) contrast(1.1);
+}
+.inst-archive::after{
+  content:'CHAMPIONNAT DE FRANCE · 1988';
+  position:absolute;bottom:0;left:0;right:0;
+  background:var(--bg-deep);color:var(--or);
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  padding:12px 20px;text-align:center;
+  border-top:1px solid var(--or);
+}
+
+.inst-text{font-family:'Outfit',sans-serif}
+.inst-text p{
+  font-size:clamp(15px,1.4vw,17px);line-height:1.85;
+  color:var(--ink-soft);margin-bottom:18px;
+}
+.inst-text p::first-letter{
+  font-family:'Cormorant Garamond',serif;font-size:64px;
+  float:left;line-height:.9;padding:8px 12px 0 0;color:var(--or);
+}
+.inst-text p:not(:first-of-type)::first-letter{
+  font-size:inherit;float:none;padding:0;color:inherit;
+}
+
+.inst-signature{
+  margin-top:32px;padding-top:32px;border-top:1px solid var(--rule);
+  display:flex;align-items:center;gap:20px;
+}
+.sig-name{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:24px;color:var(--ink);
+}
+.sig-role{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ink-mute);margin-top:4px;
+}
+
+/* ══ LE CURSUS ══ */
+.cursus{
+  padding:clamp(80px,10vw,140px) clamp(20px,5vw,80px);
+  background:linear-gradient(180deg,var(--bg) 0%,var(--bg-elev) 100%);
+  border-top:1px solid var(--rule);
+}
+.cursus-list{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:0}
+.cursus-item{
+  display:grid;grid-template-columns:120px 1fr auto;
+  gap:48px;align-items:start;
+  padding:48px 0;border-top:1px solid var(--or-line);
+}
+.cursus-item:last-child{border-bottom:1px solid var(--or-line)}
+@media(max-width:700px){.cursus-item{grid-template-columns:1fr;gap:16px}}
+
+.cursus-roman{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:48px;color:var(--or);line-height:1;
+}
+.cursus-body h3{
+  font-family:'Bebas Neue',sans-serif;font-size:36px;
+  color:var(--ink);line-height:1;margin-bottom:14px;
+}
+.cursus-tag{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--or);margin-bottom:20px;
+}
+.cursus-body p{
+  font-size:15px;line-height:1.75;color:var(--ink-soft);
+  max-width:540px;
+}
+.cursus-prix{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:14px;color:var(--ink-mute);text-align:right;
+}
+.cursus-prix strong{
+  display:block;font-style:normal;font-family:'Bebas Neue',sans-serif;
+  font-size:32px;color:var(--or);
+}
+
+/* ══ LIVRET D'ÉVALUATION ══ */
+.livret{
+  padding:clamp(80px,10vw,140px) clamp(20px,5vw,80px);
+  background:var(--bg);border-top:1px solid var(--rule);
+}
+.livret-frame{
+  max-width:980px;margin:0 auto;
+  border:1px solid var(--or-line);
+  background:var(--bg-elev);
+  position:relative;
+}
+.livret-frame::before{
+  content:'LIVRET D\'ÉVALUATION · ÉDITION 2026';
+  position:absolute;top:-1px;left:50%;transform:translateX(-50%) translateY(-50%);
+  background:var(--bg);padding:0 20px;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;
+  color:var(--or);
+}
+.livret-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0}
+@media(max-width:768px){.livret-grid{grid-template-columns:repeat(2,1fr)}}
+.livret-cell{
+  padding:32px 24px;border-right:1px solid var(--or-line);
+  border-bottom:1px solid var(--or-line);
+}
+.livret-cell:nth-child(5n){border-right:none}
+.livret-cell:nth-last-child(-n+5){border-bottom:none}
+.livret-code{
+  font-family:'Bebas Neue',sans-serif;font-size:42px;
+  color:var(--or);line-height:1;margin-bottom:12px;
+}
+.livret-label{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:18px;color:var(--ink);margin-bottom:14px;
+}
+.livret-desc{
+  font-size:12px;line-height:1.65;color:var(--ink-soft);
+}
+.livret-cell.elite{
+  background:linear-gradient(180deg,transparent 0%,var(--or-soft) 100%);
+}
+
+/* ══ CTA FINAL ══ */
+.admission{
+  padding:clamp(100px,12vw,180px) clamp(20px,5vw,80px);
+  background:
+    radial-gradient(ellipse at center top,rgba(255,207,0,.08) 0%,transparent 60%),
+    var(--bg-deep);
+  text-align:center;border-top:1px solid var(--rule);
+}
+.admission-seal{
+  width:140px;height:140px;margin:0 auto 36px;
+  border:2px solid var(--or);border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;
+}
+.admission-seal::before{
+  content:'';position:absolute;inset:8px;
+  border:1px solid var(--or-line);border-radius:50%;
+}
+.admission-seal-top{
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;
+  color:var(--or);text-transform:uppercase;
+}
+.admission-seal-mid{
+  font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--or);
+  line-height:1;margin:6px 0;
+}
+.admission-seal-bot{
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;
+  color:var(--or);
+}
+.admission-h{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,6vw,80px);
+  line-height:.95;color:var(--ink);margin-bottom:18px;
+}
+.admission-h em{font-style:normal;color:var(--or)}
+.admission-lead{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(17px,1.8vw,22px);color:var(--ink-soft);
+  max-width:580px;margin:0 auto 48px;line-height:1.6;
+}
+.admission-cta{
+  display:inline-block;
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;
+  color:#000;background:var(--or);padding:20px 44px;
+  text-decoration:none;transition:all .2s;
+}
+.admission-cta:hover{filter:brightness(1.1);transform:translateY(-2px)}
+
+.flourish{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin:48px auto 0;color:var(--or-line);
+}
+.flourish span{
+  width:48px;height:1px;background:var(--or-line);
+}
+.flourish-mark{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  color:var(--or);font-size:20px;
+}
+</style>
+</head>
+<body>
+
+<nav class="mock-nav">
+  <a href="karting-mockup-A-elite.html" class="active">A · Élite</a>
+  <a href="karting-mockup-B-atelier.html">B · Atelier</a>
+  <a href="karting-mockup-C-paddock.html">C · Paddock</a>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow-top">Fondée en 1988 · BPJEPS Sport Auto · Champion de France</div>
+    <div class="crest">
+      <span class="crest-letters">JBE</span>
+      <span class="crest-year">1988</span>
+    </div>
+    <p class="hero-supra">L'Académie de Pilotage</p>
+    <h1 class="hero-title">Du <em>volant</em><br>à la <em>course.</em></h1>
+    <p class="devise">Ce que les meilleures écoles de pilotage<br>n'osent plus enseigner.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val">7 ans</div><div class="hero-stat-key">Âge minimum</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">5</div><div class="hero-stat-key">Niveaux C1→C5</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">35+</div><div class="hero-stat-key">Années</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">BPJEPS</div><div class="hero-stat-key">Diplôme d'État</div></div>
+    </div>
+    <div class="scroll-cue">Découvrir l'académie</div>
+  </div>
+</section>
+
+<!-- ══ L'INSTITUTION ══ -->
+<section class="institution">
+  <div class="section-num">CHAPITRE I</div>
+  <div class="section-tag">L'Institution</div>
+  <h2 class="section-h">Trente-cinq ans à former <em>des pilotes.</em></h2>
+
+  <div class="inst-grid">
+    <div class="inst-archive">
+      <img src="assets/images/karting-adulte-circuit.jpg" alt="Archives JB EMERIC">
+    </div>
+    <div class="inst-text">
+      <p>En 1988, Jean-Baptiste EMERIC remporte le titre de Champion de France de Karting. L'année suivante, il commence à enseigner. Trente-cinq saisons plus tard, l'Académie a formé plusieurs centaines de pilotes — du gamin de sept ans qui découvre le volant, jusqu'au coureur licencié FFSA qui défend ses chronos.</p>
+      <p>La méthode n'a pas changé depuis le premier jour : on évalue, on corrige, on valide. Pas de raccourci, pas de complaisance. Cinq niveaux d'évaluation, des critères chronométrés, et la possibilité — pour ceux qui atteignent le sommet — d'entrer en compétition réelle au volant d'une BMW 325i HTCC.</p>
+      <div class="inst-signature">
+        <div>
+          <div class="sig-name">Jean-Baptiste EMERIC</div>
+          <div class="sig-role">Fondateur · Champion de France 1988</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LE CURSUS ══ -->
+<section class="cursus">
+  <div class="section-num">CHAPITRE II</div>
+  <div class="section-tag">Le Cursus en trois étapes</div>
+  <h2 class="section-h">Chaque étape prépare <em>la suivante.</em></h2>
+
+  <div class="cursus-list">
+    <article class="cursus-item">
+      <div class="cursus-roman">I</div>
+      <div class="cursus-body">
+        <div class="cursus-tag">Découverte · Enfant dès 7 ans · Adulte débutant</div>
+        <h3>Les bases du pilotage</h3>
+        <p>Position, regard, trajectoire. Les trois fondations que les pilotes professionnels n'ont jamais oubliées, et que 90 % des pilotes amateurs n'ont jamais vraiment apprises.</p>
+      </div>
+      <div class="cursus-prix">À partir de<strong>185 €</strong>la journée</div>
+    </article>
+
+    <article class="cursus-item">
+      <div class="cursus-roman">II</div>
+      <div class="cursus-body">
+        <div class="cursus-tag">Progression · Niveaux C1 → C3</div>
+        <h3>Comprendre sa conduite</h3>
+        <p>Identifier ce qu'on fait. Et surtout : pourquoi on le fait. La différence entre un pilote qui progresse et un pilote qui stagne, c'est la capacité à diagnostiquer soi-même ses erreurs.</p>
+      </div>
+      <div class="cursus-prix">Vidéo embarquée<strong>incluse</strong>session debrief</div>
+    </article>
+
+    <article class="cursus-item">
+      <div class="cursus-roman">III</div>
+      <div class="cursus-body">
+        <div class="cursus-tag">Performance · Niveaux C4 → C5</div>
+        <h3>Pousser les limites</h3>
+        <p>Le kart cesse d'être une contrainte à gérer. Il devient un outil. Freinage tardif, pilotage actif, gestion des déséquilibres : c'est ici qu'on prépare l'entrée en compétition.</p>
+      </div>
+      <div class="cursus-prix">Validation C5<strong>↗ Challenge</strong>BMW 325i HTCC</div>
+    </article>
+  </div>
+</section>
+
+<!-- ══ LIVRET D'ÉVALUATION ══ -->
+<section class="livret">
+  <div class="section-num">CHAPITRE III</div>
+  <div class="section-tag">La Grille d'évaluation</div>
+  <h2 class="section-h">Cinq niveaux. <em>Aucun raccourci.</em></h2>
+
+  <div class="livret-frame">
+    <div class="livret-grid">
+      <div class="livret-cell">
+        <div class="livret-code">C1</div>
+        <div class="livret-label">Débutant</div>
+        <div class="livret-desc">Position correcte, trajectoires respectées, régularité sur 5 tours.</div>
+      </div>
+      <div class="livret-cell">
+        <div class="livret-code">C2</div>
+        <div class="livret-label">Amateur</div>
+        <div class="livret-desc">Freinage à la corde, gestion du regard, chronos stables à ±0.5s.</div>
+      </div>
+      <div class="livret-cell">
+        <div class="livret-code">C3</div>
+        <div class="livret-label">Confirmé</div>
+        <div class="livret-desc">Diagnostic autonome des erreurs, gestion de la dégradation pneumatique.</div>
+      </div>
+      <div class="livret-cell">
+        <div class="livret-code">C4</div>
+        <div class="livret-label">Avancé</div>
+        <div class="livret-desc">Techniques de compétition, gestion stratégique d'une course sur la durée.</div>
+      </div>
+      <div class="livret-cell elite">
+        <div class="livret-code">C5</div>
+        <div class="livret-label">Compétiteur</div>
+        <div class="livret-desc">Niveau d'entrée en sélection Challenge. Chronos de référence atteints.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ADMISSION ══ -->
+<section class="admission">
+  <div class="admission-seal">
+    <div class="admission-seal-top">★ Académie ★</div>
+    <div class="admission-seal-mid">JB<br>EMERIC</div>
+    <div class="admission-seal-bot">DEPUIS 1988</div>
+  </div>
+  <h2 class="admission-h">Demande <em>d'admission.</em></h2>
+  <p class="admission-lead">L'Académie ouvre les inscriptions toute l'année. Une journée d'évaluation suffit pour commencer le cursus.</p>
+  <a href="contact.html" class="admission-cta">Réserver une journée</a>
+  <div class="flourish">
+    <span></span>
+    <span class="flourish-mark">·</span>
+    <span></span>
+  </div>
+</section>
+
+</body>
+</html>

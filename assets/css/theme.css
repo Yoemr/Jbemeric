@@ -272,16 +272,7 @@
 }
 
 /* ─── CASSE PARAGRAPHES ──────────────────────────────────────────── */
-/* Force l'affichage en sentence case indépendamment de la saisie.   */
-/* Les titres/badges en uppercase sont gérés dans leur propre CSS.   */
-.hero-lead, .hero-sub, .ov-desc, .body-txt,
-.stat-desc, .sr-lead, .pc-lead, .man-lead, .art-desc {
-  text-transform: lowercase;
-}
-.hero-lead::first-letter, .hero-sub::first-letter,
-.ov-desc::first-letter, .body-txt::first-letter,
-.stat-desc::first-letter, .sr-lead::first-letter,
-.pc-lead::first-letter, .man-lead::first-letter,
-.art-desc::first-letter {
-  text-transform: uppercase;
-}
+/* Désactivé : CSS ne sait pas capitaliser après ". " (seul JS le fait). */
+/* L'auto-capitalisation phrase-par-phrase est gérée dans live-editor.js */
+/* via autoCapitalizeSentences() au load et au save.                    */
+/* Conserver le texte source tel quel pour préserver les majuscules.    */

@@ -137,8 +137,8 @@ function scanElements() {
     if (el.querySelector('a,img,button,input,select,textarea')) continue
     var txt = el.textContent.trim()
     if (!txt || txt.length < 2) continue
-    if (!el.id) el.id = 'txt-' + n
-    n++
+    // Compteur n n'avance QUE si on auto-assigne un ID — robuste aux changements DOM
+    if (!el.id) { el.id = 'txt-' + n; n++ }
     el.setAttribute('data-orig-html', el.innerHTML)
     el.setAttribute('data-orig', txt)
     if (el.getAttribute('style')) el.setAttribute('data-orig-style', el.getAttribute('style'))
@@ -156,8 +156,8 @@ function scanElements() {
     if (el2.querySelector('p,h1,h2,h3,h4,h5,h6,div,section,article,ul,ol,table,form')) continue
     var txt2 = el2.textContent.trim()
     if (!txt2 || txt2.length < 2) continue
-    if (!el2.id) el2.id = 'jbe-u-' + u
-    u++
+    // Compteur u n'avance QUE si on auto-assigne un ID — robuste aux changements DOM
+    if (!el2.id) { el2.id = 'jbe-u-' + u; u++ }
     el2.setAttribute('data-orig-html', el2.innerHTML)
     el2.setAttribute('data-orig', txt2)
     if (el2.getAttribute('style')) el2.setAttribute('data-orig-style', el2.getAttribute('style'))
@@ -185,8 +185,8 @@ function scanImages() {
     if (img.closest('.ov-card-img')) continue   // cards miroir index
     if (img.closest('.sr-card'))     continue   // cards track-days
     if (img.closest('[data-dashboard]')) continue // marqueur générique
-    if (!img.id) img.id = 'img-' + n
-    n++
+    // Compteur n n'avance QUE si on auto-assigne un ID — robuste aux ajouts/retraits d'images
+    if (!img.id) { img.id = 'img-' + n; n++ }
     img.setAttribute('data-orig-src', elSrc)
     _imgs.push(img)
   }
@@ -308,13 +308,26 @@ function _addVideoControls(vid) {
     wrap.style.display  = 'block'
     wrap.style.width    = cs.width
     wrap.style.height   = cs.height
+    // Préserver float + marges de la vidéo (ex: portrait float-left dans article)
+    if (cs.cssFloat && cs.cssFloat !== 'none') {
+      wrap.style.cssFloat     = cs.cssFloat
+      wrap.style.marginTop    = cs.marginTop
+      wrap.style.marginRight  = cs.marginRight
+      wrap.style.marginBottom = cs.marginBottom
+      wrap.style.marginLeft   = cs.marginLeft
+      // shape-outside éventuel (non utilisé sur le portrait actuel mais générique)
+      if (cs.shapeOutside && cs.shapeOutside !== 'none') {
+        wrap.style.shapeOutside = cs.shapeOutside
+      }
+    }
   }
 
   vid.parentNode.insertBefore(wrap, vid)
   wrap.appendChild(vid)
 
   // Réinitialiser le style inline de la vidéo (supprime inset, z-index, etc.)
-  vid.style.cssText = 'position:static;width:100%;height:100%;object-fit:' + cs.objectFit + ';object-position:' + cs.objectPosition + ';display:block'
+  // float:none pour éviter qu'un float hérité de la classe casse le wrap
+  vid.style.cssText = 'position:static;width:100%;height:100%;object-fit:' + cs.objectFit + ';object-position:' + cs.objectPosition + ';display:block;float:none;margin:0'
 
   vid.volume = 0.1
 
@@ -346,8 +359,9 @@ function _addVideoControls(vid) {
   volWrap.appendChild(volSlider)
   ctrl.appendChild(btnPlay)
   ctrl.appendChild(volWrap)
+  // Ancrage : .hero pour vidéos hero (CSS spécifique), sinon le wrap (vidéos in-flow type étapes)
   var heroSection = vid.closest ? vid.closest('.hero') : null
-  ;(heroSection || document.body).appendChild(ctrl)
+  ;(heroSection || wrap).appendChild(ctrl)
 
   btnPlay.addEventListener('click', function(e) {
     e.stopPropagation()
@@ -1111,8 +1125,25 @@ function activateImages() {
                   _addVideoControls(vid)
                 }
               } else {
-                savedTarget.src = url
-                if (altVal) savedTarget.alt = altVal
+                // Upload image
+                if (savedTarget.tagName === 'VIDEO') {
+                  // Swap vidéo → image : reconstruire <img> et virer wrap+contrôles
+                  var newImg = document.createElement('img')
+                  newImg.id        = savedTarget.id
+                  newImg.className = savedTarget.className
+                  newImg.src       = url
+                  if (altVal) newImg.alt = altVal
+                  var wrap = savedTarget.parentNode
+                  if (wrap && wrap.classList && wrap.classList.contains('jbe-vid-wrap')) {
+                    wrap.parentNode.replaceChild(newImg, wrap)
+                  } else {
+                    savedTarget.parentNode.replaceChild(newImg, savedTarget)
+                  }
+                  savedTarget = newImg
+                } else {
+                  savedTarget.src = url
+                  if (altVal) savedTarget.alt = altVal
+                }
               }
               saveMedia(savedTarget, url, isVid ? 'video' : 'image', altVal, nameVal)
             } else {
@@ -1217,9 +1248,15 @@ function activateImages() {
 function bindImage(img, floatBtn) {
   var target
   if (img.tagName === 'VIDEO') {
-    // Vidéo background : .hero-content (z-index:3) intercepte tous les events souris.
-    // On remonte à la section parente (.hero ou section) qui est accessible par la souris.
-    target = (img.closest && (img.closest('.hero') || img.closest('section'))) || img.parentNode || img
+    // Hero vidéos plein écran : utiliser .hero (l'overlay intercepte les events).
+    // Vidéos en flux (étapes, articles) : utiliser le wrap pour isoler chaque vidéo.
+    var heroAncestor = img.closest && img.closest('.hero')
+    if (heroAncestor) {
+      target = heroAncestor
+    } else {
+      var vWrap = img.closest && img.closest('.jbe-vid-wrap')
+      target = vWrap || (img.closest && img.closest('section')) || img.parentNode || img
+    }
   } else {
     // Utiliser le premier ancêtre positionné comme target des events mouse.
     var op = img.offsetParent
@@ -1292,13 +1329,15 @@ function saveMedia(el, url, mediaType, altText, fileName) {
   var payload = { id: key, content: url }
   if (altText)  payload.alt_text  = altText
   if (fileName) payload.file_name = fileName
-  if (mediaType === 'video') payload.media_type = 'video'
+  // Toujours envoyer media_type explicite \u2014 sinon en swap video\u2192image, l'ancien 'video' reste en DB
+  payload.media_type = (mediaType === 'video') ? 'video' : 'image'
   setStatus('\u23f3 Sauvegarde...')
   sb.from('site_content')
     .upsert(payload, { onConflict: 'id' })
     .then(function (res) {
       if (res.error) throw res.error
       _db[key] = url
+      _dbMeta[key] = payload.media_type
       setStatus('\u2705 ' + (mediaType === 'video' ? 'Vid\u00e9o' : 'Image') + ' sauvegard\u00e9e')
       flashImg(el)
     })

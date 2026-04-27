@@ -81,7 +81,10 @@
       "WebFetch(domain:www.facebook.com)",
       "Bash(find . -name \"*.html\" -not -path \"./node_modules/*\" -exec sed -i '/<link rel=\"icon\"[^>]*favicon\\\\.svg[^>]*>/d; /<link rel=\"shortcut icon\"[^>]*favicon\\\\.svg[^>]*>/d' {} \\\\;)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(ffmpeg -version)",
+      "PowerShell(Get-Command ffmpeg -ErrorAction SilentlyContinue)",
+      "PowerShell($ff = \"C:\\\\Users\\\\Yoemr\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\ffmpeg-8.1-full_build\\\\bin\\\\ffmpeg.exe\"; $fp = \"C:\\\\Users\\\\Yoemr\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\ffmpeg-8.1-full_build\\\\bin\\\\ffprobe.exe\"; $vid = \"D:\\\\OneDrive\\\\Documents\\\\Documents Perso\\\\Jbemeric\\\\assets\\\\images\\\\Conseille Karting Jbemeric.mp4\"; & $fp -v error -select_streams v:0 -show_entries stream=width,height,duration,r_frame_rate -of default=noprint_wrappers=1 $vid 2>&1)"
     ]
   }
 }

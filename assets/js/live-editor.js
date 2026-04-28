@@ -398,19 +398,58 @@ function applyVideoControlsToAll() {
   }
 }
 
+function _setVideoSrc(vid, url) {
+  var srcChild = vid.querySelector('source')
+  var current  = srcChild ? (srcChild.getAttribute('src') || '') : (vid.getAttribute('src') || '')
+  if (current === url) return
+  if (srcChild) srcChild.setAttribute('src', url)
+  else          vid.setAttribute('src', url)
+  vid.load()
+}
+
+function _makeImgFromVideo(vid, url) {
+  var img = document.createElement('img')
+  img.id        = vid.id
+  img.className = vid.className
+  img.src       = url
+  if (vid.alt) img.alt = vid.alt
+  return img
+}
+
 function applyImages() {
   for (var i = 0; i < _imgs.length; i++) {
     var img = _imgs[i]
     var key = PAGE + '__' + img.id
     if (!_db[key]) continue
-    if (_dbMeta[key] === 'video') {
-      if (img.tagName === 'VIDEO') continue // déjà une vidéo, pas de re-conversion
-      var vid = _makeVideoFromImg(img, _db[key])
-      img.parentNode.replaceChild(vid, img)
-      _imgs[i] = vid  // mettre à jour la référence : l'<img> est retiré du DOM
-      _addVideoControls(vid)
+    var url       = _db[key]
+    var dbType    = _dbMeta[key]
+    var elIsVideo = (img.tagName === 'VIDEO')
+    if (dbType === 'video') {
+      if (elIsVideo) {
+        // Element est déjà un <video> : juste maj la source si différente
+        _setVideoSrc(img, url)
+      } else {
+        // <img> -> <video>
+        var vid = _makeVideoFromImg(img, url)
+        img.parentNode.replaceChild(vid, img)
+        _imgs[i] = vid
+        _addVideoControls(vid)
+      }
     } else {
-      img.src = _db[key]
+      // dbType est 'image' (ou undefined)
+      if (elIsVideo) {
+        // <video> -> <img> (l'utilisateur avait swap video->image)
+        var newImg = _makeImgFromVideo(img, url)
+        var wrap = img.parentNode
+        if (wrap && wrap.classList && wrap.classList.contains('jbe-vid-wrap')) {
+          wrap.parentNode.replaceChild(newImg, wrap)
+        } else {
+          img.parentNode.replaceChild(newImg, img)
+        }
+        _imgs[i] = newImg
+      } else {
+        img.src = url
+      }
     }
   }
 }

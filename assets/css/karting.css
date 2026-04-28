@@ -204,7 +204,7 @@ img{display:block;max-width:100%}
 .fmt-portrait{
   float:left;
   width:140px;height:170px;
-  object-fit:cover;object-position:center 18%;
+  object-fit:cover;
   margin:0 22px 8px 0;
   border:1px solid rgba(255,207,0,.35);
   background:var(--bg-elev);

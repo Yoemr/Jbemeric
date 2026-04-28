@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<base href="/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maquette D — Race Program · Vers la Compétition · JB EMERIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Outfit',sans-serif;font-weight:300;
+  background:#030810;color:#fff;
+  -webkit-font-smoothing:antialiased;overflow-x:clip;
+}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+:root{
+  --bg:#030810;
+  --bg-panel:#07101e;
+  --bg-stripe:#050d1a;
+  --accent:#FFCF00;
+  --accent-dim:rgba(255,207,0,.1);
+  --accent-faint:rgba(255,207,0,.04);
+  --rule:rgba(255,255,255,.06);
+  --rule-accent:rgba(255,207,0,.2);
+  --ink-soft:rgba(255,255,255,.6);
+  --ink-mute:rgba(255,255,255,.3);
+}
+
+/* ── NAV ── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:stretch;height:56px;
+  background:var(--bg);
+  border-bottom:2px solid var(--accent);
+}
+.tb-section{
+  display:flex;align-items:center;padding:0 clamp(16px,3vw,40px);
+  border-right:1px solid var(--rule);
+}
+.tb-section:last-child{border-right:none;margin-left:auto}
+.tb-back{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ink-mute);transition:color .15s;
+}
+.tb-back:hover{color:#fff}
+.tb-num{
+  font-family:'Bebas Neue',sans-serif;font-size:28px;
+  color:var(--accent);letter-spacing:2px;line-height:1;
+}
+.tb-name{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2.5px;
+  text-transform:uppercase;color:#fff;
+}
+.tb-cta{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:#000;background:var(--accent);
+  padding:0 22px;display:flex;align-items:center;
+  transition:filter .2s;
+}
+.tb-cta:hover{filter:brightness(1.1)}
+
+/* ── HERO ── */
+.hero{
+  position:relative;
+  min-height:100svh;
+  display:grid;
+  grid-template-rows:1fr;
+  overflow:hidden;
+  padding-top:56px;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+}
+.hero-bg img{
+  width:100%;height:100%;object-fit:cover;object-position:center 35%;
+  filter:brightness(.3) saturate(.6);
+}
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(3,8,16,.98) 0%,rgba(3,8,16,.7) 55%,rgba(3,8,16,.3) 100%);
+}
+
+/* Bandes verticales style circuit */
+.hero-bands{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 79px,
+    rgba(255,207,0,.025) 79px,
+    rgba(255,207,0,.025) 80px
+  );
+}
+
+.hero-content{
+  position:relative;z-index:2;
+  padding:clamp(48px,6vw,80px) clamp(20px,5vw,72px);
+  display:flex;flex-direction:column;
+  gap:0;
+}
+
+/* En-tête dossier */
+.doc-header{
+  display:flex;align-items:center;gap:16px;
+  padding-bottom:clamp(20px,3vw,28px);
+  border-bottom:1px solid var(--rule-accent);
+  margin-bottom:clamp(24px,4vw,40px);
+  flex-wrap:wrap;
+}
+.dh-tag{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--accent);
+  background:rgba(255,207,0,.1);border:1px solid var(--rule-accent);
+  padding:5px 12px;
+}
+.dh-sep{color:var(--accent);opacity:.4;font-family:'DM Mono',monospace}
+.dh-ref{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ink-mute);
+}
+
+.hero-main{
+  display:grid;grid-template-columns:1fr;
+  gap:clamp(32px,5vw,60px);
+  align-items:center;
+}
+@media(min-width:900px){.hero-main{grid-template-columns:2fr 1fr}}
+
+.hero-text{display:flex;flex-direction:column;gap:clamp(18px,2.5vw,26px)}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(64px,11vw,148px);
+  line-height:.82;letter-spacing:-1px;
+}
+.hero-title em{font-style:normal;color:var(--accent)}
+.hero-lead{
+  font-size:clamp(13px,1.3vw,16px);line-height:1.75;
+  color:var(--ink-soft);max-width:540px;
+}
+.hero-ctas{display:flex;gap:10px;flex-wrap:wrap}
+.btn-prim,.btn-sec{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;padding:13px 24px;
+  display:inline-flex;align-items:center;gap:8px;transition:all .2s;
+}
+.btn-prim{background:var(--accent);color:#000}
+.btn-prim:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-sec{border:1px solid rgba(255,207,0,.25);color:var(--accent)}
+.btn-sec:hover{background:var(--accent-dim)}
+
+/* Panel dossier de droite */
+.hero-panel{
+  background:rgba(7,16,30,.8);backdrop-filter:blur(16px);
+  border:1px solid var(--rule-accent);
+}
+.hp-head{
+  background:var(--accent);padding:10px 16px;
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:#000;font-weight:500;
+}
+.hp-body{display:flex;flex-direction:column;gap:0}
+.hp-row{
+  padding:14px 16px;border-bottom:1px solid var(--rule);
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  align-items:center;
+}
+.hp-row:last-child{border-bottom:none}
+.hp-label{
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ink-mute);
+}
+.hp-val{
+  font-family:'DM Mono',monospace;font-size:clamp(14px,1.8vw,18px);
+  color:var(--accent);font-weight:500;text-align:right;
+}
+
+/* Bas du hero — index des entrées */
+.hero-index{
+  margin-top:clamp(32px,4vw,52px);
+  border-top:1px solid var(--rule);
+  padding-top:clamp(18px,2.5vw,24px);
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:2px;background:var(--rule);
+  border:1px solid var(--rule);
+}
+.hi-item{
+  background:rgba(3,8,16,.9);
+  padding:14px 18px;
+  display:flex;align-items:center;gap:12px;
+  transition:background .15s;
+}
+.hi-item:hover{background:var(--accent-faint)}
+.hi-num{
+  font-family:'Bebas Neue',sans-serif;font-size:28px;
+  color:rgba(255,207,0,.35);line-height:1;flex-shrink:0;
+}
+.hi-label{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-soft);line-height:1.4;
+}
+
+/* ── ENTRÉES DE COURSE ── */
+.entries{
+  padding:0 clamp(20px,5vw,72px);
+}
+
+.entry{
+  display:grid;grid-template-columns:1fr;
+  border-top:2px solid var(--rule);
+  transition:background .2s;
+}
+.entry:hover{background:var(--accent-faint)}
+@media(min-width:860px){
+  .entry{grid-template-columns:clamp(200px,22vw,280px) 1fr}
+}
+
+/* Colonne gauche — numéro + catégorie */
+.entry-id{
+  padding:clamp(32px,4vw,52px) clamp(20px,3vw,40px);
+  background:var(--bg-panel);
+  border-right:1px solid var(--rule);
+  display:flex;flex-direction:column;justify-content:space-between;
+  gap:24px;
+}
+@media(max-width:859px){.entry-id{border-right:none;border-bottom:1px solid var(--rule)}}
+
+.eid-num-wrap{display:flex;align-items:flex-end;gap:8px}
+.eid-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(80px,12vw,140px);
+  line-height:.85;color:var(--accent);
+}
+.eid-suffix{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ink-mute);
+  padding-bottom:8px;
+}
+.eid-cat{
+  display:flex;flex-direction:column;gap:6px;
+  border-top:1px solid var(--rule-accent);
+  padding-top:14px;
+}
+.eid-cat-label{
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ink-mute);
+}
+.eid-cat-val{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;
+  color:var(--accent);
+}
+
+/* Colonne droite — contenu */
+.entry-body{
+  padding:clamp(32px,4vw,52px) clamp(20px,3vw,48px);
+  display:flex;flex-direction:column;gap:clamp(20px,2.5vw,28px);
+}
+.eb-label{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--ink-mute);
+}
+.eb-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5.5vw,72px);line-height:.9;
+}
+.eb-title em{font-style:normal;color:var(--accent)}
+.eb-lead{
+  font-size:clamp(14px,1.3vw,16px);line-height:1.75;
+  color:var(--ink-soft);max-width:600px;
+}
+
+/* Tableau specs */
+.eb-specs{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  gap:1px;background:var(--rule);border:1px solid var(--rule);
+  max-width:560px;
+}
+.ebs-cell{
+  background:var(--bg-stripe);
+  padding:12px 14px;display:flex;flex-direction:column;gap:5px;
+}
+.ebs-val{
+  font-family:'DM Mono',monospace;
+  font-size:clamp(18px,2.5vw,26px);
+  color:var(--accent);line-height:1;
+}
+.ebs-key{
+  font-family:'DM Mono',monospace;font-size:8px;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--ink-mute);
+}
+
+/* Infos line */
+.eb-infos{
+  display:flex;flex-direction:column;gap:1px;
+  border-left:2px solid var(--accent);
+  padding-left:16px;max-width:560px;
+}
+.ebi{font-size:13px;line-height:1.6;color:var(--ink-soft)}
+.ebi strong{color:#fff;font-weight:500}
+
+.eb-cta{
+  background:var(--accent);color:#000;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;padding:12px 24px;
+  display:inline-flex;align-items:center;gap:8px;
+  align-self:flex-start;transition:all .2s;
+}
+.eb-cta:hover{filter:brightness(1.1);transform:translateY(-1px)}
+
+/* ── DISCIPLINES ── */
+.disciplines{
+  padding:clamp(64px,8vw,100px) clamp(20px,5vw,72px);
+  background:var(--bg-panel);
+  border-top:1px solid var(--rule);
+}
+.disc-kicker{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--accent);margin-bottom:14px;
+}
+.disc-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(32px,5vw,60px);line-height:.9;
+  margin-bottom:clamp(32px,4vw,48px);
+}
+.disc-title em{font-style:normal;color:var(--accent)}
+.disc-table{
+  border:1px solid var(--rule);
+  max-width:900px;
+}
+.dt-head,.dt-row{
+  display:grid;
+  grid-template-columns:40px 1fr 1fr auto;
+  gap:0;border-bottom:1px solid var(--rule);
+}
+.dt-row:last-child{border-bottom:none}
+.dt-head{background:rgba(255,207,0,.05)}
+.dt-cell{
+  padding:12px 16px;
+  font-size:14px;
+  border-right:1px solid var(--rule);
+}
+.dt-cell:last-child{border-right:none}
+.dt-head .dt-cell{
+  font-family:'DM Mono',monospace;font-size:8px;
+  letter-spacing:2px;text-transform:uppercase;color:var(--ink-mute);
+}
+.dt-row .dt-cell:first-child{
+  font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);
+  display:flex;align-items:center;
+}
+.dt-row .dt-cell:last-child{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--accent);
+  display:flex;align-items:center;white-space:nowrap;
+}
+.dt-row{transition:background .15s}
+.dt-row:hover{background:var(--accent-faint)}
+
+/* ── CTA FINAL ── */
+.cta-final{
+  padding:clamp(72px,9vw,110px) clamp(20px,5vw,72px);
+  background:var(--bg);
+  border-top:2px solid var(--accent);
+  display:grid;grid-template-columns:1fr auto;
+  align-items:center;gap:clamp(24px,4vw,60px);
+  flex-wrap:wrap;
+}
+@media(max-width:700px){.cta-final{grid-template-columns:1fr}}
+.cf-text{display:flex;flex-direction:column;gap:14px}
+.cf-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,7vw,88px);line-height:.88;
+}
+.cf-title em{font-style:normal;color:var(--accent)}
+.cf-lead{font-size:15px;line-height:1.7;color:var(--ink-soft);max-width:520px}
+.cf-ctas{display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+@media(max-width:700px){.cf-ctas{flex-direction:row;flex-wrap:wrap}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="tb-section">
+    <a class="tb-back" href="academie.html">← Académie</a>
+  </div>
+  <div class="tb-section">
+    <span class="tb-num">JBE</span>
+  </div>
+  <div class="tb-section">
+    <span class="tb-name">Vers la Compétition</span>
+  </div>
+  <div class="tb-section">
+    <a class="tb-cta" href="contact.html">Contact →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="assets/images/bmw-325i-htcc.jpg" alt="JB EMERIC compétition circuit">
+  </div>
+  <div class="hero-bands"></div>
+
+  <div class="hero-content">
+    <div class="doc-header">
+      <span class="dh-tag">Dossier Compétition</span>
+      <span class="dh-sep">·</span>
+      <span class="dh-ref">JB EMERIC École de Pilotage · Édition 2026</span>
+    </div>
+
+    <div class="hero-main">
+      <div class="hero-text">
+        <h1 class="hero-title">Former<br>des <em>pilotes.</em></h1>
+        <p class="hero-lead">Deux formations sérieuses — kart 125cc à boîte et voiture de circuit. Pour les pilotes qui ont l'ambition de courir en championnat, pas ceux qui cherchent une journée de loisir.</p>
+        <div class="hero-ctas">
+          <a href="#karting125" class="btn-prim">Kart 125cc →</a>
+          <a href="#voiture" class="btn-sec">Formation voiture →</a>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <div class="hp-head">Données Techniques</div>
+        <div class="hp-body">
+          <div class="hp-row"><span class="hp-label">0 → 100 km/h</span><span class="hp-val">1.2s</span></div>
+          <div class="hp-row"><span class="hp-label">Régime Rotax</span><span class="hp-val">18 000 tr/min</span></div>
+          <div class="hp-row"><span class="hp-label">Cylindrée</span><span class="hp-val">125cc 2T</span></div>
+          <div class="hp-row"><span class="hp-label">Voiture 01</span><span class="hp-val">206 S16</span></div>
+          <div class="hp-row"><span class="hp-label">Voiture 02</span><span class="hp-val">F. Renault</span></div>
+          <div class="hp-row"><span class="hp-label">Moniteur</span><span class="hp-val">Champion 88</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-index">
+      <div class="hi-item"><span class="hi-num">01</span><div class="hi-label">Kart 125cc<br>à boîte</div></div>
+      <div class="hi-item"><span class="hi-num">02</span><div class="hi-label">Formation<br>voiture</div></div>
+      <div class="hi-item"><span class="hi-num">03</span><div class="hi-label">Disciplines<br>accompagnement</div></div>
+      <div class="hi-item"><span class="hi-num">04</span><div class="hi-label">Challenge<br>HTCC</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ENTRÉE 01 — KARTING 125CC -->
+<section class="entries">
+  <div class="entry" id="karting125">
+    <div class="entry-id">
+      <div class="eid-num-wrap">
+        <span class="eid-num">01</span>
+        <span class="eid-suffix">Entrée</span>
+      </div>
+      <div class="eid-cat">
+        <span class="eid-cat-label">Catégorie</span>
+        <span class="eid-cat-val">Karting · 125cc Boîte</span>
+      </div>
+    </div>
+    <div class="entry-body">
+      <div class="eb-label">Karting Compétition · Continuation C1 → C5</div>
+      <h2 class="eb-title">Kart 125cc<br>à <em>boîte.</em></h2>
+      <p class="eb-lead">Ce n'est plus le kart de location. Le Rotax 125cc 2 temps à boîte séquentielle est une machine de compétition à part entière. La continuité naturelle du cursus C1→C5, pour les pilotes prêts à courir en championnat.</p>
+      <div class="eb-specs">
+        <div class="ebs-cell"><span class="ebs-val">1.2s</span><span class="ebs-key">0 → 100 km/h</span></div>
+        <div class="ebs-cell"><span class="ebs-val">18 000</span><span class="ebs-key">tr/min Rotax</span></div>
+        <div class="ebs-cell"><span class="ebs-val">125cc</span><span class="ebs-key">2 temps</span></div>
+        <div class="ebs-cell"><span class="ebs-val">×6</span><span class="ebs-key">Boîte séq.</span></div>
+      </div>
+      <div class="eb-infos">
+        <p class="ebi"><strong>Profil :</strong> Niveau C4–C5 confirmé sur kart 4 temps</p>
+        <p class="ebi"><strong>Débouchés :</strong> Championnats régionaux et nationaux FFSA Karting</p>
+        <p class="ebi"><strong>Encadrement :</strong> JB EMERIC — réglages, stratégie, debrief session</p>
+      </div>
+      <a href="contact.html" class="eb-cta">Réserver une session →</a>
+    </div>
+  </div>
+
+  <!-- ENTRÉE 02 — FORMATION VOITURE -->
+  <div class="entry" id="voiture">
+    <div class="entry-id">
+      <div class="eid-num-wrap">
+        <span class="eid-num">02</span>
+        <span class="eid-suffix">Entrée</span>
+      </div>
+      <div class="eid-cat">
+        <span class="eid-cat-label">Catégorie</span>
+        <span class="eid-cat-val">Voiture · 206 S16 → FR</span>
+      </div>
+    </div>
+    <div class="entry-body">
+      <div class="eb-label">Formation Voiture · Deux étapes successives</div>
+      <h2 class="eb-title">De la 206<br>à la <em>monoplace.</em></h2>
+      <p class="eb-lead">Deux étapes sur deux machines distinctes. La 206 S16 pour apprendre à piloter une vraie voiture de course. La Formule Renault pour passer à la monoplace. Chaque étape validée par JB — sans raccourci possible.</p>
+      <div class="eb-specs">
+        <div class="ebs-cell"><span class="ebs-val">206</span><span class="ebs-key">S16 · étape 01</span></div>
+        <div class="ebs-cell"><span class="ebs-val">FR</span><span class="ebs-key">Formule Renault</span></div>
+        <div class="ebs-cell"><span class="ebs-val">FFSA</span><span class="ebs-key">Circuits</span></div>
+        <div class="ebs-cell"><span class="ebs-val">JBE</span><span class="ebs-key">Encadrement</span></div>
+      </div>
+      <div class="eb-infos">
+        <p class="ebi"><strong>Profil :</strong> Adulte motivé — karting non obligatoire</p>
+        <p class="ebi"><strong>Progression :</strong> 206 maîtrisée → accès FR sur validation JB</p>
+        <p class="ebi"><strong>Débouchés :</strong> Mitjet, Clio Cup, monoplace, championnat</p>
+      </div>
+      <a href="contact.html" class="eb-cta">Discuter de mon projet →</a>
+    </div>
+  </div>
+</section>
+
+<!-- DISCIPLINES -->
+<section class="disciplines">
+  <div class="disc-kicker">— L'accompagnement</div>
+  <h2 class="disc-title">Les championnats.<br><em>On vous y emmène.</em></h2>
+  <div class="disc-table">
+    <div class="dt-head">
+      <div class="dt-cell">#</div>
+      <div class="dt-cell">Discipline</div>
+      <div class="dt-cell">Description</div>
+      <div class="dt-cell">Accès</div>
+    </div>
+    <div class="dt-row">
+      <div class="dt-cell">01</div>
+      <div class="dt-cell">Karting FFSA</div>
+      <div class="dt-cell">Championnats régionaux et nationaux. Continuation 125cc.</div>
+      <div class="dt-cell">Voiture fournie</div>
+    </div>
+    <div class="dt-row">
+      <div class="dt-cell">02</div>
+      <div class="dt-cell">Mitjet 1.6</div>
+      <div class="dt-cell">Biplace sportif, entrée accessible en compétition automobile.</div>
+      <div class="dt-cell">Location équipe</div>
+    </div>
+    <div class="dt-row">
+      <div class="dt-cell">03</div>
+      <div class="dt-cell">Clio Cup</div>
+      <div class="dt-cell">Monotype national, bonne visibilité sponsors.</div>
+      <div class="dt-cell">Location équipe</div>
+    </div>
+    <div class="dt-row">
+      <div class="dt-cell">+</div>
+      <div class="dt-cell">Autres</div>
+      <div class="dt-cell">D'autres disciplines étudiées selon profil et budget.</div>
+      <div class="dt-cell">Sur demande</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="cf-text">
+    <h2 class="cf-title">Par où<br><em>commencer ?</em></h2>
+    <p class="cf-lead">Quinze minutes avec JB. Votre profil, votre budget, votre objectif. Une réponse directe et honnête sur la bonne entrée.</p>
+  </div>
+  <div class="cf-ctas">
+    <a href="contact.html" class="btn-prim">Parler de mon projet →</a>
+    <a href="academie.html" class="btn-sec">Retour Académie →</a>
+  </div>
+</section>
+
+</body>
+</html>

@@ -30,6 +30,27 @@ var MIME = {
   '.webp':  'image/webp'
 }
 
+// ── Redirections (_redirects, format Netlify) ─────────────────────────────────
+// Lues au démarrage. Sans ça, les liens relatifs vers d'anciens chemins
+// (contact.html, articles.html, login.html…) tombent en 404 en local alors
+// qu'ils fonctionnent en production — et on croit à un bug du site.
+// Sémantique Netlify : un fichier existant l'emporte sur une règle de redirection.
+var REDIRECTS = {}
+
+function loadRedirects() {
+  var file = path.join(ROOT, '_redirects')
+  if (!fs.existsSync(file)) return
+  var lines = fs.readFileSync(file, 'utf8').split('\n')
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i].trim()
+    if (!line || line.charAt(0) === '#') continue
+    var parts = line.split(/\s+/)
+    if (parts.length < 2 || parts[0].charAt(0) !== '/') continue
+    REDIRECTS[parts[0]] = { to: parts[1], code: parseInt(parts[2], 10) || 301 }
+  }
+}
+loadRedirects()
+
 http.createServer(function (req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
@@ -47,10 +68,32 @@ http.createServer(function (req, res) {
     req.on('end', function () {
       try {
         var payload  = JSON.parse(body)
-        var page     = (payload.page || '').replace(/[^a-z0-9_-]/gi, '')
         var entries  = payload.entries || {}
-        var filename = page + '.html'
+
+        // payload.path = chemin complet depuis la racine ('academie/karting').
+        // payload.page = ancien format, nom de fichier seul — conservé en repli.
+        // Sans le chemin, toute page en sous-dossier échouait : 'karting' était
+        // cherché à la racine du projet, où il n'existe pas.
+        var rel = (typeof payload.path === 'string' && payload.path)
+                  ? payload.path
+                  : (payload.page || '')
+        rel = rel.replace(/\\/g, '/').replace(/^\/+/, '')
+
+        // Le point est exclu du jeu autorisé : pas de '..', donc pas de remontée.
+        if (!rel || !/^[a-z0-9/_-]+$/i.test(rel)) {
+          res.writeHead(400, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({ error: 'Chemin de page invalide : ' + rel }))
+          return
+        }
+
+        var filename = rel + '.html'
         var filePath = path.join(ROOT, filename)
+
+        if (filePath.indexOf(ROOT) !== 0) {
+          res.writeHead(403, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({ error: 'Chemin hors du projet' }))
+          return
+        }
 
         if (!fs.existsSync(filePath)) {
           res.writeHead(404, { 'Content-Type': 'application/json' })
@@ -101,7 +144,14 @@ http.createServer(function (req, res) {
     resolved = path.join(filePath, 'index.html')
   }
 
+  // Aucun fichier : on tente les règles de _redirects, comme le ferait Netlify
   if (!resolved) {
+    var rule = REDIRECTS[pathname]
+    if (rule) {
+      res.writeHead(rule.code, { 'Location': rule.to })
+      res.end()
+      return
+    }
     res.writeHead(404, { 'Content-Type': 'text/plain' })
     res.end('404 — ' + pathname)
     return
@@ -117,6 +167,7 @@ http.createServer(function (req, res) {
   var finalPort = addr && addr.port ? addr.port : PORT
   console.log('─────────────────────────────────────────')
   console.log('  Serveur JBE : http://localhost:' + finalPort)
-  console.log('  /save-html  : actif (màj HTML auto)')
+  console.log('  /save-html  : actif (màj HTML auto, sous-dossiers OK)')
+  console.log('  _redirects  : ' + Object.keys(REDIRECTS).length + ' règles chargées')
   console.log('─────────────────────────────────────────')
 })

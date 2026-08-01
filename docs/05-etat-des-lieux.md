@@ -1,4 +1,4 @@
-# État des lieux — inventaire du réel
+# État des lieux, inventaire du réel
 
 **Relevé le** : 1er août 2026
 **Périmètre** : 18 pages HTML, 21 CSS, 18 JS, `_redirects`, `routes.js`, `dev-server.js`
@@ -50,7 +50,7 @@ Utilitaire admin/legal/contact.html         16 Ko · 107 mots
 
 ## 2. Anomalies vérifiées
 
-### 2.1 — Le serveur local ne lit pas `_redirects`
+### 2.1 Le serveur local ne lit pas `_redirects`
 
 **Constat.** `outil-dev/dev-server.js` ne contient aucune gestion de redirection. Or de nombreuses pages utilisent des liens relatifs vers d'anciens chemins (`contact.html`, `articles.html`, `academie-competition.html`, `login.html`…), qui, combinés au `<base href="/">` présent sur les 18 pages, se résolvent en URLs racine couvertes uniquement par `_redirects`.
 
@@ -71,7 +71,7 @@ Utilitaire admin/legal/contact.html         16 Ko · 107 mots
 
 **Effet de bord en production.** Ces liens fonctionnent, mais chaque navigation interne concernée passe par un aller-retour 301 supplémentaire. La navigation dépend de `_redirects` plutôt que de `routes.js`, alors que `routes.js` se déclare « source unique de vérité pour toutes les URLs du site ».
 
-### 2.2 — La sauvegarde locale du live-editor est cassée sur toutes les pages en sous-dossier
+### 2.2 La sauvegarde locale du live-editor est cassée sur toutes les pages en sous-dossier
 
 **Constat.** `live-editor.js` ligne 12 :
 
@@ -79,7 +79,7 @@ Utilitaire admin/legal/contact.html         16 Ko · 107 mots
 var PAGE = (location.pathname.split('/').pop().replace('.html','')) || 'index'
 ```
 
-Pour `/academie/karting.html`, `PAGE` vaut `karting`. `dev-server.js` reconstruit ensuite le chemin par `path.join(ROOT, page + '.html')`, soit `/karting.html` — qui n'existe pas.
+Pour `/academie/karting.html`, `PAGE` vaut `karting`. `dev-server.js` reconstruit ensuite le chemin par `path.join(ROOT, page + '.html')`, soit `/karting.html`, qui n'existe pas.
 
 **Vérification par POST sur `/save-html`** :
 
@@ -88,11 +88,11 @@ Pour `/academie/karting.html`, `PAGE` vaut `karting`. `dev-server.js` reconstrui
 
 **Portée.** La sauvegarde locale ne fonctionne que pour les cinq pages restées à la racine : `index`, `academie`, `coaching`, `track`, `paddock`. Elle échoue sur les treize autres : les deux pages Académie, les quatre pages Paddock, et les sept pages utilitaires.
 
-**Non vérifié.** L'impact sur la persistance Supabase — `PAGE` sert aussi de préfixe aux clés `site_content`. La sauvegarde distante peut fonctionner alors que le cache HTML local échoue. À confirmer.
+**Non vérifié.** L'impact sur la persistance Supabase, `PAGE` sert aussi de préfixe aux clés `site_content`. La sauvegarde distante peut fonctionner alors que le cache HTML local échoue. À confirmer.
 
 **Risque latent.** `PAGE` étant dérivé du seul nom de fichier, deux pages homonymes dans des dossiers différents partageraient leurs clés de contenu. Aucun cas actuel.
 
-### 2.3 — Liens et ressources cassés
+### 2.3 Liens et ressources cassés
 
 | Élément | Détail |
 |---|---|
@@ -100,20 +100,20 @@ Pour `/academie/karting.html`, `PAGE` vaut `karting`. `dev-server.js` reconstrui
 | `paddock.html#lib` | Lié depuis `index.html` **et** depuis `paddock.html`. L'ancre réelle est `#blog`. |
 | `assets/images/jb-emeric-portrait.jpg` | Référencée par `academie/karting.html`. Absente du disque. Confirmée 404. |
 
-### 2.4 — Fichiers morts
+### 2.4 Fichiers morts
 
-**CSS chargés par aucune page** — `adulte.css`, `challenge.css`, `coming-soon.css`, `sections-contact.css`, et **`pages.css`**.
+**CSS chargés par aucune page** : `adulte.css`, `challenge.css`, `coming-soon.css`, `sections-contact.css`, et **`pages.css`**.
 
 `pages.css` mérite attention : `claude/MEMOIRE.md` le décrit comme un pilier de l'architecture CSS, « les règles communes à plusieurs pages ». Aucune page ne le charge. La convention documentée n'est pas celle du code.
 
-**JS chargés par aucune page** — `auth.js`, `section-avis.js`, `section-contact.js`, `sync-mirror.js.bak`, `track-sessions.js`.
+**JS chargés par aucune page** : `auth.js`, `section-avis.js`, `section-contact.js`, `sync-mirror.js.bak`, `track-sessions.js`.
 
 Deux cas particuliers :
 
-- **`auth.js`** n'est chargé nulle part, alors que `admin/login.html` et `admin/signup.html` chargent bien `auth.css`. Le mécanisme d'authentification est donc écrit en dur dans les pages, ou inopérant. **Non vérifié** — à examiner avant toute suppression.
+- **`auth.js`** n'est chargé nulle part, alors que `admin/login.html` et `admin/signup.html` chargent bien `auth.css`. Le mécanisme d'authentification est donc écrit en dur dans les pages, ou inopérant. **Non vérifié** : à examiner avant toute suppression.
 - **`track-sessions.js`** interroge la table `events`, comme `track-render.js` qui, lui, est bien chargé par `track.html`. Doublon probable.
 
-### 2.5 — SEO
+### 2.5 SEO
 
 **Canonique pointant vers l'accueil.** `admin/legal/contact.html` déclare `<link rel="canonical" href="https://jbemeric.netlify.app/">`. Cette balise indique à Google que la page contact est un doublon de l'accueil. C'est l'anomalie SEO la plus sérieuse relevée : elle conduit à la désindexation de la page contact.
 
@@ -123,17 +123,17 @@ Deux cas particuliers :
 
 **Métadonnées absentes.** `paddock/article.html` n'a ni `<title>`, ni `<meta description>`, ni canonique. Son `<h1>` est une concaténation JavaScript. La page est intégralement rendue côté client : 7 mots de contenu statique. Les 29 articles importés de WordPress n'ont donc aucun contenu indexable.
 
-**`<h1>` absent** — `paddock.html`, `admin/login.html`, `admin/signup.html`, `admin/dashboard.html`.
+**`<h1>` absent** : `paddock.html`, `admin/login.html`, `admin/signup.html`, `admin/dashboard.html`.
 
-### 2.6 — Contradictions entre les décisions actées et le site
+### 2.6 Contradictions entre les décisions actées et le site
 
-**« PACA » supprimé du SEO — décision d'avril 2026, jamais appliquée.** La mention subsiste dans les `<title>` de `index.html`, `coaching.html`, `track.html` et `admin/legal/contact.html`, ainsi que dans plusieurs `<meta description>`.
+**« PACA » supprimé du SEO, décision d'avril 2026, jamais appliquée.** La mention subsiste dans les `<title>` de `index.html`, `coaching.html`, `track.html` et `admin/legal/contact.html`, ainsi que dans plusieurs `<meta description>`.
 
-**Parcours linéaire abandonné — décision d'avril 2026, subsiste dans les métadonnées.** La description de `academie.html` annonce : « De karting enfant à la compétition BMW HTCC. 5 niveaux progressifs ». C'est exactement le modèle linéaire remplacé par les quatre voies parallèles, et cela survend le Challenge que la décision demandait de ne pas mettre en vedette. Le corps de la page, lui, dit « Deux entrées vers la course ».
+**Parcours linéaire abandonné, décision d'avril 2026, subsiste dans les métadonnées.** La description de `academie.html` annonce : « De karting enfant à la compétition BMW HTCC. 5 niveaux progressifs ». C'est exactement le modèle linéaire remplacé par les quatre voies parallèles, et cela survend le Challenge que la décision demandait de ne pas mettre en vedette. Le corps de la page, lui, dit « Deux entrées vers la course ».
 
 **Page « Stages » inexistante.** Le tableau des cinq offres du `MEMOIRE.md` la présente comme une page. C'est l'ancre `track.html#stages`.
 
-### 2.7 — Base de données
+### 2.7 Base de données
 
 Tables interrogées, par fichier :
 
@@ -148,19 +148,19 @@ Tables interrogées, par fichier :
 | `users` | `admin.js` |
 | `circuits` | `admin.js` |
 
-`circuits` est documentée dans `MEMOIRE.md` comme non exposée via l'API REST — toute requête la concernant renvoie 400. `admin.js` l'interroge néanmoins. **Non vérifié** : le tableau de bord admin est-il fonctionnel sur ce point.
+`circuits` est documentée dans `MEMOIRE.md` comme non exposée via l'API REST, toute requête la concernant renvoie 400. `admin.js` l'interroge néanmoins. **Non vérifié** : le tableau de bord admin est-il fonctionnel sur ce point.
 
 ---
 
-## 3. Incohérences de dates — à documenter, pas à corriger
+## 3. Incohérences de dates, à documenter, pas à corriger
 
 Le site emploie quatre repères temporels qui semblent se contredire mais ne se contredisent pas :
 
-- **1986** — début en karting (`paddock/palmares.html` : « 1986-2026 »)
-- **1988** — Champion de France de karting (`MEMOIRE.md`)
-- **1989** — création de l'école (`index.html` : « Depuis 1989 », URL Facebook `JBEMERIC.Since1989`)
-- **« 40 ans de compétition »** (`academie.html`, `paddock/palmares.html`) — 2026 − 1986
-- **« 37 ans à former des pilotes »** (`academie/karting.html`) — 2026 − 1989
+- **1986** : début en karting (`paddock/palmares.html` : « 1986-2026 »)
+- **1988** : Champion de France de karting (`MEMOIRE.md`)
+- **1989** : création de l'école (`index.html` : « Depuis 1989 », URL Facebook `JBEMERIC.Since1989`)
+- **« 40 ans de compétition »** (`academie.html`, `paddock/palmares.html`), 2026 − 1986
+- **« 37 ans à former des pilotes »** (`academie/karting.html`), 2026 − 1989
 
 L'ensemble est cohérent : quarante ans de carrière de pilote, trente-sept ans d'enseignement. Mais la distinction n'est écrite nulle part, ce qui expose à une « correction » qui casserait la justesse actuelle. À consigner dans le document éditorial.
 
@@ -170,13 +170,13 @@ L'ensemble est cohérent : quarante ans de carrière de pilote, trente-sept ans 
 
 À préserver lors du nettoyage.
 
-- **`routes.js`** — source centrale des chemins, commentée, avec un helper de page courante et un correctif pour les ancres sous `<base href="/">`. Bien conçu.
-- **`_redirects`** — couverture complète des anciennes URLs, plus des raccourcis lisibles (`/karting`, `/palmares`, `/contact`).
-- **`<base href="/">`** — présent sur les 18 pages, sans exception.
-- **`sync-mirror.js`** — le mécanisme de ressource transversale existe déjà : il aspire `academie.html#portes`, `coaching.html#formules` et `track.html#sr-grid` pour les injecter dans l'accueil, et notifie le live-editor par `jbe-mirror-loaded`. C'est la base sur laquelle brancher le palmarès.
-- **`nav.js` / `footer.js`** — autorité unique, injection dynamique, sous-menus cohérents avec l'arborescence.
-- **Arborescence** — `academie/` et `paddock/` respectent déjà la hiérarchie voulue.
-- **Métadonnées** — hors les cas listés en 2.5, les pages principales ont des `<title>` et descriptions rédigés, pas générés.
+- **`routes.js`** : source centrale des chemins, commentée, avec un helper de page courante et un correctif pour les ancres sous `<base href="/">`. Bien conçu.
+- **`_redirects`** : couverture complète des anciennes URLs, plus des raccourcis lisibles (`/karting`, `/palmares`, `/contact`).
+- **`<base href="/">`** : présent sur les 18 pages, sans exception.
+- **`sync-mirror.js`** : le mécanisme de ressource transversale existe déjà : il aspire `academie.html#portes`, `coaching.html#formules` et `track.html#sr-grid` pour les injecter dans l'accueil, et notifie le live-editor par `jbe-mirror-loaded`. C'est la base sur laquelle brancher le palmarès.
+- **`nav.js` / `footer.js`** : autorité unique, injection dynamique, sous-menus cohérents avec l'arborescence.
+- **Arborescence** : `academie/` et `paddock/` respectent déjà la hiérarchie voulue.
+- **Métadonnées** : hors les cas listés en 2.5, les pages principales ont des `<title>` et descriptions rédigés, pas générés.
 
 ---
 
@@ -184,8 +184,8 @@ L'ensemble est cohérent : quarante ans de carrière de pilote, trente-sept ans 
 
 À trancher par Yoan, hors de ce chantier.
 
-1. **« Nos voitures »** — l'ancre `track.html#voitures` ou la page `paddock/nos-voitures.html` ? Les deux existent, la seconde est invisible.
-2. **`track.html`** — reste une page longue à ancres, ou éclate en sous-pages ?
-3. **`auth.js`** — code mort à supprimer, ou fonctionnalité jamais branchée à rétablir ?
-4. **`paddock/article.html`** — le rendu 100 % client est-il assumé, ou faut-il rendre les 29 articles indexables ?
-5. **Pages publiques dans `admin/`** — `contact`, `mentions-legales`, `confidentialite` en sortent-elles ?
+1. **« Nos voitures »** : l'ancre `track.html#voitures` ou la page `paddock/nos-voitures.html` ? Les deux existent, la seconde est invisible.
+2. **`track.html`** : reste une page longue à ancres, ou éclate en sous-pages ?
+3. **`auth.js`** : code mort à supprimer, ou fonctionnalité jamais branchée à rétablir ?
+4. **`paddock/article.html`** : le rendu 100 % client est-il assumé, ou faut-il rendre les 29 articles indexables ?
+5. **Pages publiques dans `admin/`** : `contact`, `mentions-legales`, `confidentialite` en sortent-elles ?

@@ -124,25 +124,33 @@ Dix avis, c'est très peu pour 37 ans d'activité. Il y a un gisement là.
 
 > 265 avenue du Col de l'Ange, **Gémenos**
 
-**Téléphones relevés** : 04 42 32 87 87 (fixe) et 06 60 18 87 87 (mobile). **À vérifier par Yoan** : le fixe de Gémenos est-il encore actif après le déménagement ?
+**Téléphones.**
+
+- **06 60 18 87 87**, mobile. **Confirmé actif par Yoan.** C'est le numéro sûr.
+- **04 42 32 87 87**, fixe. Statut incertain, Yoan pense qu'il fonctionne encore sans en être certain. C'est pourtant **le seul numéro affiché sur les supports externes** : ancien site, TripAdvisor, annuaires.
+
+**Action à faible coût et à effet immédiat** : appeler le fixe pour trancher. S'il est mort, chaque support externe envoie les prospects dans le vide, et là ce ne sont pas des positions de référencement qui se perdent, ce sont des ventes. Dans le doute, basculer les supports externes sur le mobile.
 
 **Création de l'école** : 1989.
 **Argument récurrent sur les supports externes** : première école à proposer du sport automobile sur le circuit du Grand-Sambuc.
 
-### Le problème
+### Ce que ça change, et ce que ça ne change pas
 
-Le nouveau site est le **seul** support qui indique Aubagne. Tout le reste de l'empreinte web pointe encore sur Gémenos :
+**Précision de Yoan, 1er août 2026** : « L'adresse n'a pas vraiment d'importance, rien ne se fait sur place. »
 
-- `jbemeric.com`, le site principal actuel
-- La fiche TripAdvisor, ancrée sur la page géographique de Gémenos
-- Les annuaires et pages de revendeurs
-- `assets/js/site-data.js` du nouveau site, qui pointe encore vers l'URL TripAdvisor version Gémenos
+C'est déterminant, et ça invalide l'analyse que j'avais posée en première passe. Je la corrige ici plutôt que de la laisser traîner.
 
-Pour une activité locale, l'adresse est le premier signal de référencement. Un client qui cherche « stage de pilotage Aubagne » ou « stage de pilotage Marseille » tombe sur des fiches qui annoncent une ville où l'entreprise n'est plus.
+**L'adresse n'est qu'administrative.** Aucun client ne s'y rend. L'activité se déroule sur des circuits, à chaque fois ailleurs. Mettre à jour l'adresse sur quinze annuaires n'apportera pratiquement rien.
 
-**À traiter** : mise à jour de l'adresse sur chaque support externe, un par un. C'est fastidieux et sans intérêt intellectuel, mais c'est probablement l'action au meilleur rapport effort/résultat de tout le projet.
+**Ce qui compte réellement en référencement local, ce sont les circuits.** Le client ne cherche pas « école de pilotage Aubagne », il cherche « stage de pilotage Paul Ricard », « track day Lédenon », « circuit du Luc ». Ce sont les lieux d'activité qui doivent porter le référencement local, pas le domicile.
 
-**Nuance à conserver** : Gémenos reste un lieu de l'histoire de JB, la ville apparaît d'ailleurs dans son palmarès et parmi ses sponsors historiques. On corrige l'adresse commerciale, on n'efface pas le passé.
+L'ancien site l'avait d'ailleurs compris à sa manière : il annonce onze circuits, dont Barcelone, Spa et Monza. C'est cette liste qui a de la valeur.
+
+**Conséquence pratique** : si une fiche Google Business Profile est créée, elle doit l'être en **zone de service** et non en établissement avec adresse visible. C'est le réglage prévu par Google pour les activités qui se déplacent chez le client.
+
+**Reste vrai malgré tout** : le lien TripAdvisor codé dans `assets/js/site-data.js` pointe sur la version Gémenos. À corriger, mais c'est de l'hygiène, pas une priorité.
+
+**Nuance à conserver** : Gémenos reste un lieu de l'histoire de JB. La ville figure dans son palmarès et parmi ses sponsors historiques. On ne l'efface pas.
 
 ---
 
@@ -160,11 +168,35 @@ Pour une activité locale, l'adresse est le premier signal de référencement. U
 
 **Dix avis TripAdvisor pour 37 ans d'activité.** La preuve sociale est sous-exploitée alors que le positionnement repose sur la réputation de l'homme.
 
-**Toute l'empreinte externe annonce la mauvaise ville.** JB est à Aubagne, le web dit Gémenos. Voir section 5. Correction à faire support par support, y compris dans `assets/js/site-data.js` qui pointe encore sur l'URL TripAdvisor de Gémenos.
+**Le référencement local doit viser les circuits, pas le domicile.** Rien ne se déroule à l'adresse de l'entreprise. Voir section 5.
+
+**Un numéro incertain est affiché partout.** Le fixe figure sur tous les supports externes et son statut n'est pas établi. Le mobile, lui, est confirmé actif.
+
+**La boutique n'a jamais été un vrai chantier.** Précision de Yoan : ni la boutique ni beaucoup de sous-pages de menu n'ont réellement été travaillées, et certaines ont été créées sans son accord. Voir la section 8.
 
 ---
 
-## 7. Sources
+## 7. Ce qui n'a jamais été validé
+
+**Déclaration de Yoan, 1er août 2026** : « La boutique on l'a jamais vraiment travaillée. Beaucoup de sous-pages de menu n'ont jamais vraiment été travaillées, parfois même créées sans mon autorisation. »
+
+C'est à prendre au sérieux. Une partie du site existant n'est pas le fruit d'une décision, mais d'une initiative prise en cours de session sans validation. Ces pages occupent de la place, portent du contenu et apparaissent dans des menus, tout en ne représentant aucune intention.
+
+**Candidats identifiés par l'inventaire**, à confirmer par Yoan un par un :
+
+| Élément | Indice |
+|---|---|
+| `paddock/nos-voitures.html` | 19 Ko, CSS dédié, absente de toute navigation |
+| Entrée de menu « Boutique 4x sans frais » | Pointe vers un domaine en 404 |
+| Ancres `track.html#voiture-perso` | Référencée par le menu, n'existe pas dans la page |
+| `old/`, 9 fichiers | Maquettes et sauvegardes jamais nettoyées |
+| CSS `adulte.css`, `challenge.css`, `coming-soon.css` | Vestiges de pages supprimées |
+
+**Règle à inscrire dans `CLAUDE.md`** : aucune page, aucune entrée de menu, aucune section n'est créée sans accord explicite de Yoan. C'est la cause directe d'une partie du désordre actuel.
+
+---
+
+## 8. Sources
 
 - [jbemeric.com](https://jbemeric.com/)
 - [Palmarès sur l'ancien site](https://jbemeric.com/palmares/)

@@ -97,9 +97,11 @@ Téléphone affiché : 04 79 26 46 60. **Ce n'est pas le numéro de JB** (04 42 
 
 Non contrôlées par JB, mais visibles par les clients.
 
-**TripAdvisor, deux fiches pour le même établissement.**
-- `d12031338` rattachée à Gémenos (`g488288`)
-- `d12031338` rattachée à Aubagne (`g644128`)
+**TripAdvisor, une seule fiche mais rattachée à la mauvaise ville.**
+
+L'établissement porte l'identifiant `d12031338`. Il est accessible via deux pages géographiques, Gémenos (`g488288`) et Aubagne (`g644128`), mais c'est bien **une seule fiche**, pas un doublon. J'avais annoncé deux fiches lors de la première passe, c'était faux.
+
+Le problème réel est ailleurs : la fiche est ancrée sur **Gémenos**, l'ancienne implantation. Voir la section 5 sur le déménagement.
 
 84 % d'avis positifs sur 10 avis. Les avis lus sont bons : ambiance, organisation professionnelle, pertinence des conseils techniques, qualité du coaching. Un avis porte spécifiquement sur un trackday avec voiture personnelle, un autre sur un stage Megane RS au circuit du Luc.
 
@@ -111,14 +113,36 @@ Dix avis, c'est très peu pour 37 ans d'activité. Il y a un gisement là.
 
 ---
 
-## 5. Coordonnées officielles relevées
+## 5. Le déménagement, et pourquoi il compte
 
-- Adresse : 265 avenue du Col de l'Ange, Gémenos
-- Téléphone : +33 4 42 32 87 87
-- Création de l'école : 1989
-- Argument récurrent : première école à proposer du sport automobile sur le circuit du Grand-Sambuc
+**Adresse actuelle, confirmée par Yoan et par les mentions légales du nouveau site :**
 
-**À vérifier par Yoan** : l'adresse de Gémenos est-elle toujours valide ? Le `MEMOIRE.md` mentionne 475 Chemin du Bon Civet dans les mentions légales du nouveau site. Deux adresses circulent.
+> 475 Chemin du Bon Civet, 13400 **Aubagne**
+> SIRET 38095916300037
+
+**Ancienne adresse, valable pendant environ vingt ans :**
+
+> 265 avenue du Col de l'Ange, **Gémenos**
+
+**Téléphones relevés** : 04 42 32 87 87 (fixe) et 06 60 18 87 87 (mobile). **À vérifier par Yoan** : le fixe de Gémenos est-il encore actif après le déménagement ?
+
+**Création de l'école** : 1989.
+**Argument récurrent sur les supports externes** : première école à proposer du sport automobile sur le circuit du Grand-Sambuc.
+
+### Le problème
+
+Le nouveau site est le **seul** support qui indique Aubagne. Tout le reste de l'empreinte web pointe encore sur Gémenos :
+
+- `jbemeric.com`, le site principal actuel
+- La fiche TripAdvisor, ancrée sur la page géographique de Gémenos
+- Les annuaires et pages de revendeurs
+- `assets/js/site-data.js` du nouveau site, qui pointe encore vers l'URL TripAdvisor version Gémenos
+
+Pour une activité locale, l'adresse est le premier signal de référencement. Un client qui cherche « stage de pilotage Aubagne » ou « stage de pilotage Marseille » tombe sur des fiches qui annoncent une ville où l'entreprise n'est plus.
+
+**À traiter** : mise à jour de l'adresse sur chaque support externe, un par un. C'est fastidieux et sans intérêt intellectuel, mais c'est probablement l'action au meilleur rapport effort/résultat de tout le projet.
+
+**Nuance à conserver** : Gémenos reste un lieu de l'histoire de JB, la ville apparaît d'ailleurs dans son palmarès et parmi ses sponsors historiques. On corrige l'adresse commerciale, on n'efface pas le passé.
 
 ---
 
@@ -135,6 +159,8 @@ Dix avis, c'est très peu pour 37 ans d'activité. Il y a un gisement là.
 **La liste des circuits du vieux site est plus riche que celle du nouveau.** Onze circuits, dont trois à l'étranger. C'est du contenu à récupérer, pas à jeter.
 
 **Dix avis TripAdvisor pour 37 ans d'activité.** La preuve sociale est sous-exploitée alors que le positionnement repose sur la réputation de l'homme.
+
+**Toute l'empreinte externe annonce la mauvaise ville.** JB est à Aubagne, le web dit Gémenos. Voir section 5. Correction à faire support par support, y compris dans `assets/js/site-data.js` qui pointe encore sur l'URL TripAdvisor de Gémenos.
 
 ---
 

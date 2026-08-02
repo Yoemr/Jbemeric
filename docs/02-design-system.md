@@ -154,7 +154,54 @@ Le pattern inverse, `em { display: block }`, est volontaire sur les titres `.pc-
 
 ---
 
-## 6. Questions ouvertes
+## 6. Médias vidéo
+
+**Statut : décision reportée au chantier de refonte du design.**
+
+### Ce qui existe
+
+Sept fichiers `.mp4` dans `assets/images/`, 129 Mo au total.
+
+| Fichier | Poids | Format | Durée |
+|---|---|---|---|
+| Presentation Jbemeric | 43,4 Mo | 1280x720 | 2 min 41 |
+| Stage de pilotage Karting pour enfants | 25,3 Mo | **720x1280 portrait** | 1 min 08 |
+| Coaching Jbemeric | 21,4 Mo | 640x360 | 4 min 18 |
+| Jean Baptiste EMERIC Stages de pilotage | 13,6 Mo | | |
+| Les bases du pilotage | 11,0 Mo | | |
+| Journee de Stage | 10,2 Mo | | |
+| Conseille Karting Jbemeric | 4,5 Mo | | |
+
+Ce sont des vidéos complètes, pas des boucles de fond.
+
+### Le problème actuel
+
+`academie/karting.html` lance en automatique une vidéo de **25,3 Mo au format portrait** comme fond de hero. Lourde sur mobile, et mal cadrée sur écran large. C'est en production aujourd'hui.
+
+### Ce qui a été mesuré
+
+Un extrait de 12 secondes, piste audio retirée, résolution inchangée :
+
+- Presentation : 43,4 Mo devient **1,59 Mo**
+- Coaching : 21,4 Mo devient **0,47 Mo**
+
+Le gain vient de la durée, pas de la compression. Un hero n'a pas besoin de deux minutes.
+
+### La direction retenue par Yoan
+
+**Pas de compression uniforme. Une version distincte pour mobile**, la qualité pleine restant sur grand écran.
+
+**Piège technique à connaître** : l'attribut `media` sur les balises `<source>` d'un élément `<video>` n'est pas fiable selon les navigateurs. Il faut sélectionner la source en JavaScript, via `matchMedia`, ou ne servir la vidéo qu'au-dessus d'une largeur donnée et laisser le `poster` seul en dessous.
+
+### Où vivent les vidéos aujourd'hui
+
+Sauf sur `academie/karting.html`, elles ne sont **pas** dans le HTML. Elles sont stockées dans Supabase et injectées au chargement par `live-editor.js`, qui remplace une `<img>` par une `<video>`. Vérifié dans le cache de `academie.html` : `academie__img-1` pointe vers un `.mp4`.
+
+**Conséquence** : si Supabase ne répond pas, les pages sans cache local n'affichent que l'image de secours. `index.html`, `coaching.html`, `track.html` et `paddock.html` ont **zéro entrée** en cache.
+
+---
+
+## 7. Questions ouvertes
 
 1. **Les effets miroir de l'accueil.** Yoan était parti sur des aperçus de chaque page avec effet miroir. Il n'en est plus certain et pense s'être obstiné pour rien. À trancher avec les rôles éditorial et SEO, pas seul.
 2. **`palmares.css`, 53 Ko** pour une page rendue en JavaScript. Vérifier ce que ce fichier contient réellement.

@@ -77,21 +77,35 @@ Hors menu, statut incertain
 
 ## 3. Statut de chaque page
 
-| Page | Statut | Motif |
-|---|---|---|
-| `index.html` | **à définir** | Cahier des charges donné oralement, effets miroir en suspens |
-| `academie.html` | **à refondre** | Le Challenge en était un pilier, il est mort |
-| `academie/karting.html` | à refondre | Hérite du niveau 1 |
-| `academie/competition.html` | à refondre | Contient une section `#challenge` devenue caduque |
-| `coaching.html` | **défini** | Deux profils clairs, énoncés par Yoan |
-| `track.html` | **en chantier** | Trois modèles économiques à arbitrer, voir section 5 |
-| `paddock.html` | **défini** | Hub média, structure claire |
-| `paddock/articles.html` | défini | Hérite du niveau 4 |
-| `paddock/article.html` | défini | Gabarit, hérite de 4.1 |
-| `paddock/palmares.html` | défini | Également ressource transversale |
-| `paddock/nos-voitures.html` | **jamais validé** | Absente de tout menu, doublon d'une ancre |
-| `admin/dashboard.html` | **à définir** | Le plus gros chantier à venir |
-| Pages légales | utilitaire | Standard, pas de cahier des charges |
+**Déclaré par Yoan le 1er août 2026.** Ces statuts remplacent une première évaluation de Claude qui présentait Coaching et Paddock comme définis. Ils ne le sont pas.
+
+> **Aucune page du site n'est terminée.** Certaines n'ont jamais été travaillées, d'autres sont à reprendre intégralement.
+
+### Ce qui a reçu du travail
+
+| Élément | État |
+|---|---|
+| `index.html` | Travaillée, **non finie** |
+| `academie.html` et ses sous-pages | Travaillées, **non finies**, à reprendre. Le Challenge en était un pilier, il est mort. |
+| `coaching.html` | Travaillée, **non finie** |
+| `paddock.html` | Travaillée, **non finie** |
+| **`assets/js/live-editor.js`** | **Le plus gros investissement du projet.** Voir ci-dessous. |
+
+### Ce qui n'a pas vraiment été travaillé
+
+`track.html` · `paddock/nos-voitures.html` · `admin/dashboard.html` · `admin/login.html` · `admin/signup.html` · `admin/mot-de-passe-oublie.html` · les trois pages légales.
+
+Yoan a précisé que certaines sous-pages de menu ont même été **créées sans son accord**. Voir `docs/audit-plateformes.md` section 7.
+
+### Le live-editor est le vrai actif du projet
+
+C'est là qu'est passé l'essentiel du temps de développement. Il permet à JB de modifier textes et images directement sur le site, connecté en admin, sans toucher au code.
+
+Ce n'est pas une fonctionnalité parmi d'autres. **C'est ce qui rend le site tenable pour un homme de 65 ans qui n'écrira jamais une ligne de HTML.** Sans lui, chaque changement de tarif ou de date passe par Yoan, depuis l'Australie.
+
+État au 1er août 2026 : environ 1800 lignes, plus 238 lignes de travail non commité sur un système d'identifiants stables. Deux bugs corrigés le jour même, voir `docs/03-technique.md` section 5.
+
+**Conséquence pour tout chantier de refonte** : le live-editor s'appuie sur la structure du DOM pour retrouver ses contenus. Refondre une page sans en tenir compte casse le lien entre la page et ce que JB a saisi dans Supabase.
 
 ---
 
@@ -150,9 +164,14 @@ Plus les **track-days** proprement dits, où JB loue le circuit ou se greffe sur
 
 Un cahier des charges par page maîtresse, au moment d'attaquer la page. Pas tous d'avance.
 
-Ordre suggéré, du plus urgent au moins urgent :
+**Contexte décisif** : aucune page n'est finie, et Yoan a annoncé le 1er août 2026 que l'ensemble du design est à revoir. Il ne s'agit donc pas de corriger des pages existantes mais de les reconstruire, sur un argument commercial qui a changé.
 
-1. **Niveau 3, Stages & Track-Days.** C'est là que se trouve le modèle économique le plus prometteur, et c'est la page la plus cassée.
-2. **Niveau 1, Académie.** Le Challenge en était un pilier, il faut le remplacer.
-3. **Niveau 0, Accueil.** Dépend de ce que les autres pages racontent.
-4. **Niveau 5, Admin.** Le plus gros chantier technique, mais il ne bloque pas les ventes.
+Ordre suggéré, à discuter :
+
+1. **Niveau 1, Académie.** Sujet le plus clair, une école du karting à la compétition, enfants et adultes, plusieurs budgets. Le Challenge doit être remplacé de toute façon. Bonne page pilote pour faire émerger le design system en construisant plutôt qu'en théorisant.
+2. **Niveau 3, Stages & Track-Days.** C'est là que se trouve l'argent, mais trois modèles économiques restent à arbitrer avant de pouvoir dessiner quoi que ce soit.
+3. **Niveau 2, Coaching.** Deux profils déjà clairs, dépend de ce que dit le niveau 3.
+4. **Niveau 0, Accueil.** En dernier parmi les pages publiques : il agrège ce que les autres racontent.
+5. **Niveau 5, Admin.** Gros chantier technique, ne bloque aucune vente, mais conditionne l'autonomie de JB.
+
+**Contrainte transversale** : le live-editor lit la structure du DOM pour retrouver les contenus saisis par JB. Toute refonte de page doit préserver ce lien, ou prévoir la migration des clés `site_content`.

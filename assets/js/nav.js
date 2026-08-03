@@ -1,5 +1,5 @@
 /**
- * nav.js — JB EMERIC
+ * nav.js : JB EMERIC
  * Injecte la nav et le burger mobile dans chaque page.
  * Marque automatiquement le bon item "active" selon l'URL.
  */

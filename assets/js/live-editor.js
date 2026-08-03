@@ -1,4 +1,4 @@
-// live-editor.js — JB EMERIC
+// live-editor.js : JB EMERIC
 // ZERO class ES6 · ZERO template literal · ZERO arrow function
 console.log("live-editor.js charge !");
 console.log("Configuration OK : Utilisation des colonnes id et content uniquement");
@@ -87,15 +87,15 @@ var _db       = {}
 var _dbMeta   = {}
 var _els      = []
 var _imgs     = []
-// _vidCtrls supprimé — ctrl ancré au .hero, plus de repositionnement JS
+// _vidCtrls supprimé : ctrl ancré au .hero, plus de repositionnement JS
 var _dirty    = {}
 var _active = null
 var _bar    = null
 
-// ─── ID STABLES (universal — anchor + DOM path) ──────
+// ─── ID STABLES (universal : anchor + DOM path) ──────
 // Format : s_<anchor>__<tag.class[-idx]>__<...>
 // L'anchor = ancêtre le plus proche avec un id explicite (non auto-généré).
-// Robuste aux ajouts/retraits d'éléments — l'ID ne dépend pas de l'ordre
+// Robuste aux ajouts/retraits d'éléments : l'ID ne dépend pas de l'ordre
 // document, juste de la position relative à un anchor stable.
 
 function _isExplicitId(id) {
@@ -161,8 +161,8 @@ function _computeStableId(el) {
 
 // ─── SANITY CHECKS pour migration legacy → stable ────
 // Stratégie : check de longueur + check de chevauchement de mots significatifs.
-// Un mot signif de data-orig (HTML par défaut) doit apparaître dans le contenu DB
-// — sinon c'est probablement du drift entre éléments différents.
+// Un mot signif de data-orig (HTML par défaut) doit apparaître dans le contenu DB,
+// sinon c'est probablement du drift entre éléments différents.
 var _SANITY_STOP = {
   'les':1,'des':1,'son':1,'ses':1,'une':1,'leur':1,'cette':1,'tous':1,'toutes':1,
   'nous':1,'vous':1,'elle':1,'elles':1,'sont':1,'pour':1,'avec':1,'sans':1,'sous':1,
@@ -769,7 +769,7 @@ function activateEditing() {
     stopEdit(_active, true)
   })
 
-  // Bouton saut de ligne flottant — affiché pendant l'édition
+  // Bouton saut de ligne flottant : affiché pendant l'édition
   var brFloat = document.createElement('button')
   brFloat.id          = 'jbe-br-float'
   brFloat.type        = 'button'
@@ -1792,7 +1792,7 @@ function updateLocalHTML() {
     else if (d.error) console.warn('[JBE] save-html : ' + d.error)
   })
   .catch(function () {
-    // Normal si on est sur Netlify — pas de serveur local, on ignore
+    // Normal si on est sur Netlify : pas de serveur local, on ignore
   })
 }
 

@@ -3,7 +3,7 @@
 /**
  * Import WordPress XML → Supabase docs table
  * Usage: node import-wp.js
- * One-shot script — can be re-run safely (upsert on slug)
+ * One-shot script, can be re-run safely (upsert on slug)
  */
 
 const fs   = require('fs');

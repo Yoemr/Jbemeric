@@ -1,5 +1,5 @@
 /**
- * footer.js — JB EMERIC
+ * footer.js : JB EMERIC
  * Injecte le footer dans chaque page.
  * Modifier ce fichier = mise à jour automatique sur tout le site.
  */

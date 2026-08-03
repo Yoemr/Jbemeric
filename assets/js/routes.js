@@ -1,5 +1,5 @@
 /**
- * routes.js — JB EMERIC
+ * routes.js : JB EMERIC
  * Source unique de vérité pour toutes les URLs du site.
  * Modifier ce fichier = mise à jour automatique de nav, footer, sync-mirror, etc.
  *

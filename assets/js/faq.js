@@ -1,5 +1,5 @@
-// faq.js — JB EMERIC
-// Accordion FAQ universel — fond blanc, design uniforme
+// faq.js : JB EMERIC
+// Accordion FAQ universel : fond blanc, design uniforme
 // Chargé dans toutes les pages qui ont une section .jbe-faq
 // ZERO class ES6 · ZERO template literal · ZERO arrow function
 

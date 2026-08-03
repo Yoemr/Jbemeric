@@ -1,4 +1,4 @@
-// sync-mirror.js — JB EMERIC
+// sync-mirror.js : JB EMERIC
 // Aspire les sections des pages piliers et les injecte dans index.html
 // ZERO template literal · ZERO class ES6 · Compatible tous navigateurs modernes
 // Sources : academie.html#portes · coaching.html#formules · track.html#sr-grid
@@ -65,7 +65,7 @@ function setLoading(target) {
 
 function setError(target, url) {
   if (!target) return
-  target.innerHTML = '<p style="opacity:.4;font-size:12px;padding:8px 0">Contenu non disponible — <a href="' + url + '" style="color:inherit">voir la page →</a></p>'
+  target.innerHTML = '<p style="opacity:.4;font-size:12px;padding:8px 0">Contenu non disponible, <a href="' + url + '" style="color:inherit">voir la page →</a></p>'
 }
 
 function injectSkeletonCSS() {
@@ -77,7 +77,7 @@ function injectSkeletonCSS() {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  ACADÉMIE — extrait les 3 portes + le parcours de academie.html
+//  ACADÉMIE : extrait les 3 portes + le parcours de academie.html
 // ─────────────────────────────────────────────────────────────
 function mirrorAcademie() {
   var target = getTarget('mirror-academie')
@@ -141,7 +141,7 @@ function buildAcademieCards(section, parcours) {
   }
   html += '</div>'
 
-  // Bandeau parcours en bas — miroir de academie.html#parcours
+  // Bandeau parcours en bas : miroir de academie.html#parcours
   html += buildParcoursBar(parcours)
 
   html += '</div>'
@@ -192,7 +192,7 @@ function buildParcoursBar(parcours) {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  COACHING — extrait les 2 panels de coaching.html#formules
+//  COACHING : extrait les 2 panels de coaching.html#formules
 // ─────────────────────────────────────────────────────────────
 function mirrorCoaching() {
   var target = getTarget('mirror-coaching')
@@ -275,7 +275,7 @@ function buildCoachingCards(section) {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  TRACK — extrait les sessions de track.html#sr-grid
+//  TRACK : extrait les sessions de track.html#sr-grid
 // ─────────────────────────────────────────────────────────────
 function mirrorTrack() {
   var target = getTarget('mirror-track')
@@ -384,7 +384,7 @@ function buildTrackCards(section) {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  PADDOCK — threads forum + prochain événement depuis Supabase
+//  PADDOCK : threads forum + prochain événement depuis Supabase
 // ─────────────────────────────────────────────────────────────
 function mirrorPaddock() {
   var target = getTarget('mirror-paddock')

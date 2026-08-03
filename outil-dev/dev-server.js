@@ -1,4 +1,4 @@
-// dev-server.js — Serveur local JB EMERIC
+// dev-server.js : Serveur local JB EMERIC
 // Remplace "npx serve" : même fonction + met à jour les HTML à chaque sauvegarde
 //
 // Lancement : node dev-server.js
@@ -33,7 +33,7 @@ var MIME = {
 // ── Redirections (_redirects, format Netlify) ─────────────────────────────────
 // Lues au démarrage. Sans ça, les liens relatifs vers d'anciens chemins
 // (contact.html, articles.html, login.html…) tombent en 404 en local alors
-// qu'ils fonctionnent en production — et on croit à un bug du site.
+// qu'ils fonctionnent en production : et on croit à un bug du site.
 // Sémantique Netlify : un fichier existant l'emporte sur une règle de redirection.
 var REDIRECTS = {}
 
@@ -71,7 +71,7 @@ http.createServer(function (req, res) {
         var entries  = payload.entries || {}
 
         // payload.path = chemin complet depuis la racine ('academie/karting').
-        // payload.page = ancien format, nom de fichier seul — conservé en repli.
+        // payload.page = ancien format, nom de fichier seul : conservé en repli.
         // Sans le chemin, toute page en sous-dossier échouait : 'karting' était
         // cherché à la racine du projet, où il n'existe pas.
         var rel = (typeof payload.path === 'string' && payload.path)
@@ -153,7 +153,7 @@ http.createServer(function (req, res) {
       return
     }
     res.writeHead(404, { 'Content-Type': 'text/plain' })
-    res.end('404 — ' + pathname)
+    res.end('404 : ' + pathname)
     return
   }
 

@@ -1,4 +1,4 @@
-// track-render.js — JB EMERIC
+// track-render.js : JB EMERIC
 // Rendu dynamique track.html : dots places, calendrier Supabase, inscriptions, votes
 // Chargé dans track.html
 
@@ -46,7 +46,7 @@
     if (pct >= 100) {
       fill.className = 'sr-vote-fill full';
       hint.className = 'sr-vote-hint full';
-      hint.textContent = '✅ Seuil atteint — validation en cours';
+      hint.textContent = '✅ Seuil atteint, validation en cours';
       // Changer le badge
       var badge = document.getElementById('badge-' + circuit);
       badge.className = 'sr-badge open';
@@ -54,7 +54,7 @@
     } else if (pct >= 60) {
       fill.className = 'sr-vote-fill almost';
       hint.className = 'sr-vote-hint almost';
-      hint.textContent = '⚡ Proche de la validation — encore ' + (max - count) + ' vote' + (max - count > 1 ? 's' : '');
+      hint.textContent = '⚡ Proche de la validation, encore ' + (max - count) + ' vote' + (max - count > 1 ? 's' : '');
     }
   };
 
@@ -219,7 +219,7 @@
     var cards = events.map(function(ev) {
       var d = new Date(ev.date_event)
       var dayStr  = DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear()
-      var circuit = ev.circuits ? ev.circuits.nom : '—'
+      var circuit = ev.circuits ? ev.circuits.nom : '…'
       var region  = ev.circuits ? ev.circuits.region : ''
       var taken   = ev.nb_inscrits || 0
       var total   = ev.nb_places   || 10
@@ -267,7 +267,7 @@
   }
 })()
 
-// ANCIEN script places — remplacé, garder pour compatibilité
+// ANCIEN script places : remplacé, garder pour compatibilité
 ;(async function() {
   try {
     var r = await fetch(
@@ -345,7 +345,7 @@
       var circuitNom = ev.circuits ? ev.circuits.nom : ''
       var d = new Date(ev.date_event)
       var MONTHS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc']
-      var label = (ev.type || '') + ' — ' + d.getDate() + ' ' + MONTHS[d.getMonth()]
+      var label = (ev.type || '') + ' · ' + d.getDate() + ' ' + MONTHS[d.getMonth()]
       btn.onclick = function() {
         window.openModal(label, ev.prix || 195, circuitNom, ev.id)
       }

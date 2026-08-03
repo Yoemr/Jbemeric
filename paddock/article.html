@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="assets/css/theme.css">
   <link rel="stylesheet" href="assets/css/nav.css">
   <link rel="stylesheet" href="assets/css/paddock.css">
-  <title id="page-title">Article — JB EMERIC</title>
+  <title id="page-title">Article · JB EMERIC</title>
   <meta name="description" id="page-desc" content="Article technique JB EMERIC">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -168,7 +168,7 @@ const CAT_MAP = {
 }
 
 function getSlug() {
-  // Hash-based routing — immune aux redirects clean-URL du serveur
+  // Hash-based routing : immune aux redirects clean-URL du serveur
   const hash = window.location.hash.slice(1)
   if (hash) return decodeURIComponent(hash)
   // Fallback query string (compatibilité)
@@ -209,7 +209,7 @@ function renderArticle(a) {
   const date = formatDate(a.published_at)
 
   // Mise à jour SEO
-  document.getElementById('page-title').textContent = (a.title || 'Article') + ' — JB EMERIC'
+  document.getElementById('page-title').textContent = (a.title || 'Article') + ' · JB EMERIC'
   if (document.getElementById('page-desc') && a.intro) {
     document.getElementById('page-desc').setAttribute('content', a.intro)
   }

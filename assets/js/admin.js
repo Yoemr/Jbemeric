@@ -1,4 +1,4 @@
-// admin.js — JB EMERIC
+// admin.js : JB EMERIC
 // Dashboard admin : gestion événements, threads, documents
 // Chargé dans admin.html (réservé admins connectés)
 
@@ -20,13 +20,13 @@ async function sbLogout() {
   window.location.href = 'login.html'
 }
 
-// Éditeur de contenu — non disponible (editor.js supprimé)
+// Éditeur de contenu : non disponible (editor.js supprimé)
 // Le contenu est éditable directement sur le site via live-editor.js
 window.saveAllPending = function() { toast('Utilisez le mode édition sur le site', 'info') }
 window.filterEditor   = function() {}
 
 // ═══════════════════════════════════════════════════════════════════
-//  AUTH GUARD — bloquer les non-admins
+//  AUTH GUARD : bloquer les non-admins
 // ═══════════════════════════════════════════════════════════════════
 const ALLOWED_ROLES = ['admin', 'moderateur']
 let currentUser = null
@@ -63,7 +63,7 @@ let currentRole = null
 })()
 
 // ═══════════════════════════════════════════════════════════════════
-//  ÉVÉNEMENTS — CRUD
+//  ÉVÉNEMENTS : CRUD
 // ═══════════════════════════════════════════════════════════════════
 async function loadEvents() {
   const statusFilter = document.getElementById('filter-status')?.value || ''
@@ -86,7 +86,7 @@ async function loadEvents() {
   tbody.innerHTML = (data||[]).map(ev => {
     const d = new Date(ev.date_event)
     const dateStr = d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear()
-    const circuit = ev.circuits?.nom || '—'
+    const circuit = ev.circuits?.nom || '…'
     const badge = badgeStatus(ev.status)
     const vis = ev.visible_site
       ? '<span style="color:#4ade80;font-size:11px">✓ Visible</span>'
@@ -94,10 +94,10 @@ async function loadEvents() {
 
     return `<tr id="erow-${ev.id}">
       <td class="td-mono">${dateStr}</td>
-      <td>${ev.type || '—'}</td>
+      <td>${ev.type || '…'}</td>
       <td>${circuit}</td>
       <td>${badge}</td>
-      <td class="td-mono">${ev.prix ? ev.prix + ' €' : '—'}</td>
+      <td class="td-mono">${ev.prix ? ev.prix + ' €' : '…'}</td>
       <td class="td-mono">${ev.nb_inscrits || 0} / ${ev.nb_places || 10}</td>
       <td>${vis}</td>
       <td><div class="td-acts">
@@ -135,7 +135,7 @@ window.deleteEvent = async function(id, btn) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  FORUM — MODÉRATION
+//  FORUM : MODÉRATION
 // ═══════════════════════════════════════════════════════════════════
 window.togglePin = async function(id, pinned) {
   const { error } = await supabase.from('forum_threads').update({ pinned }).eq('id', id)
@@ -161,7 +161,7 @@ window.deleteThread = async function(id) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  DOCS — CRUD
+//  DOCS : CRUD
 // ═══════════════════════════════════════════════════════════════════
 window.saveDoc = async function() {
   const title    = document.getElementById('doc-title')?.value?.trim()
@@ -186,7 +186,7 @@ window.saveDoc = async function() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  INSCRIPTIONS — LISTE COMPLÈTE
+//  INSCRIPTIONS : LISTE COMPLÈTE
 // ═══════════════════════════════════════════════════════════════════
 var _inscrPage = 0
 var INSCR_PER_PAGE = 20
@@ -219,11 +219,11 @@ async function loadInscriptions() {
   tbody.innerHTML = data.map(ins => {
     var d = new Date(ins.created_at)
     var dateStr = d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear()
-    var name = ins.prenom && ins.nom ? ins.prenom + ' ' + ins.nom : (ins.user_name || '—')
+    var name = ins.prenom && ins.nom ? ins.prenom + ' ' + ins.nom : (ins.user_name || '…')
     var ev = ins.events
-    var evDate = ev ? new Date(ev.date_event).toLocaleDateString('fr-FR', {day:'numeric',month:'short'}) : '—'
-    var evType = ev ? (ev.type || '—') : '—'
-    var circuit = ev && ev.circuits ? ev.circuits.nom : '—'
+    var evDate = ev ? new Date(ev.date_event).toLocaleDateString('fr-FR', {day:'numeric',month:'short'}) : '…'
+    var evType = ev ? (ev.type || '…') : '…'
+    var circuit = ev && ev.circuits ? ev.circuits.nom : '…'
     var coaching = ins.coaching_requested ? '<span style="color:#FFCF00">✓ Oui</span>' : '<span style="color:rgba(255,255,255,.3)">Non</span>'
     var statutColor = ins.statut === 'confirme' ? '#4ade80' : ins.statut === 'annule' ? '#f87171' : '#FFCF00'
     var statutLabel = ins.statut === 'confirme' ? 'Confirmé' : ins.statut === 'annule' ? 'Annulé' : 'En attente'
@@ -231,8 +231,8 @@ async function loadInscriptions() {
     return `<tr>
       <td class="td-mono" style="font-size:10px">${dateStr}</td>
       <td style="font-weight:500">${name}</td>
-      <td class="td-mono" style="font-size:9px">${ins.email || '—'}</td>
-      <td class="td-mono" style="font-size:9px">${ins.telephone || '—'}</td>
+      <td class="td-mono" style="font-size:9px">${ins.email || '…'}</td>
+      <td class="td-mono" style="font-size:9px">${ins.telephone || '…'}</td>
       <td style="font-size:10px">${evDate} · ${evType}</td>
       <td style="font-size:10px">${circuit}</td>
       <td style="text-align:center">${coaching}</td>
@@ -311,7 +311,7 @@ window.doLogout = async () => { await sbLogout() }
 // ═══════════════════════════════════════════════════════════════════
 const TITLES = {
   dashboard:    'Dashboard',
-  sessions:     'Track-Days — Sessions',
+  sessions:     'Track-Days · Sessions',
   inscriptions: 'Inscriptions reçues',
   votes:        'Votes Potential',
   coaching:     'Coaching',
@@ -352,9 +352,9 @@ async function loadKPIs() {
       supabase.from('events').select('id',{count:'exact'}).eq('status','Full'),
       supabase.from('inscriptions').select('id',{count:'exact'}),
     ])
-    document.getElementById('k-open').textContent    = open.count    ?? '—'
-    document.getElementById('k-votes').textContent   = potential.count ?? '—'
-    document.getElementById('k-full').textContent    = full.count    ?? '—'
+    document.getElementById('k-open').textContent    = open.count    ?? '…'
+    document.getElementById('k-votes').textContent   = potential.count ?? '…'
+    document.getElementById('k-full').textContent    = full.count    ?? '…'
     document.getElementById('k-inscrits').textContent =
       inscrits.count ?? 0
 
@@ -369,8 +369,8 @@ async function loadKPIs() {
     ])
     const kThreads = document.getElementById('k-threads')
     const kDocs    = document.getElementById('k-docs')
-    if (kThreads) kThreads.textContent = threads.count ?? '—'
-    if (kDocs)    kDocs.textContent    = docs.count    ?? '—'
+    if (kThreads) kThreads.textContent = threads.count ?? '…'
+    if (kDocs)    kDocs.textContent    = docs.count    ?? '…'
 
     // Charger les inscriptions récentes
     const { data: recInscrits } = await supabase
@@ -388,7 +388,7 @@ async function loadKPIs() {
           var d = new Date(ins.created_at)
           var dd = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear()
           return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">' +
-            '<div><div style="font-family:'DM Mono';font-size:11px;color:#fff">' + (ins.user_name||'—') + '</div>' +
+            '<div><div style="font-family:'DM Mono';font-size:11px;color:#fff">' + (ins.user_name||'…') + '</div>' +
             '<div style="font-family:'DM Mono';font-size:9px;color:rgba(255,255,255,.35);margin-top:2px">' + (ins.email||'') + '</div></div>' +
             '<div style="font-family:'DM Mono';font-size:9px;color:rgba(255,207,0,.5)">' + dd + '</div>' +
             '</div>'
@@ -422,7 +422,7 @@ window.loadEvents = async () => {
   const rows = (data ?? []).map(ev => `
     <tr id="erow-${ev.id}">
       <td class="td-mono td-main">${fmtDate(ev.date_event)}</td>
-      <td class="td-main">${ev.circuits?.nom ?? '—'}</td>
+      <td class="td-main">${ev.circuits?.nom ?? '…'}</td>
       <td style="font-size:11px">${ev.type}</td>
       <td>${badgeStatus(ev.status)}</td>
       <td class="td-mono">${ev.nb_inscrits}/${ev.nb_places}</td>
@@ -484,7 +484,7 @@ window.previewDocFile = (input) => {
   const prev = document.getElementById('doc-preview')
   if (file && prev) {
     const size = (file.size / 1024 / 1024).toFixed(1)
-    prev.textContent = `✓ ${file.name} — ${size} Mo`
+    prev.textContent = `✓ ${file.name} · ${size} Mo`
   }
 }
 
@@ -551,7 +551,7 @@ async function loadForumMod() {
         ${t.pinned?'📌 ':''}${t.title}
       </td>
       <td>${tagLabels[t.tag]??'?'} ${t.tag}</td>
-      <td style="font-size:11px">${t.author_name??'—'}</td>
+      <td style="font-size:11px">${t.author_name??'…'}</td>
       <td class="td-mono">${t.reply_count}</td>
       <td><div class="td-acts">
         <button class="btn btn-ok btn-sm" onclick="pinThread(${t.id},${!t.pinned})">
@@ -625,7 +625,7 @@ async function loadVotes() {
     const pct = Math.min(100, Math.round((ev.nb_votes||0)/SEUIL*100))
     return `<tr>
       <td class="td-mono td-main">${fmtDate(ev.date_event)}</td>
-      <td class="td-main">${ev.circuits?.nom??'—'}</td>
+      <td class="td-main">${ev.circuits?.nom??'…'}</td>
       <td class="td-mono">${ev.nb_votes||0}</td>
       <td><div class="vbar-wrap">
         <div class="vbar"><div class="vbar-fill" style="width:${pct}%"></div></div>
@@ -700,7 +700,7 @@ window.toast = (msg, type='ok') => {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  RADAR — Détection automatique de journées circuit
+//  RADAR : Détection automatique de journées circuit
 // ═══════════════════════════════════════════════════════════════════
 
 // ── Configuration sources (ajouter des URLs ici) ───────────────────
@@ -760,7 +760,7 @@ function generateSimulatedDates() {
 let _radarResults  = []
 let _radarNewCount = 0
 
-// Persistance localStorage — retrouver les décisions (validé/ignoré)
+// Persistance localStorage : retrouver les décisions (validé/ignoré)
 const RADAR_KEY = 'jbe_radar_decisions'
 function getDecisions() { return JSON.parse(localStorage.getItem(RADAR_KEY) || '{}') }
 function saveDecision(id, status) {
@@ -809,7 +809,7 @@ window.runRadarScan = async function() {
   _radarNewCount = _radarResults.filter(r => r.status === 'new').length
 
   spinner.style.display = 'none'
-  status.textContent    = `Scan terminé — ${_radarResults.length} dates trouvées`
+  status.textContent    = `Scan terminé, ${_radarResults.length} dates trouvées`
   scanTime.textContent  = 'Mis à jour : ' + new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})
 
   // Mettre à jour la pastille
@@ -909,7 +909,7 @@ window.validateRadarDate = async function(id) {
         circuit_id,
         date_event:   result.date,
         type:         result.type_tag === 'gt' ? 'Stage GT' : 'Track-Day',
-        status:       'Potential',       // Démarre en Potential — JB valide ensuite
+        status:       'Potential',       // Démarre en Potential : JB valide ensuite
         prix:         result.prix,
         visible_site: false,             // Masqué jusqu'à validation manuelle
         source_veille:result.source_url,

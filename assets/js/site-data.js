@@ -1,12 +1,12 @@
 /**
- * site-data.js — JB EMERIC · Source de vérité du site
+ * site-data.js : JB EMERIC · Source de vérité du site
  * ═══════════════════════════════════════════════════════════════════
  * Données extraites et enrichies depuis :
- * - jbemeric.com (site officiel WordPress — palmarès complet)
+ * - jbemeric.com (site officiel WordPress : palmarès complet)
  * - emericjb.unblog.fr (blog officiel archives)
  * - Réseaux sociaux officiels
  *
- * window.JBEMERIC_DATA — utilisé par palmares.html, paddock.html, index.html
+ * window.JBEMERIC_DATA : utilisé par palmares.html, paddock.html, index.html
  */
 
 window.JBEMERIC_DATA = {
@@ -42,7 +42,7 @@ window.JBEMERIC_DATA = {
 
   /* ── INTRO PALMARÈS ───────────────────────────────────────────── */
   palmaresIntro: {
-    accroche: 'Le palmarès de JB EMERIC commence en 1986. Depuis, c\'est 40 ans de compétition sur dix disciplines différentes — aubagnais de naissance, pilote depuis le karting, fondateur de l\'école de pilotage JB EMERIC (1989) et président de l\'association Promotion Sport Auto.',
+    accroche: 'Le palmarès de JB EMERIC commence en 1986. Depuis, c\'est 40 ans de compétition sur dix disciplines différentes : aubagnais de naissance, pilote depuis le karting, fondateur de l\'école de pilotage JB EMERIC (1989) et président de l\'association Promotion Sport Auto.',
     citation: {
       texte: 'L\'amour de la course automobile qu\'il sait communiquer à tous. Hier la Formule 3, aujourd\'hui le Sport Prototype, demain le Tourisme. JB n\'a qu\'un seul but : <em>GAGNER !</em>',
       source: 'Présentation officielle JB EMERIC'
@@ -64,7 +64,7 @@ window.JBEMERIC_DATA = {
     {
       annee: 1986,
       titre: '1ère victoire en Karting',
-      detail: 'Karting National 1 — Diplôme obtenu sur le circuit de la Châtre (École AVIA). Grand Prix de Nice avec 140 pilotes au départ, Grand Prix de Ganges en bagarre avec Sandrine Nahon.',
+      detail: 'Karting National 1. Diplôme obtenu sur le circuit de la Châtre (École AVIA). Grand Prix de Nice avec 140 pilotes au départ, Grand Prix de Ganges en bagarre avec Sandrine Nahon.',
       categorie: 'karting',
       highlight: true,
       voiture: 'Karting National 1',
@@ -77,12 +77,12 @@ window.JBEMERIC_DATA = {
         'assets/images/palmares/presse/1986-articles-pages-8.jpg',
         'assets/images/palmares/presse/1986-articles-pages-14.jpg'
       ],
-      anecdote: 'Aubagne reconnaît ses débuts — ville natale de Marcel Pagnol.'
+      anecdote: 'Aubagne reconnaît ses débuts, ville natale de Marcel Pagnol.'
     },
     {
       annee: 1987,
       titre: 'Volant PALMYR remporté',
-      detail: 'Remporte le volant de l\'école de pilotage PALMYR face à 7 finalistes. Participe au Championnat de France B de Formule Ford — plusieurs 2èmes places. Voiture : Rondeau de 1984.',
+      detail: 'Remporte le volant de l\'école de pilotage PALMYR face à 7 finalistes. Participe au Championnat de France B de Formule Ford, plusieurs 2èmes places. Voiture : Rondeau de 1984.',
       categorie: 'monoplace',
       voiture: 'Rondeau FF 1984',
       circuits: ['Lédenon'],
@@ -98,7 +98,7 @@ window.JBEMERIC_DATA = {
         'assets/images/palmares/presse/1987-salon-voit-course.jpg',
         'assets/images/palmares/presse/1987-1988-articles.jpg'
       ],
-      anecdote: 'Résultats remarqués par la presse régionale et nationale — sponsor La Marseillaise.'
+      anecdote: 'Résultats remarqués par la presse régionale et nationale, sponsor La Marseillaise.'
     },
     {
       annee: 1988,
@@ -135,13 +135,13 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 1989,
-      titre: 'Entrée en Formule Renault — Fondation École JB EMERIC',
-      detail: 'Saison stoppée après le départ de Malcolm Hill avec la caisse de l\'entreprise et le matériel. Fin de saison sauvée avec le team DAS Racing d\'Yves Déchaume. Voiture : Reynard. Création de l\'école de pilotage JB EMERIC à Aubagne — 35 ans d\'enseignement en 2024.',
+      titre: 'Entrée en Formule Renault · Fondation École JB EMERIC',
+      detail: 'Saison stoppée après le départ de Malcolm Hill avec la caisse de l\'entreprise et le matériel. Fin de saison sauvée avec le team DAS Racing d\'Yves Déchaume. Voiture : Reynard. Création de l\'école de pilotage JB EMERIC à Aubagne, 35 ans d\'enseignement en 2024.',
       categorie: 'monoplace',
       voiture: 'Reynard FR',
       coequipiers: ['Pierre Derode', 'Yves Déchaume (team DAS Racing)', 'Malcolm Hill'],
       circuits: ['Magny-Cours'],
-      anecdote: 'Malcolm Hill part avec la caisse et le matériel : Pierre Derode et JB se retrouvent à pied. Yves Déchaume sauve la saison — partenariat qui débouchera sur la superbe saison 1990.',
+      anecdote: 'Malcolm Hill part avec la caisse et le matériel : Pierre Derode et JB se retrouvent à pied. Yves Déchaume sauve la saison, partenariat qui débouchera sur la superbe saison 1990.',
       images: ['assets/images/palmares/annees/1989-formule-renault.jpg', 'assets/images/palmares/annees/1989-fr-reynard.jpg'],
       presse: [
         'assets/images/palmares/presse/1989-fr-magny.jpg',
@@ -153,7 +153,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 1990,
-      titre: '7ème sur 70 — Championnat Formule Renault',
+      titre: '7ème sur 70 · Championnat Formule Renault',
       detail: '4 fois 4ème sur 5 courses. 2 pôles position : Pau (à 4 centièmes de la pôle) et Nogaro. Meilleure équipe du championnat.',
       categorie: 'monoplace',
       voiture: 'Formule Renault',
@@ -181,7 +181,7 @@ window.JBEMERIC_DATA = {
     {
       annee: 1991,
       titre: '3ème Championnat de France B de Formule 3',
-      detail: '1ère victoire en F3 B à Magny-Cours, le jour du Grand Prix de France F1. 3ème sur le circuit de Nogaro. Départ sur les chapeaux de roues. Podium final au Championnat de France de Formule 3 B. Présence sur tous les médias — article "240 km/h".',
+      detail: '1ère victoire en F3 B à Magny-Cours, le jour du Grand Prix de France F1. 3ème sur le circuit de Nogaro. Départ sur les chapeaux de roues. Podium final au Championnat de France de Formule 3 B. Présence sur tous les médias, article "240 km/h".',
       categorie: 'monoplace',
       highlight: true,
       voiture: 'Formule 3',
@@ -217,7 +217,7 @@ window.JBEMERIC_DATA = {
     {
       annee: 1992,
       titre: 'Sport Proto : 2 podiums, 1 pôle, 1 record du tour',
-      detail: 'Première saison en Sport Prototype (6 courses seulement). Alfa Romeo Hydra avec Richard Solinas (France Boulon) et Claude Thepaut (Leroy Merlin). 2ème Paul Ricard. Parallèlement : Formule Renault — 1er à Magny-Cours.',
+      detail: 'Première saison en Sport Prototype (6 courses seulement). Alfa Romeo Hydra avec Richard Solinas (France Boulon) et Claude Thepaut (Leroy Merlin). 2ème Paul Ricard. Parallèlement : Formule Renault, 1er à Magny-Cours.',
       categorie: 'prototype',
       voiture: 'Sport Prototype Alfa Romeo Hydra',
       coequipiers: ['Richard Solinas', 'Claude Thepaut', 'Arturo Merzario'],
@@ -241,7 +241,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 1993,
-      titre: 'Saison difficile — Problèmes mécaniques',
+      titre: 'Saison difficile · Problèmes mécaniques',
       detail: 'Mauvais choix d\'écurie. Saison jalonnée de problèmes mécaniques. Communication massive : 120 panneaux 4x3 sur la région.',
       categorie: 'prototype',
       images: ['assets/images/palmares/annees/1993-4x3-sponsors.jpg']
@@ -249,7 +249,7 @@ window.JBEMERIC_DATA = {
     {
       annee: 1994,
       titre: '1er Championnat de France B ALFA ROMEO Sport Prototype',
-      detail: 'Victoire au Championnat de France ALFA ROMEO Sport Prototype classe B (Paul Ricard). 3ème sur 3 courses. 5ème Grand Prix de Pau en Peugeot Spider 905. 15ème général aux 2 Tours d\'Horloge en Triumph Spitfire — un exploit.',
+      detail: 'Victoire au Championnat de France ALFA ROMEO Sport Prototype classe B (Paul Ricard). 3ème sur 3 courses. 5ème Grand Prix de Pau en Peugeot Spider 905. 15ème général aux 2 Tours d\'Horloge en Triumph Spitfire, un exploit.',
       categorie: 'prototype',
       highlight: true,
       voiture: 'Alfa Romeo Sport Proto · Peugeot Spider 905 · Triumph Spitfire',
@@ -266,12 +266,12 @@ window.JBEMERIC_DATA = {
         'assets/images/palmares/annees/1994-podium-ricard.jpg'
       ],
       citations: [
-        { texte: '2 Tours d\'Horloge la nuit en Triumph Spitfire, 15ème au général — un pur plaisir !', source: 'JB EMERIC' }
+        { texte: '2 Tours d\'Horloge la nuit en Triumph Spitfire, 15ème au général, un pur plaisir !', source: 'JB EMERIC' }
       ]
     },
     {
       annee: 1995,
-      titre: 'Création de son équipe — Coupe Alfa 145',
+      titre: 'Création de son équipe · Coupe Alfa 145',
       detail: 'Création de son équipe. 7 courses en Coupe Alfa Romeo 145. Triumph Spitfire aux 2 Tours d\'Horloge.',
       categorie: 'tourisme',
       voiture: 'Alfa Romeo 145 · Triumph Spitfire',
@@ -292,7 +292,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 1997,
-      titre: 'Coupe Barquette Hommell — 1 victoire 5 podiums',
+      titre: 'Coupe Barquette Hommell · 1 victoire 5 podiums',
       detail: 'Coupe Barquette Hommell. 2 fois 1er de classe au Championnat de France de la Montagne. Courses de côte : Bagnol Sabran, Col Saint Pierre, Mont Ventoux. Rallye du Mistral : 31ème au général sur 83 concurrents, 1ère GT.',
       categorie: 'gt',
       voiture: 'Barquette Hommell',
@@ -319,7 +319,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 1999,
-      titre: 'Motorola Cup Sebring USA — 2ème Coupe Hommell',
+      titre: 'Motorola Cup Sebring USA · 2ème Coupe Hommell',
       detail: 'Participation Motorola Cup à Sebring (USA) en Chevrolet Camaro. 2ème Coupe Hommell avec Laurent Gremmel.',
       categorie: 'gt',
       voiture: 'Chevrolet Camaro · Barquette Hommell',
@@ -333,7 +333,7 @@ window.JBEMERIC_DATA = {
     {
       annee: 2000,
       titre: '1er Coupe HOMMELL RS avec Frédéric Dedours',
-      detail: 'Victoire en Coupe HOMMELL RS avec Frédéric Dedours — vainqueur dès ses premières courses sous les couleurs du Team JB EMERIC. Victoire de la Porsche 964 RS avec Laurent Gremmel.',
+      detail: 'Victoire en Coupe HOMMELL RS avec Frédéric Dedours, vainqueur dès ses premières courses sous les couleurs du Team JB EMERIC. Victoire de la Porsche 964 RS avec Laurent Gremmel.',
       categorie: 'gt',
       highlight: true,
       voiture: 'Hommell RS · Porsche 964 RS',
@@ -342,7 +342,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2001,
-      titre: '2ème Coupe HOMMELL RS2 — 3ème Fun Cup',
+      titre: '2ème Coupe HOMMELL RS2 · 3ème Fun Cup',
       detail: '2ème Coupe HOMMELL RS2 avec Franck Martinez. 2ème Coupe HOMMELL avec Laurent Gremmel. 3ème Fun Cup à Lédenon. Motorola Cup Sebring.',
       categorie: 'gt',
       voiture: 'Hommell RS2 · VW Fun Cup',
@@ -355,7 +355,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2002,
-      titre: '2ème et 3ème Coupe Hommell RS2 — GT FFSA',
+      titre: '2ème et 3ème Coupe Hommell RS2 · GT FFSA',
       detail: '2ème et 3ème en Coupe HOMMELL RS2 avec Franck Martinez et Pascal Chaboseau. GT FFSA à Nogaro sur Chevrolet Camaro (importée des USA).',
       categorie: 'gt',
       voiture: 'Hommell RS2 · Chevrolet Camaro',
@@ -365,7 +365,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2003,
-      titre: '2ème Coupe Hommell RS2 — Super Série FFSA',
+      titre: '2ème Coupe Hommell RS2 · Super Série FFSA',
       detail: '2ème en Coupe HOMMELL RS2 avec Franck Martinez. Participation à la SUPER SÉRIE FFSA en Ferrari 360 Modena GT.',
       categorie: 'gt',
       voiture: 'Hommell RS2 · Ferrari 360 Modena',
@@ -381,7 +381,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2005,
-      titre: 'LMES Spa sur Viper — Formule Renault',
+      titre: 'LMES Spa sur Viper · Formule Renault',
       detail: 'LMES sur Chrysler Viper (équipe Paul Belmondo Racing) avec Pierre Perret à Spa-Francorchamps. 14ème à Gémenos-la-Baume en Formule Renault école.',
       categorie: 'gt',
       voiture: 'Chrysler Viper · Formule Renault',
@@ -391,7 +391,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2006,
-      titre: 'Multi-disciplines — 3ème catégorie FFSA Dijon',
+      titre: 'Multi-disciplines · 3ème catégorie FFSA Dijon',
       detail: 'Série FFSA à Dijon : 3ème catégorie avec Philippe Azebrook. Chevrolet Camaro préparation Patrick Caldentey. Course de côte Gémenos en Formule Renault : 19ème.',
       categorie: 'gt',
       voiture: 'Chevrolet Camaro · Formule Renault',
@@ -401,7 +401,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2007,
-      titre: 'Sport Prototype Norma M20 — Podium Dijon',
+      titre: 'Sport Prototype Norma M20 · Podium Dijon',
       detail: 'Sport Prototype Norma M20 à Jarama avec Richard Mori (sous les couleurs PID). Podium Sport Proto à Dijon. Chevrolet Camaro à Paul Ricard & Spa. VW Fun Cup également engagée. Courses de côte Gémenos en Formule Renault : 23ème général, 2ème classe.',
       categorie: 'prototype',
       voiture: 'Norma M20 · Chevrolet Camaro · VW Fun Cup · Formule Renault',
@@ -414,7 +414,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2008,
-      titre: '1er de classe x3 — Norma courses de côte',
+      titre: '1er de classe x3 · Norma courses de côte',
       detail: '1er de classe à chaque course en Norma M20. 3ème à Bouc-Bel-Air (1er podium), 14ème à Barcelonnette, 13ème à Gémenos-la-Baume.',
       categorie: 'montagne',
       highlight: true,
@@ -429,7 +429,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2009,
-      titre: '1er de classe Bouc-Bel-Air — F3000 Gémenos',
+      titre: '1er de classe Bouc-Bel-Air · F3000 Gémenos',
       detail: '5ème à Bouc-Bel-Air (1ère classe). 14ème à Barcelonnette (3ème classe). 5ème à Gémenos-la-Baume en F3000 (équipe Lionel Régal).',
       categorie: 'montagne',
       voiture: 'Norma M20 · F3000',
@@ -439,7 +439,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2010,
-      titre: 'F3 Classic — 1er catégorie 1721 cm³',
+      titre: 'F3 Classic · 1er catégorie 1721 cm³',
       detail: 'Formule Renault Martini MK65 en F3 Classic. 1er dans la catégorie 1721 cm³. Sortie de route à Istres (Norma M20).',
       categorie: 'monoplace',
       voiture: 'Formule Renault Martini MK65 · Norma M20',
@@ -447,7 +447,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2011,
-      titre: 'F3 Classic — Victoires de classe',
+      titre: 'F3 Classic · Victoires de classe',
       detail: '2ème à Nogaro avec victoire de classe (1721 cm³). 2ème à Lédenon avec victoire de classe.',
       categorie: 'monoplace',
       voiture: 'Formule Renault Martini MK65',
@@ -455,8 +455,8 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2012,
-      titre: 'Vainqueur général F. Renault Classic — Meilleure équipe 2012',
-      detail: 'Saison magistrale : Dijon (2×2ème + victoire FR), Paul Ricard (victoire FR), Val de Vienne (victoire générale sous la pluie — plus belle course du palmarès), Charade (victoire générale + 2×victoire FR), Nogaro (3×victoire FR), Lédenon (2ème général + victoire FR). Élu meilleure équipe Formule Renault 2012.',
+      titre: 'Vainqueur général F. Renault Classic · Meilleure équipe 2012',
+      detail: 'Saison magistrale : Dijon (2×2ème + victoire FR), Paul Ricard (victoire FR), Val de Vienne (victoire générale sous la pluie, plus belle course du palmarès), Charade (victoire générale + 2×victoire FR), Nogaro (3×victoire FR), Lédenon (2ème général + victoire FR). Élu meilleure équipe Formule Renault 2012.',
       categorie: 'monoplace',
       highlight: true,
       voiture: 'Formule Renault Martini MK65',
@@ -479,7 +479,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2013,
-      titre: 'Formule Renault Classic — 6 podiums, 2 records du tour',
+      titre: 'Formule Renault Classic · 6 podiums, 2 records du tour',
       detail: 'Dijon : pôle + 2×2ème général + 1er classe 1721 cm³ + 2 records du tour. Spa-Francorchamps : 2×2ème général + 1er classe. Le Mans : 4ème et 5ème (ennuis mécaniques). Paul Ricard : 2×1er général.',
       categorie: 'monoplace',
       voiture: 'Formule Renault Classic',
@@ -494,7 +494,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2014,
-      titre: 'MitJet Super-Tourisme — GT Tour',
+      titre: 'MitJet Super-Tourisme · GT Tour',
       detail: 'Nouvelle catégorie MitJet avec Franck Martinez (élève école JB). Spa : 4ème + 4ème + 16ème + 7ème. Val de Vienne course endurance arrêtée par orage. Paul Ricard : 10ème endurance avec Guy Landini. Rencontre avec Yvan Muller au paddock.',
       categorie: 'tourisme',
       voiture: 'MitJet Super-Tourisme',
@@ -519,7 +519,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2015,
-      titre: 'Grand Prix de Pau Formule Ford Historique — Magny-Cours Supertourisme',
+      titre: 'Grand Prix de Pau Formule Ford Historique · Magny-Cours Supertourisme',
       detail: 'GP de Pau en Formule Ford Vaney 1971 : qualif 4ème catégorie + 10ème général. Course 2 : 12ème général + 4ème catégorie. Retour Supertourisme à Magny-Cours (V6 Nissan 3.5L). Paul Ricard : 10ème endurance avec Guy Landini (11ème sprint).',
       categorie: 'historique',
       voiture: 'Formule Ford Vaney 1971 · Supertourisme V6 Nissan',
@@ -532,7 +532,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2016,
-      titre: 'Décathlonien du sport auto — Ferrari & Pilotage au féminin',
+      titre: 'Décathlonien du sport auto · Ferrari & Pilotage au féminin',
       detail: 'Année communication majeure. "Le décathlonien du sport auto" par René Martorell (Échappement Magazine). Businews octobre : "JB EMERIC vous prête sa Ferrari". Échappement septembre : reportage pilotage au féminin. Coaching Ferrari pour clients privés. Développement de l\'offre école.',
       categorie: 'multi',
       presse: [
@@ -546,7 +546,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2018,
-      titre: 'Rallye Sainte-Baume — Podium',
+      titre: 'Rallye Sainte-Baume · Podium',
       detail: 'Catégorie promotion avec 2 clients école. Peugeot 206 S16 de l\'école de pilotage. Podium à la fin. Spéciale du Grand Caunet Roquefort-la-Bédoule.',
       categorie: 'rallye',
       voiture: 'Peugeot 206 S16',
@@ -559,8 +559,8 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2019,
-      titre: 'Courses de côte FR2000 — 1er Rallycircuit VHRS',
-      detail: 'Formule Renault FR2000 : Côte Saint-Savournin 18ème général + 2ème classe, Côte Barcelonnette 20ème général + 3ème classe. Rallycircuit VHRS Porsche 911 RS : 5ème — première en VHRS pour le palmarès.',
+      titre: 'Courses de côte FR2000 · 1er Rallycircuit VHRS',
+      detail: 'Formule Renault FR2000 : Côte Saint-Savournin 18ème général + 2ème classe, Côte Barcelonnette 20ème général + 3ème classe. Rallycircuit VHRS Porsche 911 RS : 5ème, première en VHRS pour le palmarès.',
       categorie: 'montagne',
       voiture: 'Formule Renault FR2000 · Porsche 911 RS (VHRS)',
       circuits: ['Saint-Savournin', 'Barcelonnette', 'Rallycircuit VHRS'],
@@ -573,7 +573,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2020,
-      titre: '9ème Côte du Circuit du Luc — 1er classe',
+      titre: '9ème Côte du Circuit du Luc · 1er classe',
       detail: 'Formule Renault FR2000 école de pilotage. 12ème général, 7ème groupe, 1ère classe. Belle victoire avec mécanicien Hector Vaillant. Sport Mag reportage vidéo.',
       categorie: 'montagne',
       highlight: true,
@@ -588,7 +588,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2021,
-      titre: 'Sainte-Baume Rallycircuit — Unique en France',
+      titre: 'Sainte-Baume Rallycircuit · Unique en France',
       detail: 'Décembre 16-19. Épreuve unique en France mixant spéciales rallye et circuit Paul Ricard. Centaine de voitures. Présence de Valtteri Bottas et pilotes F1/Rallye mondial. Association Promotion Sport Auto. Peugeot 206 S16. Spéciales : L\'Espigoulier, Bastides, Grand Caunet, Sainte-Baume, Rougiers-Mazaugues, Circuit Paul Ricard.',
       categorie: 'rallye',
       voiture: 'Peugeot 206 S16 · Porsche 911 RS (VHRS)',
@@ -598,7 +598,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2022,
-      titre: '2 Tours d\'Horloge Paul Ricard — Porsche VHRS',
+      titre: '2 Tours d\'Horloge Paul Ricard · Porsche VHRS',
       detail: 'Porsche 911 Carrera 2.7L avec Pierre Setti (élève de l\'école) en VHRS.',
       categorie: 'endurance',
       voiture: 'Porsche 911 Carrera 2.7L',
@@ -608,7 +608,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2023,
-      titre: 'Circuit du Luc FR2000 — 1er de classe',
+      titre: 'Circuit du Luc FR2000 · 1er de classe',
       detail: '12ème général, 7ème groupe, 1er de classe. Avec mécanicien Hector Vaillant.',
       categorie: 'montagne',
       highlight: true,
@@ -621,7 +621,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2024,
-      titre: 'HTCC Nogaro — Honda Civic Groupe N',
+      titre: 'HTCC Nogaro · Honda Civic Groupe N',
       detail: 'Circuit Nogaro. Honda Civic groupe N. 2ème catégorie en qualif, 18ème général qualif. Course : 3ème classe, 29ème général (problème mécanique pit stop). Avec Didier Gheza.',
       categorie: 'tourisme',
       voiture: 'Honda Civic Groupe N',
@@ -635,8 +635,8 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 2025,
-      titre: 'Coaching — Sainte-Baume Rallycircuit',
-      detail: 'Saison centrée sur le coaching karting enfants (dès 4 ans) et coaching adultes sur différents circuits. Sainte-Baume Rallycircuit 13-15 novembre 2025 — Ferrari et voitures école.',
+      titre: 'Coaching · Sainte-Baume Rallycircuit',
+      detail: 'Saison centrée sur le coaching karting enfants (dès 4 ans) et coaching adultes sur différents circuits. Sainte-Baume Rallycircuit 13-15 novembre 2025, Ferrari et voitures école.',
       categorie: 'rallye',
       voiture: 'Ferrari · Voitures école',
       circuits: ['Sainte-Baume'],
@@ -668,11 +668,11 @@ window.JBEMERIC_DATA = {
 
   /* ── SPONSORS HISTORIQUES ────────────────────────────────────── */
   sponsorsPalmares: [
-    { nom: 'France Boulon',      depuis: 1986, duree: '35 ans',  logo: 'assets/images/palmares/sponsors/france-boulon.png', highlight: true, note: 'Fournitures industrielles — partenaire historique de 1986 à 2021' },
-    { nom: 'Ville d\'Aubagne',   depuis: 1986, duree: '40 ans',  logo: 'assets/images/palmares/sponsors/aubagne.png',       highlight: true, note: 'Ville natale de JB — soutien historique' },
+    { nom: 'France Boulon',      depuis: 1986, duree: '35 ans',  logo: 'assets/images/palmares/sponsors/france-boulon.png', highlight: true, note: 'Fournitures industrielles, partenaire historique de 1986 à 2021' },
+    { nom: 'Ville d\'Aubagne',   depuis: 1986, duree: '40 ans',  logo: 'assets/images/palmares/sponsors/aubagne.png',       highlight: true, note: 'Ville natale de JB, soutien historique' },
     { nom: 'Gémenos',            depuis: 2005, duree: '20 ans+', logo: 'assets/images/palmares/sponsors/gemenos.jpg',       note: 'Seconde ville de résidence' },
     { nom: 'La Marseillaise',    depuis: 1990, duree: '3 ans',   logo: 'assets/images/palmares/sponsors/la-marseillaise.png', note: 'Sponsor 1990-1992' },
-    { nom: 'Leroy Merlin',       depuis: 1992, duree: '—',       logo: 'assets/images/palmares/sponsors/leroy-merlin.png',  note: 'Via Claude Thepaut — Sport Proto' },
+    { nom: 'Leroy Merlin',       depuis: 1992, duree: '…',       logo: 'assets/images/palmares/sponsors/leroy-merlin.png',  note: 'Via Claude Thepaut, Sport Proto' },
     { nom: 'IGOL',               depuis: 2022, duree: '3 ans+',  logo: 'assets/images/palmares/sponsors/igol.jpg',          note: 'Huiles moteur' },
     { nom: 'Var Matin',          depuis: 2014, duree: '10 ans+', logo: 'assets/images/palmares/sponsors/var-matin.jpg',     note: 'Presse régionale' },
     { nom: 'GT2i',               logo: 'assets/images/palmares/sponsors/gt2i.jpg',          note: 'Équipement sport auto' },
@@ -734,7 +734,7 @@ window.JBEMERIC_DATA = {
     playlists: [
       {
         id:    'PLP9M5a4kLIYGCbEbfB0JYE6-FULezpzq6',
-        titre: 'Trajectoires circuits — Caméras embarquées',
+        titre: 'Trajectoires circuits · Caméras embarquées',
         desc:  'Paul Ricard, Lédenon, Luc, Magny-Cours, Grand Sambuc, Spa...'
       }
     ],
@@ -774,7 +774,7 @@ window.JBEMERIC_DATA = {
     { prenom: 'Franck',        nom: 'Martinez',  role: 'Pilote partenaire', note: 'Co-pilote GT Tour 2014' },
     { prenom: 'Patrick',       nom: '',          role: 'Moniteur diplômé BPJEPS' },
     { prenom: 'Jean-Christophe', nom: 'Balon',   role: 'Moniteur diplômé BPJEPS' },
-    { prenom: 'Pascal',        nom: 'Zarb',      role: 'Club Promotion Sport Auto — membre fondateur' },
+    { prenom: 'Pascal',        nom: 'Zarb',      role: 'Club Promotion Sport Auto, membre fondateur' },
     { prenom: 'Maxence',       nom: 'Benech',    role: 'Pilote FR2000' }
   ],
 

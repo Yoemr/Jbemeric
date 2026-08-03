@@ -1,5 +1,5 @@
 /**
- * palmares.js — JB EMERIC
+ * palmares.js : JB EMERIC
  * Timeline scroll-snap : 1 slide = 100vh, 1 ou plusieurs années par slide (packing sparse).
  * Layout : hero photo SOUS la date (sidebar) + centre (titre, détail, carousel auto,
  * banderole caption, grille presse clickable).
@@ -25,18 +25,18 @@
   var CAROUSEL_AUTOPLAY_MS = 3500
   var PACK_CAP = 10  // capacité d'un slide pour packing sparse
 
-  /* ═══ TIMELINE AUTOPLAY — config ═══════════════════════════ */
+  /* ═══ TIMELINE AUTOPLAY : config ═══════════════════════════ */
   var TIMELINE_DEFAULT_MS = 6000   // délai si slide sans carousel
   var USER_IDLE_MS        = 8000   // pause après interaction user
   var lastUserInteraction = 0
   var timelineAutoplayTimer = null
   var timelineObserver = null
 
-  /* ═══ LIGHTBOX MAGAZINE — state ════════════════════════════ */
+  /* ═══ LIGHTBOX MAGAZINE : state ════════════════════════════ */
   var lbCollections = {}
   var lbState = { id: null, index: 0, zoom: 1 }
 
-  /* ═══ CAROUSELS — state (par carousel id) ══════════════════ */
+  /* ═══ CAROUSELS : state (par carousel id) ══════════════════ */
   var carouselTimers = {}
 
   /* ── Helpers ─────────────────────────────────────────────── */
@@ -71,12 +71,12 @@
     if (n === 3) return 3
     if (n === 4) return 4      // 1 rangée de 4 (évite 2+2 plus haut)
     if (n === 5) return 5      // 1 rangée de 5 (évite 3+2 asymétrique)
-    if (n === 6) return 3      // 2 rangées de 3 — symétrique
+    if (n === 6) return 3      // 2 rangées de 3 : symétrique
     if (n === 7) return 4      // 4+3 (compromis : 7 cols = trop étroit)
-    if (n === 8) return 4      // 2 rangées de 4 — symétrique
-    if (n === 9) return 3      // 3 rangées de 3 — symétrique
-    if (n === 10) return 5     // 2 rangées de 5 — symétrique
-    if (n === 12) return 4     // 3 rangées de 4 — symétrique
+    if (n === 8) return 4      // 2 rangées de 4 : symétrique
+    if (n === 9) return 3      // 3 rangées de 3 : symétrique
+    if (n === 10) return 5     // 2 rangées de 5 : symétrique
+    if (n === 12) return 4     // 3 rangées de 4 : symétrique
     return 4                   // fallback : 4 cols
   }
 
@@ -167,7 +167,7 @@
       txtEl.innerHTML = escAllowEm(d.palmaresIntro.citation.texte)
     }
     if (srcEl && d.palmaresIntro.citation && d.palmaresIntro.citation.source) {
-      srcEl.textContent = '— ' + d.palmaresIntro.citation.source
+      srcEl.textContent = d.palmaresIntro.citation.source
     }
   }
 
@@ -179,7 +179,7 @@
     var s = String(src).toLowerCase()
     // Règle 1 (forte) : fichier rangé dans /presse/ = article
     if (s.indexOf('/presse/') >= 0) return true
-    // Règle 2 : si déjà dans /annees/, c'est une photo — respecter le classement manuel
+    // Règle 2 : si déjà dans /annees/, c'est une photo : respecter le classement manuel
     if (s.indexOf('/annees/') >= 0) return false
     // Règle 3 : patterns de noms de magazines/articles (pour chemins libres)
     return /(^|[/_-])(article|articles|presse|echappement|marseillaise|bitume|busines|bitume|decathlonien)(s|e|es)?([/_\.-]|$)/.test(s)
@@ -203,7 +203,7 @@
   /* ═══ BUILD : single year card (slide "heavy") ════════════ */
   function buildYearCardHTML(e, rencontres, slideIndex, totalSlides) {
     var isHL = e.highlight === true
-    var catLabel = CAT_LABELS[e.categorie] || e.categorie || '—'
+    var catLabel = CAT_LABELS[e.categorie] || e.categorie || '…'
     var collHeroId = 'y' + e.annee + '-img'
     var collPresseId = 'y' + e.annee + '-presse'
     var collCarouselId = 'y' + e.annee + '-car'
@@ -213,15 +213,15 @@
     var cleanImages = sp.images
     var cleanPresse = sp.presse
 
-    /* ── Hero (1re image PHOTO — jamais un article) : va dans la sidebar sous la date ── */
+    /* ── Hero (1re image PHOTO, jamais un article) : va dans la sidebar sous la date ── */
     var heroSide = ''
     var carousel = ''
     if (cleanImages && cleanImages.length) {
       lbCollections[collHeroId] = cleanImages.map(function (src) {
-        return { src: src, caption: e.annee + ' — ' + (e.titre || '') }
+        return { src: src, caption: e.annee + ', ' + (e.titre || '') }
       })
       heroSide = '<div class="pal-year-hero" onclick="openLightbox(\'' + collHeroId + '\', 0)">' +
-        '<img src="' + esc(cleanImages[0]) + '" alt="' + esc(e.annee + ' — ' + e.titre) + '" loading="lazy">' +
+        '<img src="' + esc(cleanImages[0]) + '" alt="' + esc(e.annee + ', ' + e.titre) + '" loading="lazy">' +
         '<span class="pal-hero-badge">◉ Voir</span>' +
       '</div>'
 
@@ -229,13 +229,13 @@
       if (cleanImages.length > 1) {
         var carImgs = cleanImages.slice(1)
         lbCollections[collCarouselId] = carImgs.map(function (src, i) {
-          return { src: src, caption: e.annee + ' — Photo ' + (i + 2) + '/' + cleanImages.length }
+          return { src: src, caption: e.annee + ', photo ' + (i + 2) + '/' + cleanImages.length }
         })
         carousel = '<div class="pal-carousel" data-id="' + collCarouselId + '" data-auto="' + CAROUSEL_AUTOPLAY_MS + '">' +
           '<div class="pal-carousel-track">' +
             carImgs.map(function (src, i) {
               return '<div class="pal-carousel-slide" onclick="openLightbox(\'' + collCarouselId + '\',' + i + ')">' +
-                '<img src="' + esc(src) + '" alt="' + esc(e.annee + ' — photo ' + (i + 2)) + '" loading="lazy">' +
+                '<img src="' + esc(src) + '" alt="' + esc(e.annee + ', photo ' + (i + 2)) + '" loading="lazy">' +
               '</div>'
             }).join('') +
           '</div>' +
@@ -337,7 +337,7 @@
   function buildPackedCardHTML(years, slideIndex, totalSlides) {
     var cards = years.map(function (e) {
       var isHL = e.highlight === true
-      var catLabel = CAT_LABELS[e.categorie] || e.categorie || '—'
+      var catLabel = CAT_LABELS[e.categorie] || e.categorie || '…'
       var metaBits = []
       if (e.voiture) metaBits.push('<span><b>Voiture</b> ' + esc(e.voiture) + '</span>')
       if (e.circuits && e.circuits.length) metaBits.push('<span><b>' + (e.circuits.length > 1 ? 'Circuits' : 'Circuit') + '</b> ' + esc(e.circuits.slice(0, 2).join(' · ')) + (e.circuits.length > 2 ? ' …' : '') + '</span>')
@@ -358,7 +358,7 @@
     return '<article class="pal-year pal-year--packed" data-slide="' + slideIndex + '">' +
       '<div class="pal-packed-wrap">' +
         '<div class="pal-packed-head-big">' +
-          '<span class="pal-packed-range">' + esc(years[0].annee) + (years.length > 1 ? ' — ' + esc(years[years.length - 1].annee) : '') + '</span>' +
+          '<span class="pal-packed-range">' + esc(years[0].annee) + (years.length > 1 ? '-' + esc(years[years.length - 1].annee) : '') + '</span>' +
           '<span class="pal-packed-label">' + years.length + ' année' + (years.length > 1 ? 's' : '') + '</span>' +
           '<span class="pal-packed-count">' + slideIndex + ' / ' + totalSlides + '</span>' +
         '</div>' +
@@ -446,7 +446,7 @@
         })
       })
 
-      // Sync dots on manual scroll — ne PAS toucher lastUserInteraction ici
+      // Sync dots on manual scroll : ne PAS toucher lastUserInteraction ici
       // (ce listener se déclenche aussi sur scrollTo programmatique → faux positifs qui
       //  empêchaient l'autoplay vertical de repartir). L'interaction utilisateur réelle
       //  est déjà captée au niveau document via wheel/touchstart/keydown/mousedown.
@@ -593,7 +593,7 @@
    * Matching intelligent photo ↔ voiture :
    *   1. On rejette les scans d'article (isLikelyArticle).
    *   2. On rejette les photos "contexte" (podium, portrait, pilote, livre, sponsors, feu,
-   *      plaque 4x3, etc.) — ce ne sont PAS des photos de voiture.
+   *      plaque 4x3, etc.) : ce ne sont PAS des photos de voiture.
    *   3. On détecte le "brand claim" du filename : si le nom du fichier identifie une
    *      marque/modèle, et que la voiture n'a aucun rapport avec ce claim (ni directement,
    *      ni via alias), on applique un gros malus (anti-confusion).
@@ -780,7 +780,7 @@
     })
 
     var cars = Object.keys(carMap).map(function (k) { return carMap[k] })
-    // Exclut les voitures sans photo valide — fini les tuiles vides qui polluent la grille
+    // Exclut les voitures sans photo valide : fini les tuiles vides qui polluent la grille
     cars = cars.filter(function (c) { return !!c.image })
     cars.sort(function (a, b) { return Math.min.apply(null, a.annees) - Math.min.apply(null, b.annees) })
 

@@ -1,13 +1,13 @@
-// paddock-modules.js — JB EMERIC
+// paddock-modules.js : JB EMERIC
 // Bibliothèque technique + Forum Paddock
 // Chargé dans paddock.html
 
 // ═══════════════════════════════════════════════════════════════════
-//  paddock-modules.js — Bibliothèque technique + Forum
+//  paddock-modules.js : Bibliothèque technique + Forum
 //  Chargement Supabase (si configuré) ou données statiques
 // ═══════════════════════════════════════════════════════════════════
 
-// ── Import Supabase (optionnel — commenter si pas encore configuré) ──
+// ── Import Supabase (optionnel : commenter si pas encore configuré) ──
 // Supabase disponible via live-editor.js
 
 // ── Données statiques de démo ───────────────────────────────────────
@@ -16,7 +16,7 @@ var DEMO_DOCS  = [] // Charge depuis Supabase
 var DEMO_POSTS = [] // Charge depuis Supabase
 
 // ═══════════════════════════════════════════════════════════════════
-//  BIBLIOTHÈQUE — RENDU
+//  BIBLIOTHÈQUE : RENDU
 // ═══════════════════════════════════════════════════════════════════
 let _libFilter = 'all'
 let _libSearch = ''
@@ -53,7 +53,7 @@ function renderLib() {
 
   if (count) count.textContent = docs.length
   var page = docs.slice(0, (_libPage + 1) * LIB_PER_PAGE)
-  // Sur le paddock on masque "charger plus" — le bouton "Voir tous" est statique
+  // Sur le paddock on masque "charger plus" : le bouton "Voir tous" est statique
   if (more) more.style.display = 'none'
 
   if (!docs.length) {
@@ -96,7 +96,7 @@ window.filterLibTag = function(btn, tag) {
 window.loadMoreDocs = function() { _libPage++; renderLib() }
 
 // ═══════════════════════════════════════════════════════════════════
-//  FORUM — RENDU LISTE
+//  FORUM : RENDU LISTE
 // ═══════════════════════════════════════════════════════════════════
 let _forumFilter = 'all'
 let _currentPost = null
@@ -165,7 +165,7 @@ window.filterForum = function(btn, tag) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  FORUM — VUE DISCUSSION
+//  FORUM : VUE DISCUSSION
 // ═══════════════════════════════════════════════════════════════════
 window.openDiscussion = async function(postId) {
   var post = null
@@ -397,7 +397,7 @@ window.loadMorePosts = function() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  INIT — Charge depuis Supabase en priorité, fallback données démo
+//  INIT : Charge depuis Supabase en priorité, fallback données démo
 // ═══════════════════════════════════════════════════════════════════
 const SB_URL = 'https://fyaybxamuabawerqzuud.supabase.co'
 const SB_KEY = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
@@ -488,9 +488,9 @@ async function loadFromSupabase() {
 
 // Le script est chargé en type="module" → DOMContentLoaded est déjà passé.
 // On utilise le top-level await directement (supporté dans les ES modules).
-console.log('[Paddock] Init — début chargement Supabase')
+console.log('[Paddock] Init · début chargement Supabase')
 await loadFromSupabase()
-console.log('[Paddock] Init — DEMO_DOCS:', DEMO_DOCS.length, '| DEMO_POSTS:', DEMO_POSTS.length)
+console.log('[Paddock] Init · DEMO_DOCS:', DEMO_DOCS.length, '| DEMO_POSTS:', DEMO_POSTS.length)
 renderLib()
 renderForumList()
-console.log('[Paddock] Init — rendu terminé')
+console.log('[Paddock] Init · rendu terminé')

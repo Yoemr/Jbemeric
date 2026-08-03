@@ -126,10 +126,9 @@ Vérifié par requête avant correctif : `/contact.html`, `/articles.html`, `/ac
 | `paddock.html#lib` | Lié depuis `index.html` et depuis `paddock.html`, l'ancre réelle est `#blog` |
 | `assets/images/jb-emeric-portrait.jpg` | Référencée par `academie/karting.html`, absente du disque |
 | Entrée de menu « Boutique 4x sans frais » | Pointe vers `pilotage-jbemeric-marseille.fr`, domaine en **404** |
-| `auth.js` | Chargé par aucune page, alors que `login.html` et `signup.html` chargent `auth.css` |
-| `track-sessions.js` | Mort, doublon probable de `track-render.js` |
+**Les fichiers morts ont été déplacés dans `old/` le 1er août 2026**, sur décision de Yoan : déplacer plutôt que supprimer. Liste et vérification dans `docs/05-etat-des-lieux.md`.
 
-**Fichiers orphelins** : `auth.js`, `section-avis.js`, `section-contact.js`, `sync-mirror.js.bak`, `track-sessions.js`. Côté CSS, voir `docs/02-design-system.md`.
+**Piège de détection à connaître.** Chercher les orphelins par balise `<script src>` seule est faux : les modules ES sont importés depuis des scripts inline. `auth.js` avait été signalé mort alors qu'il porte toute l'authentification. Toujours chercher le nom de fichier dans l'intégralité du dépôt, imports compris.
 
 ---
 

@@ -102,16 +102,37 @@ Pour `/academie/karting.html`, `PAGE` vaut `karting`. `dev-server.js` reconstrui
 
 ### 2.4 Fichiers morts
 
-**CSS chargés par aucune page** : `adulte.css`, `challenge.css`, `coming-soon.css`, `sections-contact.css`, et **`pages.css`**.
+> **Correction du 1er août 2026.** Une première détection ne cherchait que les balises `<script src>` et `<link rel=stylesheet>`. Elle ratait les imports de modules ES et produisait des faux positifs, dont un grave : `auth.js` avait été signalé comme mort alors qu'il porte toute l'authentification du site. Le relevé ci-dessous cherche chaque nom de fichier dans l'intégralité du dépôt.
 
-`pages.css` mérite attention : `claude/MEMOIRE.md` le décrit comme un pilier de l'architecture CSS, « les règles communes à plusieurs pages ». Aucune page ne le charge. La convention documentée n'est pas celle du code.
+**`auth.js` n'est PAS orphelin.** Il est importé comme module depuis un script inline :
 
-**JS chargés par aucune page** : `auth.js`, `section-avis.js`, `section-contact.js`, `sync-mirror.js.bak`, `track-sessions.js`.
+```js
+import { signIn, consumeReturnUrl, humanError } from '/assets/js/auth.js'
+```
 
-Deux cas particuliers :
+Utilisé par `admin/login.html`, `admin/signup.html` et `admin/mot-de-passe-oublie.html`.
 
-- **`auth.js`** n'est chargé nulle part, alors que `admin/login.html` et `admin/signup.html` chargent bien `auth.css`. Le mécanisme d'authentification est donc écrit en dur dans les pages, ou inopérant. **Non vérifié** : à examiner avant toute suppression.
-- **`track-sessions.js`** interroge la table `events`, comme `track-render.js` qui, lui, est bien chargé par `track.html`. Doublon probable.
+### Fichiers réellement morts, déplacés dans `old/` le 1er août 2026
+
+Sur décision de Yoan, ils sont déplacés et non supprimés.
+
+| Fichier | Poids |
+|---|---|
+| `pages.css` | 31 Ko |
+| `challenge.css` | 24 Ko |
+| `adulte.css` | 23 Ko |
+| `track-sessions.js` | 17 Ko |
+| `section-contact.js` | 8 Ko |
+| `sections-contact.css` | 4 Ko |
+| `section-avis.js` | 4 Ko |
+| `coming-soon.css` | 4 Ko |
+| `sync-mirror.js.bak` | sauvegarde |
+
+`pages.css` méritait une note : l'ancien MEMOIRE le décrivait comme le pilier de l'architecture CSS, « les règles communes à plusieurs pages ». Aucune page ne le chargeait. `adulte.css` et `challenge.css` apparaissaient dans `academie.css`, mais uniquement dans des commentaires citant l'origine des couleurs.
+
+`track-sessions.js` interrogeait la table `events`, comme `track-render.js` qui, lui, est bien chargé par `track.html`.
+
+**Vérifié après déplacement** : les 12 pages testées répondent toujours 200, et les 5 CSS déplacés renvoient bien 404 sans que rien ne les demande.
 
 ### 2.5 SEO
 

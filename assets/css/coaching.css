@@ -1,5 +1,5 @@
 /*
- * coaching.css — JB EMERIC
+ * coaching.css : JB EMERIC
  * CSS complet extrait de coaching.html (source: zip original)
  */
 
@@ -15,7 +15,7 @@ img{display:block;max-width:100%}
 
 @media(min-width:700px){}
 
-/* HERO — plein écran, photo fond, biais couleur à droite */
+/* HERO : plein écran, photo fond, biais couleur à droite */
 .hero{position:relative;min-height:calc(100svh - 56px);display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
 @media(max-width:699px){.hero{min-height:88svh}}
 .hero-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(135deg,#040a1e 0%,#0A3D91 50%,#1252C0 100%)}
@@ -37,14 +37,14 @@ img{display:block;max-width:100%}
 .chip{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:20px;border:1px solid currentColor;opacity:.7}
 .chip-solid{opacity:1;font-weight:500}
 
-/* CORPS — fond dominant clair, bandes alternées */
-/* bande légère — fond dominant de la page */
+/* CORPS : fond dominant clair, bandes alternées */
+/* bande légère : fond dominant de la page */
 .band{padding:clamp(48px,6vw,88px) clamp(20px,5vw,72px)}
 /* fond primaire clair */
 .band-base{background:var(--bg-base,#f0f4ff);color:var(--ink-base,#111)}
-/* fond légèrement plus marqué — couleur principale diluée */
+/* fond légèrement plus marqué : couleur principale diluée */
 .band-tint{background:var(--bg-tint,#e6edff);color:var(--ink-base,#111)}
-/* accent plein — la couleur principale saturée */
+/* accent plein : la couleur principale saturée */
 .band-accent{background:var(--accent,#0a1a4a);color:var(--ink-accent,#fff)}
 /* très sombre pour les blocs hero/cta */
 .band-dark{background:#08080f;color:#fff}
@@ -71,7 +71,7 @@ img{display:block;max-width:100%}
 .band-base .sb,.band-tint .sb{color:var(--ink-base,#111)}
 .band-accent .sb,.band-dark .sb{color:rgba(255,255,255,.7)}
 
-/* BANDE PRIX — fond accent plein */
+/* BANDE PRIX : fond accent plein */
 .prix-band{background:var(--accent,#0a1a4a);color:var(--ink-accent,#fff);padding:clamp(28px,4vw,52px) clamp(20px,5vw,72px);display:flex;flex-wrap:wrap;gap:32px;align-items:center;justify-content:space-between}
 .prix-val{font-family:'Bebas Neue';font-size:clamp(80px,13vw,150px);line-height:.82;letter-spacing:-2px}
 .prix-label{font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-top:4px;opacity:.5}
@@ -189,7 +189,7 @@ img{display:block;max-width:100%}
 @media(min-width:1000px){ }
 
 /* ════════════════════════════════════════════════════
-   COACHING — DARK MODE PERFORMANCE
+   COACHING : DARK MODE PERFORMANCE
    Fond : #040a1e · Accent : #FFCF00 · Texte : #fff
    ════════════════════════════════════════════════════ */
 :root {
@@ -293,7 +293,7 @@ body { background: var(--night) }
   z-index: 0;
 }
 
-/* ── Panneau CLAIR — Amateur ── */
+/* ── Panneau CLAIR : Amateur ── */
 .offer-card--light {
   background: #fff;
   border-top-color: #0A3D91;
@@ -304,7 +304,7 @@ body { background: var(--night) }
   color: rgba(10,61,145,.04);
 }
 
-/* ── Panneau SOMBRE — Pro ── */
+/* ── Panneau SOMBRE : Pro ── */
 .offer-card--dark {
   background: #040a1e;
   border-top-color: #FFCF00;
@@ -597,7 +597,7 @@ body { background: var(--night) }
 .palm-name { font-size: 13px; font-weight: 600; color: #fff; display: block; margin-bottom: 2px }
 .palm-detail { font-size: 12px; color: rgba(255,255,255,.3) }
 
-/* ── FORMULES — dark avec blur ──────────────────────── */
+/* ── FORMULES : dark avec blur ──────────────────────── */
 .formules {
   padding: clamp(56px,7vw,96px) clamp(20px,5vw,72px);
   background: #f0f4ff;

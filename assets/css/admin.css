@@ -1,5 +1,5 @@
 /*
- * admin.css — JB EMERIC
+ * admin.css : JB EMERIC
  * CSS complet extrait de admin.html (source: zip original)
  */
 
@@ -7,7 +7,7 @@
    VARIABLES
    ═══════════════════════════════════════ */
 :root {
-  /* Palette Apple/Stripe — fond blanc, accents bleu iOS */
+  /* Palette Apple/Stripe : fond blanc, accents bleu iOS */
   --Y:     #FFD60A;  --Yd: #F5C400;
   --B2:    #0A3D91;  --B4: #007AFF;
   --BN:    #1c1c1e;  --NK: #f5f5f7;
@@ -377,7 +377,7 @@ tr:hover td { background:rgba(255,255,255,.02); color:var(--tx) }
 }
 
 /* ════════════════════════════════════════
-   RADAR — Détection automatique circuits
+   RADAR : Détection automatique circuits
    ════════════════════════════════════════ */
 .radar-section {
   background: rgba(99,102,241,.04);

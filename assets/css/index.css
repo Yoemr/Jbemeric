@@ -1,5 +1,5 @@
 /*
- * index.css — JB EMERIC
+ * index.css : JB EMERIC
  * CSS complet extrait de index.html (source: zip original)
  */
 
@@ -22,7 +22,7 @@ a{text-decoration:none;color:inherit}
 /* BANNIERE */
 .alert-bar{display:none}
 
-/* HERO STATS BAR — banderole bas du hero */
+/* HERO STATS BAR : banderole bas du hero */
 .hero-stats-bar {
   position: absolute;
   bottom: 0; left: 0; right: 0;
@@ -151,7 +151,7 @@ a{text-decoration:none;color:inherit}
 .ov-sec .ov-desc{color:rgba(255,255,255,.5)}
 .ov-sec .ov-cta{background:var(--Y);color:#000}
 .ov-sec .ov-cta:hover{background:var(--Yd)}
-/* Tags — charte contraste : blanc sur noir / jaune sur bleu */
+/* Tags, charte contraste : blanc sur noir / jaune sur bleu */
 .ov-sec .ov-tag{border-color:rgba(255,255,255,.22);color:#fff;background:rgba(255,255,255,.1)}
 .ov-sec .ov-tag-y{background:var(--B);border-color:var(--B);color:var(--Y)}
 .ov-sec + .ov-sec{border-top:3px solid var(--Y)}
@@ -190,7 +190,7 @@ a{text-decoration:none;color:inherit}
 @media(max-width:700px){ .ov-cards,.ov-cards-3 { grid-template-columns:1fr 1fr } }
 @media(max-width:480px){ .ov-cards,.ov-cards-3 { grid-template-columns:1fr } }
 
-/* Card — image plein format, texte en overlay bas */
+/* Card : image plein format, texte en overlay bas */
 .ov-card {
   position:relative; overflow:hidden;
   aspect-ratio:3/2;
@@ -320,7 +320,7 @@ a{text-decoration:none;color:inherit}
 @media(max-width:520px){.nl-grid{grid-template-columns:1fr;flex:none}.nl-cell-event,.nl-cell-forum,.nl-cell-yt,.nl-cell-cal,.nl-cell-stats{grid-column:1}.nl-cell-event{grid-row:1}.nl-cell-cal{grid-row:2}.nl-cell-forum{grid-row:3}.nl-cell-yt{grid-row:4}.nl-cell-stats{grid-row:5}}
 
 /* ════════════════════════════════════════════════════
-   SCROLL SNAP — ajustements spécifiques à index.html
+   SCROLL SNAP : ajustements spécifiques à index.html
    (règles de base dans assets/css/snap.css)
    ════════════════════════════════════════════════════ */
 
@@ -370,7 +370,7 @@ a{text-decoration:none;color:inherit}
 }
 .snap-cta:hover { filter: brightness(1.1) }
 
-/* ── Zone contenu — remplit la section ──────────── */
+/* ── Zone contenu : remplit la section ──────────── */
 .snap-content {
   width: 100%;
   height: 100%;
@@ -378,7 +378,7 @@ a{text-decoration:none;color:inherit}
   flex-direction: column;
 }
 
-/* Footer — snap point terminal */
+/* Footer : snap point terminal */
 #footer-root {
   scroll-snap-align: start;
 }
@@ -402,7 +402,7 @@ a{text-decoration:none;color:inherit}
   .snap-content > .porte { height: 33.33svh }
 }
 
-/* ════ COACHING — panels plein écran ════════════════ */
+/* ════ COACHING : panels plein écran ════════════════ */
 .snap-section#section-coaching { background: #040a1e }
 
 .snap-content .idx-coaching-panels {
@@ -421,7 +421,7 @@ a{text-decoration:none;color:inherit}
   .snap-content .offer-card { height: 50svh }
 }
 
-/* ════ TRACK — hero statique ═════════════════════════ */
+/* ════ TRACK : hero statique ═════════════════════════ */
 .snap-section-track { background: #07101f }
 
 .snap-track-hero {
@@ -514,7 +514,7 @@ a{text-decoration:none;color:inherit}
   z-index: 1;
 }
 
-/* ════ PADDOCK — grille magazine ════════════════════ */
+/* ════ PADDOCK : grille magazine ════════════════════ */
 .snap-section-paddock { background: #07101f }
 
 /* ── Portes Académie (copiées depuis academie.css) ── */
@@ -742,7 +742,7 @@ a{text-decoration:none;color:inherit}
 .palm-name { font-size: 13px; font-weight: 600; color: #fff; display: block; margin-bottom: 2px }
 .palm-detail { font-size: 12px; color: rgba(255,255,255,.3) }
 
-/* ── FORMULES — dark avec blur ──────────────────────── */
+/* ── FORMULES : dark avec blur ──────────────────────── */
 .formules {
   padding: clamp(56px,7vw,96px) clamp(20px,5vw,72px);
   background: #f0f4ff;
@@ -836,7 +836,7 @@ a{text-decoration:none;color:inherit}
 .f-gold .fcard-cta:hover, .f-both .fcard-cta:hover { background: var(--gd-dk) }
 
 /* ════════════════════════════════════════════════════
-   ACADÉMIE — Layout B + bandeau parcours
+   ACADÉMIE : Layout B + bandeau parcours
    ════════════════════════════════════════════════════ */
 
 /* Conteneur principal */
@@ -873,7 +873,7 @@ a{text-decoration:none;color:inherit}
 .acad-main .porte-cta { display:inline-block; font-family:'DM Mono'; font-size:10px; letter-spacing:2px; text-transform:uppercase; padding:13px 24px; background:#fff; color:#0a1a4a; border-radius:3px; transition: all .2s }
 .acad-main:hover .porte-cta { background:#FFCF00; color:#000 }
 
-/* Colonne droite — 2 vignettes empilées */
+/* Colonne droite : 2 vignettes empilées */
 .acad-side {
   grid-column: 2;
   grid-row: 1;
@@ -907,7 +907,7 @@ a{text-decoration:none;color:inherit}
 .acad-side-item.porte.challenge .porte-cta { background:#FFCF00; color:#000 }
 .acad-side-item.porte.challenge:hover .porte-cta { background:#fff; color:#000 }
 
-/* Bandeau parcours en bas — toute la largeur */
+/* Bandeau parcours en bas : toute la largeur */
 .acad-parcours {
   grid-column: 1 / 3;
   grid-row: 2;

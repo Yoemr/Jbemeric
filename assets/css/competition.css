@@ -1,6 +1,6 @@
 /*
- * competition.css — Page "Vers la Compétition"
- * Design motorsport premium — chiffres techniques, sections full-bleed
+ * competition.css : Page "Vers la Compétition"
+ * Design motorsport premium : chiffres techniques, sections full-bleed
  * Charte JB EMERIC · bleu profond + or accent
  */
 
@@ -282,6 +282,11 @@ img{display:block;max-width:100%}
 .dc-kicker{
   font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;
   text-transform:uppercase;color:var(--accent);margin-bottom:18px;
+  display:flex;align-items:center;gap:12px;
+}
+/* Trait d'amorce, reprend le tiret qui etait ecrit en dur dans le HTML */
+.dc-kicker::before{
+  content:'';width:28px;height:1px;background:rgba(255,207,0,.35);flex-shrink:0;
 }
 .dc-title{
   font-family:'Bebas Neue',sans-serif;

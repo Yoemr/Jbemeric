@@ -1,6 +1,6 @@
 #nav-root { position: sticky; top: 0; z-index: 1000; background: rgba(4,10,30,.97) }
 /* ══════════════════════════════════════════════════════
-   nav.css — JB EMERIC — Navigation unifiée
+   nav.css : JB EMERIC, Navigation unifiée
    Inclus dans toutes les pages. Ne pas modifier inline.
    ══════════════════════════════════════════════════════ */
 
@@ -264,10 +264,10 @@
 .fb-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg,#F5D061,#C8860A); flex-shrink: 0 }
 
 /* ════════════════════════════════════════
-   NAV — État connecté (injecté par live-editor.js)
+   NAV : État connecté (injecté par live-editor.js)
    ════════════════════════════════════════ */
 
-/* Bouton "Espace Admin" — blanc sur fond sombre du nav */
+/* Bouton "Espace Admin" : blanc sur fond sombre du nav */
 .nav-btn-admin {
   font-family: 'DM Mono', monospace;
   font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;

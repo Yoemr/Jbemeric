@@ -1,5 +1,5 @@
 /*
- * academie.css — JB EMERIC
+ * academie.css : JB EMERIC
  * Page hub de l'Académie · refonte complète
  */
 
@@ -13,22 +13,22 @@ a { text-decoration: none; color: inherit }
 img { display: block; max-width: 100% }
 
 /* ═══════════════════════════════════════════════════════
-   SCROLL SNAP — ajustements spécifiques à academie.html
+   SCROLL SNAP : ajustements spécifiques à academie.html
    (règles de base dans assets/css/snap.css)
    ═══════════════════════════════════════════════════════ */
 
-/* Parcours — timeline étire pour remplir l'écran */
+/* Parcours : timeline étire pour remplir l'écran */
 .parcours.snap-section { display: flex; flex-direction: column }
 .parcours.snap-section .timeline { flex: 1; min-height: 0 }
 .parcours.snap-section .tl-step { min-height: 0 }
 
-/* Formateur — jb-split remplit la hauteur du wrapper (desktop uniquement) */
+/* Formateur : jb-split remplit la hauteur du wrapper (desktop uniquement) */
 @media(min-width:1100px) {
   .jb-pal-wrap.snap-section { min-height: unset }
   .jb-pal-wrap.snap-section .jb-split { min-height: 0; flex: 0 0 65% }
 }
 
-/* Mobile / tablette — laisser respirer la section formateur+palmarès
+/* Mobile / tablette : laisser respirer la section formateur+palmarès
    (override de la contrainte universelle .snap-section { height: ...; overflow: hidden }) */
 @media(max-width:1099px) {
   .jb-pal-wrap.snap-section {
@@ -38,17 +38,17 @@ img { display: block; max-width: 100% }
   }
 }
 
-/* Portes+citation — override min-height pour que les cartes se contractent */
+/* Portes+citation : override min-height pour que les cartes se contractent */
 .portes-citation-wrap.snap-section .porte { min-height: 0 }
 
-/* Dernière section — FAQ + boutique, scrollable en interne */
+/* Dernière section : FAQ + boutique, scrollable en interne */
 .snap-fin { overflow-y: auto; display: flex; flex-direction: column }
 
-/* Footer — point d'ancrage terminal comme sur index */
+/* Footer : point d'ancrage terminal comme sur index */
 #footer-root { scroll-snap-align: start }
 
 /* ═══════════════════════════════════════════════════════
-   THÈME — Variables page Académie
+   THÈME : Variables page Académie
    ═══════════════════════════════════════════════════════ */
 :root {
   --accent:      #0A3D91;
@@ -80,7 +80,7 @@ body { background: var(--bg-base) }
 .sb strong { font-weight: 500; opacity: 1 }
 
 /* ═══════════════════════════════════════════════════════
-   HERO — Plein écran photo
+   HERO : Plein écran photo
    ═══════════════════════════════════════════════════════ */
 .hero {
   position: relative; min-height: calc(100svh - 56px);
@@ -134,7 +134,7 @@ body { background: var(--bg-base) }
 .chip-solid { background: #FFCF00; border-color: #FFCF00; color: #000; opacity: 1; font-weight: 500 }
 
 /* ═══════════════════════════════════════════════════════
-   ACCROCHE — Intro post-hero fond blanc
+   ACCROCHE : Intro post-hero fond blanc
    ═══════════════════════════════════════════════════════ */
 .accroche {
   background: #fff;
@@ -153,7 +153,7 @@ body { background: var(--bg-base) }
 
 
 /* ═══════════════════════════════════════════════════════
-   JB-PAL WRAP — Formateur + Palmarès côte à côte, full screen
+   JB-PAL WRAP : Formateur + Palmarès côte à côte, full screen
    ═══════════════════════════════════════════════════════ */
 .jb-pal-wrap {
   display: flex; flex-direction: column;
@@ -181,7 +181,7 @@ body { background: var(--bg-base) }
 }
 
 /* ═══════════════════════════════════════════════════════
-   JB SPLIT — Portrait formateur plein écran
+   JB SPLIT : Portrait formateur plein écran
    ═══════════════════════════════════════════════════════ */
 .jb-split {
   position: relative;
@@ -209,7 +209,7 @@ body { background: var(--bg-base) }
   background: linear-gradient(135deg, rgba(4,10,30,.72) 0%, rgba(4,10,30,.28) 45%, transparent 75%);
 }
 
-/* Bloc texte — nuage bas-gauche collé aux bords */
+/* Bloc texte : nuage bas-gauche collé aux bords */
 .jb-body {
   position: absolute;
   bottom: 0;
@@ -254,7 +254,7 @@ body { background: var(--bg-base) }
   padding-left: 14px; margin: 0; max-width: 100%;
 }
 
-/* Mobile — bloc texte en statique sous l'image */
+/* Mobile : bloc texte en statique sous l'image */
 @media(max-width:699px) {
   .jb-split { min-height: 320px; display: flex; flex-direction: column; overflow: visible; height: auto }
   .jb-img { position: relative; flex: 0 0 320px }
@@ -283,7 +283,7 @@ body { background: var(--bg-base) }
 .palm-detail { font-size: 12px; color: rgba(4,10,30,.45) }
 
 /* ═══════════════════════════════════════════════════════
-   PARCOURS — Timeline 5 étapes
+   PARCOURS : Timeline 5 étapes
    ═══════════════════════════════════════════════════════ */
 .parcours {
   background: #fff;
@@ -350,7 +350,7 @@ body { background: var(--bg-base) }
 }
 .tl-num { font-family: 'Bebas Neue'; font-size: 24px; color: #040a1e; line-height: 1 }
 
-/* Badge catégorie — ligne basse */
+/* Badge catégorie : ligne basse */
 .tl-badge {
   font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
   text-transform: uppercase; color: rgba(255,207,0,.75);
@@ -369,7 +369,7 @@ body { background: var(--bg-base) }
 .tl-link:hover { gap: 14px; color: #fff }
 .tl-link::after { content: '→'; font-size: 12px }
 
-/* ─── Step 5 — BMW HTCC — inversée or/nuit ─── */
+/* ─── Step 5 : BMW HTCC, inversée or/nuit ─── */
 .tl-step--finale {
   background: linear-gradient(160deg, #FFCF00 0%, #E6BB00 100%);
   border-top: 4px solid #040a1e;
@@ -402,7 +402,7 @@ body { background: var(--bg-base) }
 }
 
 /* ═══════════════════════════════════════════════════════
-   PORTES — 2 entrées (cartes photo plein format)
+   PORTES : 2 entrées (cartes photo plein format)
    ═══════════════════════════════════════════════════════ */
 .portes { display: grid; grid-template-columns: 1fr }
 @media(min-width:700px) { .portes { grid-template-columns: repeat(2,1fr) } }
@@ -427,15 +427,15 @@ body { background: var(--bg-base) }
   transition: background .35s;
 }
 
-/* Enfant — navy profond (couleur karting.css) */
+/* Enfant : navy profond (couleur karting.css) */
 .porte.enfant .porte-overlay        { background: linear-gradient(to top, rgba(10,26,74,.92) 30%, rgba(10,26,74,.06) 100%) }
 .porte.enfant:hover .porte-overlay  { background: linear-gradient(to top, rgba(10,26,74,.97) 30%, rgba(10,26,74,.22) 100%) }
 
-/* Adulte — bleu royal (couleur adulte.css) */
+/* Adulte : bleu royal (couleur adulte.css) */
 .porte.adulte .porte-overlay        { background: linear-gradient(to top, rgba(7,31,92,.92) 30%, rgba(7,31,92,.06) 100%) }
 .porte.adulte:hover .porte-overlay  { background: linear-gradient(to top, rgba(7,31,92,.97) 30%, rgba(7,31,92,.22) 100%) }
 
-/* Challenge — nuit avec touche dorée (couleur challenge.css) */
+/* Challenge : nuit avec touche dorée (couleur challenge.css) */
 .porte.challenge .porte-overlay       { background: linear-gradient(to top, rgba(4,10,30,.94) 30%, rgba(200,160,0,.14) 100%) }
 .porte.challenge:hover .porte-overlay { background: linear-gradient(to top, rgba(4,10,30,.98) 30%, rgba(200,160,0,.32) 100%) }
 .porte-content {
@@ -466,7 +466,7 @@ body { background: var(--bg-base) }
 .porte.challenge:hover .porte-cta { background: rgba(200,160,0,.32); border-color: rgba(200,160,0,.8) }
 
 /* ═══════════════════════════════════════════════════════
-   PORTES + CITATION — wrapper full screen
+   PORTES + CITATION : wrapper full screen
    ═══════════════════════════════════════════════════════ */
 .portes-citation-wrap {
   display: flex; flex-direction: column;

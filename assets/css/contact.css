@@ -1,5 +1,5 @@
 /*
- * contact.css — JB EMERIC
+ * contact.css : JB EMERIC
  * CSS complet extrait de contact.html (source: zip original)
  */
 
@@ -90,7 +90,7 @@ a{text-decoration:none;color:inherit}
 .ov-sec .ov-desc{color:rgba(255,255,255,.5)}
 .ov-sec .ov-cta{background:var(--Y);color:#000}
 .ov-sec .ov-cta:hover{background:var(--Yd)}
-/* Tags — charte contraste : blanc sur noir / jaune sur bleu */
+/* Tags, charte contraste : blanc sur noir / jaune sur bleu */
 .ov-sec .ov-tag{border-color:rgba(255,255,255,.22);color:#fff;background:rgba(255,255,255,.1)}
 .ov-sec .ov-tag-y{background:var(--B);border-color:var(--B);color:var(--Y)}
 .ov-sec + .ov-sec{border-top:3px solid var(--Y)}
@@ -167,7 +167,7 @@ a{text-decoration:none;color:inherit}
 
 @media(min-width:600px){}
 
-/* REVEAL — désactivé, tout visible */
+/* REVEAL : désactivé, tout visible */
 .rv{opacity:1;transform:none}
 .d1,.d2,.d3{}
 

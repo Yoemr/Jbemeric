@@ -1,5 +1,5 @@
 /*
- * cursus.css — Page académie cursus
+ * cursus.css : Page académie cursus
  * Charte JB EMERIC · bleu profond + or compétition
  */
 
@@ -316,7 +316,7 @@ img{display:block;max-width:100%}
   color:var(--accent);font-weight:400;letter-spacing:.5px;
 }
 
-/* ══ NIVEAUX — fiche FFSA ══════════════════════════ */
+/* ══ NIVEAUX : fiche FFSA ══════════════════════════ */
 .niveaux{
   padding:clamp(80px,10vw,140px) clamp(20px,5vw,80px);
   background:var(--bg-elev);

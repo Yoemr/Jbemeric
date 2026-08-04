@@ -210,3 +210,53 @@ L'ensemble est cohérent : quarante ans de carrière de pilote, trente-sept ans 
 3. **`auth.js`** : code mort à supprimer, ou fonctionnalité jamais branchée à rétablir ?
 4. **`paddock/article.html`** : le rendu 100 % client est-il assumé, ou faut-il rendre les 29 articles indexables ?
 5. **Pages publiques dans `admin/`** : `contact`, `mentions-legales`, `confidentialite` en sortent-elles ?
+
+---
+
+## 6. Mise à jour du 4 août 2026
+
+### 6.1 Résolu depuis le relevé du 1er août
+
+- **2.1** et **2.2**, serveur local et sauvegarde du live-editor : corrigés (D-006).
+- **2.5**, canoniques : les 15 pages qui en déclarent une pointent toutes vers l'URL finale. Vérifié fichier par fichier.
+- **D-007**, tiret cadratin : appliqué au dépôt. 517 occurrences supprimées sur les 18 pages, 16 CSS et 16 JS. Conventions en D-015.
+
+### 6.2 Encore ouvert, hérité du relevé précédent
+
+- **2.3**, `track.html#voiture-perso` : l'entrée de menu existe toujours dans `nav.js`, `track.html` et `nos-voitures.html`, aucun élément ne porte cet `id`.
+- **2.3**, `assets/images/jb-emeric-portrait.jpg` : toujours appelée par `academie/karting.html`, toujours absente du disque.
+- **2.5**, `<h1>` absent : `paddock.html`, `admin/login.html`, `admin/signup.html`, `admin/dashboard.html`.
+- **2.5**, canonique absente : `admin/dashboard.html`, `paddock/articles.html`, `paddock/article.html`. Ce dernier n'a toujours aucune métadonnée, les 29 articles restent non indexables.
+- **2.6**, « PACA » : subsiste dans les `<title>` de `index.html`, `coaching.html`, `track.html` et `admin/legal/contact.html`, ainsi que dans le pied de trois pages `admin/`.
+
+### 6.3 Anomalie nouvelle et sérieuse, `track-render.js` ne s'exécute jamais
+
+**Constat.** `assets/js/track-render.js` ligne 250 contient une erreur de syntaxe. Les apostrophes de la chaîne ne sont pas échappées :
+
+```js
+? '<button class="sr-btn-inscr" onclick="openModal('' + (ev.type||'Stage') + '',…)">S'inscrire →</button>'
+```
+
+**Vérification.** `node --check` rejette le fichier. L'erreur est présente à l'identique dans `HEAD` et dans `origin/main`, elle est donc antérieure et n'a pas été introduite par un chantier récent.
+
+**Portée.** `track.html` ligne 506 charge le fichier avec `type="module"`. Une erreur de syntaxe empêche l'évaluation du module entier, donc rien de ce qu'il définit n'existe au moment où la page vit :
+
+| Perdu | Rôle |
+|---|---|
+| rendu des sessions | Le calendrier des track-days ne s'affiche pas |
+| `window.vote` | Le vote pour ouvrir une session ne fonctionne pas |
+| `window.openModal` / `closeModal` | La fenêtre d'inscription ne s'ouvre pas |
+| `window.filterCards` | Les onglets de filtre sont inertes |
+
+Autrement dit, toute la partie dynamique de `track.html` est morte, et l'était déjà avant la remise à plat. La page est marquée « en chantier », ce qui a probablement masqué le défaut.
+
+**Non vérifié** : depuis quand. À dater par `git log -S` sur la ligne si l'information a un intérêt.
+
+### 6.4 Deux anomalies mineures, préexistantes
+
+- `admin/legal/contact.html` ligne 11 : la balise `<meta name="description">` se termine par `">>`. Le chevron surnuméraire injecte un `>` littéral dans le `<head>`.
+- `paddock/nos-voitures.html` : la page porte un `<meta http-equiv="refresh" content="0;url=track.html#voitures">` tout en déclarant une canonique vers elle-même, et un `og:url` (`/nos-voitures.html`) qui ne correspond pas à cette canonique (`/paddock/nos-voitures.html`). C'est le cas que `docs/04` interdit, une canonique désignant une URL qui redirige. À relier à la question ouverte 1 de la section 5.
+
+### 6.5 Hors de portée d'une modification de fichier
+
+Le contenu saisi par JB dans le live-editor vit dans la table Supabase `site_content`. Il n'est pas dans le dépôt et n'a pas été traité par la passe D-007. Un cadratin subsiste dans le cache figé de `academie/karting.html` à ce titre, laissé volontairement. La base reste à passer en revue.

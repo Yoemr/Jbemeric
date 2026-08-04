@@ -6,6 +6,47 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 4 août 2026, application de D-007 au site
+
+### D-017, Le tiret décoratif d'intertitre appartient au CSS
+
+Les quatre kickers qui commençaient par un tiret écrit en dur ont perdu ce caractère. Le trait est désormais dessiné par une règle `::before`.
+
+**Constat qui a motivé la décision** : trois des quatre kickers (`fmt-kicker`, `pc-kicker`, `nv-kicker`) portaient **déjà** un `::before` et un `::after` traçant un trait de chaque côté. Le tiret du HTML faisait donc doublon avec un trait déjà présent, sur toute la durée de vie de la page. Seul `dc-kicker` avait un vrai rôle visuel, il a reçu sa règle CSS.
+
+**Portée générale** : ce qui relève du dessin se code en CSS, jamais en caractère dans le HTML. Un caractère décoratif est lu par les lecteurs d'écran et survit aux copier-coller.
+
+### D-016, Une valeur vide s'écrit en points de suspension
+
+Les 43 emplacements qui affichaient un tiret en attendant leurs données (compteurs du dashboard, pastilles, cellules sans valeur) affichent `…`.
+
+**Raison, mot de Yoan** : un tiret « peut se lire comme zéro ou aucun », ce qui est faux quand la donnée n'est pas encore chargée.
+
+**Réserve à lever** : la distinction n'a pas été faite entre l'attente de chargement et la donnée réellement absente. `duree: '…'` du sponsor Leroy Merlin dans `site-data.js` relève du second cas. À revoir si l'ambiguïté gêne.
+
+### D-015, Conventions de remplacement du tiret cadratin
+
+D-007 interdit le caractère depuis avril. Il n'avait jamais été appliqué aux fichiers : le dépôt en comptait **517**. Conventions retenues, arbitrées par le rôle éditorial.
+
+| Contexte | Remplacement |
+|---|---|
+| Métadonnées (`title`, `og:`, `twitter:`) | Point médian, séparateur unique |
+| Apposition ou rectification | Virgule |
+| Deux segments autonomes | Point |
+| Le second segment explicite le premier | Deux points |
+| Libellés coordonnés de même rang | Point médian |
+| Attributs `alt`, légendes d'images | Virgule, jamais le point médian |
+| Incise encadrée par deux tirets | Parenthèses |
+| Commentaires de code | Deux points, ou virgule si la ligne en portait déjà un |
+
+**Pourquoi le point médian dans les métadonnées** : le site l'employait déjà dans huit titres, parfois dans le même titre qu'un cadratin. Il occupe moins de place dans le budget d'affichage d'un résultat de recherche.
+
+**Pourquoi la virgule seule dans les `alt`** : un lecteur d'écran rend une virgule par une pause et le point médian par un mot.
+
+**Hors de portée d'une modification de fichier** : le contenu saisi par JB dans le live-editor, stocké dans la table `site_content`. Un cadratin subsiste dans le cache de `academie/karting.html` à ce titre. La base n'a pas été traitée.
+
+---
+
 ## 1er août 2026, remise à plat complète
 
 ### D-014, Numérotation par niveaux pour parler du projet

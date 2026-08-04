@@ -127,6 +127,12 @@ http.createServer(function (req, res) {
 
   // ── Fichiers statiques ───────────────────────────────────────────────────────
   var pathname = new URL(req.url, 'http://localhost').pathname
+  /* Plusieurs medias de JB portent un espace dans leur nom de fichier. Le
+     navigateur les demande encodes, et sans decodage ils sont introuvables en
+     local alors qu'ils fonctionnent en production. Le decodage precede la garde
+     anti-traversee, sinon un %2e%2e passerait au travers. */
+  try { pathname = decodeURIComponent(pathname) }
+  catch (e) { res.writeHead(400); res.end('400 : URL mal encodee'); return }
   if (pathname === '/') pathname = '/index.html'
 
   var filePath = path.join(ROOT, pathname)

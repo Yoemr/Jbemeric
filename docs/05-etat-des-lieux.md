@@ -224,7 +224,7 @@ L'ensemble est cohérent : quarante ans de carrière de pilote, trente-sept ans 
 ### 6.2 Encore ouvert, hérité du relevé précédent
 
 - **2.3**, `track.html#voiture-perso` : l'entrée de menu existe toujours dans `nav.js`, `track.html` et `nos-voitures.html`, aucun élément ne porte cet `id`.
-- **2.3**, `assets/images/jb-emeric-portrait.jpg` : toujours appelée par `academie/karting.html`, toujours absente du disque.
+- ~~**2.3**, `assets/images/jb-emeric-portrait.jpg`~~ : corrigé le 4 août, voir 6.6.
 - **2.5**, `<h1>` absent : `paddock.html`, `admin/login.html`, `admin/signup.html`, `admin/dashboard.html`.
 - **2.5**, canonique absente : `admin/dashboard.html`, `paddock/articles.html`, `paddock/article.html`. Ce dernier n'a toujours aucune métadonnée, les 29 articles restent non indexables.
 - **2.6**, « PACA » : subsiste dans les `<title>` de `index.html`, `coaching.html`, `track.html` et `admin/legal/contact.html`, ainsi que dans le pied de trois pages `admin/`.
@@ -268,6 +268,20 @@ Le troisième est le plus instructif. Le bloc précédent se termine par `})()` 
 
 - `admin/legal/contact.html` ligne 11 : la balise `<meta name="description">` se termine par `">>`. Le chevron surnuméraire injecte un `>` littéral dans le `<head>`.
 - `paddock/nos-voitures.html` : la page porte un `<meta http-equiv="refresh" content="0;url=track.html#voitures">` tout en déclarant une canonique vers elle-même, et un `og:url` (`/nos-voitures.html`) qui ne correspond pas à cette canonique (`/paddock/nos-voitures.html`). C'est le cas que `docs/04` interdit, une canonique désignant une URL qui redirige. À relier à la question ouverte 1 de la section 5.
+
+### 6.6 Le portrait manquant, et ce qu'il a révélé sur le serveur local
+
+**Le symptôme.** `academie/karting.html` appelait `assets/images/jb-emeric-portrait.jpg`, absente du disque. C'était la seule image manquante du site, vérifié en croisant les 18 pages avec le contenu de `assets/images/`.
+
+**Le remplacement.** `assets/images/Jean Baptiste EMERIC.png`, seul vrai portrait de JB dans le dépôt et jusqu'ici inutilisé. Le candidat au nom trompeur, `jb-emeric-pilote.jpg`, est en réalité une photo de la BMW 325i HTCC en piste, donc précisément la voiture que D-008 déclare morte.
+
+**Le défaut de fond.** Le portrait ne se servait toujours pas après correction. `dev-server.js` ne décodait jamais l'URL demandée : `new URL(...).pathname` rend un chemin encodé, et il était passé tel quel à `path.join`. Conséquence, **tout média dont le nom contient un espace était en 404 en local**, alors qu'il fonctionne en production. Cela concernait aussi la photo de briefing enfant et les vidéos karting, déjà utilisées par le site.
+
+C'est le même genre de piège que 2.1 : un défaut qui n'existe qu'en développement et qui fait conclure à tort qu'une ressource est cassée.
+
+**Précaution.** Le décodage est placé avant la garde anti-traversée, sinon un `%2e%2e` serait passé au travers. Une URL mal encodée renvoie 400 au lieu de faire tomber le serveur.
+
+**Vérifié.** Les trois médias à espaces passent de 404 à 200. Aucune régression sur un fichier normal, une page en sous-dossier ni une règle de `_redirects`. Six motifs de traversée testés contre une cible réelle hors racine, aucun ne renvoie son contenu, les échappements donnent 403. Portrait chargé dans Chromium : 344×330 rendu en 140×170, cadrage du visage correct.
 
 ### 6.5 Hors de portée d'une modification de fichier
 

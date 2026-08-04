@@ -324,6 +324,20 @@ Contrôlé identique sur les deux thèmes. Contrôlé inchangé sur `academie`, 
 
 **Ce qui n'est pas corrigé ici.** Deux autres héritages de `theme.css` traversent toujours sur ces pages, le `?` jaune de `.fq-q::before` et le `padding-left:32px` de `.fq-a`. Ils sont visibles et cohérents, donc laissés en l'état. La consolidation de fond, qui ferait de `theme.css` la seule définition du composant avec des variables par thème, relève du chantier CSS non ouvert.
 
+### 6.10 Le double `:root` de `paddock.css`, un piège dormant et non un bug
+
+**Constat.** `paddock.css` portait deux blocs `:root`, lignes 205 et 276, déclarant des valeurs contradictoires. Le premier, recopié de `coaching.css` avec son en-tête « COACHING : DARK MODE PERFORMANCE », déclarait `--ink` en blanc. Le second le déclare en `#0d0d0d`.
+
+Deux `:root` ont la même spécificité : **le dernier du fichier gagne pour tout le document**, y compris pour les règles écrites entre les deux. Le premier bloc n'appliquait donc aucune de ses valeurs.
+
+**Ce que la vérification a corrigé dans le diagnostic initial.** Un premier test semblait montrer que les titres de vidéos du Paddock étaient invisibles, texte `rgb(13,13,13)` sur fond `rgb(7,16,31)`. C'était **faux**, et l'erreur venait du banc d'essai, qui omettait le conteneur `.yt-card`. Dans le balisage réel, ce conteneur a un fond blanc, donc le texte sombre y est correct et parfaitement lisible. Vérifié au navigateur avec la structure exacte.
+
+Le défaut était donc dormant, pas actif : le bloc mort donnait seulement l'illusion qu'un thème sombre régnait sur cette partie du fichier. Le jour où quelqu'un ajoutait un élément en comptant sur `--ink` blanc, il obtenait du texte noir sans comprendre pourquoi.
+
+**Correction.** Un seul `:root`. Vérifié avant suppression : `--night3`, `--ink-s` et `--ink-xs` n'avaient aucun consommateur dans tout le dépôt. `--sep` n'était lu sans valeur de repli que par `.hud-bar` et `.hud-item`, absents des trois pages qui chargent cette feuille, et dont les deux pages porteuses (`coaching.html`, `paddock/nos-voitures.html`) ne chargent pas `paddock.css`. Il a été rapatrié par précaution.
+
+**Vérifié.** Relevé des 17 variables calculées avant et après, dans un navigateur : seules les trois sans consommateur ont disparu, toutes les autres valeurs sont identiques au caractère près, `--ink`, `--sep` et `--hero-overlay` compris. Capture de `paddock.html` après correction, page intacte.
+
 ### 6.7 Diagnostics posés mais non appliqués, périmètre écarté par Yoan
 
 Le 4 août, Yoan a limité le travail aux pages qu'il a déclarées **[défini]** dans `docs/01-architecture.md`, soit `coaching.html` et `paddock.html`. Soigner les métadonnées d'une page destinée à être refondue est du travail à refaire. Les constats ci-dessous sont donc établis et vérifiés, mais volontairement non corrigés. Ils évitent de refaire le diagnostic quand ces chantiers s'ouvriront.

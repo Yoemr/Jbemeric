@@ -198,23 +198,23 @@ img{display:block;max-width:100%}
 
 @media(min-width:1000px){ }
 
-/* ════════════════════════════════════════════════════
-   COACHING : DARK MODE PERFORMANCE
-   Fond : #040a1e · Accent : #FFCF00 · Texte : #fff
-   ════════════════════════════════════════════════════ */
-:root {
-  --night:   #040a1e;
-  --night2:  #07101f;
-  --night3:  #0a1628;
-  --gd:      #FFCF00;
-  --gd-dk:   #C8A000;
-  --bl:      #0A3D91;
-  --ink:     #ffffff;
-  --ink-s:   rgba(255,255,255,.5);
-  --ink-xs:  rgba(255,255,255,.22);
-  --sep:     rgba(255,255,255,.06);
-  --hero-overlay: linear-gradient(to bottom,rgba(4,10,30,.2) 0%,rgba(4,10,30,.7) 50%,rgba(4,10,30,1) 100%);
-}
+/* Un second bloc :root vivait ici, recopie de coaching.css, en-tete
+   "COACHING : DARK MODE PERFORMANCE" comprise. Il declarait --ink en blanc
+   la ou le bloc plus bas le declare en #0d0d0d.
+
+   Deux :root ont la meme specificite : le dernier du fichier gagne pour tout
+   le document, y compris pour les regles ecrites entre les deux. Ce bloc
+   n'appliquait donc aucune de ses valeurs, il donnait seulement l'illusion
+   qu'un theme sombre etait en vigueur dans cette partie du fichier.
+
+   Verifie avant suppression : --night3, --ink-s et --ink-xs n'avaient aucun
+   consommateur dans tout le depot. --sep n'etait lu que par .hud-bar et
+   .hud-item, absents des trois pages qui chargent cette feuille. Il est
+   conserve dans le bloc unique, plus bas, par precaution.
+
+   Les autres variables etaient soit identiques dans les deux blocs, soit
+   deja ecrasees. Aucune valeur calculee ne change. */
+
 /* Fond global noir */
 body { background: var(--night) }
 @media(max-width:699px){
@@ -286,6 +286,10 @@ body { background: var(--night) }
   --ink2:   rgba(13,13,13,.52);
   --sd:     rgba(255,255,255,.07);
   --sl:     rgba(13,13,13,.09);
+  /* rapatriee du bloc supprime plus haut : lue sans valeur de repli par
+     .hud-bar et .hud-item, qui n'apparaissent sur aucune page chargeant
+     cette feuille, mais la conserver ne coute rien */
+  --sep:    rgba(255,255,255,.06);
   --hero-overlay: linear-gradient(to bottom,rgba(4,10,30,.1) 0%,rgba(4,10,30,.55) 50%,rgba(4,10,30,.97) 100%);
 }
 body { background: var(--night) }

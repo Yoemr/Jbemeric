@@ -53,10 +53,6 @@
         '<a class="ft-contact-val" href="tel:+33660188787">06 60 18 87 87</a>' +
       '</div>' +
       '<div class="ft-contact-item">' +
-        '<span class="ft-contact-label">Région</span>' +
-        '<span class="ft-contact-val" style="cursor:default">Provence · Alpes · Côte d\'Azur</span>' +
-      '</div>' +
-      '<div class="ft-contact-item">' +
         '<span class="ft-contact-label">Contact</span>' +
         '<a class="ft-contact-val" href="' + R.contact + '">Formulaire de contact</a>' +
       '</div>' +

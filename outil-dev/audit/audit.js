@@ -18,6 +18,7 @@
 const fs = require('fs')
 const path = require('path')
 const { construire } = require('./contexte')
+const perimetre = require('./perimetre')
 
 const NIVEAUX = {
   faute:  { rang: 0, etiquette: 'FAUTE ', tri: 0 },  // contredit une decision ou casse quelque chose
@@ -37,6 +38,7 @@ function main() {
   const args = process.argv.slice(2)
   const court = args.includes('--court')
   const json = args.includes('--json')
+  const tout = args.includes('--tout')   // montre aussi le hors perimetre
   const filtres = args.filter(a => !a.startsWith('--'))
 
   const ctx = construire()
@@ -53,6 +55,10 @@ function main() {
     } catch (e) {
       sortie = { anomalies: [{ niveau: 'faute', ou: regle.id, quoi: `la regle a echoue : ${e.message}` }], resume: 'erreur' }
     }
+    // Chaque anomalie est rangee selon qu'elle touche une page qui compte.
+    for (const a of sortie.anomalies) {
+      a.dedans = perimetre.estDedans(String(a.ou).split(':')[0], ctx)
+    }
     resultats.push({ regle, ...sortie })
   }
 
@@ -68,20 +74,28 @@ function main() {
   console.log('  AUDIT JB EMERIC   ' + new Date().toISOString().slice(0, 16).replace('T', ' '))
   console.log('  ' + '-'.repeat(66))
 
+  let horsTotal = 0
   for (const r of resultats) {
+    const dedans = r.anomalies.filter(a => a.dedans)
+    const dehors = r.anomalies.filter(a => !a.dedans)
+    horsTotal += dehors.length
+
     const compte = { faute: 0, tache: 0, signal: 0 }
-    r.anomalies.forEach(a => compte[a.niveau]++)
+    dedans.forEach(a => compte[a.niveau]++)
     Object.keys(compte).forEach(k => { total[k] += compte[k] })
 
     const badge = compte.faute ? `${compte.faute} faute(s)` : 'aucune faute'
+    const suffixe = dehors.length ? `   (+ ${dehors.length} hors perimetre)` : ''
     console.log('')
     console.log(`  ${r.regle.titre.toUpperCase()}   [${r.regle.reference}]`)
-    console.log(`    ${badge}, ${compte.tache} a nettoyer, ${compte.signal} a juger   ${r.resume}`)
+    console.log(`    ${badge}, ${compte.tache} a nettoyer, ${compte.signal} a juger   ${r.resume}${suffixe}`)
 
     if (!court) {
-      const tries = [...r.anomalies].sort((a, b) => NIVEAUX[a.niveau].tri - NIVEAUX[b.niveau].tri)
+      const montrer = tout ? r.anomalies : dedans
+      const tries = [...montrer].sort((a, b) => NIVEAUX[a.niveau].tri - NIVEAUX[b.niveau].tri)
       for (const a of tries) {
-        console.log(`      ${NIVEAUX[a.niveau].etiquette}  ${a.ou}`)
+        const marque = a.dedans ? '' : '  [hors perimetre]'
+        console.log(`      ${NIVEAUX[a.niveau].etiquette}  ${a.ou}${marque}`)
         console.log(`               ${a.quoi}`)
       }
     }
@@ -89,7 +103,12 @@ function main() {
 
   console.log('')
   console.log('  ' + '-'.repeat(66))
-  console.log(`  TOTAL   ${total.faute} faute(s)   ${total.tache} a nettoyer   ${total.signal} a juger`)
+  console.log(`  PERIMETRE   ${total.faute} faute(s)   ${total.tache} a nettoyer   ${total.signal} a juger`)
+  console.log(`  Les ${perimetre.PAGES.length} pages qui comptent : ${perimetre.PAGES.join(', ')}`)
+  if (horsTotal) {
+    console.log(`  HORS PERIMETRE   ${horsTotal} releve(s), sans consequence sur le code de sortie.`)
+    if (!tout) console.log('  Les voir : --tout')
+  }
   console.log('')
   if (total.faute) {
     console.log('  Une faute contredit une decision actee ou casse quelque chose.')

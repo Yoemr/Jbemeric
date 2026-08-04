@@ -23,6 +23,20 @@ Pire, à chaque vérification un script jetable était fabriqué sur le moment, 
 
 D'où la règle : **ce qui est mesurable est mesuré par cet outil, une fois pour toutes. Le jugement reste aux humains, dans `docs/06-decisions.md` et les fiches de chantier.**
 
+## Le périmètre
+
+`perimetre.js` déclare les pages qui comptent, sur décision de Yoan du 4 août 2026 : « je veux un focus sur index, académie, karting adulte et enfant, compétition, coaching, track et paddock. Les autres pages honnêtement je m'en fous un peu. »
+
+Un défaut sur une de ces pages est une faute qui fait échouer. Un défaut ailleurs est relevé, rangé à part, sans conséquence sur le code de sortie, et masqué par défaut. Il ne disparaît pas, il cesse d'occuper la place.
+
+```
+node outil-dev/audit/audit.js --tout   voir aussi le hors perimetre
+```
+
+Une feuille de style ou un script suit ses pages : chargé par au moins une page du périmètre, il est dans le périmètre.
+
+Effet mesuré à la mise en place : 7 fautes deviennent 2, et ces deux-là sont sur des pages que Yoan travaille vraiment.
+
 ## Les trois niveaux
 
 | Niveau | Sens | Fait échouer |

@@ -338,6 +338,23 @@ Le défaut était donc dormant, pas actif : le bloc mort donnait seulement l'ill
 
 **Vérifié.** Relevé des 17 variables calculées avant et après, dans un navigateur : seules les trois sans consommateur ont disparu, toutes les autres valeurs sont identiques au caractère près, `--ink`, `--sep` et `--hero-overlay` compris. Capture de `paddock.html` après correction, page intacte.
 
+### 6.11 `contact.css` et `legal.css` étaient des copies de l'accueil
+
+**Constat.** Le rôle design avait relevé que ces deux feuilles partagent 136 lignes identiques, soit 98% de la plus petite. La bonne opération n'était pas de mutualiser ces lignes mais de les supprimer des deux côtés : ce sont des copies du CSS de l'ancienne page d'accueil, systèmes `.ov-sec`, `.btn`, `.cta-band` et `.palmares` compris, dont aucune des quatre pages concernées n'utilise quoi que ce soit.
+
+**Méthode de vérification.** Pour chaque page, le DOM a été récupéré **après exécution du JavaScript**, donc avec la navigation et le pied de page injectés. Chaque sélecteur de la feuille a ensuite été confronté aux classes et identifiants réellement présents. Les sélecteurs à état (`:hover`, `.open`) ont été inspectés à part, pour éviter de déclarer mort un style qui n'apparaît qu'au clic : aucun faux positif, ils portaient tous sur des classes absentes.
+
+| Feuille | Sélecteurs | Morts | Lignes avant | Après |
+|---|---|---|---|---|
+| `contact.css` | 142 | 131 | 184 | 30, commentaire compris |
+| `legal.css` | 154 | 131 | 252 | 97 |
+
+**Le cas `contact.css` est extrême.** `admin/legal/contact.html` n'utilise **aucune classe CSS**, tout son habillage passe par des attributs `style`. La feuille se réduit au reset, à trois règles d'élément et à une media query sur `#contact-grid`.
+
+**Supprimés en connaissance de cause** : le bloc `:root` des deux fichiers, onze variables chacun. Dans `contact.css` aucun style en ligne de la page n'appelle `var()`. Dans `legal.css`, les deux seules variables consommées par les règles conservées, `--Y` et `--BN`, sont déjà déclarées par `theme.css`, chargée avant, avec les mêmes valeurs. L'animation `@keyframes pulse` de `contact.css` partait aussi : son unique usage était dans une règle elle-même morte.
+
+**Vérifié.** Capture avant et après pour les quatre pages, comparaison octet par octet des images décompressées. **Identique au pixel sur les quatre**, soit 5,2 millions d'octets sans un écart pour `contact.html`.
+
 ### 6.7 Diagnostics posés mais non appliqués, périmètre écarté par Yoan
 
 Le 4 août, Yoan a limité le travail aux pages qu'il a déclarées **[défini]** dans `docs/01-architecture.md`, soit `coaching.html` et `paddock.html`. Soigner les métadonnées d'une page destinée à être refondue est du travail à refaire. Les constats ci-dessous sont donc établis et vérifiés, mais volontairement non corrigés. Ils évitent de refaire le diagnostic quand ces chantiers s'ouvriront.

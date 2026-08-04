@@ -20,12 +20,11 @@ const PAGES = [
   'coaching.html',
   'track.html',
   'paddock.html',
+  'paddock/palmares.html',      // ajoute par Yoan le 4 aout : « palmares aussi on garde »
 ]
 
 // Volontairement dehors : les sept pages admin/, les gabarits d'articles du
-// paddock, nos-voitures dont le sort n'est pas tranche, et le palmares.
-// Ce dernier est un cas limite : c'est un vrai contenu, quarante annees de
-// donnees, mais Yoan ne l'a pas nomme. A rediscuter s'il remonte.
+// paddock, et nos-voitures dont le sort n'est pas tranche.
 
 function estDedans(chemin, ctx) {
   if (PAGES.includes(chemin)) return true

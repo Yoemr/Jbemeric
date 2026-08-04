@@ -226,7 +226,9 @@ L'ensemble est cohérent : quarante ans de carrière de pilote, trente-sept ans 
 - **2.3**, `track.html#voiture-perso` : l'entrée de menu existe toujours dans `nav.js`, `track.html` et `nos-voitures.html`, aucun élément ne porte cet `id`.
 - ~~**2.3**, `assets/images/jb-emeric-portrait.jpg`~~ : corrigé le 4 août, voir 6.6.
 - **2.5**, `<h1>` absent : `paddock.html`, `admin/login.html`, `admin/signup.html`, `admin/dashboard.html`.
-- **2.5**, canonique absente : `admin/dashboard.html`, `paddock/articles.html`, `paddock/article.html`. Ce dernier n'a toujours aucune métadonnée, les 29 articles restent non indexables.
+- **2.5**, canonique absente : `admin/dashboard.html`, `paddock/articles.html`, `paddock/article.html`.
+
+> **Rectification du 4 août 2026.** Le relevé du 1er août affirmait en 2.5 que `paddock/article.html` n'a « ni `<title>`, ni `<meta description>`, ni canonique ». C'est faux pour les deux premiers. La page porte `<title id="page-title">Article · JB EMERIC</title>` et `<meta name="description" id="page-desc">`, deux valeurs de repli que le JS écrase au chargement avec le contenu réel de l'article. Seule la canonique manque vraiment. Le fond du problème demeure : les 29 articles ne sont pas indexables, parce que le contenu est rendu côté client. Mais la cause n'est pas l'absence de balises.
 - **2.6**, « PACA » : subsiste dans les `<title>` de `index.html`, `coaching.html`, `track.html` et `admin/legal/contact.html`, ainsi que dans le pied de trois pages `admin/`.
 
 ### 6.3 `track-render.js` ne s'exécutait jamais. Corrigé le 4 août 2026
@@ -282,6 +284,30 @@ C'est le même genre de piège que 2.1 : un défaut qui n'existe qu'en développ
 **Précaution.** Le décodage est placé avant la garde anti-traversée, sinon un `%2e%2e` serait passé au travers. Une URL mal encodée renvoie 400 au lieu de faire tomber le serveur.
 
 **Vérifié.** Les trois médias à espaces passent de 404 à 200. Aucune régression sur un fichier normal, une page en sous-dossier ni une règle de `_redirects`. Six motifs de traversée testés contre une cible réelle hors racine, aucun ne renvoie son contenu, les échappements donnent 403. Portrait chargé dans Chromium : 344×330 rendu en 140×170, cadrage du visage correct.
+
+### 6.7 Diagnostics posés mais non appliqués, périmètre écarté par Yoan
+
+Le 4 août, Yoan a limité le travail aux pages qu'il a déclarées **[défini]** dans `docs/01-architecture.md`, soit `coaching.html` et `paddock.html`. Soigner les métadonnées d'une page destinée à être refondue est du travail à refaire. Les constats ci-dessous sont donc établis et vérifiés, mais volontairement non corrigés. Ils évitent de refaire le diagnostic quand ces chantiers s'ouvriront.
+
+**`footer.js` ligne 17 écrit « École de Pilotage · Région PACA » dans le pied de toutes les pages du site.** C'est la mention la plus diffusée de la région, et elle ne figurait dans aucun relevé antérieur. Une seule ligne à changer, mais elle modifie le rendu des 18 pages, donc elle attend l'accord de Yoan.
+
+**Les `Disallow` de `robots.txt` sont périmés depuis la réorganisation en sous-dossiers.** Le fichier bloque `/admin.html`, `/login.html`, `/signup.html` et `/mot-de-passe-oublie.html`, c'est-à-dire exactement les anciennes URLs que `_redirects` renvoie en 301. Les URLs réelles sous `admin/` ne sont couvertes par aucune règle. La protection est nulle. À noter qu'un `Disallow` empêche le crawl mais pas l'indexation de l'URL nue.
+
+Remède proposé, quand `admin/` passera en chantier :
+
+| Page | Balise |
+|---|---|
+| `admin/dashboard.html` | `noindex,nofollow`, sans canonique |
+| `admin/login.html`, `admin/signup.html` | `noindex,follow`, elles sont liées depuis la navigation publique |
+| `admin/mot-de-passe-oublie.html` | `noindex,nofollow` |
+
+Et dans `robots.txt`, remplacer les quatre règles obsolètes par `Disallow: /admin/` suivi de `Allow: /admin/legal/`, faute de quoi on bloquerait `contact`, `mentions-legales` et `confidentialite`, dont deux figurent dans `sitemap.xml`. Ce point tombe si les pages légales sortent de `admin/`, question ouverte 5.
+
+**Footers statiques en double.** `admin/login.html` et `admin/signup.html` embarquent un pied de page recopié en dur, en plus du `<div id="footer-root">` alimenté par `footer.js`. Sur `login.html` il est tronqué au milieu d'un mot ligne 173 : `© 2026 JB EMERIC · Tous dr`, suivi directement des balises de script. Contraire au principe scalable, à supprimer au profit du seul `footer-root`.
+
+**Le Challenge est encore nommé dans du texte visible.** `admin/legal/contact.html` ligne 39 propose des renseignements « sur nos stages, track-days, le Challenge ou le coaching vidéo ». Même chose dans `academie/karting.html` ligne 136 et dans un titre d'iframe de `academie.html` ligne 184. D-008 le déclare mort. Cas particulier des titres de vidéos YouTube : ce sont des intitulés de contenus qui existent réellement sur la chaîne.
+
+**`paddock/nos-voitures.html`** cumule un `<meta http-equiv="refresh">` vers `track.html#voitures`, une canonique vers elle-même et un `og:url` vers une URL redirigée. Les trois se contredisent. Le remède dépend du sort de la page, question ouverte 1.
 
 ### 6.5 Hors de portée d'une modification de fichier
 

@@ -326,6 +326,10 @@ body { background: var(--night) }
 }
 .nl-masthead-title {
   font-family: 'Bebas Neue'; font-size: 28px; letter-spacing: 2px; color: #fff;
+  /* porte le <h1> de la page : neutralise la graisse par défaut du navigateur.
+     Bebas Neue n'existe qu'en 400, un bold produirait un faux-gras synthétique.
+     La marge, elle, est déjà remise à zéro par le reset en tête de fichier. */
+  font-weight: 400;
 }
 .nl-masthead-sub {
   font-family: 'DM Mono'; font-size: 8px; letter-spacing: 3px;

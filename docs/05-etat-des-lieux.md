@@ -229,7 +229,7 @@ L'ensemble est cohérent : quarante ans de carrière de pilote, trente-sept ans 
 - **2.5**, canonique absente : `admin/dashboard.html`, `paddock/articles.html`, `paddock/article.html`. Ce dernier n'a toujours aucune métadonnée, les 29 articles restent non indexables.
 - **2.6**, « PACA » : subsiste dans les `<title>` de `index.html`, `coaching.html`, `track.html` et `admin/legal/contact.html`, ainsi que dans le pied de trois pages `admin/`.
 
-### 6.3 Anomalie nouvelle et sérieuse, `track-render.js` ne s'exécute jamais
+### 6.3 `track-render.js` ne s'exécutait jamais. Corrigé le 4 août 2026
 
 **Constat.** `assets/js/track-render.js` ligne 250 contient une erreur de syntaxe. Les apostrophes de la chaîne ne sont pas échappées :
 
@@ -250,7 +250,19 @@ L'ensemble est cohérent : quarante ans de carrière de pilote, trente-sept ans 
 
 Autrement dit, toute la partie dynamique de `track.html` est morte, et l'était déjà avant la remise à plat. La page est marquée « en chantier », ce qui a probablement masqué le défaut.
 
-**Non vérifié** : depuis quand. À dater par `git log -S` sur la ligne si l'information a un intérêt.
+**Correction du 4 août 2026.** Le défaut n'était pas seul. Comme le fichier ne parvenait jamais à s'évaluer, aucun des suivants n'avait pu se manifester. Ils sont apparus l'un après l'autre à mesure que le précédent tombait.
+
+| # | Défaut | Nature |
+|---|---|---|
+| 1 | ligne 250 | Apostrophes non échappées dans le `onclick` généré |
+| 2 | ligne 448 | `font-family:'DM Mono'` dans une chaîne à quotes simples |
+| 3 | ligne 355 | Insertion automatique de point-virgule |
+
+Le troisième est le plus instructif. Le bloc précédent se termine par `})()` sans point-virgule et le suivant commence par `(`, donc JavaScript lisait un appel de fonction sur le résultat du bloc précédent. Le fichier connaissait déjà le remède : la ligne 300 commence par `;(`. Sur les quatre blocs immédiatement invoqués du fichier, un seul n'était pas protégé.
+
+**Ce qui a été changé sur le fond.** Le bouton d'inscription ne porte plus de `onclick` écrit dans la chaîne HTML. Les valeurs passent par des attributs `data-`, échappés par un helper `escAttr`, et le handler est branché après injection. Motif : un simple échappement aurait rétabli la syntaxe mais laissé le défaut vivant, puisque `circuits.nom` vaut par exemple « Circuit d'Hyères ». Voir D-018.
+
+**Vérifié.** `node --check` passe sur les 17 JS du dépôt. Page chargée dans Chromium : plus aucune erreur non interceptée, seuls subsistent les trois `Failed to fetch` vers Supabase, attendus hors ligne et traités par les `try/catch`. Banc d'essai avec données simulées : la carte se construit, le bouton existe, l'apostrophe du nom de circuit survit à l'aller-retour, et le clic appelle `openModal` avec les quatre arguments attendus.
 
 ### 6.4 Deux anomalies mineures, préexistantes
 

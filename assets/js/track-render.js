@@ -216,6 +216,17 @@
       return 'assets/images/sambuc-circuit.jpg'
     }
 
+    /* Échappement pour insertion dans un attribut HTML. Les valeurs viennent
+       de Supabase et peuvent contenir une apostrophe ou un guillemet. */
+    function escAttr(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+    }
+
     var cards = events.map(function(ev) {
       var d = new Date(ev.date_event)
       var dayStr  = DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear()
@@ -247,7 +258,11 @@
         '</div>' +
         '<div class="sr-card-foot">' +
           (status === 'Open'
-            ? '<button class="sr-btn-inscr" onclick="openModal('' + (ev.type||'Stage') + '',' + prix + ','' + circuit + '','' + ev.id + '')">S'inscrire →</button>'
+            ? '<button class="sr-btn-inscr" data-inscr' +
+                ' data-type="'    + escAttr(ev.type || 'Stage') + '"' +
+                ' data-prix="'    + escAttr(prix)               + '"' +
+                ' data-circuit="' + escAttr(circuit)            + '"' +
+                ' data-ev="'      + escAttr(ev.id)              + '">S\'inscrire →</button>'
             : '<button class="sr-btn-inscr" style="opacity:.4;cursor:default" disabled>Bientôt disponible</button>'
           ) +
         '</div>' +
@@ -255,6 +270,20 @@
     })
 
     grid.innerHTML = cards.join('')
+
+    /* Branchement du bouton d'inscription après injection. Un handler écrit
+       dans la chaîne HTML obligeait à replier les valeurs entre quotes, ce qui
+       était la cause du défaut de syntaxe précédent. */
+    Array.prototype.forEach.call(grid.querySelectorAll('[data-inscr]'), function(btn) {
+      btn.addEventListener('click', function() {
+        window.openModal(
+          btn.getAttribute('data-type'),
+          parseFloat(btn.getAttribute('data-prix')),
+          btn.getAttribute('data-circuit'),
+          btn.getAttribute('data-ev')
+        )
+      })
+    })
 
     // Mettre à jour le compteur total
     var openCount = events.filter(function(e) { return e.status === 'Open' }).length
@@ -323,7 +352,9 @@
 // ─────────────────────────────────────────────────────────────
 
 // Charger les events depuis Supabase et lier les boutons S'inscrire
-(async function() {
+// Le point-virgule d'ouverture est obligatoire : le bloc precedent se termine
+// par })() sans separateur, et JS lirait sinon un appel sur son resultat.
+;(async function() {
   try {
     var r = await fetch(
       'https://fyaybxamuabawerqzuud.supabase.co/rest/v1/events?status=eq.Open&visible_site=eq.true&order=date_event.asc&select=id,date_event,type,prix,nb_places,circuits(nom)',
@@ -416,7 +447,7 @@ function filterCards(btn, type) {
       if (!empty) {
         empty = document.createElement('div')
         empty.id = 'sr-empty'
-        empty.style.cssText = 'grid-column:1/-1;text-align:center;padding:40px;font-family:'DM Mono';font-size:10px;color:rgba(255,255,255,.3)'
+        empty.style.cssText = "grid-column:1/-1;text-align:center;padding:40px;font-family:'DM Mono';font-size:10px;color:rgba(255,255,255,.3)"
         empty.textContent = 'Aucune date dans cette catégorie pour le moment.'
         grid.appendChild(empty)
       }

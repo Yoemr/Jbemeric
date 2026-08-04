@@ -6,6 +6,24 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 4 août 2026, correction de `track-render.js`
+
+### D-018, Pas de handler écrit dans une chaîne HTML
+
+Quand du HTML est construit en JavaScript, les valeurs dynamiques passent par des attributs `data-`, échappés, et le comportement est branché après injection. Jamais par un `onclick` assemblé dans la chaîne.
+
+**Raison** : un `onclick` en chaîne impose trois niveaux de quotes imbriqués, guillemets de l'attribut, quotes de l'appel, quotes de la chaîne JS. C'est ce qui avait cassé `track-render.js`. Et même une fois la syntaxe rétablie, la moindre apostrophe dans une donnée venue de Supabase aurait recassé le bouton en silence. `circuits.nom` vaut par exemple « Circuit d'Hyères ».
+
+**Portée** : règle générale, pas un correctif ponctuel. Elle vaut pour tout rendu dynamique du site.
+
+### D-019, Un bloc immédiatement invoqué commence par un point-virgule
+
+Tout `(function(){})()` ou `(async function(){})()` s'écrit `;(function(){})()`.
+
+**Raison** : sans séparateur, JavaScript rattache le bloc à l'expression précédente et lit un appel de fonction sur son résultat. Le fichier appliquait déjà la règle à un endroit sur quatre, ce qui a suffi à masquer le problème.
+
+---
+
 ## 4 août 2026, application de D-007 au site
 
 ### D-017, Le tiret décoratif d'intertitre appartient au CSS

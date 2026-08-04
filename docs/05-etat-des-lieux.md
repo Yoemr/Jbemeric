@@ -301,6 +301,29 @@ L'exception apparente est `admin/dashboard.html`, dont le `<nav class="sb-nav">`
 
 **Vérifié** : les 15 liens internes distincts du site répondent 200 en direct, aucun ne passe plus par une redirection. Séquence des balises inchangée sur les 18 pages, seuls des attributs `href` ont bougé.
 
+### 6.9 Le premier item de FAQ avait un filet invisible sur les deux pages sombres
+
+**Constat.** Diagnostiqué par le rôle design par lecture de la cascade, puis confirmé au navigateur. Sur `academie/karting.html` et `academie/competition.html`, fond `rgb(4,10,30)`, le premier item de la FAQ portait un filet noir à 8%, donc invisible, alors que tous les suivants avaient le filet clair.
+
+**Cause.** Deux définitions du même composant se superposent. `theme.css` pose `border-bottom` noir sur tout `.fq` et `border-top` noir sur `.fq:first-child`. Cette dernière règle a une spécificité de (0,2,0), supérieure au `.fq` simple de (0,1,0) des feuilles de page, donc elle gagne quel que soit l'ordre de chargement. Les deux pages sombres déclaraient bien un filet clair, mais seulement sur `.fq`, jamais sur `.fq:first-child`.
+
+**Correction.** Les deux feuilles déclarent désormais leurs trois bordures explicitement, `border-top` sur `.fq`, `border-bottom:0` sur `.fq`, puis `:first-child` et `:last-child`. Elles ne dépendent plus de ce que `theme.css` leur impose. `theme.css` n'a pas été touché, donc aucune page à fond clair ne bouge.
+
+**Vérifié au navigateur**, feuilles réelles chargées dans l'ordre réel, avec le bon `data-theme` :
+
+| | avant | après |
+|---|---|---|
+| premier item, filet haut | noir 8%, invisible | blanc 8%, visible |
+| items suivants, filet haut | blanc 8% | blanc 8% |
+| filet bas, sauf dernier | 1px noir invisible | 0px |
+| dernier item, filet bas | 1px | 1px |
+
+Contrôlé identique sur les deux thèmes. Contrôlé inchangé sur `academie`, `coaching` et `track`, qui restent sur le comportement de `theme.css`.
+
+**Effet de bord assumé** : chaque item non terminal perd le pixel de bordure invisible qu'il portait, soit environ 4 pixels sur une FAQ de cinq questions.
+
+**Ce qui n'est pas corrigé ici.** Deux autres héritages de `theme.css` traversent toujours sur ces pages, le `?` jaune de `.fq-q::before` et le `padding-left:32px` de `.fq-a`. Ils sont visibles et cohérents, donc laissés en l'état. La consolidation de fond, qui ferait de `theme.css` la seule définition du composant avec des variables par thème, relève du chantier CSS non ouvert.
+
 ### 6.7 Diagnostics posés mais non appliqués, périmètre écarté par Yoan
 
 Le 4 août, Yoan a limité le travail aux pages qu'il a déclarées **[défini]** dans `docs/01-architecture.md`, soit `coaching.html` et `paddock.html`. Soigner les métadonnées d'une page destinée à être refondue est du travail à refaire. Les constats ci-dessous sont donc établis et vérifiés, mais volontairement non corrigés. Ils évitent de refaire le diagnostic quand ces chantiers s'ouvriront.

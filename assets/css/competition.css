@@ -433,7 +433,13 @@ img{display:block;max-width:100%}
 }
 .faq-title em{font-style:normal;color:var(--accent)}
 .faq-list{max-width:900px}
-.fq{border-top:1px solid var(--rule);padding:22px 0;cursor:pointer}
+/* Les trois bordures sont declarees explicitement. theme.css pose un
+   border-bottom noir sur tout .fq et un border-top noir sur .fq:first-child,
+   ce dernier avec une specificite superieure a un .fq simple : sans ces
+   regles, le premier item porte un filet noir invisible sur fond sombre
+   alors que tous les autres ont le filet clair. */
+.fq{border-top:1px solid var(--rule);border-bottom:0;padding:22px 0;cursor:pointer}
+.fq:first-child{border-top:1px solid var(--rule)}
 .fq:last-child{border-bottom:1px solid var(--rule)}
 .fq-q{
   font-size:16px;font-weight:500;color:var(--ink);

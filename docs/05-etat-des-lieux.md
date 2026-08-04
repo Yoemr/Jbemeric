@@ -6,6 +6,10 @@
 
 > Ce document constate. Il ne juge pas et ne propose rien. Chaque affirmation ci-dessous a été vérifiée dans les fichiers ou par test. Ce qui n'a pas été vérifié est signalé comme tel.
 
+> **Depuis le 4 août 2026, ne plus se fier à ce document pour ce qui est mesurable.** Lancer `node outil-dev/audit/audit.js`. Tirets cadratins, images manquantes, ancres et liens cassés, canoniques, `h1`, sélecteurs CSS morts, syntaxe JavaScript, unicité du pied de page et du menu : tout cela est désormais calculé en moins d'une seconde, et donc toujours à jour. Deux affirmations de ce relevé s'étaient révélées fausses faute d'être recalculées. Voir D-024.
+>
+> Ce que le document garde d'utile : l'historique daté, les causes racines, et tout ce qui relève du jugement plutôt que de la mesure.
+
 ---
 
 ## 1. Les pages

@@ -171,12 +171,12 @@
 
 <div id="footer-root"></div>
 
+<!-- routes.js en premier : sync-mirror.js lit window.ROUTES des son chargement.
+     Il etait place avant, donc il tombait sur un objet vide et retombait sur
+     ses URLs de secours, celles d'avant la reorganisation en sous-dossiers. -->
+<script src="assets/js/routes.js"></script>
 <script src="assets/js/sync-mirror.js"></script>
 <script type="module" src="assets/js/live-editor.js"></script>
-
-<!-- CSS responsive pour la page contact -->
-
-<script src="assets/js/routes.js"></script>
 <script src="assets/js/nav.js"></script>
 <script src="assets/js/footer.js"></script>
 <script id="jbe-content-cache" type="application/json">{}</script>

@@ -285,6 +285,22 @@ C'est le même genre de piège que 2.1 : un défaut qui n'existe qu'en développ
 
 **Vérifié.** Les trois médias à espaces passent de 404 à 200. Aucune régression sur un fichier normal, une page en sous-dossier ni une règle de `_redirects`. Six motifs de traversée testés contre une cible réelle hors racine, aucun ne renvoie son contenu, les échappements donnent 403. Portrait chargé dans Chromium : 344×330 rendu en 140×170, cadrage du visage correct.
 
+### 6.8 Ressources transversales, un seul footer et un seul menu
+
+**Le footer.** Constat de Yoan : le site est censé n'avoir qu'un pied de page pour toutes les pages. `admin/login.html` et `admin/signup.html` en affichaient trois. Un `auth-footer` compact, un pied de site complet recopié en dur et tronqué en plein mot sur `© 2026 JB EMERIC · Tous dr`, puis le vrai injecté par `footer.js`.
+
+Conséquence, et c'est ce qui a rendu le défaut visible : la correction de `footer.js` du 4 août n'atteignait pas ces deux pages, qui continuaient d'afficher « Région PACA » depuis leur copie figée. Le bloc en dur portait aussi des liens vers les anciennes URLs à plat.
+
+68 lignes retirées dans chaque fichier. Vérifié au rendu : une seule accroche par page, formulaires intacts.
+
+**Le menu.** Contrôle équivalent : 17 pages sur 18 injectent la navigation par `nav-root` et `nav.js`, aucune ne porte de `<nav>` en dur. Vérifié au rendu à cinq profondeurs différentes, de la racine à `admin/legal/` : 14 onglets, un burger, un menu mobile, partout identique.
+
+L'exception apparente est `admin/dashboard.html`, dont le `<nav class="sb-nav">` n'est pas le menu du site mais la barre latérale de l'interface d'administration. Rôle différent, présence légitime. Cette page n'a en revanche aucun pied de page, elle est la seule dans ce cas.
+
+**Les liens en dur vers d'anciennes URLs.** Le relevé du 1er août signalait en 2.1 que la navigation dépendait de `_redirects` plutôt que de `routes.js`. 29 liens dans 9 pages pointaient encore vers les chemins à plat (`contact.html`, `academie-competition.html`, `login.html`, `articles.html`), rattrapés par une redirection 301 à chaque clic. Tous réécrits vers l'URL finale, que `routes.js` déclarait déjà.
+
+**Vérifié** : les 15 liens internes distincts du site répondent 200 en direct, aucun ne passe plus par une redirection. Séquence des balises inchangée sur les 18 pages, seuls des attributs `href` ont bougé.
+
 ### 6.7 Diagnostics posés mais non appliqués, périmètre écarté par Yoan
 
 Le 4 août, Yoan a limité le travail aux pages qu'il a déclarées **[défini]** dans `docs/01-architecture.md`, soit `coaching.html` et `paddock.html`. Soigner les métadonnées d'une page destinée à être refondue est du travail à refaire. Les constats ci-dessous sont donc établis et vérifiés, mais volontairement non corrigés. Ils évitent de refaire le diagnostic quand ces chantiers s'ouvriront.

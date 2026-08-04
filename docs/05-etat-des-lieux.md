@@ -355,6 +355,25 @@ Le défaut était donc dormant, pas actif : le bloc mort donnait seulement l'ill
 
 **Vérifié.** Capture avant et après pour les quatre pages, comparaison octet par octet des images décompressées. **Identique au pixel sur les quatre**, soit 5,2 millions d'octets sans un écart pour `contact.html`.
 
+### 6.12 Suite du nettoyage, `auth.css` et `track.css`
+
+Même méthode que 6.11, avec une précaution supplémentaire indispensable ici.
+
+**Le piège du contenu construit en JavaScript.** Sur `track.html`, le calendrier des sessions est fabriqué par `track-render.js`, donc ses classes n'existent dans aucun fichier HTML. Et dans ce bac à sable, Supabase est injoignable, donc elles n'apparaissent pas non plus dans le DOM rendu. Les déclarer mortes aurait cassé la page en production.
+
+Parade retenue : recenser les **230 noms de classes que les scripts du site savent fabriquer**, plus les onze classes d'état ajoutées au clic (`open`, `active`, `selected`…), et les compter comme présentes. L'analyse ne supprime donc que ce qui n'apparaît ni dans le HTML, ni dans le DOM rendu, ni dans le JavaScript.
+
+| Feuille | Règles retirées | Lignes avant | Après |
+|---|---|---|---|
+| `auth.css` | 132 | 403 | 222 |
+| `track.css` | 58 | 572 | 445 |
+
+`auth.css` portait le système « band » au complet plus un bloc de styles de FAQ, alors que les deux pages d'authentification n'ont ni l'un ni l'autre. `track.css` portait **un troisième nommage de FAQ**, `.faq-item` / `.faq-q` / `.faq-a`, alors que `track.html` emploie `.fq` comme le reste du site.
+
+**Vérifié.** Capture avant et après des trois pages, comparaison octet par octet des images décompressées, puis une seconde passe après ajout des commentaires d'en-tête. **Identique au pixel à chaque fois.**
+
+**Bilan des quatre feuilles allégées** : 1411 lignes avant, 794 après, aucune différence visible sur les sept pages concernées.
+
 ### 6.7 Diagnostics posés mais non appliqués, périmètre écarté par Yoan
 
 Le 4 août, Yoan a limité le travail aux pages qu'il a déclarées **[défini]** dans `docs/01-architecture.md`, soit `coaching.html` et `paddock.html`. Soigner les métadonnées d'une page destinée à être refondue est du travail à refaire. Les constats ci-dessous sont donc établis et vérifiés, mais volontairement non corrigés. Ils évitent de refaire le diagnostic quand ces chantiers s'ouvriront.

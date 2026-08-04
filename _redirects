@@ -26,3 +26,15 @@
 /contact.html               /admin/legal/contact.html        301
 /mentions-legales.html      /admin/legal/mentions-legales.html 301
 /confidentialite.html       /admin/legal/confidentialite.html  301
+
+# ── Atelier : ce qui n'appartient pas au site public ─────────────
+# netlify.toml declare publish = "." donc TOUT le depot est servi.
+# Sans ces regles, la vision commerciale, le journal des decisions,
+# l'audit des plateformes, les consignes des agents et le schema de
+# base de donnees sont lisibles par qui connait l'URL.
+# 404 et non 301 : on ne redirige pas vers une page, on nie l'existence.
+# Le point d'exclamation est obligatoire : sans lui, un fichier qui existe
+# sur le disque l'emporte sur la regle et continue d'etre servi.
+/docs/*          /404-atelier    404!
+/outil-dev/*     /404-atelier    404!
+/.claude/*       /404-atelier    404!

@@ -46,7 +46,16 @@ function loadRedirects() {
     if (!line || line.charAt(0) === '#') continue
     var parts = line.split(/\s+/)
     if (parts.length < 2 || parts[0].charAt(0) !== '/') continue
-    REDIRECTS[parts[0]] = { to: parts[1], code: parseInt(parts[2], 10) || 301 }
+    var statut = parts[2] || '301'
+    // Le point d'exclamation de Netlify force la regle meme si un fichier
+    // existe a ce chemin. Sans lui, le fichier gagne toujours.
+    var force = statut.slice(-1) === '!'
+    REDIRECTS[parts[0]] = {
+      to: parts[1],
+      code: parseInt(statut, 10) || 301,
+      force: force,
+      motif: parts[0].slice(-2) === '/*' ? parts[0].slice(0, -1) : null,
+    }
   }
 }
 loadRedirects()
@@ -134,6 +143,18 @@ http.createServer(function (req, res) {
   try { pathname = decodeURIComponent(pathname) }
   catch (e) { res.writeHead(400); res.end('400 : URL mal encodee'); return }
   if (pathname === '/') pathname = '/index.html'
+
+  // Regles forcees, evaluees AVANT la resolution du fichier. C'est ce que fait
+  // Netlify avec le point d'exclamation, et c'est le seul moyen de masquer un
+  // fichier qui existe reellement sur le disque.
+  for (var cle in REDIRECTS) {
+    var r = REDIRECTS[cle]
+    if (!r.force) continue
+    var correspond = r.motif ? pathname.indexOf(r.motif) === 0 : pathname === cle
+    if (!correspond) continue
+    if (r.code === 404) { res.writeHead(404, { 'Content-Type': 'text/plain' }); res.end('404'); return }
+    res.writeHead(r.code, { 'Location': r.to }); res.end(); return
+  }
 
   var filePath = path.join(ROOT, pathname)
 

@@ -41,8 +41,9 @@ Le reste de l'écriture est libre.
 1. **Cadrer avant de construire.** Un chantier qui touche plus d'une page ou modifie une structure commence par une discussion, puis une fiche courte dans `docs/chantiers/` validée par Yoan. Une retouche ponctuelle se fait directement.
 2. **Règle des 95 %.** Aucune modification de code si la solution n'est pas sûre à 95 %. Dans le doute, poser une question précise.
 3. **Deux tentatives maximum sur un bug.** Au-delà, arrêt et changement d'approche. Aucun retour arrière sans énoncer la cause racine.
-4. **Vérifier, pas affirmer.** Une anomalie se prouve par un test, pas par une lecture de code.
-5. **Fin de chantier** : mise à jour de `docs/05-etat-des-lieux.md` et `docs/06-decisions.md`, puis résumé court.
+4. **Vérifier, pas affirmer.** Une anomalie se prouve par un test, pas par une lecture de code. **Commencer par `node outil-dev/audit/audit.js`**, jamais par une exploration à la main : l'état du site est calculé, pas rédigé. Ne pas se fier à `docs/05` pour ce qui est mesurable.
+5. **Le périmètre avant tout le reste.** Huit pages comptent : index, académie, karting, compétition, coaching, track, paddock, palmarès. Un défaut ailleurs se signale, il ne se corrige pas sans demander.
+6. **Fin de chantier** : mise à jour de `docs/05-etat-des-lieux.md` et `docs/06-decisions.md`, puis résumé court.
 
 ---
 

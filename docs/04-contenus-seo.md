@@ -45,9 +45,31 @@ Onze lieux, dont trois à l'étranger. C'est un gisement de référencement que 
 
 **Karting** : Aubagne, Cuges-les-Pins, Trets, Hyères, La Penne-sur-Huveaune.
 
-### Ne pas ajouter « PACA » par défaut
+### La géographie s'exprime par les circuits, jamais par une région
 
-L'activité déborde largement la région. La mention subsiste dans les `<title>` de `index.html`, `coaching.html`, `track.html` et `admin/legal/contact.html`. Décision d'avril 2026 jamais appliquée.
+**Règle.** Un circuit est un mot-clé, une région est une limite. On nomme les circuits, y compris les étrangers quand la page s'y prête. On n'annonce pas de région.
+
+Une région ne se mentionne que lorsqu'elle répond à une question réelle du lecteur. Exemple retenu : la FAQ de `coaching.html`, à la question « le coaching se fait sur quel circuit ? », énumère les cinq partenaires karting et situe l'ensemble. La mention y est un service, pas une étiquette.
+
+**Pourquoi, au-delà de la préférence.** Personne ne tape « stage de pilotage PACA ». Les requêtes portent des noms de circuits. Ces requêtes sont plus précises, plus recherchées, et JB y est légitime là où peu de monde peut opposer trente-sept ans de présence.
+
+**Le palmarès du site le prouve déjà.** Comptage des mentions de circuits dans `assets/js/site-data.js`, sur les quarante années de 1986 à 2026 :
+
+| Hors région | | En région | |
+|---|---|---|---|
+| Pau | 62 | Paul Ricard | 46 |
+| Nogaro | 25 | Aubagne | 13 |
+| Dijon | 20 | Le Luc | 10 |
+| Spa | 18 | Grand Sambuc | 4 |
+| Magny-Cours | 17 | Castellet, Alès, Trets | 5 |
+| Val de Vienne | 11 | | |
+| Charade, Le Mans, Mugello, Jarama, Monza, Barcelone, Albi, Croix-en-Ternois | 17 | | |
+
+Ce sont des occurrences de texte et non un décompte d'épreuves, donc un ordre de grandeur. L'écart reste sans ambiguïté : Pau est le circuit le plus cité de tout le site, devant Paul Ricard, et les lieux hors région dominent largement. La page palmarès affirmait donc une carrière nationale et internationale pendant que les balises `title` annonçaient une école régionale.
+
+**La région reste une réalité pratique, pas une promesse.** JB vit dans le Sud, il y aura donc naturellement plus d'activité là. C'est une conséquence, on ne l'écrit pas. Un lecteur de Lyon ne doit jamais conclure d'une balise que ce n'est pas pour lui.
+
+Voir D-020 pour le raisonnement complet, notamment le lien avec l'absence de parc.
 
 ### Règles de balisage
 

@@ -1168,7 +1168,7 @@ function activateImages() {
             '</div>' +
             '<div style="display:flex;flex-direction:column;gap:6px">' +
               '<label style="font-family:\'DM Mono\';font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4)">L\u00e9gende / texte alternatif <span style="color:rgba(255,207,0,.5)">(SEO)</span></label>' +
-              '<input id="jbe-img-alt" type="text" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:#fff;padding:10px 12px;font-family:\'DM Mono\';font-size:11px;outline:none;width:100%;box-sizing:border-box" placeholder="ex: Stage karting enfant JB EMERIC, circuit PACA">' +
+              '<input id="jbe-img-alt" type="text" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:#fff;padding:10px 12px;font-family:\'DM Mono\';font-size:11px;outline:none;width:100%;box-sizing:border-box" placeholder="ex: Stage karting enfant JB EMERIC, circuit de Brignoles">' +
             '</div>' +
             '<div style="display:flex;gap:8px">' +
               '<input id="jbe-img-file" type="file" accept="image/*,video/mp4,video/webm,video/ogg" style="display:none">' +

@@ -106,6 +106,12 @@ fetchSupabase(function (err, rows) {
 
   // Regroupement par page. La cle de page est le nom de fichier sans .html,
   // meme regle que la variable PAGE de live-editor.js. Voir docs/03-technique.md.
+  //
+  // ATTENTION : cette table doit rester identique a PAGE_ALIASES de
+  // live-editor.js. La regle d'audit « renommages » verifie cette egalite a
+  // chaque execution, donc une divergence sera signalee.
+  var PAGE_ALIASES = { 'karting-adulte': 'karting' }
+
   var byPage = {}
   for (var i = 0; i < rows.length; i++) {
     var row = rows[i]
@@ -126,7 +132,16 @@ fetchSupabase(function (err, rows) {
     var pageKey = path.basename(rel, '.html')
     seen[pageKey] = true
 
+    // Page renommee : les lignes Supabase portent encore l'ancienne cle. Sans
+    // ce repli, la page recevrait un cache vide et son contenu passerait pour
+    // orphelin, donc le filet de secours tomberait exactement sur la page qui
+    // vient d'etre renommee.
     var payload = byPage[pageKey]
+    if (!payload && PAGE_ALIASES[pageKey]) {
+      var ancien = PAGE_ALIASES[pageKey]
+      payload = byPage[ancien]
+      if (payload) { seen[ancien] = true; console.log('  ..  ' + rel + '  contenu repris de la cle « ' + ancien + ' »') }
+    }
     if (!payload) { empty++; continue }
 
     var res = updateHtml(rel, payload)

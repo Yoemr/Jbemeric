@@ -21,8 +21,9 @@
     { type:'link', href:R.index,    key:'index',    label:'Accueil' },
     { type:'sub',  href:R.academie, key:'academie', label:'Acad&eacute;mie',
       subs:[
-        { href:R.karting,     label:'Formation Karting' },
-        { href:R.competition, label:'Vers la Comp&eacute;tition' },
+        { href:R.kartingEnfant, label:'Karting enfant' },
+        { href:R.karting,       label:'Karting adulte' },
+        { href:R.competition,   label:'Vers la Comp&eacute;tition' },
       ]
     },
     { type:'link', href:R.coaching, key:'coaching', label:'Coaching' },

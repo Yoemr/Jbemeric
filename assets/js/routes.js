@@ -29,7 +29,8 @@
     paddock:    '/paddock.html',
 
     // ── Académie ───────────────────────────────────────────────────
-    karting:    '/academie/karting.html',
+    kartingEnfant: '/academie/karting-enfant.html',
+    karting:    '/academie/karting-adulte.html',
     competition:'/academie/competition.html',
 
     // ── Paddock ────────────────────────────────────────────────────

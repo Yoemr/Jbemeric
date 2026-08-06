@@ -15,7 +15,8 @@
 const PAGES = [
   'index.html',
   'academie.html',
-  'academie/karting.html',      // couvre aujourd'hui l'enfant ET l'adulte
+  'academie/karting-enfant.html',
+  'academie/karting-adulte.html',
   'academie/competition.html',
   'coaching.html',
   'track.html',

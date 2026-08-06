@@ -11,6 +11,35 @@ var sb      = createClient(SB_URL, SB_ANON)
 
 var PAGE = (location.pathname.split('/').pop().replace('.html','')) || 'index'
 
+// ─── RENOMMAGES DE PAGES ─────────────────────────────────────────────
+// La cle Supabase derive du nom de fichier. Renommer une page orphelinerait
+// donc tout ce que JB y a deja saisi. Cette table declare l'ancienne cle, qui
+// reste lisible : au chargement, un contenu trouve sous l'ancienne est repris
+// sous la nouvelle si celle-ci est vide. Les sauvegardes suivantes ecrivent
+// sous la nouvelle, donc la base se migre d'elle-meme au rythme des editions.
+//
+// 6 aout 2026 : karting.html devient karting-adulte.html, pour etre symetrique
+// de karting-enfant.html. 21 contenus etaient en jeu.
+//
+// Une entree ne se retire d'ici que le jour ou la base a ete migree pour de
+// bon, et seulement ce jour-la.
+var PAGE_ALIASES = { 'karting-adulte': 'karting' }
+
+function _reprendreAncienneCle() {
+  var ancien = PAGE_ALIASES[PAGE]
+  if (!ancien) return
+  var av = ancien + '__', ap = PAGE + '__', n = 0
+  for (var cle in _db) {
+    if (cle.indexOf(av) !== 0) continue
+    var nouvelle = ap + cle.slice(av.length)
+    if (_db[nouvelle]) continue
+    _db[nouvelle] = _db[cle]
+    if (_dbMeta[cle]) _dbMeta[nouvelle] = _dbMeta[cle]
+    n++
+  }
+  if (n) console.log('[JBE] ' + n + ' contenu(s) repris de l\'ancienne cle « ' + ancien + ' »')
+}
+
 // Chemin complet de la page depuis la racine du site, utilisé UNIQUEMENT pour
 // écrire le cache HTML local via /save-html.
 // PAGE reste la clé Supabase (PAGE + '__' + id) et ne doit pas changer :
@@ -380,6 +409,7 @@ function _loadFromCache() {
         if (medias[mk]) { _dbMeta[mk] = medias[mk]; nm++ }
       }
     }
+    _reprendreAncienneCle()
     console.log('[JBE] Fallback cache HTML: ' + n + ' entree(s)' + (nm ? ', ' + nm + ' media(s)' : ''))
   } catch (e) { console.warn('[JBE] Cache parse error', e) }
 }
@@ -395,6 +425,7 @@ function loadTexts() {
             if (res.data[i].media_type) _dbMeta[res.data[i].id] = res.data[i].media_type
           }
         }
+        _reprendreAncienneCle()
         console.log('[JBE] ' + res.data.length + ' entree(s) Supabase')
       }
     })

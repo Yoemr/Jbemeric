@@ -36,7 +36,8 @@
     // Académie
     '<div class="ft-col">' +
       '<div class="ft-col-title">Académie</div>' +
-      '<a href="' + R.karting + '">Formation Karting</a>' +
+      '<a href="' + R.kartingEnfant + '">Karting enfant</a>' +
+      '<a href="' + R.karting + '">Karting adulte</a>' +
       '<a href="' + R.competition + '">Vers la Compétition</a>' +
       '<a href="' + R.coaching + '">Coaching vidéo</a>' +
     '</div>' +

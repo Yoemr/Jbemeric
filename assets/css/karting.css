@@ -285,6 +285,10 @@ img{display:block;max-width:100%}
 .etape-img img{
   width:100%;height:100%;object-fit:cover;display:block;
 }
+/* Cadrage des visuels verticaux (captures de video) places dans un cadre
+   paysage : object-position center coupe le sujet, qui est rarement au
+   milieu de la hauteur. Classe generale, applicable a n'importe quel media. */
+.img-vertical img{object-position:center 30%}
 
 .etape-body{}
 .etape-tag{

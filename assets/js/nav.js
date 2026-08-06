@@ -50,7 +50,7 @@
   // ── Détecter la page active via ROUTES.matchCurrent ─────────────
   var current = R.matchCurrent && R.matchCurrent()
   // Les sous-pages académie mappent vers la clé parente 'academie'
-  var activeKey = (current === 'karting' || current === 'competition') ? 'academie' : (current || '')
+  var activeKey = (current === 'kartingEnfant' || current === 'karting' || current === 'competition') ? 'academie' : (current || '')
 
   // ── Construire les items desktop ────────────────────────────────
   function buildDesktopItems() {

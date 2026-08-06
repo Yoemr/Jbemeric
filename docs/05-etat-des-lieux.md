@@ -378,6 +378,53 @@ Parade retenue : recenser les **230 noms de classes que les scripts du site save
 
 **Bilan des quatre feuilles allégées** : 1411 lignes avant, 794 après, aucune différence visible sur les sept pages concernées.
 
+### 6.13 Le contenu de JB est indexé par position, pas par identité
+
+**C'est le point le plus important de ce relevé.** Il conditionne tout travail éditorial sur les pages que JB a déjà éditées.
+
+**Le mécanisme.** `live-editor.js` attribue à chaque élément éditable une clé de repli calculée par un compteur, dans l'ordre du document : `txt-1`, `txt-2`, `img-1`. Un élément qui porte déjà un attribut `id` échappe à ce compteur et garde son identité.
+
+**La conséquence.** Insérer ou retirer un seul élément éditable décale la numérotation de **tout ce qui suit dans la page**. La clé `txt-12` ne désigne alors plus le même paragraphe.
+
+Un garde-fou existe, `_legacyTextSanity` : il compare le contenu enregistré au texte d'origine de l'élément, par longueur et par recouvrement de mots. En cas de désaccord, il refuse d'appliquer. C'est une bonne protection contre l'affichage d'un texte sur le mauvais élément, mais elle a un prix : **le contenu saisi par JB disparaît de l'écran**, remplacé par le texte du HTML, sans message.
+
+Rien n'est perdu en base. Tout est perdu à l'affichage.
+
+**L'ampleur, mesurée.**
+
+| Page | Contenus | Positionnels | Stables |
+|---|---|---|---|
+| `academie.html` | 22 | 21 | 1 |
+| `academie/karting-adulte.html` | 21 | 16 | 5 |
+| `index.html` | 10 | 10 | 0 |
+| `coaching.html` | 8 | 8 | 0 |
+| `paddock/palmares.html` | 7 | 6 | 1 |
+| `academie/competition.html` | 4 | 3 | 1 |
+| `track.html` | 1 | 1 | 0 |
+| **Total** | **73** | **65** | **8** |
+
+**89 % des contenus de JB sont indexés par position.** Toutes les pages du périmètre sont concernées.
+
+**Ce que ça interdit en pratique.** Ajouter une troisième voie au hub de l'Académie, ce qui était l'étape suivante du chantier, insère des éléments éditables au milieu de `academie.html` et décale 21 clés sur 22. Le travail de JB sur cette page disparaîtrait de l'écran.
+
+**Les issues possibles, à trancher.**
+
+1. **Figer les identités d'abord.** Donner un attribut `id` explicite à chaque élément éditable, en reprenant sa clé positionnelle actuelle. Sa clé cesse alors de dépendre de sa position. Il faut connaître la correspondance actuelle, donc rejouer le scan du live-editor sur chaque page.
+2. **Migrer les clés en base** vers les identifiants stables que le live-editor sait déjà calculer. Demande un accès Supabase, aujourd'hui soumis à l'approbation de Yoan.
+3. **Accepter la perte** page par page, en sachant que JB devra ressaisir. À ne considérer que si le contenu concerné est négligeable.
+
+Aucune de ces issues ne relève d'une retouche. C'est un chantier, et il précède le travail éditorial sur ces pages.
+
+### 6.14 La version téléphone est cassée sur les pages Académie
+
+Constat visuel, non traité sur décision de Yoan : « la version téléphone sera faite à la toute fin quand on aura fini le site entier ».
+
+Sur un écran de 390 pixels, le texte et les boutons du hero débordent et sont coupés à droite, sur `academie/karting-adulte.html` comme sur `academie/competition.html`. Le titre « Pas des touristes. » s'affiche « Pas des tourist ». `overflow-x:clip` masque le débordement au lieu de le rendre visible, donc il n'y a pas de barre de défilement pour le signaler, les mots sont simplement tronqués.
+
+**Piste non vérifiée** : les grilles écrites `repeat(2, 1fr)` ne peuvent pas descendre sous la largeur de leur contenu. Une piste de correction serait `repeat(2, minmax(0, 1fr))`, à confirmer.
+
+**Fausse alerte à ne pas reprendre** : le bouton de menu semblait absent sur téléphone. Analyse des pixels de la barre : il est présent au bon endroit, simplement discret. Aucun défaut de navigation.
+
 ### 6.7 Diagnostics posés mais non appliqués, périmètre écarté par Yoan
 
 Le 4 août, Yoan a limité le travail aux pages qu'il a déclarées **[défini]** dans `docs/01-architecture.md`, soit `coaching.html` et `paddock.html`. Soigner les métadonnées d'une page destinée à être refondue est du travail à refaire. Les constats ci-dessous sont donc établis et vérifiés, mais volontairement non corrigés. Ils évitent de refaire le diagnostic quand ces chantiers s'ouvriront.

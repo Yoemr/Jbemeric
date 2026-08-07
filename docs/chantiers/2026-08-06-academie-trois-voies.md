@@ -2,11 +2,11 @@
 
 **Date d'ouverture** : 6 août 2026
 **Demandé par** : Yoan
-**État** : fiche à valider, aucune page créée
+**État** : validé par Yoan, structure livrée. Reste les avis TripAdvisor et les vidéos YouTube du hub.
 
 ---
 
-> **Rien n'est construit avant validation.** Ce chantier crée une page et une entrée de menu, ce que D-011 interdit sans accord explicite de Yoan.
+> **Fiche validée le 6 août.** Ce qui est fait : la page enfant, la page adulte assumée, le renommage symétrique, le menu à trois entrées, le pied de page, le hub à trois voies. Ce qui reste : section 3 du hub, avis TripAdvisor, et section 4, tirage des vidéos.
 
 ## 1. La structure retenue
 
@@ -24,6 +24,8 @@ colonies.html                       B2B, plus tard, hors de ce chantier
 **Pourquoi les colonies ne sont pas sous l'Académie.** Les trois voies s'adressent à un particulier qui achète pour lui ou pour son enfant. Une colonie est un organisme qui achète une prestation de groupe. Acheteur différent, preuve différente (BPJEPS, agrément, assurances, capacité par jour, références), action différente (un devis, pas une réservation). Un directeur de colonie ne se promène pas dans un cursus C1 à C5. Chantier séparé, à ouvrir quand Yoan le décidera.
 
 ## 2. Le nom de fichier de la page adulte n'est pas un choix
+
+> **Annulé le 6 août, voir D-025.** Yoan a demandé le renommage symétrique et la mise à jour des bases. La page s'appelle `academie/karting-adulte.html`. La contrainte décrite ci-dessous est réelle, elle est contournée par une table d'alias dans `live-editor.js` et `build-cache.js`, pas par le nom du fichier. Le raisonnement reste ici parce qu'il explique pourquoi cette table existe.
 
 `academie/karting.html` **garde son nom**. Ce n'est pas une préférence, c'est une contrainte technique vérifiée.
 
@@ -77,11 +79,11 @@ Libellés proposés, à valider : « Karting enfant », « Karting adulte », «
 - **Les colonies de vacances.** Voir section 1.
 - **La réorganisation de la chaîne YouTube** en playlists, et les réseaux sociaux. Après le site.
 
-## 7. Ce qui reste à trancher par Yoan
+## 7. Ce qui a été tranché par Yoan
 
-1. **Validation de cette fiche**, donc création de `academie/karting-enfant.html` et d'une entrée de menu.
-2. Les **libellés du menu**.
-3. Que devient l'ancienne section enfant du cursus adulte : on la retire, ou on garde une passerelle vers la page enfant ?
+1. **Fiche validée**, page enfant créée, entrée de menu créée.
+2. **Libellés du menu retenus** : « Karting enfant », « Karting adulte », « Vers la Compétition ».
+3. **Pages distinctes, aucun lien entre elles**, sauf vers la Compétition. Mot de Yoan : « que ce soit enfants ou adultes, s'ils veulent progresser, l'étape d'après c'est la compétition ». Les demi-mentions à l'enfant ont donc été retirées du cursus adulte sans passerelle en retour.
 
 ## 8. Une mise en garde à retenir
 

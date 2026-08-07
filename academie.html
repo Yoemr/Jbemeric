@@ -50,25 +50,34 @@
 <section class="parcours snap-section" id="parcours" data-mirror="academie-voies">
   <div class="parcours-head">
     <div class="pc-kicker">Les voies de l'Académie</div>
-    <h2 class="pc-title">Deux entrées<em>vers la course.</em></h2>
-    <p class="pc-lead">Il n'existe pas un cursus unique. Certains passent par le karting dès l'enfance. D'autres démarrent adulte, directement à la voiture. Chaque voie a ses exigences, son budget, son public. JB vous aide à choisir celle qui vous correspond.</p>
+    <h2 class="pc-title">Trois entrées<em>vers la course.</em></h2>
+    <p class="pc-lead">Il n'existe pas un cursus unique. Un enfant de sept ans, un adulte qui n'a jamais tenu un volant et un pilote qui vise le championnat n'ont ni les mêmes questions, ni le même rythme. La méthode, elle, ne change pas. JB vous aide à choisir par où commencer.</p>
   </div>
   <div class="timeline" style="grid-template-columns:1fr;gap:2px">
-    <style>@media(min-width:700px){.parcours .timeline{grid-template-columns:1fr 1fr !important}}</style>
+    <style>@media(min-width:700px){.parcours .timeline{grid-template-columns:1fr 1fr !important}}
+    @media(min-width:1000px){.parcours .timeline{grid-template-columns:repeat(3,1fr) !important}}</style>
 
     <div class="tl-step">
       <div class="tl-dot"><div class="tl-num">1</div></div>
-      <span class="tl-badge">Formation Karting</span>
-      <div class="tl-name">La voie pédagogique</div>
-      <div class="tl-desc">Dès 7 ans pour les enfants, accessible aux adultes débutants. Apprentissage structuré en trois étapes, avec niveaux C1 à C5. La voie qui construit les fondations, celle que les pilotes professionnels n'ont jamais oubliées.</div>
-      <a class="tl-link" href="/academie/karting-adulte.html">Découvrir la formation karting</a>
+      <span class="tl-badge">Karting enfant</span>
+      <div class="tl-name">Dès 7 ans</div>
+      <div class="tl-desc">Un moniteur diplômé d'État, des sessions courtes, un debrief après chacune. L'enfant apprend à lire un circuit avant d'apprendre à aller vite.</div>
+      <a class="tl-link" href="/academie/karting-enfant.html">Voir la journée enfant</a>
+    </div>
+
+    <div class="tl-step">
+      <div class="tl-dot"><div class="tl-num">2</div></div>
+      <span class="tl-badge">Karting adulte</span>
+      <div class="tl-name">Débutant ou déjà pilote</div>
+      <div class="tl-desc">Le cursus en trois étapes, niveaux C1 à C5, évalués par JB sur des critères chronos et techniques. La voie qui construit les fondations.</div>
+      <a class="tl-link" href="/academie/karting-adulte.html">Découvrir le cursus</a>
     </div>
 
     <div class="tl-step tl-step--finale">
-      <div class="tl-dot"><div class="tl-num">2</div></div>
+      <div class="tl-dot"><div class="tl-num">3</div></div>
       <span class="tl-badge">Vers la Compétition</span>
-      <div class="tl-name">Plusieurs voies vers la course</div>
-      <div class="tl-desc">Pour les adultes motivés. Formation en voiture, disciplines accessibles, simulateur. Plusieurs chemins pour entrer en compétition, adaptés au profil et au budget.</div>
+      <div class="tl-name">Quand le chrono devient un objectif</div>
+      <div class="tl-desc">Kart 125cc à boîte, 206 S16, monoplace. JB choisit la discipline avec vous et vous accompagne jusqu'à la piste, le jour de la course.</div>
       <a class="tl-link" href="/academie/competition.html">Voir les voies d'accès</a>
     </div>
 
@@ -250,28 +259,41 @@
 
 <div class="portes" id="portes" data-mirror="academie-portes">
 
-  <div class="porte enfant" onclick="location.href='/academie/karting-adulte.html'" role="link" tabindex="0">
+  <div class="porte enfant" onclick="location.href='/academie/karting-enfant.html'" role="link" tabindex="0">
     <div class="porte-bg">
-      <img src="assets/images/karting-enfant-circuit.jpg" alt="Formation karting JB EMERIC">
+      <img src="assets/images/karting-enfant-circuit.jpg" alt="Enfant en kart sur circuit, formation JB EMERIC">
     </div>
     <div class="porte-overlay"></div>
     <div class="porte-content">
-      <div class="porte-tag">Dès 7 ans · Tous niveaux</div>
-      <div class="porte-title">Formation<br>Karting</div>
-      <div class="porte-body">Enfant et adulte. La voie pédagogique classique. Cursus en trois étapes, niveaux C1 à C5, évaluation par JB.</div>
-      <span class="porte-cta">Découvrir la formation →</span>
+      <div class="porte-tag">Dès 7 ans · 1,30 m</div>
+      <div class="porte-title">Karting<br>enfant</div>
+      <div class="porte-body">Un moniteur diplômé d'État qui encadre lui-même la journée. Briefing, sessions courtes, debrief. Équipement fourni.</div>
+      <span class="porte-cta">Voir la journée →</span>
     </div>
   </div>
 
-  <div class="porte challenge" onclick="location.href='/academie/competition.html'" role="link" tabindex="0">
+  <div class="porte adulte" onclick="location.href='/academie/karting-adulte.html'" role="link" tabindex="0">
     <div class="porte-bg">
-      <img src="assets/images/bmw-325i-htcc.jpg" alt="Voitures de compétition JB EMERIC">
+      <img src="assets/images/karting-adulte-depart.jpg" alt="Grille de départ karting adulte, académie JB EMERIC">
     </div>
     <div class="porte-overlay"></div>
     <div class="porte-content">
-      <div class="porte-tag">Adultes · Voiture · Compétition</div>
+      <div class="porte-tag">Débutant · Tous niveaux</div>
+      <div class="porte-title">Karting<br>adulte</div>
+      <div class="porte-body">Le cursus en trois étapes, niveaux C1 à C5. Chaque passage se valide sur des critères objectifs, jamais par complaisance.</div>
+      <span class="porte-cta">Découvrir le cursus →</span>
+    </div>
+  </div>
+
+  <div class="porte competition" onclick="location.href='/academie/competition.html'" role="link" tabindex="0">
+    <div class="porte-bg">
+      <img src="assets/images/peugeot-206-s16-ricard.jpg" alt="Peugeot 206 S16 de compétition au Paul Ricard">
+    </div>
+    <div class="porte-overlay"></div>
+    <div class="porte-content">
+      <div class="porte-tag">Kart 125cc · Voiture · Monoplace</div>
       <div class="porte-title">Vers la<br>Compétition</div>
-      <div class="porte-body">Formation voiture, disciplines accessibles, simulateur. Plusieurs voies vers la course.</div>
+      <div class="porte-body">La discipline choisie avec vous, selon le profil et le budget. JB accompagne jusqu'à la piste, le jour de la course.</div>
       <span class="porte-cta">Voir les voies d'accès →</span>
     </div>
   </div>

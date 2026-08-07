@@ -404,8 +404,12 @@ body { background: var(--bg-base) }
 /* ═══════════════════════════════════════════════════════
    PORTES : 2 entrées (cartes photo plein format)
    ═══════════════════════════════════════════════════════ */
+/* Trois portes depuis le 6 aout 2026 : enfant, adulte, competition. En deux
+   colonnes la troisieme restait seule avec un vide a cote, d'ou le passage a
+   trois colonnes des que la largeur le permet. */
 .portes { display: grid; grid-template-columns: 1fr }
-@media(min-width:700px) { .portes { grid-template-columns: repeat(2,1fr) } }
+@media(min-width:700px)  { .portes { grid-template-columns: repeat(2,1fr) } }
+@media(min-width:1000px) { .portes { grid-template-columns: repeat(3,1fr) } }
 
 .porte {
   position: relative; overflow: hidden;
@@ -436,8 +440,8 @@ body { background: var(--bg-base) }
 .porte.adulte:hover .porte-overlay  { background: linear-gradient(to top, rgba(7,31,92,.97) 30%, rgba(7,31,92,.22) 100%) }
 
 /* Challenge : nuit avec touche dorée (couleur challenge.css) */
-.porte.challenge .porte-overlay       { background: linear-gradient(to top, rgba(4,10,30,.94) 30%, rgba(200,160,0,.14) 100%) }
-.porte.challenge:hover .porte-overlay { background: linear-gradient(to top, rgba(4,10,30,.98) 30%, rgba(200,160,0,.32) 100%) }
+.porte.competition .porte-overlay       { background: linear-gradient(to top, rgba(4,10,30,.94) 30%, rgba(200,160,0,.14) 100%) }
+.porte.competition:hover .porte-overlay { background: linear-gradient(to top, rgba(4,10,30,.98) 30%, rgba(200,160,0,.32) 100%) }
 .porte-content {
   position: relative; z-index: 2;
   padding: clamp(36px,5vw,72px) clamp(32px,5vw,72px);
@@ -462,8 +466,8 @@ body { background: var(--bg-base) }
 .porte:hover .porte-cta {
   background: rgba(255,255,255,.22); border-color: rgba(255,255,255,.5); gap: 12px;
 }
-.porte.challenge .porte-cta { background: rgba(200,160,0,.18); border-color: rgba(200,160,0,.5); color: #FFCF00 }
-.porte.challenge:hover .porte-cta { background: rgba(200,160,0,.32); border-color: rgba(200,160,0,.8) }
+.porte.competition .porte-cta { background: rgba(200,160,0,.18); border-color: rgba(200,160,0,.5); color: #FFCF00 }
+.porte.competition:hover .porte-cta { background: rgba(200,160,0,.32); border-color: rgba(200,160,0,.8) }
 
 /* ═══════════════════════════════════════════════════════
    PORTES + CITATION : wrapper full screen
@@ -474,7 +478,9 @@ body { background: var(--bg-base) }
 }
 .portes-citation-wrap .portes {
   flex: 1; min-height: 0;
-  grid-template-columns: repeat(2,1fr);
+  /* Le nombre de colonnes n'est plus fixe ici. Cette regle, plus specifique
+     que les media queries de .portes, les ecrasait toutes : la troisieme porte
+     restait seule sur une deuxieme ligne, a cote d'un vide. */
   grid-auto-rows: 1fr;
 }
 .portes-citation-wrap .porte { min-height: 0 }

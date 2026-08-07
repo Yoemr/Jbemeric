@@ -152,9 +152,13 @@ Sur décision de Yoan, ils sont déplacés et non supprimés.
 
 ### 2.6 Contradictions entre les décisions actées et le site
 
-**« PACA » supprimé du SEO, décision d'avril 2026, jamais appliquée.** La mention subsiste dans les `<title>` de `index.html`, `coaching.html`, `track.html` et `admin/legal/contact.html`, ainsi que dans plusieurs `<meta description>`.
+> **Ce paragraphe est daté.** Il décrit l'état d'avant le 5 août. L'audit mesure ces deux points à chaque session, règle `referencement` : s'y fier plutôt qu'à ce qui suit.
 
-**Parcours linéaire abandonné, décision d'avril 2026, subsiste dans les métadonnées.** La description de `academie.html` annonce : « De karting enfant à la compétition BMW HTCC. 5 niveaux progressifs ». C'est exactement le modèle linéaire remplacé par les quatre voies parallèles, et cela survend le Challenge que la décision demandait de ne pas mettre en vedette. Le corps de la page, lui, dit « Deux entrées vers la course ».
+**« PACA » dans les métadonnées : traité, D-020.** Plus une seule mention dans un `<title>`, une `<meta description>` ou une balise Open Graph des neuf pages du périmètre. Reste `paddock/nos-voitures.html`, hors périmètre, signalée sans être corrigée.
+
+**Dans le corps des pages, il en reste.** Sept mentions au total, six dans `track.html` et une dans `coaching.html`, deux pages du périmètre qui n'ont pas encore été retravaillées. L'audit les classe en « à juger » et non en faute : une phrase de corps peut légitimement nommer une région, ce que D-020 interdit c'est d'en faire le positionnement. À trancher quand ces deux pages passeront sur l'établi.
+
+**Parcours linéaire : traité.** La description de `academie.html` ne mentionne plus le Challenge. Le corps de la page annonce désormais trois entrées, D-026.
 
 **Page « Stages » inexistante.** Le tableau des cinq offres du `MEMOIRE.md` la présente comme une page. C'est l'ancre `track.html#stages`.
 
@@ -378,9 +382,13 @@ Parade retenue : recenser les **230 noms de classes que les scripts du site save
 
 **Bilan des quatre feuilles allégées** : 1411 lignes avant, 794 après, aucune différence visible sur les sept pages concernées.
 
-### 6.13 Le contenu de JB est indexé par position, pas par identité
+### 6.13 Les contenus du live-editor sont indexés par position, pas par identité
 
-**C'est le point le plus important de ce relevé.** Il conditionne tout travail éditorial sur les pages que JB a déjà éditées.
+> **Rectification du 6 août 2026, précision de Yoan.** Cette section a d'abord été écrite comme un blocage majeur, au motif qu'elle mettait en péril le travail de JB. C'est faux : les 73 contenus enregistrés sont des **données de test saisies par Yoan** pour éprouver le compte, pas du contenu de production. « Tu peux repartir de pages blanches si nécessaire. »
+>
+> Le mécanisme décrit ci-dessous reste exact et vaut d'être connu, mais il ne bloque rien aujourd'hui. Il deviendra une vraie contrainte le jour où JB éditera pour de bon.
+
+**Le mécanisme, qui reste vrai.**
 
 **Le mécanisme.** `live-editor.js` attribue à chaque élément éditable une clé de repli calculée par un compteur, dans l'ordre du document : `txt-1`, `txt-2`, `img-1`. Un élément qui porte déjà un attribut `id` échappe à ce compteur et garde son identité.
 
@@ -405,15 +413,14 @@ Rien n'est perdu en base. Tout est perdu à l'affichage.
 
 **89 % des contenus de JB sont indexés par position.** Toutes les pages du périmètre sont concernées.
 
-**Ce que ça interdit en pratique.** Ajouter une troisième voie au hub de l'Académie, ce qui était l'étape suivante du chantier, insère des éléments éditables au milieu de `academie.html` et décale 21 clés sur 22. Le travail de JB sur cette page disparaîtrait de l'écran.
+**Ce que ça coûtera le jour venu.** Toute insertion d'un élément éditable au milieu d'une page décale les clés suivantes, et les contenus concernés cessent de s'afficher. Aujourd'hui sans conséquence, les données étant des tests.
 
-**Les issues possibles, à trancher.**
+**Les issues, pour ce jour-là.**
 
-1. **Figer les identités d'abord.** Donner un attribut `id` explicite à chaque élément éditable, en reprenant sa clé positionnelle actuelle. Sa clé cesse alors de dépendre de sa position. Il faut connaître la correspondance actuelle, donc rejouer le scan du live-editor sur chaque page.
-2. **Migrer les clés en base** vers les identifiants stables que le live-editor sait déjà calculer. Demande un accès Supabase, aujourd'hui soumis à l'approbation de Yoan.
-3. **Accepter la perte** page par page, en sachant que JB devra ressaisir. À ne considérer que si le contenu concerné est négligeable.
+1. **Figer les identités.** Donner un attribut `id` explicite à chaque élément éditable, en reprenant sa clé positionnelle. Sa clé cesse de dépendre de sa position. Ne demande aucun accès externe.
+2. **Migrer les clés en base** vers les identifiants stables que le live-editor sait déjà calculer. Demande un accès Supabase.
 
-Aucune de ces issues ne relève d'une retouche. C'est un chantier, et il précède le travail éditorial sur ces pages.
+**Règle à retenir en attendant** : avant que JB commence à éditer pour de bon, il faut que les pages qu'il touchera portent des `id` explicites sur leurs éléments éditables. C'est peu de travail fait tôt, beaucoup fait tard.
 
 ### 6.14 La version téléphone est cassée sur les pages Académie
 

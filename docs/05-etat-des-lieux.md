@@ -422,6 +422,30 @@ Rien n'est perdu en base. Tout est perdu à l'affichage.
 
 **Règle à retenir en attendant** : avant que JB commence à éditer pour de bon, il faut que les pages qu'il touchera portent des `id` explicites sur leurs éléments éditables. C'est peu de travail fait tôt, beaucoup fait tard.
 
+### 6.14ter La bibliothèque d'images ment sur ce qu'elle montre
+
+**Trouvé le 7 août en cherchant une photo pour un hero. C'est le point le plus sérieux de la journée, et il demande une décision de Yoan.**
+
+**Trois paires de fichiers sont identiques au bit près, sous des noms qui se contredisent.**
+
+| Fichier | Identique à | Ce qu'on voit réellement |
+|---|---|---|
+| `peugeot-206-s16-ricard.jpg` | `lotus-circuit-du-luc.jpg` | Une Peugeot 206 jaune au Paul Ricard. Pas une Lotus, pas au Luc. |
+| `bmw-325i-htcc.jpg` | `jb-emeric-pilote.jpg` | Une BMW 325i noire. Pas un portrait de JB. |
+| `bmw-325i-htcc-cote.jpg` | `porsche-gt3-circuit-albi.jpg` | La même BMW de profil. Pas une Porsche, pas à Albi. |
+
+Autrement dit, la même photo est servie sous le nom que la page réclamait. Le nom de fichier finit dans le `alt` et dans la légende, donc `paddock/nos-voitures.html` présente un parc illustré par des voitures qui ne sont pas celles annoncées.
+
+**Deux problèmes plus graves que le nommage.**
+
+**Ces voitures ne sont pas celles de JB.** La 206 porte la livrée « TEAM-DIOT-RACING », les noms de Sébastien et Louis BELLONE, et l'adresse `garage-tdr-competition.fr`. Les deux photos de BMW montrent une voiture « ONE UP RACING » pilotée par **JF. VISSEAUX**, numéro 34.
+
+**La photo de la 206 porte le filigrane d'un photographe professionnel** : « RENCONTRES PEUGEOT SPORT, CIRCUIT PAUL RICARD, 2015 » et « © Daniel DELIEN / WWW.PRO-PHOTOS-SPORT.COM ». Elle est aujourd'hui le hero de `academie/competition.html`, la porte « Vers la Compétition » de l'Académie, et par le miroir elle apparaît sur la page d'accueil.
+
+**Ce que je ne peux pas trancher.** Je ne sais pas si JB a acquis ces photos, ni s'il a une autorisation. C'est une question de droits, elle appartient à Yoan. En attendant, aucune de ces images ne devrait servir de preuve du parc de l'école.
+
+**Mesuré désormais à chaque session** par `outil-dev/audit/regles/images.js`, qui compare les empreintes et non les noms. Il signale aussi 14 fichiers jamais employés.
+
 ### 6.14bis Les deux boutons d'entrée de la Compétition tombent sous la ligne de flottaison
 
 **Mesuré le 7 août, capture à 1300 × 900.** `academie/competition.html` est la page où convergent les trois voies. Ses deux boutons d'entrée, « Kart 125cc » et « Formation voiture », ainsi que la barre de statistiques, se trouvent environ 60 à 80 pixels sous le bas de l'écran sur un portable. Il faut faire défiler pour voir les deux actions de la page.

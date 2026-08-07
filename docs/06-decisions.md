@@ -6,6 +6,22 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 7 août 2026, les images
+
+### D-038, Une règle compare les empreintes des images, pas leurs noms
+
+`outil-dev/audit/regles/images.js`. Elle trouve cinq paires de fichiers identiques au bit près sous des noms différents, dont trois qui se contredisent franchement. Détail et gravité en 6.14ter du relevé.
+
+**Toujours un signal, jamais une faute.** L'audit ne sait pas ce qu'il y a sur une photo : deux noms peuvent décrire le même podium sans que personne ne mente, et c'est le cas de `1994-podium-ricard.jpg`. Crier à la faute sur les cas légitimes ferait ignorer les autres.
+
+**Le champ « où » désigne une page, pas le fichier image.** C'est lui qui range l'anomalie dans le périmètre ou dehors. Pointer l'image classait le défaut hors périmètre, donc masqué par défaut, alors qu'il touche l'accueil et l'Académie. C'est la deuxième fois que ce piège se referme, après `renommages`.
+
+### D-039, Le nombre de circuits partenaires est 5, y compris sur l'accueil
+
+Le hero de `index.html` annonçait « 15 circuits partenaires », contredit dix lignes plus bas par sa propre barre de statistiques, « 5 circuits partenaires, Brignoles, Trets, Hyères, La Penne, Cuges », et par toutes les autres pages du site. Corrigé à 5.
+
+---
+
 ## 7 août 2026, le CSS mort
 
 ### D-035, 856 lignes de CSS mort retirées, et l'outil qui l'a fait

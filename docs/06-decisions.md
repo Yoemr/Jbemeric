@@ -6,6 +6,33 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 7 août 2026, est-ce que le site fonctionne
+
+### D-044, Un outil dit si les pages tournent, pas seulement si elles sont bien écrites
+
+`outil-dev/fumee.js`. Il ouvre chaque page dans un vrai navigateur et rapporte les exceptions JavaScript, les messages d'erreur de la console et les requêtes en échec. Sans dépendance : Chromium est déjà là, et Node 22 fournit un client WebSocket, donc le protocole DevTools suffit.
+
+```
+node outil-dev/fumee.js            les 9 pages du périmètre
+node outil-dev/fumee.js --tout     tout le site
+```
+
+**Pourquoi il fallait ça.** L'audit lit des fichiers. Il ne saura jamais dire qu'une page plante. Personne n'avait jamais vérifié que les pages se chargent sans erreur, et la première exécution en a trouvé une vraie.
+
+**Deux précautions apprises en le construisant.** Les hôtes extérieurs, Google Fonts, jsDelivr, Supabase, YouTube, sont comptés à part : leur échec depuis un bac à sable ne dit rien sur le site, et les mélanger rend le rapport illisible. Et chaque page s'ouvre dans un **onglet neuf** : réutiliser le même onglet paraissait économique et accusait la mauvaise page, un script lent se déclenchant après la navigation suivante. Deux pages ont ainsi été accusées d'une erreur qui ne se reproduisait pas seule.
+
+### D-045, Un script chargé en module se vérifie en tant que module
+
+`assets/js/admin.js` portait **sept chaînes cassées** : `font-family:'DM Mono'` à l'intérieur de chaînes à guillemets simples, des apostrophes françaises non échappées, un en-tête CSV et un `join` coupés par un vrai retour à la ligne. Le fichier étant chargé en `type="module"`, le module entier était rejeté : le tableau de bord admin ne fonctionnait pas du tout.
+
+**Le plus gênant est que la règle d'audit lançait déjà `node --check` dessus, et qu'il répondait « valide ».** Les mêmes octets, copiés dans un fichier `.mjs`, échouent immédiatement. Vérifié et reproduit à partir de la version en dépôt.
+
+La règle détermine désormais le mode de chargement en lisant les pages, et vérifie en tant que module tout script chargé ainsi. Un script classique reste vérifié en script, sinon le mode strict des modules produirait de fausses alertes. Contrôlée sur témoin : la version cassée est signalée avec sa ligne, la version corrigée passe.
+
+**C'est le deuxième défaut de ce type.** Le 4 août, `track-render.js` ne s'évaluait pas non plus, pour la même raison, et le calendrier de `track.html` n'existait tout simplement pas. La leçon n'avait été qu'à moitié tirée.
+
+---
+
 ## 7 août 2026, les images
 
 ### D-038, Une règle compare les empreintes des images, pas leurs noms

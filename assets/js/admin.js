@@ -196,7 +196,7 @@ async function loadInscriptions() {
   var tbody = document.getElementById('inscriptions-tbody')
   if (!tbody) return
 
-  tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;font-family:'DM Mono';font-size:9px">Chargement…</td></tr>'
+  tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;font-family:\'DM Mono\';font-size:9px">Chargement…</td></tr>'
 
   var query = supabase
     .from('inscriptions')
@@ -210,7 +210,7 @@ async function loadInscriptions() {
   if (error) { toast('Erreur: ' + error.message, 'err'); return }
 
   if (!data || data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;font-family:'DM Mono';font-size:10px">Aucune inscription pour l'instant.</td></tr>'
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;font-family:\'DM Mono\';font-size:10px">Aucune inscription pour l\'instant.</td></tr>'
     return
   }
 
@@ -236,7 +236,7 @@ async function loadInscriptions() {
       <td style="font-size:10px">${evDate} · ${evType}</td>
       <td style="font-size:10px">${circuit}</td>
       <td style="text-align:center">${coaching}</td>
-      <td><span style="font-family:'DM Mono';font-size:9px;color:${statutColor};padding:2px 6px;background:${statutColor}22;border-radius:3px">${statutLabel}</span></td>
+      <td><span style="font-family:\'DM Mono\';font-size:9px;color:${statutColor};padding:2px 6px;background:${statutColor}22;border-radius:3px">${statutLabel}</span></td>
       <td><div class="td-acts">
         <button class="btn btn-ok btn-sm" onclick="confirmInscr('${ins.id}')">✓</button>
         <button class="btn btn-err btn-sm" onclick="cancelInscr('${ins.id}')">✕</button>
@@ -276,8 +276,7 @@ window.exportInscriptions = async function() {
 
   if (!data || !data.length) { toast('Aucune donnée à exporter', 'info'); return }
 
-  var header = 'Date,Prénom,Nom,Email,Téléphone,Événement,Circuit,Coaching,Statut
-'
+  var header = 'Date,Prénom,Nom,Email,Téléphone,Événement,Circuit,Coaching,Statut\n'
   var rows = data.map(ins => {
     var ev = ins.events
     return [
@@ -289,8 +288,7 @@ window.exportInscriptions = async function() {
       ins.coaching_requested ? 'Oui' : 'Non',
       ins.statut || 'en_attente'
     ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')
-  }).join('
-')
+  }).join('\n')
 
   var blob = new Blob(['﻿' + header + rows], { type: 'text/csv;charset=utf-8' })
   var a = document.createElement('a')
@@ -382,15 +380,15 @@ async function loadKPIs() {
     const inscList = document.getElementById('inscriptions-list')
     if (inscList && recInscrits) {
       if (recInscrits.length === 0) {
-        inscList.innerHTML = '<div style="font-family:'DM Mono';font-size:10px;color:rgba(255,255,255,.3)">Aucune inscription pour l'instant.</div>'
+        inscList.innerHTML = '<div style="font-family:\'DM Mono\';font-size:10px;color:rgba(255,255,255,.3)">Aucune inscription pour l\'instant.</div>'
       } else {
         inscList.innerHTML = recInscrits.map(function(ins) {
           var d = new Date(ins.created_at)
           var dd = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear()
           return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">' +
-            '<div><div style="font-family:'DM Mono';font-size:11px;color:#fff">' + (ins.user_name||'…') + '</div>' +
-            '<div style="font-family:'DM Mono';font-size:9px;color:rgba(255,255,255,.35);margin-top:2px">' + (ins.email||'') + '</div></div>' +
-            '<div style="font-family:'DM Mono';font-size:9px;color:rgba(255,207,0,.5)">' + dd + '</div>' +
+            '<div><div style="font-family:\'DM Mono\';font-size:11px;color:#fff">' + (ins.user_name||'…') + '</div>' +
+            '<div style="font-family:\'DM Mono\';font-size:9px;color:rgba(255,255,255,.35);margin-top:2px">' + (ins.email||'') + '</div></div>' +
+            '<div style="font-family:\'DM Mono\';font-size:9px;color:rgba(255,207,0,.5)">' + dd + '</div>' +
             '</div>'
         }).join('')
       }
@@ -559,7 +557,7 @@ async function loadForumMod() {
         </button>
         <button class="btn btn-err btn-sm" onclick="deleteThread(${t.id})">Suppr.</button>
       </div></td>
-    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px;font-family:'DM Mono';font-size:9px">Aucun sujet</td></tr>'
+    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px;font-family:\'DM Mono\';font-size:9px">Aucun sujet</td></tr>'
 }
 
 window.pinThread = async (id, pin) => {
@@ -711,7 +709,7 @@ const RADAR_SOURCES = [
   { id:'brignoles',      name:'Circuit Brignoles',      region:'PACA',       active:true,  type:'tour', rss:null },
   { id:'ledenon',        name:'Circuit de Lédenon',     region:'Occitanie',  active:true,  type:'tour', rss:null },
   { id:'nogaro',         name:'Circuit de Nogaro',      region:'Occitanie',  active:false, type:'gt',   rss:null },
-  { id:'albi',           name:'Circuit d'Albi',        region:'Occitanie',  active:false, type:'gt',   rss:null },
+  { id:'albi',           name:'Circuit d\'Albi',        region:'Occitanie',  active:false, type:'gt',   rss:null },
   { id:'magny-cours',    name:'Circuit de Magny-Cours', region:'Autre France',active:false,type:'gt',   rss:null },
 ]
 
@@ -832,7 +830,7 @@ function renderRadarResults() {
   })
 
   if (!sorted.length) {
-    container.innerHTML = '<div style="padding:24px;text-align:center;font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25)">Aucune date détectée</div>'
+    container.innerHTML = '<div style="padding:24px;text-align:center;font-family:\'DM Mono\';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25)">Aucune date détectée</div>'
     return
   }
 
@@ -875,9 +873,9 @@ function renderRadarResults() {
           <button class="btn-validate-radar" onclick="validateRadarDate('${r.id}')">✅ Valider</button>
           <button class="btn-ignore-radar"   onclick="ignoreRadarDate('${r.id}')">❌ Ignorer</button>
         ` : isValidated ? `
-          <span style="font-family:'DM Mono';font-size:8px;color:rgba(34,197,94,.5)">✓ Validé</span>
+          <span style="font-family:\'DM Mono\';font-size:8px;color:rgba(34,197,94,.5)">✓ Validé</span>
         ` : `
-          <span style="font-family:'DM Mono';font-size:8px;color:rgba(255,255,255,.2)">Ignoré</span>
+          <span style="font-family:\'DM Mono\';font-size:8px;color:rgba(255,255,255,.2)">Ignoré</span>
         `}
       </div>
     </div>`

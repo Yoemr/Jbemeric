@@ -335,58 +335,6 @@ img{display:block;max-width:100%}
   color:var(--ink-mute);max-width:580px;
 }
 
-/* ══ CHALLENGE ══════════════════════════════════════════════ */
-.challenge{
-  padding:clamp(80px,10vw,140px) clamp(20px,5vw,80px);
-  background:var(--bg-deep);
-  border-top:1px solid var(--rule);
-}
-.chall-inner{
-  max-width:1200px;margin:0 auto;
-  display:grid;grid-template-columns:1fr;
-  gap:clamp(48px,6vw,80px);
-}
-@media(min-width:960px){.chall-inner{grid-template-columns:1fr 1fr;align-items:start}}
-.chall-content{display:flex;flex-direction:column;gap:clamp(22px,3vw,30px)}
-.chall-kicker{
-  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;
-  text-transform:uppercase;color:var(--accent);
-}
-.chall-title{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(40px,5.5vw,80px);
-  line-height:.9;font-weight:400;
-}
-.chall-title em{font-style:normal;color:var(--accent)}
-.chall-lead{font-size:14px;line-height:1.75;color:var(--ink-soft)}
-.chall-lead strong{color:var(--ink);font-weight:500}
-.chall-details{
-  display:grid;grid-template-columns:1fr;gap:1px;
-  background:var(--rule);border:1px solid var(--rule);
-}
-.chd{background:var(--bg-elev);padding:15px 20px;display:flex;flex-direction:column;gap:5px}
-.chd-label{
-  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
-  text-transform:uppercase;color:var(--ink-mute);
-}
-.chd-val{font-size:13px;line-height:1.6;color:var(--ink)}
-.chall-placeholder{
-  background:var(--bg-elev);
-  border:1px dashed var(--rule-accent);
-  padding:26px 20px;display:flex;flex-direction:column;gap:8px;
-}
-.cp-label{
-  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2.5px;
-  text-transform:uppercase;color:var(--accent);
-}
-.cp-note{font-size:13px;line-height:1.6;color:var(--ink-mute)}
-.chall-aside{
-  position:sticky;top:100px;
-  border:1px solid var(--rule);overflow:hidden;
-}
-.chall-aside img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
-@media(max-width:959px){.chall-aside{display:none}}
-
 /* ══ SIMULATEUR ════════════════════════════════════════════ */
 .simulateur{
   padding:clamp(24px,3vw,36px) clamp(20px,5vw,80px);

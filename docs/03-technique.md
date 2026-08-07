@@ -132,6 +132,28 @@ Vérifié par requête avant correctif : `/contact.html`, `/articles.html`, `/ac
 
 ---
 
+## 6bis. Prendre une capture d'écran fiable
+
+Chromium sans interface est dans `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`. Il sert à prouver un rendu, mais **il ment de trois façons**, toutes rencontrées le 7 août 2026 en essayant de démontrer qu'une suppression de CSS ne changeait rien.
+
+```
+chrome --headless --no-sandbox --disable-gpu --hide-scrollbars \
+       --no-proxy-server --window-size=1300,900 \
+       --virtual-time-budget=6000 --screenshot=sortie.png URL
+```
+
+**`--no-proxy-server` est obligatoire.** Sans lui, `localhost` part dans le proxy sortant et la page revient d'un cache.
+
+**Une hauteur de fenêtre énorme donne une image morte.** À `--window-size=1300,7000`, le PNG est identique quoi qu'on change dans le CSS, y compris un `outline` magenta de six pixels. Rester sur une hauteur d'écran normale.
+
+**Une URL avec ancre n'est pas reproductible.** Trois exécutions de suite sur `#voiture`, sans aucune modification, ont donné trois empreintes différentes. La position de défilement varie. Seule la capture en haut de page est comparable d'une fois sur l'autre.
+
+**D'où la règle : tout contrôle négatif d'abord.** Avant de conclure « identique », introduire une différence visible volontaire et vérifier que l'empreinte change. Une comparaison qui ne sait pas voir une différence dira toujours « identique ».
+
+**Et souvent, mieux vaut ne pas passer par le pixel.** Pour prouver qu'une règle CSS est morte, chercher ses classes dans le HTML et le JavaScript des pages qui chargent la feuille est déterministe, instantané, et ne dépend d'aucun navigateur. Le pixel ne sert qu'à corroborer.
+
+---
+
 ## 7. Méthode
 
 **Vérifier, pas affirmer.** Une anomalie se prouve par une requête HTTP, un appel d'API ou une sortie de console. Lire le code et en déduire un comportement ne suffit pas. Cette règle a évité deux fausses alertes le 1er août : le `06 00 00 00 00` de `contact.html` est un placeholder de formulaire, et la plupart des liens signalés « cassés » par une analyse statique fonctionnent grâce à `<base href="/">` plus `_redirects`.

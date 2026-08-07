@@ -6,6 +6,28 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 7 août 2026, nettoyage et instruments
+
+### D-033, Le bloc Challenge de `competition.css` est supprimé
+
+52 lignes, 14 noms de classe, tous préfixés `chall-` ou nommés `.challenge`. Le Challenge JB EMERIC est mort depuis avril, D-008, et sa section HTML avait déjà disparu de la page. Le style, lui, était resté.
+
+**La preuve, et pourquoi elle n'est pas au pixel.** `competition.css` n'est chargée que par `academie/competition.html`. Les quatorze classes ont été cherchées dans tout le HTML et tout le JavaScript vivants du site : zéro occurrence. Aucun élément ne peut porter ces classes, donc la suppression ne peut rien changer. C'est déterministe, contrairement à une comparaison d'images.
+
+La capture en haut de page, identique en 1300, 900 et 420 pixels, ne sert que de confirmation.
+
+### D-034, Trois façons dont une capture d'écran ment
+
+Consigné en 6bis de `docs/03-technique.md`, après trois faux résultats d'affilée le même jour.
+
+1. Sans `--no-proxy-server`, `localhost` part dans le proxy sortant et la page revient d'un cache.
+2. À `--window-size=1300,7000`, le PNG est identique quoi qu'on change dans le CSS, y compris un `outline` magenta de six pixels.
+3. Une URL avec ancre n'est pas reproductible : trois exécutions sans modification, trois empreintes différentes.
+
+**La règle qui en sort** : avant de conclure « identique », introduire une différence visible volontaire et vérifier que l'empreinte change. Une comparaison qui ne sait pas voir une différence dira toujours « identique ». C'est la troisième fois qu'un instrument fabriqué sur le moment se révèle faux avant le site.
+
+---
+
 ## 7 août 2026, la page où tout converge
 
 ### D-032, Le hero de la Compétition montre une machine qui existe

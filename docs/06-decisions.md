@@ -16,6 +16,16 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 **Le champ « où » désigne une page, pas le fichier image.** C'est lui qui range l'anomalie dans le périmètre ou dehors. Pointer l'image classait le défaut hors périmètre, donc masqué par défaut, alors qu'il touche l'accueil et l'Académie. C'est la deuxième fois que ce piège se referme, après `renommages`.
 
+### D-043, Un emplacement que JB doit remplir garde sa balise `<img>`
+
+`live-editor.js` repère les médias par `document.querySelectorAll('img, video')`. Il ne voit que ce qui existe déjà. Retirer une balise `<img>`, même vide de contenu utile, retire donc à JB la possibilité d'y mettre une photo lui-même.
+
+**Rappel de Yoan, 7 août** : « beaucoup de trucs doivent être repris par mon père, il doit faire un travail de recherche sur son disque dur pour trouver les bonnes photos, c'est d'ailleurs pour ça qu'on avait codé une fonction pour qu'il puisse le changer de lui-même. »
+
+Conséquence pratique : quand une photo manque, on laisse la balise avec une image d'attente, pas un cadre vide. L'image d'attente est un SVG en `data:`, donc sans fichier à gérer et sans risque de 404.
+
+**Corollaire pour le travail éditorial** : ne pas s'acharner sur le choix des images. C'est JB qui les fournira.
+
 ### D-040, Les droits des photos sont acquis, le sujet est clos
 
 Décision de Yoan, 7 août : « On la garde, JB a les droits. » La photo de la 206 au Paul Ricard reste en place malgré son filigrane. Consigné pour qu'aucune session ne rouvre la question.

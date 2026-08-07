@@ -448,7 +448,19 @@ Autrement dit, la même photo est servie sous le nom que la page réclamait. Le 
 
 Deux cartes de `paddock/nos-voitures.html` ont perdu leur photo : la Lotus Elise Cup S et la Porsche 911 GT3 RS. Il n'existe aucune photo de ces deux voitures dans la bibliothèque, seulement des fichiers qui portaient leur nom. Un cadre vide vaut mieux qu'une voiture qui n'est pas celle annoncée.
 
-**Réserve sur cette page.** Ce que `nos-voitures.html` affiche ne vient pas de son fichier. Son `h1` dit « NOS VOITURES » dans le HTML et « TRACK-DAYS & STAGES » à l'écran, et son image de hero n'est aucune des deux valeurs du fichier. Le contenu est servi par Supabase au chargement, son cache local étant vide. Les corrections ci-dessus sont donc dans la source seulement. Elles comptent le jour où la base est remise à plat, ce que Yoan a envisagé, mais elles ne changent pas ce qu'un visiteur voit aujourd'hui.
+**`paddock/nos-voitures.html` est une page morte, et je m'étais trompé sur la cause.** J'ai d'abord écrit que son contenu venait de Supabase, parce que le navigateur affichait « TRACK-DAYS & STAGES » là où le fichier dit « NOS VOITURES ». C'est faux. La ligne 10 du fichier porte :
+
+```html
+<meta http-equiv="refresh" content="0;url=track.html#voitures">
+```
+
+La page se sabordé au chargement et renvoie sur `track.html#voitures`. Ce que j'observais était donc `track.html`, pas une base de données. `curl` recevait bien le vrai fichier, le navigateur non : c'est ce décalage qui m'a induit en erreur.
+
+**Conséquences.** Personne ne voit cette page, ni un visiteur, ni un moteur de recherche. Les corrections d'images qui y ont été faites sont donc sans effet visible ; elles restent justes dans la source. C'est la seule page du site à porter un `meta refresh`, et rien n'y mène sauf l'entrée `voitures` de `routes.js`.
+
+**À trancher par Yoan** : soit la page revit et le `meta refresh` saute, soit elle disparaît et l'entrée de `routes.js` avec elle. La laisser dans cet état garantit qu'on y repassera du temps pour rien, comme aujourd'hui.
+
+**Ce qui vaut au-delà de cette page.** Le live-editor ne voit que les `<img>` et les `<video>` déjà présents dans la page, `document.querySelectorAll('img, video')`. Retirer une balise `<img>` retire donc à JB la possibilité d'y mettre une photo lui-même. Un emplacement qu'il doit pouvoir remplir garde sa balise, avec une image d'attente s'il le faut.
 
 **Mesuré désormais à chaque session** par `outil-dev/audit/regles/images.js`, qui compare les empreintes et non les noms. Il signale aussi 14 fichiers jamais employés.
 

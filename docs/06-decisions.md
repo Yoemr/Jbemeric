@@ -6,6 +6,18 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 7 août 2026, la page où tout converge
+
+### D-032, Le hero de la Compétition montre une machine qui existe
+
+`academie/competition.html` s'ouvrait sur `bmw-325i-htcc.jpg`. Deux défauts cumulés : c'est la voiture que D-008 déclare morte, et le fichier ne fait que 769 pixels de large, étiré sur toute la largeur d'un hero. D'où l'image sombre et floue.
+
+Remplacée par `peugeot-206-s16-ricard.jpg`, 2560 pixels, machine réellement proposée par la page, et déjà l'image de la porte « Vers la Compétition » du hub : le visiteur retrouve à l'arrivée ce sur quoi il a cliqué.
+
+**Deux comptes faux corrigés au passage.** Le hero annonçait « Deux machines » et la barre de statistiques « 2 · Machines de formation », alors que la page en nomme trois : kart 125cc à boîte, 206 S16, Formule Renault. Le hero dit maintenant « Deux voies », ce qui correspond à ses deux boutons et à ses deux offres, et le compte des machines passe à trois.
+
+---
+
 ## 7 août 2026, les vidéos et les offres mortes
 
 ### D-029, Les vidéos YouTube sont tirées au sort dans une liste

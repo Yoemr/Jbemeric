@@ -422,6 +422,14 @@ Rien n'est perdu en base. Tout est perdu à l'affichage.
 
 **Règle à retenir en attendant** : avant que JB commence à éditer pour de bon, il faut que les pages qu'il touchera portent des `id` explicites sur leurs éléments éditables. C'est peu de travail fait tôt, beaucoup fait tard.
 
+### 6.14bis Les deux boutons d'entrée de la Compétition tombent sous la ligne de flottaison
+
+**Mesuré le 7 août, capture à 1300 × 900.** `academie/competition.html` est la page où convergent les trois voies. Ses deux boutons d'entrée, « Kart 125cc » et « Formation voiture », ainsi que la barre de statistiques, se trouvent environ 60 à 80 pixels sous le bas de l'écran sur un portable. Il faut faire défiler pour voir les deux actions de la page.
+
+**La cause.** `.hero` est en `min-height:100svh` avec `justify-content:flex-end`, donc tant que le contenu tient dans un écran il est calé en bas et tout se voit. Ici il déborde, à cause de la combinaison d'un `padding-top` de 180 pixels et d'un titre de trois lignes en `clamp(52px,9vw,128px)`. Les pages sœurs `karting-enfant` et `karting-adulte`, elles, tiennent.
+
+**Non corrigé volontairement.** Réduire le padding ou la taille du titre change l'allure d'un hero plein écran, c'est une décision de direction artistique, pas une correction. À trancher avec Yoan ou le rôle design. Deux leviers possibles, le `padding-top` de `.hero-inner` et le `9vw` du titre, dans `assets/css/competition.css`.
+
 ### 6.14 La version téléphone est cassée sur les pages Académie
 
 Constat visuel, non traité sur décision de Yoan : « la version téléphone sera faite à la toute fin quand on aura fini le site entier ».

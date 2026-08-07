@@ -75,7 +75,7 @@ Il est chargé automatiquement, l'ordre alphabétique du nom de fichier fixe l'o
 | `ctx.classesJs` | les noms de classes que les scripts savent fabriquer |
 | `ctx.routes` | les chemins déclarés par `routes.js` |
 
-## Quatre pièges, tous rencontrés pour de vrai
+## Cinq pièges, tous rencontrés pour de vrai
 
 **Le contenu construit en JavaScript.** Les classes du calendrier de `track.html` n'existent dans aucun fichier HTML, elles sont fabriquées par `track-render.js`. Une règle qui ne regarde que le HTML les déclare mortes et conseille de supprimer un style indispensable. D'où `ctx.classesJs`.
 
@@ -84,6 +84,10 @@ Il est chargé automatiquement, l'ordre alphabétique du nom de fichier fixe l'o
 **L'outil qui se signale lui-même.** La règle des tirets cadratins contenait le caractère qu'elle traque, la règle de référencement contient le mot « PACA ». Écrire le motif par son code Unicode, ou exclure `outil-dev/audit/`.
 
 **Le nom de fichier trouvé dans un commentaire.** Chercher `sync-mirror.js` dans tout le HTML tombe sur `<!-- Chargé par sync-mirror.js -->` et signale un faux désordre de chargement. Lire les balises `<script src>`, pas le texte.
+
+**La propriété CSS cherchée sans son sélecteur.** La règle `defilement` cherchait `scroll-snap-type` n'importe où. `palmares.css` le déclare sur un carrousel interne et passe avant `snap.css` dans l'ordre alphabétique : la règle a donc inspecté `palmares.html` et annoncé « aucune faute » sur des pages qu'elle n'avait jamais lues. Vérifier sur quel sélecteur la propriété est posée, et passer par `ctx.pages[].feuilles` pour savoir qui charge quoi.
+
+> **Une règle qui ne dit jamais rien est indiscernable d'une règle correcte.** Avant de la garder, fabriquer un témoin qui porte le défaut, vérifier qu'elle le signale, puis supprimer le témoin. C'est ce qui a démasqué le piège ci-dessus.
 
 ## Ce que l'outil ne sait pas faire
 

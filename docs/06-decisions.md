@@ -6,6 +6,26 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 7 août 2026, les avis
+
+### D-027, Les avis sont un composant unique, leur texte reste en HTML
+
+Le bloc d'avis existait sur `coaching.html`, écrit entièrement en styles en ligne. Il est maintenant un composant : `.jbe-avis` dans `assets/css/theme.css`, à côté de `.jbe-faq` qui suit déjà exactement ce régime. `coaching.html` et `academie.html` s'en servent, aucune des deux ne redéfinit quoi que ce soit.
+
+**Le texte des avis reste écrit en HTML dans chaque page**, il n'est pas injecté par JavaScript. Raison démontrée dans la fiche du 4 août sur la FAQ : un contenu rendu en JavaScript sort de ce que lit un moteur de recherche, et échappe au scan du live-editor. Or la preuve sociale est précisément ce qu'on veut faire lire.
+
+**Ce qui manque, et qui n'est pas un problème de code.** Le site ne détient que trois avis verbatim, tous sur du track-day ou du coaching en voiture personnelle. Aucun avis de parent, alors que l'enfant est la plus grosse part de marché. TripAdvisor refuse la lecture automatisée, donc ces avis se collectent à la main. `docs/04` le disait déjà : dix avis pour 37 ans, il y a un gisement là.
+
+### D-028, Un bloc posé entre deux points d'ancrage n'existe pas
+
+`snap.css` déclare `scroll-snap-type: y mandatory` sur `html` et `body`. Le navigateur s'arrête alors obligatoirement sur un élément aimanté. Un bloc de premier niveau posé entre deux `snap-section` n'est jamais un point d'arrêt : il est traversé d'un coup, et sur une page dont chaque section fait la hauteur de l'écran, cela revient à ne jamais le montrer.
+
+**Constaté le 7 août.** Le bloc d'avis ajouté à `academie.html` n'apparaissait pas. Le HTML était correct, le CSS aussi, chacun lu séparément ne montrait rien. Seule une capture l'a révélé. Remède : ranger le bloc dans `.snap-fin`, qui défile en interne.
+
+**Consigné en règle d'audit**, `outil-dev/audit/regles/defilement.js`, parce que c'est un défaut qu'on ne trouve jamais en naviguant : la page a l'air normale, il manque juste quelque chose qu'on ne sait pas chercher.
+
+---
+
 ## 6 août 2026, l'Académie à trois voies
 
 ### D-026, Le hub de l'Académie annonce trois voies, pas deux

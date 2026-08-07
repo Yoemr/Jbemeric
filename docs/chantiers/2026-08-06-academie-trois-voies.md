@@ -6,7 +6,7 @@
 
 ---
 
-> **Fiche validée le 6 août.** Ce qui est fait : la page enfant, la page adulte assumée, le renommage symétrique, le menu à trois entrées, le pied de page, le hub à trois voies, les avis sur le hub. Ce qui reste : le tirage aléatoire des vidéos YouTube, section 4.
+> **Chantier terminé le 7 août.** La page enfant, la page adulte assumée, le renommage symétrique, le menu à trois entrées, le pied de page, le hub à trois voies, les avis sur le hub, le tirage aléatoire des vidéos.
 >
 > **Réserve sur les avis, 7 août.** Le bloc est en place et partagé avec `coaching.html`, mais le site ne détient que trois avis verbatim, tous sur du track-day ou du coaching en voiture personnelle. Aucun avis de parent. TripAdvisor refuse la lecture automatisée : ces avis se collectent à la main, c'est un travail pour Yoan ou JB, pas pour le code.
 

@@ -6,6 +6,38 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 7 août 2026, les vidéos et les offres mortes
+
+### D-029, Les vidéos YouTube sont tirées au sort dans une liste
+
+Huit intégrations YouTube étaient écrites en dur dans `academie.html`. Elles vivent maintenant dans `site-data.js`, et `assets/js/videos.js` en tire quatre au hasard à chaque chargement.
+
+**Pourquoi le tirage.** Demande de Yoan : « d'abord on fait la structure du site et on affiche des vidéos YouTube aléatoires ». Les vidéos sont provisoires, elles seront refaites par des spécialistes du montage. Figer huit choix dans une page n'avait pas de sens.
+
+**Rien sur téléphone.** Même règle et même seuil que `hero-video.js`, 700 pixels : huit intégrations, c'est huit connexions à un tiers pour un décor. Le script ne construit rien en dessous, donc aucune requête n'est émise, et `academie.css` masque la section pour qu'on ne voie pas un cadre vide sous son titre. Les deux sont nécessaires : masquer sans s'abstenir de construire ferait quand même payer le téléchargement. Mesuré : zéro `iframe` à 390 pixels, quatre à 1300.
+
+**Ce que ça coûte.** Le titre des vidéos sort du HTML livré, donc un moteur de recherche ne le lit plus. Assumé pour ce bloc et pour lui seul : un titre de vidéo YouTube ne porte aucun mot-clé qu'on cherche à défendre. La règle inverse vaut toujours pour la FAQ et les avis.
+
+**Ajouter une vidéo est désormais une ligne** dans `site-data.js`. Un conteneur peut aussi filtrer par thème, `data-videos="trajectoires"`, et limiter le nombre, `data-videos-n`.
+
+### D-030, Une règle d'audit pour les offres mortes
+
+D-008 déclare le Challenge JB EMERIC et la BMW 325i HTCC morts depuis avril. Rien ne le vérifiait, et trois titres de vidéos de l'Académie nommaient encore le Challenge le 7 août.
+
+`outil-dev/audit/regles/offres-mortes.js` distingue quatre endroits, parce qu'ils ne coûtent pas la même chose : la prose lue par le visiteur est une faute, un commentaire de code est une tâche, un nom de classe aussi, un `alt` ou un nom de fichier est un signal à juger.
+
+**Une leçon de méthode au passage.** La première version traitait `alt="BMW 325i HTCC"` comme une promesse et annonçait six fautes, dont quatre n'en étaient pas. Une photo d'archive décrite fidèlement ne vend rien. La règle retire donc toutes les valeurs d'attributs avant de juger : ce qui reste est ce que le visiteur lit vraiment.
+
+**Une seule vraie faute trouvée dans le périmètre**, et elle comptait : la FAQ de `track.html` proposait encore la BMW 325i HTCC à la location. Retirée. **Le reste de cette liste de voitures reste à vérifier avec JB**, je ne sais pas quel matériel existe réellement aujourd'hui.
+
+### D-031, Le miroir de l'accueil suit les classes de l'Académie
+
+`sync-mirror.js` recopie la classe de chaque porte telle quelle depuis `academie.html`. Renommer `.porte.challenge` en `.porte.competition` sur l'Académie, le 6 août, a donc silencieusement dépouillé la troisième porte de la page d'accueil : `index.css` stylait encore l'ancien nom. Renommé à son tour, rendu vérifié.
+
+**À retenir** : toute classe portée par un élément aspiré par le miroir existe en double, dans `academie.css` et dans `index.css`. Les renommer ensemble, toujours.
+
+---
+
 ## 7 août 2026, les avis
 
 ### D-027, Les avis sont un composant unique, leur texte reste en HTML

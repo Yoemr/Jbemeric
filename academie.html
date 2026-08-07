@@ -178,80 +178,9 @@
     <p class="sb">Journées karting et trajectoires circuit : en caméra embarquée, depuis la piste.</p>
     <a class="ac-vid-chan" href="https://www.youtube.com/@jbemeric" target="_blank" rel="noopener">Voir la chaîne complète →</a>
   </div>
-  <div class="yt-grid yt-grid--4">
-    <div class="yt-card">
-      <div class="yt-thumb">
-        <iframe src="https://www.youtube.com/embed/fDfKSUysAcc" title="Soirée karting annuelle JB EMERIC" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-      </div>
-      <div class="yt-info">
-        <div class="yt-title">Soirée karting annuelle JB EMERIC</div>
-        <div class="yt-meta"><span>Journée karting</span><span>Karting Indoor</span></div>
-      </div>
-    </div>
-    <div class="yt-card">
-      <div class="yt-thumb">
-        <iframe src="https://www.youtube.com/embed/6OqQsIq3TVY" title="Course karting circuit d'Hyères · Challenge JB EMERIC" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-      </div>
-      <div class="yt-info">
-        <div class="yt-title">Course karting circuit d'Hyères</div>
-        <div class="yt-meta"><span>Journée karting</span><span>Circuit Hyères</span></div>
-      </div>
-    </div>
-    <div class="yt-card">
-      <div class="yt-thumb">
-        <iframe src="https://www.youtube.com/embed/BwQ3uK1KusE" title="Challenge karting JB EMERIC" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-      </div>
-      <div class="yt-info">
-        <div class="yt-title">Challenge karting JB EMERIC</div>
-        <div class="yt-meta"><span>Journée karting</span><span>Challenge</span></div>
-      </div>
-    </div>
-    <div class="yt-card">
-      <div class="yt-thumb">
-        <iframe src="https://www.youtube.com/embed/6bnnztZPLEE" title="Challenge JB EMERIC · podium et récompense" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-      </div>
-      <div class="yt-info">
-        <div class="yt-title">Challenge JB EMERIC · podium et récompense</div>
-        <div class="yt-meta"><span>Journée karting</span><span>Challenge · Brignoles</span></div>
-      </div>
-    </div>
-    <div class="yt-card">
-      <div class="yt-thumb">
-        <iframe src="https://www.youtube.com/embed/_TFbxVe6rgE" title="Trajectoires circuit d'Hyères · karting" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-      </div>
-      <div class="yt-info">
-        <div class="yt-title">Trajectoires circuit d'Hyères · karting</div>
-        <div class="yt-meta"><span>Trajectoires</span><span>Circuit Hyères</span></div>
-      </div>
-    </div>
-    <div class="yt-card">
-      <div class="yt-thumb">
-        <iframe src="https://www.youtube.com/embed/y379fkccClk" title="Trajectoires circuit d'Hyères · tracé adulte" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-      </div>
-      <div class="yt-info">
-        <div class="yt-title">Trajectoires circuit d'Hyères · tracé adulte</div>
-        <div class="yt-meta"><span>Trajectoires</span><span>Circuit Hyères</span></div>
-      </div>
-    </div>
-    <div class="yt-card">
-      <div class="yt-thumb">
-        <iframe src="https://www.youtube.com/embed/lMjIWKGiEIU" title="Trajectoires circuit Cuges les Pins" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-      </div>
-      <div class="yt-info">
-        <div class="yt-title">Trajectoires circuit Cuges les Pins</div>
-        <div class="yt-meta"><span>Trajectoires</span><span>Circuit Cuges</span></div>
-      </div>
-    </div>
-    <div class="yt-card">
-      <div class="yt-thumb">
-        <iframe src="https://www.youtube.com/embed/jrBZnvw2CgE" title="Trajectoires circuit La Penne sur Huveaune" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-      </div>
-      <div class="yt-info">
-        <div class="yt-title">Trajectoires circuit La Penne sur Huveaune</div>
-        <div class="yt-meta"><span>Trajectoires</span><span>Circuit La Penne</span></div>
-      </div>
-    </div>
-  </div>
+  <!-- Rempli par videos.js, tirage au sort dans site-data.js.
+       Vide sur telephone, et la section entiere est masquee : voir videos.js. -->
+  <div class="yt-grid yt-grid--4" data-videos data-videos-n="4"></div>
 </section>
 
 <!-- ═══ 3 PORTES + CITATION : full screen ══════════════ -->
@@ -382,6 +311,8 @@
 <div id="footer-root"></div>
 
 <script src="assets/js/faq.js"></script>
+<script src="assets/js/site-data.js"></script>
+<script src="assets/js/videos.js"></script>
 <script type="module" src="assets/js/live-editor.js"></script>
 <script src="assets/js/routes.js"></script>
 <script src="assets/js/nav.js"></script>

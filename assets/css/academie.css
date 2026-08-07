@@ -644,5 +644,12 @@ body { background: var(--bg-base) }
   display: flex; gap: 10px; margin-top: auto;
   padding-top: 8px; border-top: 1px solid var(--sep); flex-wrap: wrap;
 }
+/* Sous le seuil, videos.js ne construit rien : la section resterait un cadre
+   vide sous son titre. On la retire donc du flux. Masquer ne suffirait pas a
+   economiser les requetes, c'est le script qui s'en charge, et le script ne
+   suffirait pas a eviter le cadre vide. Les deux vont ensemble.
+   Meme seuil que nav.css, hero-video.js et videos.js. */
+@media(max-width:699px) { .ac-videos { display: none } }
+
 .yt-grid--4 { grid-template-columns: 1fr 1fr }
 @media(min-width:960px) { .yt-grid--4 { grid-template-columns: repeat(4,1fr) } }

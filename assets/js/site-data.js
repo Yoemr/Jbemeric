@@ -778,6 +778,31 @@ window.JBEMERIC_DATA = {
     { prenom: 'Maxence',       nom: 'Benech',    role: 'Pilote FR2000' }
   ],
 
+  /* ── VIDÉOS YOUTUBE ───────────────────────────────────────────
+     Extraits de la chaîne @jbemeric, tirés au sort par videos.js.
+
+     Provisoire, décision de Yoan du 6 août 2026 : « elles seront mises à
+     jour par des personnes spécialisées dans les réseaux sociaux et du
+     montage vidéo ». D'ici là, on remplit avec ce qui existe.
+
+     Ajouter une vidéo, c'est ajouter une ligne ici. Rien d'autre.
+
+     Schéma : id YouTube, titre, theme (sert au filtrage), lieu.
+     Les titres ne nomment plus le Challenge JB EMERIC, D-008 : les images
+     sont bien du karting sur ces circuits, la marque commerciale, elle,
+     n'existe plus.
+     ───────────────────────────────────────────────────────────── */
+  videos: [
+    { id: 'fDfKSUysAcc', titre: 'Soirée karting annuelle',            theme: 'journee',      lieu: 'Karting indoor' },
+    { id: '6OqQsIq3TVY', titre: 'Course de karting',                  theme: 'journee',      lieu: 'Circuit d\'Hyères' },
+    { id: 'BwQ3uK1KusE', titre: 'Une journée de karting',             theme: 'journee',      lieu: 'Circuit de Brignoles' },
+    { id: '6bnnztZPLEE', titre: 'Podium et remise des récompenses',   theme: 'journee',      lieu: 'Circuit de Brignoles' },
+    { id: '_TFbxVe6rgE', titre: 'Trajectoires en karting',            theme: 'trajectoires', lieu: 'Circuit d\'Hyères' },
+    { id: 'y379fkccClk', titre: 'Trajectoires, tracé adulte',         theme: 'trajectoires', lieu: 'Circuit d\'Hyères' },
+    { id: 'lMjIWKGiEIU', titre: 'Trajectoires sur circuit',           theme: 'trajectoires', lieu: 'Cuges-les-Pins' },
+    { id: 'jrBZnvw2CgE', titre: 'Trajectoires sur circuit',           theme: 'trajectoires', lieu: 'La Penne-sur-Huveaune' }
+  ],
+
   /* ── VOITURES DE L'ÉCOLE ─────────────────────────────────────── */
   voitures: [
     { nom: 'BMW 325i HTCC',                categorie: 'Challenge auto',     annee: '2020+' },

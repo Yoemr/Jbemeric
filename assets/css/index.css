@@ -420,18 +420,18 @@ a{text-decoration:none;color:inherit}
 .porte:hover .porte-bg img{transform:scale(1.06)}
 .porte-overlay{position:absolute;inset:0;z-index:1;transition:opacity .4s}
 .porte.enfant .porte-overlay{background:linear-gradient(to top,rgba(10,26,74,.96) 0%,rgba(10,26,74,.6) 50%,rgba(10,26,74,0) 100%)}
-.porte.challenge .porte-overlay{background:linear-gradient(to top,rgba(100,80,0,.97) 0%,rgba(160,120,0,.55) 50%,rgba(180,140,0,0) 100%)}
+.porte.competition .porte-overlay{background:linear-gradient(to top,rgba(100,80,0,.97) 0%,rgba(160,120,0,.55) 50%,rgba(180,140,0,0) 100%)}
 .porte:hover .porte-overlay{opacity:.85}
 .porte-content{position:relative;z-index:2;padding:clamp(28px,4vw,48px)}
 .porte-tag{font-family:'DM Mono';font-size:8px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:12px}
 .porte-title{font-family:'Bebas Neue';font-size:clamp(32px,5vw,52px);color:#fff;line-height:.9;margin-bottom:14px}
-.porte.challenge .porte-title{color:var(--accent-em,#FFCF00)}
+.porte.competition .porte-title{color:var(--accent-em,#FFCF00)}
 .porte-body{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;max-width:280px;margin-bottom:24px;opacity:0;transform:translateY(8px);transition:all .35s}
 .porte:hover .porte-body{opacity:1;transform:translateY(0)}
 .porte-cta{display:inline-block;font-family:'DM Mono';font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:13px 24px;border-radius:3px;transition:all .2s;transform:translateY(4px);opacity:.85}
 .porte:hover .porte-cta{transform:translateY(0);opacity:1}
 .porte.enfant .porte-cta,.porte.adulte .porte-cta{background:#fff;color:#0a1a4a}
-.porte.challenge .porte-cta{background:#FFCF00;color:#000}
+.porte.competition .porte-cta{background:#FFCF00;color:#000}
 .offer-card > * { position: relative; z-index: 1 }
 .offer-card::after {
   position: absolute;
@@ -588,15 +588,15 @@ a{text-decoration:none;color:inherit}
 .acad-side-item .porte-bg img { width:100%; height:100%; object-fit:cover; transition:transform .55s ease }
 .acad-side-item:hover .porte-bg img { transform:scale(1.06) }
 .acad-side-item .porte-overlay { position:absolute; inset:0; z-index:1; transition:opacity .3s }
-.acad-side-item.porte.challenge .porte-overlay { background:linear-gradient(to top,rgba(100,74,0,.97) 0%,rgba(140,100,0,.5) 60%,rgba(160,120,0,.05) 100%) }
+.acad-side-item.porte.competition .porte-overlay { background:linear-gradient(to top,rgba(100,74,0,.97) 0%,rgba(140,100,0,.5) 60%,rgba(160,120,0,.05) 100%) }
 .acad-side-item .porte-content { position:relative; z-index:2; padding:clamp(14px,2vw,24px) }
 .acad-side-item .porte-tag { font-family:'DM Mono'; font-size:7.5px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:6px }
 .acad-side-item .porte-title { font-family:'Bebas Neue'; font-size:clamp(22px,3.5vw,38px); color:#fff; line-height:.88; margin-bottom:10px }
-.acad-side-item.porte.challenge .porte-title { color:#FFCF00 }
+.acad-side-item.porte.competition .porte-title { color:#FFCF00 }
 .acad-side-item .porte-body { display:none }
 .acad-side-item .porte-cta { display:inline-block; font-family:'DM Mono'; font-size:8px; letter-spacing:1.5px; text-transform:uppercase; padding:8px 14px; border-radius:2px; transition:all .2s }
-.acad-side-item.porte.challenge .porte-cta { background:#FFCF00; color:#000 }
-.acad-side-item.porte.challenge:hover .porte-cta { background:#fff; color:#000 }
+.acad-side-item.porte.competition .porte-cta { background:#FFCF00; color:#000 }
+.acad-side-item.porte.competition:hover .porte-cta { background:#fff; color:#000 }
 
 /* Bandeau parcours en bas : toute la largeur */
 .acad-parcours {

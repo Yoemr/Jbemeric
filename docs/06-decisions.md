@@ -16,6 +16,24 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 **Le champ « où » désigne une page, pas le fichier image.** C'est lui qui range l'anomalie dans le périmètre ou dehors. Pointer l'image classait le défaut hors périmètre, donc masqué par défaut, alors qu'il touche l'accueil et l'Académie. C'est la deuxième fois que ce piège se referme, après `renommages`.
 
+### D-040, Les droits des photos sont acquis, le sujet est clos
+
+Décision de Yoan, 7 août : « On la garde, JB a les droits. » La photo de la 206 au Paul Ricard reste en place malgré son filigrane. Consigné pour qu'aucune session ne rouvre la question.
+
+### D-041, Un nom de fichier image dit ce que l'image montre
+
+Demande de Yoan le 7 août, « renommer selon le contenu réel ». Les trois noms qui mentaient ne sont plus employés : `lotus-circuit-du-luc.jpg`, `porsche-gt3-circuit-albi.jpg` et `jb-emeric-pilote.jpg` sont remplacés partout par le nom qui décrit la photo. Les fichiers restent sur le disque, orphelins, en attente d'une validation de suppression.
+
+**Conséquence assumée** : deux cartes de `paddock/nos-voitures.html` n'ont plus de photo, la Lotus Elise Cup S et la Porsche 911 GT3 RS. Il n'existe aucune photo de ces voitures, seulement des fichiers qui portaient leur nom. Un cadre vide vaut mieux qu'une voiture qui n'est pas celle annoncée.
+
+### D-042, Un script ne cite que des images qui existent
+
+`track-render.js` réclamait trois fichiers absents, dont **l'image de repli**, celle que renvoie tout type d'événement non reconnu. Toute date de track-day sortant des mots-clés prévus affichait donc une image cassée. Invisible en naviguant : il faut une date du bon type, et les dates viennent de Supabase.
+
+La branche Caterham pointait en plus sur le fichier « Lotus » qui est une Peugeot, soit trois voitures différentes pour une seule image. Les branches Caterham et Porsche sont retirées faute de photo, elles tombent dans le repli.
+
+**La règle `images` vérifie désormais** que tout chemin `assets/images/...` cité dans du JavaScript existe. La règle `liens` ne regardait que le HTML.
+
 ### D-039, Le nombre de circuits partenaires est 5, y compris sur l'accueil
 
 Le hero de `index.html` annonçait « 15 circuits partenaires », contredit dix lignes plus bas par sa propre barre de statistiques, « 5 circuits partenaires, Brignoles, Trets, Hyères, La Penne, Cuges », et par toutes les autres pages du site. Corrigé à 5.

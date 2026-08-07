@@ -204,16 +204,25 @@
       return html
     }
 
-    // Associer une image selon le type
+    // Associer une image selon le type.
+    //
+    // Trois chemins pointaient ici dans le vide : peugeot-206-sambuc.jpg,
+    // porsche-gt3-stage.jpg et sambuc-circuit.jpg n'existent pas. Le pire
+    // etait le dernier, qui sert de repli : toute date dont le type ne
+    // contient aucun des mots ci-dessous affichait une image cassee. Personne
+    // ne l'avait vu parce qu'il faut une date du bon type pour s'en rendre
+    // compte, et les dates viennent de Supabase.
+    //
+    // Regle desormais : on ne cite que des fichiers qui existent. Une
+    // discipline sans photo tombe dans le repli plutot que de promettre une
+    // image absente. Il n'y a aujourd'hui ni Caterham ni Porsche en photo.
     function imgForType(type) {
       var t = (type||'').toLowerCase()
       if (t.includes('karting')) return 'assets/images/karting-enfant-circuit.jpg'
       if (t.includes('gt') || t.includes('tourisme')) return 'assets/images/bmw-325i-htcc.jpg'
-      if (t.includes('206') || t.includes('peugeot')) return 'assets/images/peugeot-206-sambuc.jpg'
-      if (t.includes('caterham')) return 'assets/images/lotus-circuit-du-luc.jpg'
+      if (t.includes('206') || t.includes('peugeot')) return 'assets/images/peugeot-206-s16-ricard.jpg'
       if (t.includes('ferrari')) return 'assets/images/ferrari-f8-tributo.jpg'
-      if (t.includes('porsche')) return 'assets/images/porsche-gt3-stage.jpg'
-      return 'assets/images/sambuc-circuit.jpg'
+      return 'assets/images/karting-adulte-circuit.jpg'
     }
 
     /* Échappement pour insertion dans un attribut HTML. Les valeurs viennent

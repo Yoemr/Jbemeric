@@ -442,7 +442,13 @@ Autrement dit, la même photo est servie sous le nom que la page réclamait. Le 
 
 **La photo de la 206 porte le filigrane d'un photographe professionnel** : « RENCONTRES PEUGEOT SPORT, CIRCUIT PAUL RICARD, 2015 » et « © Daniel DELIEN / WWW.PRO-PHOTOS-SPORT.COM ». Elle est aujourd'hui le hero de `academie/competition.html`, la porte « Vers la Compétition » de l'Académie, et par le miroir elle apparaît sur la page d'accueil.
 
-**Ce que je ne peux pas trancher.** Je ne sais pas si JB a acquis ces photos, ni s'il a une autorisation. C'est une question de droits, elle appartient à Yoan. En attendant, aucune de ces images ne devrait servir de preuve du parc de l'école.
+**Question des droits : tranchée le 7 août par Yoan.** « On la garde, JB a les droits. » Le sujet est clos, aucune session n'a à le rouvrir.
+
+**Nommage : traité le 7 août**, sur demande de Yoan. Les trois noms qui mentaient ne sont plus employés nulle part. Les fichiers restent sur le disque, orphelins, en attente d'une validation individuelle de suppression comme le veut `CLAUDE.md`.
+
+Deux cartes de `paddock/nos-voitures.html` ont perdu leur photo : la Lotus Elise Cup S et la Porsche 911 GT3 RS. Il n'existe aucune photo de ces deux voitures dans la bibliothèque, seulement des fichiers qui portaient leur nom. Un cadre vide vaut mieux qu'une voiture qui n'est pas celle annoncée.
+
+**Réserve sur cette page.** Ce que `nos-voitures.html` affiche ne vient pas de son fichier. Son `h1` dit « NOS VOITURES » dans le HTML et « TRACK-DAYS & STAGES » à l'écran, et son image de hero n'est aucune des deux valeurs du fichier. Le contenu est servi par Supabase au chargement, son cache local étant vide. Les corrections ci-dessus sont donc dans la source seulement. Elles comptent le jour où la base est remise à plat, ce que Yoan a envisagé, mais elles ne changent pas ce qu'un visiteur voit aujourd'hui.
 
 **Mesuré désormais à chaque session** par `outil-dev/audit/regles/images.js`, qui compare les empreintes et non les noms. Il signale aussi 14 fichiers jamais employés.
 

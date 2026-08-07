@@ -58,7 +58,12 @@ module.exports = {
 
     // Ou chaque image est-elle employee ? Une image en double dont une seule
     // copie sert n'a pas la meme gravite qu'une paire employee des deux cotes.
-    const corpus = ctx.pages.map(p => p.html).join('\n') + '\n' + ctx.js.map(j => j.source).join('\n')
+    // L'audit s'exclut de son propre corpus. Les commentaires de CE fichier
+    // citent les noms de fichiers en exemple : sans cette exclusion, la regle
+    // se compte elle-meme et declare employe un nom que plus aucune page
+    // n'utilise. Troisieme piege du LISEZMOI, refait le jour meme.
+    const corpus = ctx.pages.map(p => p.visible).join("\n") + "\n"
+      + ctx.js.filter(j => !j.chemin.startsWith('outil-dev/audit/')).map(j => j.source).join('\n')
     const employee = f => corpus.includes(path.basename(f))
 
     // Pages qui affichent une image donnee. Le champ « ou » doit designer une
@@ -66,7 +71,7 @@ module.exports = {
     // dans le perimetre ou dehors. Pointer l'image rangeait le defaut hors
     // perimetre, donc masque par defaut, alors qu'il touche l'accueil et
     // l'Academie. Meme piege que dans la regle « renommages ».
-    const pagesQuiEmploient = f => ctx.pages.filter(p => p.html.includes(path.basename(f))).map(p => p.chemin)
+    const pagesQuiEmploient = f => ctx.pages.filter(p => p.visible.includes(path.basename(f))).map(p => p.chemin)
 
     let paires = 0
     for (const [, memes] of parEmpreinte) {
@@ -87,13 +92,32 @@ module.exports = {
       })
     }
 
+    // L'inverse : une image reclamee qui n'existe pas. La regle « liens » ne
+    // regarde que le HTML, or track-render.js choisit sa photo dans du code.
+    // Trois chemins y pointaient dans le vide le 7 aout, dont l'image de repli,
+    // celle que renvoie tout type d'evenement non reconnu. Personne ne l'avait
+    // vu parce qu'il faut une date au bon type pour l'afficher.
+    const present = new Set(fichiers.map(f => f.replace(/\\/g, '/')))
+    let manquantes = 0
+    for (const j of ctx.js) {
+      for (const m of j.code.matchAll(/['"`](assets\/images\/[^'"`]+?\.(?:jpg|jpeg|png|webp|gif|mp4))['"`]/gi)) {
+        if (present.has(m[1])) continue
+        manquantes++
+        anomalies.push({
+          niveau: 'faute',
+          ou: j.chemin,
+          quoi: `reclame « ${m[1]} », qui n'existe pas : l'image sera cassee a l'ecran`,
+        })
+      }
+    }
+
     // Images presentes mais employees nulle part. Simple signal : une photo en
     // reserve n'est pas un defaut, mais 129 Mo de medias meritent d'etre connus.
     const inutilisees = fichiers.filter(f => !employee(f))
 
     return {
       anomalies,
-      resume: `${fichiers.length} fichiers, ${paires} doublon(s) de contenu, ${inutilisees.length} jamais employe(s)`,
+      resume: `${fichiers.length} fichiers, ${paires} doublon(s) de contenu, ${manquantes} reclamee(s) sans exister, ${inutilisees.length} jamais employe(s)`,
     }
   },
 }

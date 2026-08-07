@@ -311,14 +311,6 @@ img{display:block;max-width:100%}
   font-size:14px;line-height:1.8;color:var(--ink-soft);
   margin-bottom:18px;
 }
-.etape-prix{
-  font-size:14px;line-height:1.7;color:var(--ink-soft);
-  margin-top:8px;
-}
-.etape-prix strong{
-  font-family:'Bebas Neue',sans-serif;font-size:22px;
-  color:var(--accent);font-weight:400;letter-spacing:.5px;
-}
 
 /* ══ NIVEAUX : fiche FFSA ══════════════════════════ */
 .niveaux{

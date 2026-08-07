@@ -99,7 +99,6 @@ a{text-decoration:none;color:inherit}
 .btn{display:inline-flex;align-items:center;gap:7px;font-family:'DM Mono';font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:13px 24px;border-radius:8px;font-weight:500;transition:all .2s;white-space:nowrap}
 
 /* ══ FOOTER UNIFIÉ ══ */
-@media(min-width:640px){ }
 
   /* ── Variables locales ── */
   .sessions-root {

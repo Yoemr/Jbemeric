@@ -96,7 +96,6 @@ a{text-decoration:none;color:inherit}
 .btn-y{background:var(--Y);color:var(--ink)}.btn-y:hover{background:var(--Yd);transform:translateY(-2px)}
 .btn-g{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.22)}.btn-g:hover{background:rgba(255,255,255,.2)}
 /* Tags, charte contraste : blanc sur noir / jaune sur bleu */
-.ov-sec .ov-tag{border-color:rgba(255,255,255,.22);color:#fff;background:rgba(255,255,255,.1)}
 
 .ov-cards { display:grid; gap:2px; grid-template-columns:repeat(3,1fr) }
 .ov-cards-3 { grid-template-columns:repeat(3,1fr) }
@@ -304,11 +303,6 @@ a{text-decoration:none;color:inherit}
 /* ════ COACHING : panels plein écran ════════════════ */
 .snap-section#section-coaching { background: #040a1e }
 
-.snap-content .idx-coaching-panels {
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
 .snap-content .offer-card {
   height: 100%;
   min-height: 0;

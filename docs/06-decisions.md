@@ -6,6 +6,32 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 7 août 2026, le CSS mort
+
+### D-035, 856 lignes de CSS mort retirées, et l'outil qui l'a fait
+
+Sept feuilles allégées : `palmares.css` de 53 à 40 Ko, `index.css` de 43 à 28, `paddock.css` de 46 à 24, `coaching.css` de 29 à 20, plus `academie.css`, `karting.css`, `nav.css` et les onze media queries vides.
+
+**L'outil est versionné**, `outil-dev/nettoyer-css.js`. Sans `--ecrire` il ne touche à rien.
+
+**Ce qu'il refuse de faire, volontairement.** Il ne retire qu'une règle de premier niveau dont **tous** les sélecteurs sont morts. Jamais une règle mixte, jamais quoi que ce soit dans un `@media`. Le but est une transformation dont l'innocuité se démontre, pas un nettoyage maximal. Ce qui survit à cette prudence, une cinquantaine de sélecteurs, reste signalé par l'audit et se traitera à la main.
+
+### D-036, Le critère « ce sélecteur est-il vivant » n'est écrit qu'une fois
+
+`outil-dev/audit/vocabulaire.js`. La règle d'audit et l'outil de nettoyage s'en servent tous les deux.
+
+**Raison, et elle n'est pas théorique.** J'avais d'abord écrit le critère deux fois. Deux copies finissent par diverger, et le jour où elles divergent, l'outil supprime ce que la règle croit vivant. Le projet connaît déjà cette panne exacte : c'est pour ça que la règle `renommages` existe, elle vérifie que deux tables d'alias restent identiques.
+
+### D-037, Une page rendue en JavaScript ne se vérifie pas au pixel
+
+`palmares.html` a donné **trois empreintes différentes en trois exécutions sans aucune modification**. Toute comparaison d'images y est sans valeur.
+
+La preuve utilisée à la place est déterministe : chercher chaque classe des règles retirées dans le HTML de la page et dans tous les scripts qu'elle charge. Zéro occurrence sur 51 classes, donc aucun élément ne peut les porter, donc la suppression ne peut rien changer.
+
+**Un piège dans ma propre vérification, à retenir.** Ma première extraction des scripts s'écrivait `src="([^"?]+)"`, pour couper le `?v=21`. Couper la query dans la classe de caractères fait rater la balise entière : `palmares.js` et cinq autres fichiers n'étaient pas lus, et la vérification a répondu « aucune classe présente » sans avoir ouvert le fichier qui les contient toutes. La query se coupe **après** la capture. Corrigé aussi dans l'audit, où le même motif dormait.
+
+---
+
 ## 7 août 2026, nettoyage et instruments
 
 ### D-033, Le bloc Challenge de `competition.css` est supprimé

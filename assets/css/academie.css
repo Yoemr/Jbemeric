@@ -136,20 +136,6 @@ body { background: var(--bg-base) }
 /* ═══════════════════════════════════════════════════════
    ACCROCHE : Intro post-hero fond blanc
    ═══════════════════════════════════════════════════════ */
-.accroche {
-  background: #fff;
-  padding: clamp(48px,6.5vw,88px) clamp(20px,5vw,72px);
-  border-left: 5px solid #FFCF00;
-}
-.ac-title {
-  font-family: 'Bebas Neue'; font-size: clamp(30px,4.5vw,56px);
-  color: #040a1e; line-height: .95; max-width: 720px; margin-bottom: 22px;
-}
-.ac-title em { font-style: normal; color: #0A3D91; display: block }
-.ac-body {
-  font-size: clamp(15px,1.6vw,17px); color: rgba(4,10,30,.52);
-  line-height: 1.82; max-width: 560px;
-}
 
 
 /* ═══════════════════════════════════════════════════════
@@ -270,17 +256,6 @@ body { background: var(--bg-base) }
     border-image: linear-gradient(180deg,#F5D061,#C8860A) 1;
   }
 }
-.palm-row { display: flex; align-items: baseline; gap: 16px; padding: 13px 0; border-top: 1px solid rgba(4,10,30,.08) }
-.palm-row:last-child { border-bottom: 1px solid rgba(4,10,30,.08) }
-.palm-yr {
-  font-family: 'Bebas Neue'; font-size: 18px;
-  background: linear-gradient(135deg,#F5D061,#C8860A);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text; line-height: 1; min-width: 52px; flex-shrink: 0;
-}
-.palm-info { display: flex; flex-direction: column; gap: 2px }
-.palm-name { font-size: 13px; font-weight: 600; color: #040a1e; display: block }
-.palm-detail { font-size: 12px; color: rgba(4,10,30,.45) }
 
 /* ═══════════════════════════════════════════════════════
    PARCOURS : Timeline 5 étapes
@@ -572,25 +547,6 @@ body { background: var(--bg-base) }
 /* ═══════════════════════════════════════════════════════
    BOUTIQUE CTA
    ═══════════════════════════════════════════════════════ */
-.shop-cta {
-  background: linear-gradient(135deg,#040a1e 0%,#0A3D91 100%);
-  padding: clamp(28px,4vw,44px) clamp(20px,5vw,72px);
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 16px;
-}
-.shop-kicker {
-  font-family: 'DM Mono'; font-size: 8px; letter-spacing: 3px;
-  text-transform: uppercase; color: rgba(255,207,0,.6); margin-bottom: 6px;
-}
-.shop-title { font-family: 'Bebas Neue'; font-size: clamp(20px,3.5vw,34px); color: #fff; line-height: .95 }
-.shop-body { font-family: 'DM Mono'; font-size: 10px; color: rgba(255,255,255,.45); margin-top: 6px; line-height: 1.6 }
-.shop-btn {
-  padding: 13px 26px; background: #FFCF00; color: #000;
-  font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
-  text-transform: uppercase; font-weight: 700; text-decoration: none;
-  border-radius: 6px; white-space: nowrap; transition: background .15s; flex-shrink: 0;
-}
-.shop-btn:hover { background: #C8A000 }
 
 /* ═══════════════════════════════════════════════════════
    SECTION VIDÉOS YOUTUBE

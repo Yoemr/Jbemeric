@@ -131,6 +131,17 @@ function construire() {
   }
   classesJs.balises = balisesJs
 
+  // Et pour les identifiants, meme famille de piege, refermee avant qu'elle ne
+  // serve : une page rendue en JavaScript n'a aucun de ses id dans son HTML.
+  // Une regle en #quelque-chose y passerait pour morte. Aucun cas reel au
+  // 7 aout, mais c'est la troisieme fois que ce trou coute cher.
+  const idsJs = new Set()
+  for (const f of js) {
+    for (const m of f.source.matchAll(/\bid=\\?["']([a-zA-Z][\w-]*)/g)) idsJs.add(m[1])
+    for (const m of f.source.matchAll(/getElementById\(\s*['"]([a-zA-Z][\w-]*)['"]/g)) idsJs.add(m[1])
+  }
+  classesJs.ids = idsJs
+
   // Chemins declares par routes.js, source de verite des URLs construites en JS.
   const routes = {}
   const fichierRoutes = js.find(f => f.chemin.endsWith('routes.js'))

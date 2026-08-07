@@ -21,11 +21,9 @@ a{text-decoration:none;color:inherit}
 img{display:block;max-width:100%}
 
 /* HERO : plein écran, photo fond, biais couleur à droite */
-.hero{position:relative;min-height:calc(100svh - 56px);display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
 
 /* CORPS : fond dominant clair, bandes alternées */
 /* bande légère : fond dominant de la page */
-.band{padding:clamp(48px,6vw,88px) clamp(20px,5vw,72px)}
 .btn{display:inline-flex;align-items:center;font-family:'DM Mono';font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:14px 22px;border-radius:8px;font-weight:500;transition:all .2s}
 .btn:hover{transform:translateY(-2px)}
 .btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}.btn-ghost:hover{background:rgba(255,255,255,.14)}
@@ -51,16 +49,6 @@ img{display:block;max-width:100%}
 body { background: var(--night) }
 
 /* ── BARRE COCKPIT ── sous le hero, style HUD ───────── */
-.hud-bar {
-  background: var(--night2);
-  border-top: 1px solid var(--sep);
-  border-bottom: 1px solid var(--sep);
-  padding: 0 clamp(20px,5vw,72px);
-  display: flex;
-  align-items: stretch;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
 
 /* ── SPLIT SCREEN ───────────────────────────────────── */
 
@@ -342,7 +330,6 @@ body { background: var(--night) }
 .ev-badge { font-family:'DM Mono'; font-size:7.5px; letter-spacing:1.5px; text-transform:uppercase; padding:3px 10px; border-radius:20px; white-space:nowrap }
 
 /* ── Footer ── */
-@media(min-width:640px) { }
 
 /* ════════════════════════════════════════════
    BIBLIOTHÈQUE TECHNIQUE

@@ -78,24 +78,25 @@ Comptage des occurrences dans `assets/css/` :
 
 ### État réel des fichiers
 
-21 fichiers CSS. Les plus lourds :
+16 fichiers CSS. Les plus lourds, après le nettoyage du 7 août :
 
-| Fichier | Poids | Remarque |
-|---|---|---|
-| `palmares.css` | 53 Ko | Pour une page de 8 Ko rendue en JS. Disproportion à examiner. |
-| `paddock.css` | 46 Ko | Sert aussi `articles.html` et `article.html` |
-| `index.css` | 43 Ko | |
-| **`pages.css`** | **30 Ko** | **Chargé par zéro page sur 18.** Mort. |
-| `coaching.css` | 29 Ko | |
-| `academie.css` | 29 Ko | |
-| `track.css` | 24 Ko | |
-| **`challenge.css`** | **24 Ko** | **Mort.** Le Challenge n'existe plus. |
+| Fichier | Poids | Avant | Remarque |
+|---|---|---|---|
+| `palmares.css` | 40 Ko | 53 Ko | Page rendue en JS. Ne se vérifie pas au pixel, voir `docs/03` 6bis. |
+| `index.css` | 28 Ko | 43 Ko | Reçoit du balisage aspiré depuis l'Académie et le Coaching. |
+| `academie.css` | 27 Ko | 29 Ko | |
+| `paddock.css` | 24 Ko | 46 Ko | Sert aussi `articles.html` et `article.html` |
+| `coaching.css` | 20 Ko | 29 Ko | |
+| `track.css` | 19 Ko | 24 Ko | |
+| `karting.css` | 17 Ko | | Sert `karting-adulte.html` et `karting-enfant.html` |
+| `competition.css` | 14 Ko | | |
+| `nav.css` | 11 Ko | | Autorité unique de la nav et du pied de page |
 
-**Orphelins confirmés**, chargés par aucune page : `adulte.css`, `challenge.css`, `coming-soon.css`, `pages.css`, `sections-contact.css`.
+`pages.css` et `challenge.css`, décrits ici comme morts, ont été supprimés. Il ne reste aucun orphelin : l'audit signale en faute toute feuille que plus aucune page ne charge.
 
 > `pages.css` était décrit dans l'ancien MEMOIRE comme le pilier de l'architecture CSS, « les règles communes à plusieurs pages ». La convention documentée n'a jamais été appliquée. C'est le meilleur exemple de l'écart entre la documentation d'avril et le code réel.
 
-**Aucune suppression sans validation individuelle de Yoan.**
+**Aucune suppression de fichier sans validation individuelle de Yoan.** Retirer une règle morte à l'intérieur d'un fichier ne relève pas de cette règle : `node outil-dev/nettoyer-css.js <feuille>` le fait, et ne touche qu'aux règles dont tous les sélecteurs sont morts.
 
 ---
 

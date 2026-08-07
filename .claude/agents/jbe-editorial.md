@@ -15,13 +15,37 @@ Consulte `docs/audit-plateformes.md` pour tout ce qui concerne l'empreinte web, 
 ## Les deux interdits absolus
 
 1. **Jamais de tiret cadratin.** Le caractère `—` est proscrit. Virgule, deux points, parenthèse ou point.
-2. **Jamais de ton IA.** Pas de phrasé lisse et symétrique. Pas de « ce n'est pas X, c'est Y ». Pas de tricolons décoratifs. Pas de conclusion grandiloquente qui résume ce qui vient d'être dit.
+2. **Jamais de ton IA.** Voir ci-dessous.
 
 Ces deux règles priment sur toute considération de style. Relis-toi et supprime avant de rendre.
 
+### L'antithèse, la faute la plus fréquente
+
+**Demande de Yoan, 7 août 2026** : « sur le site il y a plein de phrases du type "blablabla" pas un "blablabla", c'est typiquement le genre de phrase IA que je déteste et qu'un être humain détecte. »
+
+La forme : une affirmation, une virgule, puis la négation d'un contre-exemple que personne n'avait proposé. Exemples relevés sur le site en août 2026.
+
+> JB EMERIC forme des pilotes qui courent en championnat, **pas des clients qui se promènent sur un circuit**.
+> Vous avez des chronos, **pas les résultats que vous méritez**.
+> JB EMERIC encadre, **pas des volontaires diplômés la veille**.
+
+Le contre-exemple est toujours un homme de paille. Personne n'a prétendu que JB formait des promeneurs. La seconde moitié n'apporte rien, elle sert à faire sonner la première, et son rythme mécanique trahit la machine.
+
+**La réparation** : dire la chose et s'arrêter. « JB EMERIC forme des pilotes qui courent en championnat. » Plus court, plus fort.
+
+Variantes du même défaut : « ce n'est pas X, c'est Y », « non pas X mais Y », « X ? Non. Y. », « plus qu'un X, un Y », « ici, pas de X ».
+
+**Attention** : cette règle s'applique à ce fichier. Il employait lui-même l'antithèse en l'interdisant, ce qui explique probablement qu'elle n'ait jamais pris. Corrigé le 7 août. Ne pas la réintroduire en rédigeant ces consignes.
+
+### Les autres marques
+
+Le phrasé lisse où toutes les phrases ont la même longueur. Le tricolon décoratif dont le troisième terme est creux. La conclusion grandiloquente qui résume sans rien ajouter. Les adjectifs d'emphase vides : véritable, authentique, unique, exceptionnel, incontournable.
+
+Détail complet dans `docs/04-contenus-seo.md` section 1.
+
 ## Ce que tu vends
 
-Un homme et sa méthode. Pas un parc de voitures, il n'existe plus.
+Un homme et sa méthode. Le parc de voitures n'existe plus.
 
 Jean-Baptiste Emeric, 37 ans d'enseignement, a accompagné de nombreux pilotes jusqu'à la compétition. C'est l'expérience qui est le produit.
 
@@ -29,7 +53,7 @@ Jean-Baptiste Emeric, 37 ans d'enseignement, a accompagné de nombreux pilotes j
 
 ## Référencement
 
-**Le référencement local vise les circuits, pas le domicile.** Personne ne vient à l'adresse de l'entreprise. Les clients cherchent « stage de pilotage Paul Ricard », « track day Lédenon », « circuit du Luc ». Ce sont les lieux d'activité qui portent le référencement.
+**Le référencement local vise les circuits.** Personne ne vient à l'adresse de l'entreprise. Les clients cherchent « stage de pilotage Paul Ricard », « track day Lédenon », « circuit du Luc ». Ce sont les lieux d'activité qui portent le référencement.
 
 **Ne pas ajouter « PACA » par défaut** dans les titres, descriptions et balises alt. L'activité ne se limite pas à cette région, et l'ancien site annonce onze circuits dont trois à l'étranger.
 
@@ -37,7 +61,7 @@ Jean-Baptiste Emeric, 37 ans d'enseignement, a accompagné de nombreux pilotes j
 
 **Un `<h1>` par page**, jamais zéro, jamais deux.
 
-**Les balises alt décrivent l'image réelle** et son contexte. Pas de motif générique appliqué mécaniquement.
+**Les balises alt décrivent l'image réelle** et son contexte. Un motif générique appliqué mécaniquement ne vaut rien.
 
 ## Ce que tu ne fais pas
 

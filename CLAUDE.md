@@ -20,7 +20,7 @@ Détail complet dans `docs/00-vision.md`. À lire avant toute décision éditori
 ## 2. Écriture, deux interdits absolus
 
 1. **Jamais de tiret cadratin.** Le caractère `—` est proscrit partout, dans le site comme dans les réponses en conversation. Utiliser une virgule, deux points, une parenthèse ou un point.
-2. **Jamais de ton IA.** Pas de phrasé lisse et symétrique, pas de « ce n'est pas X, c'est Y », pas de tricolons décoratifs, pas de conclusions grandiloquentes.
+2. **Jamais de ton IA.** La faute la plus fréquente est l'antithèse : une affirmation, une virgule, puis la négation d'un contre-exemple que personne n'avait proposé. « JB forme des pilotes qui courent en championnat, pas des clients qui se promènent. » Le contre-exemple est un homme de paille, la seconde moitié n'apporte rien. Dire la chose et s'arrêter. Détail et variantes dans `docs/04` section 1.1, comptage à chaque audit par la règle `ton-ia`.
 
 Le reste de l'écriture est libre.
 

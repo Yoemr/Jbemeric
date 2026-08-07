@@ -188,7 +188,9 @@ Sa fonction principale est donc le **tri** : parmi des centaines de dates, lesqu
 4. **Le parcours d'achat par mode**, quand le site encaisse et quand il oriente ailleurs.
 5. **Les frais de déplacement**, comment ils entrent dans la décision et s'ils apparaissent dans le prix.
 6. **Le sort de `paddock/nos-voitures.html`**, morte aujourd'hui.
-7. **Question posée le 7 août et restée sans réponse** : est-ce que JB lui-même est une entrée du site, au même rang que la progression et les événements ? Aujourd'hui il n'a aucune page à lui, et son palmarès est au troisième niveau sous Paddock, alors que la vision dit qu'on vend un homme et sa méthode.
+7. ~~Est-ce que JB lui-même est une entrée du site ?~~ **Tranché le 7 août par Yoan** : « on peut faire une page JB et on pourrait y mettre le palmarès dedans ». Reste à décider si elle occupe une entrée de menu ou si elle est seulement atteignable depuis l'accueil, le pied de page et les endroits où sa crédibilité est l'argument. Chantier séparé.
+
+**Constat relevé au passage** : l'histoire de JB est aujourd'hui racontée six fois, trente-huit mentions de 1988, du titre ou des 40 ans, réparties sur l'accueil, l'Académie, le Coaching, le karting adulte, Paddock et le palmarès. C'est le principe scalable violé sur le contenu. Une page JB serait l'endroit où cela s'écrit une fois, vers lequel les autres pointent.
 
 ---
 

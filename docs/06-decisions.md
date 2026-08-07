@@ -6,6 +6,42 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 7 août 2026, l'écriture et la page JB
+
+### D-046, L'antithèse est nommée, illustrée, et comptée
+
+**Demande de Yoan** : « sur le site il y a plein de phrases du type "blablabla" pas un "blablabla", c'est typiquement le genre de phrase IA que je déteste et qu'un être humain détecte. »
+
+L'interdit existait depuis le 1er août, en une ligne : « pas de ce n'est pas X, c'est Y ». Il n'a pas pris. Trois raisons, et la troisième est la plus gênante.
+
+1. **Il était abstrait.** Aucun exemple, donc rien à reconnaître.
+2. **Il ne nommait qu'une variante sur cinq.** La forme dominante sur le site est « affirmation, virgule, négation d'un contre-exemple », qui n'était pas décrite.
+3. **Les fichiers de consignes employaient eux-mêmes la tournure en l'interdisant.** Six occurrences dans `docs/04-contenus-seo.md` et `.claude/agents/jbe-editorial.md`. La consigne enseignait par l'exemple le contraire de ce qu'elle demandait.
+
+**Ce qui change.** `docs/04` section 1.1 décrit la forme, donne cinq exemples pris sur le site, explique pourquoi un humain la détecte, et donne la réparation. Le contre-exemple est toujours un homme de paille : personne n'a jamais prétendu que JB formait des promeneurs. La seconde moitié n'apporte rien, elle sert à faire sonner la première. La réparation tient en trois mots : dire et s'arrêter.
+
+Les six occurrences dans les consignes sont corrigées.
+
+### D-047, Une règle d'audit compte les tournures
+
+`outil-dev/audit/regles/ton-ia.js`. Six tournures dans le périmètre au 7 août, sur l'accueil, l'Académie, le Coaching et la Compétition.
+
+**Toujours un signal, jamais une faute.** Le français emploie « pas » à longueur de phrase pour de bonnes raisons. Seul un humain sait si le contre-exemple est un homme de paille ou une précision utile.
+
+**Elle surveille aussi les consignes**, puisque c'est là que le défaut s'était installé. Avec une exception : un exemple cité entre guillemets pour montrer le défaut n'est pas le défaut, sinon la règle signale la documentation qui la décrit.
+
+**Les textes du site ne sont pas corrigés**, Yoan a demandé qu'on ne touche plus au contenu avant d'avoir validé la structure. Le comptage attend.
+
+### D-048, JB aura sa page, et le palmarès ira dedans
+
+**Décision de Yoan** : « on peut faire une page JB et on pourrait y mettre le palmarès dedans ».
+
+**Ce qui l'a motivée.** Son histoire est aujourd'hui racontée six fois : trente-huit mentions de 1988, du titre de Champion de France ou des quarante ans, réparties sur l'accueil, l'Académie, le Coaching, le karting adulte, Paddock et le palmarès. C'est le principe scalable violé sur le contenu.
+
+**Reste ouvert** : est-ce que cette page occupe une entrée de menu, ou est-elle seulement atteignable depuis l'accueil, le pied de page et les endroits où la crédibilité de JB est l'argument ? Le menu dit ce qu'on vend, et lui n'est pas un produit, il est la raison d'acheter.
+
+---
+
 ## 7 août 2026, est-ce que le site fonctionne
 
 ### D-044, Un outil dit si les pages tournent, pas seulement si elles sont bien écrites

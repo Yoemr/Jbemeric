@@ -12,6 +12,21 @@
 // Precaution majeure sur les selecteurs morts : les classes fabriquees par le
 // JavaScript comptent comme presentes. Sans cela, l'audit conseillerait de
 // supprimer le style du calendrier de track.html, construit par track-render.js.
+//
+// Deuxieme precaution, du meme genre mais plus vicieuse, trouvee le 7 aout.
+// index.html ne contient presque rien : sync-mirror.js va chercher des sections
+// entieres dans academie.html et coaching.html et les lui injecte. Les classes
+// de ce balisage n'apparaissent ni dans index.html, ni en clair dans le script,
+// puisqu'elles voyagent dans un innerHTML.
+//
+// Resultat avant correction : 114 selecteurs d'index.css sur 286 declares morts,
+// soit 40 %, alors qu'ils habillent la page d'accueil. Suivre ce conseil aurait
+// depouille le haut de l'entonnoir.
+//
+// D'ou la notion de page aspiree : si une page charge un script qui va chercher
+// une autre page en .html, elle herite du vocabulaire de cette page. C'est
+// deduit du code, pas d'une liste ecrite a la main, donc un futur miroir sera
+// pris en compte tout seul.
 
 function selecteursDe(code) {
   const aplati = code.replace(/@media[^{]*\{/g, '')
@@ -25,17 +40,36 @@ function selecteursDe(code) {
   return sortie
 }
 
-function peutCorrespondre(sel, classes, ids, balises) {
+function peutCorrespondre(sel, classes, ids, balises, prefixes) {
   if (sel.startsWith(':root') || sel.startsWith('*') || /^[\d.]+%$/.test(sel) || sel === 'from' || sel === 'to') return true
   const cls = [...sel.matchAll(/\.([A-Za-z_][\w-]*)/g)].map(m => m[1])
   const idz = [...sel.matchAll(/#([A-Za-z_][\w-]*)/g)].map(m => m[1])
-  if (cls.length && !cls.every(c => classes.has(c))) return false
+  const connue = c => classes.has(c) || [...prefixes].some(p => c.startsWith(p))
+  if (cls.length && !cls.every(connue)) return false
   if (idz.length && !idz.every(i => ids.has(i))) return false
   if (!cls.length && !idz.length) {
     const base = (sel.match(/^([a-zA-Z][a-zA-Z0-9]*)/) || [])[1]
     if (base && !balises.has(base.toLowerCase())) return false
   }
   return true
+}
+
+// Pages dont le balisage peut atterrir dans « page » a l'execution, parce
+// qu'un de ses scripts va les chercher. On lit f.code, sans les commentaires :
+// un « Chargé par academie.html » en commentaire ne prouve rien.
+function pagesAspirees(page, ctx) {
+  const sources = [...page.utile.matchAll(/<script[^>]*\ssrc="([^"?]+)"/g)].map(m => m[1].replace(/^\.?\//, ''))
+  const trouvees = new Set()
+  for (const src of sources) {
+    const script = ctx.js.find(j => j.chemin === src || j.chemin.endsWith('/' + src))
+    if (!script) continue
+    for (const m of script.code.matchAll(/fetch\w*\(\s*['"]([^'"]+\.html)['"]/g)) {
+      const cible = m[1].replace(/^\.?\//, '')
+      const p = ctx.pages.find(x => x.chemin === cible || x.chemin.endsWith('/' + cible))
+      if (p && p !== page) trouvees.add(p)
+    }
+  }
+  return [...trouvees]
 }
 
 module.exports = {
@@ -74,14 +108,17 @@ module.exports = {
         continue
       }
       const classes = new Set(ctx.classesJs)
-      const ids = new Set(), balises = new Set()
+      const ids = new Set(), balises = new Set(ctx.classesJs.balises || [])
       for (const p of consommatrices) {
-        p.classes.forEach(c => classes.add(c))
-        p.ids.forEach(i => ids.add(i))
-        p.balises.forEach(b => balises.add(b))
+        for (const source of [p, ...pagesAspirees(p, ctx)]) {
+          source.classes.forEach(c => classes.add(c))
+          source.ids.forEach(i => ids.add(i))
+          source.balises.forEach(b => balises.add(b))
+        }
       }
+      const prefixes = ctx.classesJs.prefixes || new Set()
       const sels = selecteursDe(f.code)
-      const morts = sels.filter(s => !peutCorrespondre(s, classes, ids, balises))
+      const morts = sels.filter(s => !peutCorrespondre(s, classes, ids, balises, prefixes))
       if (morts.length) {
         const part = Math.round((100 * morts.length) / sels.length)
         anomalies.push({

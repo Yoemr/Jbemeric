@@ -75,7 +75,7 @@ Il est chargé automatiquement, l'ordre alphabétique du nom de fichier fixe l'o
 | `ctx.classesJs` | les noms de classes que les scripts savent fabriquer |
 | `ctx.routes` | les chemins déclarés par `routes.js` |
 
-## Cinq pièges, tous rencontrés pour de vrai
+## Sept pièges, tous rencontrés pour de vrai
 
 **Le contenu construit en JavaScript.** Les classes du calendrier de `track.html` n'existent dans aucun fichier HTML, elles sont fabriquées par `track-render.js`. Une règle qui ne regarde que le HTML les déclare mortes et conseille de supprimer un style indispensable. D'où `ctx.classesJs`.
 
@@ -87,7 +87,13 @@ Il est chargé automatiquement, l'ordre alphabétique du nom de fichier fixe l'o
 
 **La propriété CSS cherchée sans son sélecteur.** La règle `defilement` cherchait `scroll-snap-type` n'importe où. `palmares.css` le déclare sur un carrousel interne et passe avant `snap.css` dans l'ordre alphabétique : la règle a donc inspecté `palmares.html` et annoncé « aucune faute » sur des pages qu'elle n'avait jamais lues. Vérifier sur quel sélecteur la propriété est posée, et passer par `ctx.pages[].feuilles` pour savoir qui charge quoi.
 
-> **Une règle qui ne dit jamais rien est indiscernable d'une règle correcte.** Avant de la garder, fabriquer un témoin qui porte le défaut, vérifier qu'elle le signale, puis supprimer le témoin. C'est ce qui a démasqué le piège ci-dessus.
+**Le balisage qui vient d'une autre page.** `index.html` ne contient presque rien : `sync-mirror.js` va chercher des sections entières dans `academie.html` et `coaching.html` et les lui injecte. Ces classes n'apparaissent ni dans `index.html`, ni en clair dans le script, puisqu'elles voyagent dans un `innerHTML`. L'audit déclarait donc morts **114 sélecteurs d'`index.css` sur 286** qui habillent la page d'accueil. Une page qui charge un script allant chercher une autre page en `.html` hérite de son vocabulaire, déduit du code et non d'une liste écrite à la main.
+
+**La classe fabriquée par concaténation.** `palmares.js` écrit `class="pal-year pal-year--heavy' + (isHL ? ' pal-year--highlight' : '')`. Ne lire que le préfixe littéral rate tout ce qui suit : **107 sélecteurs de `palmares.css` sur 332** déclarés morts pour cette seule raison. Même chose pour les balises, `palmares.html` ne contient aucun `<a>` écrit à la main. `ctx.classesJs` lit donc une fenêtre après chaque `class=`, retient les préfixes qui finissent par un tiret, et `ctx.classesJs.balises` collecte les balises fabriquées.
+
+> **Une règle qui ne dit jamais rien est indiscernable d'une règle correcte.** Avant de la garder, fabriquer un témoin qui porte le défaut, vérifier qu'elle le signale, puis supprimer le témoin.
+
+> **Se tromper du bon côté.** Une règle dont l'action est « supprime ce CSS » doit préférer garder un style inutile plutôt qu'en supprimer un vivant. Quelques lignes mortes coûtent moins qu'une page cassée. C'est pourquoi la capture des classes JavaScript sur-approxime volontairement.
 
 ## Ce que l'outil ne sait pas faire
 

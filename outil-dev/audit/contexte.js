@@ -78,15 +78,58 @@ function construire() {
 
   // Classes que les scripts savent fabriquer. Indispensable : sans elles, une
   // regle declarerait morts des styles qui servent a du contenu injecte.
+  //
+  // Piege trouve le 7 aout : ne lire que le prefixe litteral de class=" ne
+  // suffit pas. palmares.js ecrit
+  //
+  //   'class="pal-year pal-year--heavy' + (isHL ? ' pal-year--highlight' : '')
+  //
+  // et « pal-year--highlight » echappait a la capture. 107 selecteurs de
+  // palmares.css sur 332 etaient declares morts pour cette seule raison.
+  //
+  // On lit donc aussi les chaines qui suivent immediatement un class=, dans une
+  // fenetre courte, et on ne garde que celles qui ressemblent a une liste de
+  // classes. La regle se trompe alors du bon cote : retenir un style inutile
+  // coute quelques lignes, en supprimer un vivant casse une page.
+  const FENETRE = 220
+  const RESSEMBLE_A_DES_CLASSES = /^[\s]*[a-zA-Z][\w-]*(?:\s+[a-zA-Z][\w-]*)*[\s]*$/
   const classesJs = new Set()
+  const prefixesJs = new Set()   // « pal-packed-grid-- » suivi d'un nombre calcule
+
+  function retenir(brut) {
+    for (const c of brut.split(/\s+/).filter(Boolean)) {
+      if (c.endsWith('-')) prefixesJs.add(c)
+      else classesJs.add(c)
+    }
+  }
+
   for (const f of js) {
-    for (const m of f.source.matchAll(/class=\\?["']([a-zA-Z][a-zA-Z0-9 _-]*)/g)) {
-      m[1].split(/\s+/).filter(Boolean).forEach(c => classesJs.add(c))
+    for (const m of f.source.matchAll(/class=\\?["']/g)) {
+      const zone = f.source.slice(m.index, m.index + FENETRE)
+      for (const s of zone.matchAll(/["'`]([^"'`\n]*)["'`]/g)) {
+        if (RESSEMBLE_A_DES_CLASSES.test(s[1])) retenir(s[1])
+      }
+      // Le tout premier litteral colle a class=" n'est pas entoure de deux
+      // quotes dans la fenetre, il se lit a part.
+      const direct = zone.match(/^class=\\?["']([a-zA-Z][\w -]*)/)
+      if (direct) retenir(direct[1])
     }
     for (const m of f.source.matchAll(/classList\.(?:add|toggle|remove)\(\s*'([a-zA-Z][\w-]*)'/g)) {
       classesJs.add(m[1])
     }
   }
+  // Une classe construite par concatenation, « pal-packed-grid--' + n », laisse
+  // un prefixe. Tout selecteur qui commence par lui est considere vivant.
+  classesJs.prefixes = prefixesJs
+
+  // Meme raison pour les balises. palmares.html ne contient aucun <a> ecrit a
+  // la main, tout son contenu est fabrique par palmares.js. Sans ceci, le
+  // selecteur « a » de palmares.css passait pour mort.
+  const balisesJs = new Set()
+  for (const f of js) {
+    for (const m of f.source.matchAll(/<([a-zA-Z][a-zA-Z0-9]*)[\s>]/g)) balisesJs.add(m[1].toLowerCase())
+  }
+  classesJs.balises = balisesJs
 
   // Chemins declares par routes.js, source de verite des URLs construites en JS.
   const routes = {}

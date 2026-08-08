@@ -470,7 +470,7 @@ La page se sabordé au chargement et renvoie sur `track.html#voitures`. Ce que j
 
 **La cause.** `.hero` est en `min-height:100svh` avec `justify-content:flex-end`, donc tant que le contenu tient dans un écran il est calé en bas et tout se voit. Ici il déborde, à cause de la combinaison d'un `padding-top` de 180 pixels et d'un titre de trois lignes en `clamp(52px,9vw,128px)`. Les pages sœurs `karting-enfant` et `karting-adulte`, elles, tiennent.
 
-**Non corrigé volontairement.** Réduire le padding ou la taille du titre change l'allure d'un hero plein écran, c'est une décision de direction artistique, pas une correction. À trancher avec Yoan ou le rôle design. Deux leviers possibles, le `padding-top` de `.hero-inner` et le `9vw` du titre, dans `assets/css/competition.css`.
+**Corrigé le 8 août, et mon diagnostic était faux.** La mesure montre que les boutons étaient visibles et que seule la barre de statistiques débordait, de 56 pixels exactement. La cause : `competition.css` et `karting.css` oubliaient de soustraire la hauteur de la nav dans `min-height`. Voir D-051. J'avais estimé au lieu de mesurer, et rangé un bug en décision de direction artistique.
 
 ### 6.14 La version téléphone est cassée sur les pages Académie
 

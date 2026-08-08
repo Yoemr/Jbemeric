@@ -6,6 +6,24 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 8 août 2026, le hero qui débordait
+
+### D-051, Deux feuilles oubliaient de soustraire la hauteur de la nav
+
+`competition.css` et `karting.css` déclaraient `.hero { min-height: 100svh }`. La nav fait 56 pixels et occupe le flux au-dessus. Le hero commençait donc à 56 et s'étendait sur une hauteur d'écran entière, débordant de 56 pixels exactement, sur toute hauteur d'écran.
+
+Onze autres déclarations du site écrivent `calc(100svh - 56px)`, dont `academie.css`, `coaching.css`, `index.css`, `track.css` et `snap.css`. Ces deux-là étaient les seules à l'oublier.
+
+**Trois pages du périmètre concernées** : `academie/competition.html`, `academie/karting-adulte.html`, `academie/karting-enfant.html`.
+
+**Mesuré, pas estimé.** Avant : la barre de statistiques finissait 56 pixels sous le bas de l'écran, en 800, 900 et 1000 pixels de haut. Après : zéro débordement en 900 et 1000. En 800 il reste 35 pixels, mais là le contenu ne tient réellement pas et `min-height` joue son rôle.
+
+**Correction d'une affirmation fausse que j'avais faite le 7 août.** J'avais écrit en 6.14bis du relevé que les deux boutons d'entrée tombaient sous la ligne de flottaison, et j'avais attribué la cause au padding et à la taille du titre. La mesure dit l'inverse : les boutons étaient visibles, c'est la barre de statistiques qui débordait, et la cause n'a rien à voir avec la typographie. J'avais estimé au lieu de mesurer, et j'avais laissé le défaut en attente d'une décision de direction artistique qui n'avait pas lieu d'être. C'était un bug, pas un choix.
+
+**Vérifié sans régression.** `karting.css` porte `overflow:hidden` sur son hero, donc réduire la hauteur pouvait couper du contenu. Contrôle fait : 4 pixels de dépassement, identiques avant et après la correction, donc un arrondi préexistant et sans rapport.
+
+---
+
 ## 7 août 2026, l'écriture et la page JB
 
 ### D-046, L'antithèse est nommée, illustrée, et comptée

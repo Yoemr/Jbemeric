@@ -50,7 +50,7 @@ img{display:block;max-width:100%}
 
 /* ══ HERO ══════════════════════════════════════════════════ */
 .hero{
-  position:relative;min-height:100svh;
+  position:relative;min-height:calc(100svh - 56px);
   display:flex;flex-direction:column;
   justify-content:flex-end;overflow:hidden;
 }

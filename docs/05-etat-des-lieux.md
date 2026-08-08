@@ -560,3 +560,44 @@ Aucun de ces points ne peut avancer sans Yoan.
 - **Le bouton « je viens »**, sous sa forme allégée « dites-moi si vous venez ». Le vote a été retiré, rien n'a été mis à la place.
 - **Le nombre de circuits et d'organisateurs qui comptent vraiment**, qui décide entre saisie manuelle et collecte automatisée.
 - **La colonne `nb_votes` et la table `votes`**, plus écrites par personne. Les supprimer est irréversible.
+
+---
+
+## 8. Mise à jour du 8 août 2026, les événements réels
+
+### 8.1 Ce que la page Événements montrait vraiment
+
+Neuf dates à l'inscription, dont **six déjà passées** : 3 avril, 17 avril, 9 mai, 13 mai, 19 juin, 5 juillet. Toutes avec le badge « Inscriptions ouvertes ». La requête n'avait aucun filtre de date. Corrigé, D-067.
+
+Trois boutons sur trois auraient par ailleurs ouvert la fiche d'une autre date que celle affichée, à cause d'un rattachement par position dans deux blocs concurrents. Corrigé, D-068.
+
+### 8.2 L'état réel du calendrier de JB
+
+Sur onze lignes dans `events`, au 8 août 2026 :
+
+| | Nombre |
+|---|---|
+| Dates passées | 7 |
+| Dates à venir | 4 |
+| dont publiques | 3 |
+| dont en préparation, invisibles | 1 |
+
+Les quatre dates restantes : 29 août à Lédenon (en préparation, pas publique), 16 octobre à Brignoles, 15 novembre au Grand Sambuc, 12 décembre à Brignoles.
+
+**Aucune inscription sur aucune date.** `nb_inscrits` vaut 0 partout, et la table `inscriptions` n'a jamais reçu de ligne depuis le site.
+
+Trois circuits seulement sont employés sur les onze dates : Brignoles, Lédenon, Grand Sambuc. La table `circuits` en déclare quinze, dont Spa, Monza et Barcelone.
+
+### 8.3 Le prototype de suivi
+
+`outil-dev/prototype/evenements.html`. Hors du site, n'écrit rien, s'ouvre dans un navigateur. Montre les dates réelles et les quatre champs manquants. Voir D-069.
+
+### 8.4 Les sources de veille repérées, non consultées
+
+`trackdays.fr`, `calendrier-piste.fr`, `europatrackdays.com`, `circuitduvar.com`, `sambucdrivingacademy.fr`, `circuitpaulricard.com`, et l'ancien site `jbemeric.com/calendrier`.
+
+**Aucune n'a pu être ouverte depuis ce poste.** Rien n'a été saisi dans la base à partir d'elles. Voir D-070.
+
+### 8.5 Tout le dépôt est publié
+
+`netlify.toml` déclare `publish = "."`. `outil-dev/`, `docs/` et `old/` sont donc en ligne. `robots.txt` les écarte désormais des robots, D-071. Ils restent accessibles à qui connaît l'adresse.

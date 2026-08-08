@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Prototype · suivi des événements JB EMERIC</title>
+<style>
+  :root {
+    --fond:#0b0f1a; --carte:#111726; --bord:rgba(255,255,255,.08);
+    --texte:#e8ecf5; --gris:rgba(232,236,245,.5); --gris2:rgba(232,236,245,.32);
+    --or:#FFCF00; --vert:#22c55e; --rouge:#ef4444; --bleu:#6366f1;
+    --mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  * { box-sizing:border-box }
+  body {
+    margin:0; padding:32px 20px 80px; background:var(--fond); color:var(--texte);
+    font-family:system-ui,-apple-system,'Segoe UI',sans-serif; line-height:1.65;
+  }
+  .page { max-width:1080px; margin:0 auto }
+
+  .bandeau {
+    border:1px solid var(--or); border-left-width:4px; border-radius:6px;
+    padding:16px 20px; margin-bottom:36px; background:rgba(255,207,0,.05);
+  }
+  .bandeau strong { color:var(--or) }
+
+  h1 { font-size:26px; margin:0 0 6px; letter-spacing:-.4px }
+  h2 {
+    font-size:13px; letter-spacing:2.5px; text-transform:uppercase;
+    color:var(--gris); font-family:var(--mono); font-weight:500;
+    margin:52px 0 18px; padding-bottom:10px; border-bottom:1px solid var(--bord);
+  }
+  h3 { font-size:16px; margin:28px 0 8px }
+  p  { margin:0 0 14px; color:rgba(232,236,245,.78) }
+  .sous { color:var(--gris); font-size:14px; margin-bottom:28px }
+  code { font-family:var(--mono); font-size:12px; background:rgba(255,255,255,.06); padding:2px 6px; border-radius:3px }
+
+  /* ── Comparaison avant / apres ── */
+  .duo { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px }
+  .duo > div { border:1px solid var(--bord); border-radius:6px; padding:18px 20px; background:var(--carte) }
+  .duo .chiffre { font-size:42px; font-family:var(--mono); line-height:1.1 }
+  .duo .avant .chiffre { color:var(--rouge) }
+  .duo .apres .chiffre { color:var(--vert) }
+  .duo .quoi { font-size:12px; font-family:var(--mono); letter-spacing:1.5px; text-transform:uppercase; color:var(--gris2) }
+
+  /* ── Fiches ── */
+  .fiche {
+    border:1px solid var(--bord); border-radius:6px; background:var(--carte);
+    margin-bottom:14px; overflow:hidden;
+  }
+  .fiche.passee { opacity:.42 }
+  .fiche.cachee { border-left:3px solid var(--bleu) }
+  .fiche-tete {
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:14px;
+    padding:16px 20px; border-bottom:1px solid var(--bord);
+  }
+  .fiche-date { font-family:var(--mono); font-size:15px; color:var(--or); min-width:130px }
+  .fiche-titre { font-size:16px; font-weight:600; flex:1; min-width:200px }
+  .etiquette {
+    font-family:var(--mono); font-size:9px; letter-spacing:1.5px; text-transform:uppercase;
+    padding:4px 10px; border-radius:3px; white-space:nowrap;
+  }
+  .et-ouvert { background:rgba(34,197,94,.14); color:#7ee2a8 }
+  .et-prepa  { background:rgba(99,102,241,.16); color:#a5a8f5 }
+  .et-cache  { background:rgba(255,255,255,.07); color:var(--gris) }
+  .et-passe  { background:rgba(239,68,68,.14); color:#f5a3a3 }
+
+  .champs { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:0 }
+  .champ { padding:14px 20px; border-right:1px solid var(--bord); border-bottom:1px solid var(--bord) }
+  .champ-nom { font-family:var(--mono); font-size:9px; letter-spacing:1.4px; text-transform:uppercase; color:var(--gris2); margin-bottom:5px }
+  .champ-val { font-size:14px }
+  .manquant { color:var(--rouge); font-family:var(--mono); font-size:12px }
+  .manquant::before { content:'? '; }
+
+  /* ── Tableau des sources ── */
+  table { width:100%; border-collapse:collapse; font-size:14px }
+  th, td { text-align:left; padding:11px 14px; border-bottom:1px solid var(--bord); vertical-align:top }
+  th { font-family:var(--mono); font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gris2); font-weight:500 }
+  td a { color:var(--or) }
+
+  .note {
+    border-left:3px solid var(--bord); padding:2px 0 2px 18px; margin:20px 0;
+    color:var(--gris); font-size:14px;
+  }
+  .note strong { color:var(--texte) }
+  ul { padding-left:20px; color:rgba(232,236,245,.78) }
+  li { margin-bottom:7px }
+  #etat { font-family:var(--mono); font-size:11px; color:var(--gris2) }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="bandeau">
+  <strong>Prototype, rien de tout ceci n'est en ligne.</strong>
+  Cette page vit dans <code>outil-dev/prototype/</code>, hors du site. Aucun bouton n'enregistre
+  quoi que ce soit. Elle sert à regarder les vraies dates de JB et à voir ce qui manque pour les suivre.
+</div>
+
+<h1>Suivi des événements</h1>
+<p class="sous" id="etat">Données figées au 8 août 2026. Ouverte depuis un poste connecté, la page se rafraîchit toute seule.</p>
+
+<h2>Ce que la page Événements montrait au public</h2>
+
+<div class="duo">
+  <div class="avant">
+    <div class="chiffre" id="n-avant">9</div>
+    <div class="quoi">dates proposées à l'inscription</div>
+    <p style="margin-top:12px;font-size:14px">Dont <strong id="n-passees">6</strong> déjà passées, d'avril à juillet, toutes marquées « Inscriptions ouvertes ».</p>
+  </div>
+  <div class="apres">
+    <div class="chiffre" id="n-apres">3</div>
+    <div class="quoi">dates réellement à venir</div>
+    <p style="margin-top:12px;font-size:14px">La requête n'avait aucun filtre de date. Corrigé le 8 août.</p>
+  </div>
+</div>
+
+<h2>Les dates qui restent en 2026</h2>
+
+<p>Voilà le concret. En comptant celle qui n'est pas publique, il reste
+<strong id="n-restantes">4</strong> dates sur l'année. Les cadres en rouge sont les
+informations qu'on avait dit vouloir suivre et que la base ne sait pas encore stocker.</p>
+
+<div id="fiches"></div>
+
+<h2>Ce qui manque pour suivre, et pourquoi</h2>
+
+<p>Ces quatre informations reviennent dans chaque discussion sur les événements. Aucune n'existe
+dans la table <code>events</code> aujourd'hui, c'est pour ça qu'elles s'affichent en rouge ci-dessus.</p>
+
+<table>
+  <thead><tr><th>Colonne</th><th>Ce qu'elle dit</th><th>Pourquoi elle change tout</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>mode</code></td>
+      <td>Box partagé, coaching seul, revendeur, ou greffe sur l'événement d'un autre</td>
+      <td>C'est ce qui détermine qui vend, qui encaisse, et ce que JB doit avancer</td>
+    </tr>
+    <tr>
+      <td><code>organisateur</code></td>
+      <td>Le nom de celui qui loue la piste quand ce n'est pas JB</td>
+      <td>Sans lui, impossible de savoir qui rappeler l'année suivante</td>
+    </tr>
+    <tr>
+      <td><code>lien_organisateur</code></td>
+      <td>L'adresse de la page d'origine</td>
+      <td>Permet de vérifier la date sans refaire la recherche</td>
+    </tr>
+    <tr>
+      <td><code>cout</code></td>
+      <td>Ce que la journée coûte à JB</td>
+      <td>Le prix client seul ne dit rien. C'est l'écart qui dit si la date vaut le déplacement</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>Décision à prendre.</strong> Ajouter ces quatre colonnes engage le modèle de données.
+  Je ne le fais pas sans ton accord. Une fois ajoutées, les cadres rouges ci-dessus deviennent
+  des champs que ton père remplit.
+</div>
+
+<h2>Où trouver les dates des autres</h2>
+
+<p>Le travail de veille, aujourd'hui, c'est JB au téléphone. Les agrégateurs suivants publient
+les journées de roulage par circuit et par organisateur. <strong>Je ne les ai pas ouverts</strong> :
+le poste sur lequel je travaille bloque tout accès à ces domaines, et je refuse de recopier des dates
+que je n'ai pas pu lire à la source.</p>
+
+<table>
+  <thead><tr><th>Source</th><th>Ce qu'elle couvre</th></tr></thead>
+  <tbody>
+    <tr><td>trackdays.fr</td><td>Calendrier par circuit, dont Grand Sambuc</td></tr>
+    <tr><td>calendrier-piste.fr</td><td>Roulages par circuit, dont Le Luc</td></tr>
+    <tr><td>europatrackdays.com</td><td>Journées circuit en Europe, Grand Sambuc et Le Luc</td></tr>
+    <tr><td>circuitduvar.com</td><td>Agenda du Circuit du Var, au Luc</td></tr>
+    <tr><td>sambucdrivingacademy.fr</td><td>Calendrier propre au Grand Sambuc</td></tr>
+    <tr><td>circuitpaulricard.com</td><td>Événements du Castellet</td></tr>
+    <tr><td>jbemeric.com/calendrier</td><td>L'ancien site de JB, à comparer avec la base</td></tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>La question qui décide de la suite.</strong> Combien de circuits et d'organisateurs comptent
+  vraiment pour JB ? Si c'est cinq ou six, la saisie à la main dans le dashboard suffit et coûte
+  dix minutes par mois. Au-delà, il faut aller les chercher automatiquement. Tu es le seul à
+  connaître ce chiffre.
+</div>
+
+<h2>Ce que ce prototype ne fait pas</h2>
+<ul>
+  <li>Il n'écrit rien. Aucun bouton, aucun formulaire, aucune sauvegarde.</li>
+  <li>Il ne remplace pas le dashboard, qui reste un chantier complet.</li>
+  <li>Il ne va pas chercher les dates des autres organisateurs, faute d'accès réseau depuis ce poste.</li>
+</ul>
+
+</div>
+
+<script>
+// ── Les données ─────────────────────────────────────────────────────────────
+// Recopiées de la table events le 8 août 2026, via le serveur Supabase. Elles
+// sont figées ici pour que la page soit lisible même hors connexion. Ouverte
+// depuis un poste qui joint Supabase, elle se rafraîchit et le dit.
+var FIGE = [
+  { date:'2026-04-03', type:'Karting Enfant',           circuit:'Circuit de Brignoles',    region:'Var (83)',          prix:195, places:12, inscrits:0, statut:'Open',      visible:true  },
+  { date:'2026-04-17', type:'Caterham · Voiture perso', circuit:'Circuit de Brignoles',    region:'Var (83)',          prix:195, places:10, inscrits:0, statut:'Open',      visible:true  },
+  { date:'2026-05-09', type:'Track-Day GT & Tourisme',  circuit:'Circuit de Lédenon',      region:'Gard (30)',         prix:245, places:10, inscrits:0, statut:'Open',      visible:true  },
+  { date:'2026-05-10', type:'Track-Day GT & Tourisme',  circuit:'Circuit de Lédenon',      region:'Gard (30)',         prix:245, places:10, inscrits:0, statut:'Potential', visible:false },
+  { date:'2026-05-13', type:'Caterham · Voiture perso', circuit:'Circuit de Brignoles',    region:'Var (83)',          prix:195, places:10, inscrits:0, statut:'Open',      visible:true  },
+  { date:'2026-06-19', type:'Caterham · Voiture perso', circuit:'Circuit de Brignoles',    region:'Var (83)',          prix:195, places:10, inscrits:0, statut:'Open',      visible:true  },
+  { date:'2026-07-05', type:'Stage 206 S16',            circuit:'Circuit du Grand Sambuc', region:'Bouches-du-Rhône',  prix:195, places:10, inscrits:0, statut:'Open',      visible:true  },
+  { date:'2026-08-29', type:'Track-Day GT & Tourisme',  circuit:'Circuit de Lédenon',      region:'Gard (30)',         prix:245, places:10, inscrits:0, statut:'Potential', visible:false },
+  { date:'2026-10-16', type:'Caterham · Voiture perso', circuit:'Circuit de Brignoles',    region:'Var (83)',          prix:195, places:10, inscrits:0, statut:'Open',      visible:true  },
+  { date:'2026-11-15', type:'Stage 206 S16',            circuit:'Circuit du Grand Sambuc', region:'Bouches-du-Rhône',  prix:195, places:10, inscrits:0, statut:'Open',      visible:true  },
+  { date:'2026-12-12', type:'Caterham · Fin de saison', circuit:'Circuit de Brignoles',    region:'Var (83)',          prix:195, places:10, inscrits:0, statut:'Open',      visible:true  },
+]
+
+var AUJOURDHUI = new Date().toISOString().slice(0, 10)
+var MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre']
+var JOURS = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi']
+
+function enClair(iso) {
+  var d = new Date(iso + 'T12:00:00')
+  return JOURS[d.getDay()] + ' ' + d.getDate() + ' ' + MOIS[d.getMonth()] + ' ' + d.getFullYear()
+}
+
+function echapper(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
+function etiquettes(ev) {
+  var out = []
+  if (ev.date < AUJOURDHUI) out.push('<span class="etiquette et-passe">date passée</span>')
+  if (ev.statut === 'Open')      out.push('<span class="etiquette et-ouvert">inscriptions ouvertes</span>')
+  if (ev.statut === 'Potential') out.push('<span class="etiquette et-prepa">en préparation</span>')
+  if (!ev.visible)               out.push('<span class="etiquette et-cache">pas sur le site</span>')
+  return out.join('')
+}
+
+// Un champ que la base ne sait pas encore stocker s'affiche en creux. Le but du
+// prototype est justement de rendre ces trous visibles plutôt que de les combler
+// avec des valeurs plausibles.
+function champ(nom, valeur, manquant) {
+  return '<div class="champ"><div class="champ-nom">' + echapper(nom) + '</div>'
+       + '<div class="champ-val">'
+       + (manquant ? '<span class="manquant">' + echapper(valeur) + '</span>' : echapper(valeur))
+       + '</div></div>'
+}
+
+function fiche(ev) {
+  var classes = 'fiche'
+  if (ev.date < AUJOURDHUI) classes += ' passee'
+  if (!ev.visible) classes += ' cachee'
+
+  return '<div class="' + classes + '">'
+    + '<div class="fiche-tete">'
+      + '<div class="fiche-date">' + enClair(ev.date) + '</div>'
+      + '<div class="fiche-titre">' + echapper(ev.type) + '</div>'
+      + etiquettes(ev)
+    + '</div>'
+    + '<div class="champs">'
+      + champ('Circuit',   ev.circuit + ' · ' + ev.region)
+      + champ('Prix client', ev.prix + ' €')
+      + champ('Places',    ev.inscrits + ' inscrit(s) sur ' + ev.places)
+      + champ('Mode d\'engagement',  'non suivi', true)
+      + champ('Organisateur hôte',   'non suivi', true)
+      + champ('Lien vers la source', 'non suivi', true)
+      + champ('Coût pour JB',        'non suivi', true)
+      + champ('Marge', 'sans le coût, incalculable', true)
+    + '</div>'
+  + '</div>'
+}
+
+function dessiner(evenements, origine) {
+  var visibles  = evenements.filter(function (e) { return e.visible })
+  var passees   = visibles.filter(function (e) { return e.date < AUJOURDHUI })
+  var avenir    = visibles.filter(function (e) { return e.date >= AUJOURDHUI })
+  var restantes = evenements.filter(function (e) { return e.date >= AUJOURDHUI })
+
+  document.getElementById('n-avant').textContent     = visibles.length
+  document.getElementById('n-passees').textContent   = passees.length
+  document.getElementById('n-apres').textContent     = avenir.length
+  document.getElementById('n-restantes').textContent = restantes.length
+
+  document.getElementById('fiches').innerHTML =
+    restantes.length
+      ? restantes.map(fiche).join('')
+      : '<div class="fiche"><div class="fiche-tete"><div class="fiche-titre">Plus aucune date à venir dans la base.</div></div></div>'
+
+  document.getElementById('etat').textContent = origine
+}
+
+dessiner(FIGE, 'Données figées au 8 août 2026. Ce poste ne joint pas Supabase.')
+
+// Rafraîchissement depuis la base. Échoue en silence là où le réseau est
+// coupé : la page reste lisible avec les données figées, et le dit.
+;(function () {
+  var URL = 'https://fyaybxamuabawerqzuud.supabase.co/rest/v1/'
+  var CLE = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
+  fetch(URL + 'events?order=date_event.asc&select=date_event,type,status,prix,nb_places,nb_inscrits,visible_site,circuits(nom,region)',
+        { headers: { apikey: CLE, Authorization: 'Bearer ' + CLE } })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json() })
+    .then(function (lignes) {
+      if (!lignes || !lignes.length) return
+      dessiner(lignes.map(function (l) {
+        return {
+          date: l.date_event, type: l.type,
+          circuit: l.circuits ? l.circuits.nom : '?',
+          region:  l.circuits ? l.circuits.region : '',
+          prix: Number(l.prix), places: l.nb_places, inscrits: l.nb_inscrits || 0,
+          statut: l.status, visible: l.visible_site,
+        }
+      }), 'Données lues en direct dans Supabase le ' + enClair(AUJOURDHUI) + '.')
+    })
+    .catch(function () { /* on garde les donnees figees, deja affichees */ })
+})()
+</script>
+</body>
+</html>

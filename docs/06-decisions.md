@@ -6,6 +6,52 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 8 août 2026, les événements réels
+
+### D-067, La page Événements proposait six dates déjà passées
+
+La requête de `track-render.js` n'avait aucun filtre de date. Le 8 août, la page affichait neuf dates dont six révolues, du 3 avril au 5 juillet, toutes avec le badge « Inscriptions ouvertes » et un bouton « S'inscrire ».
+
+Filtre `date_event=gte.aujourd'hui` ajouté. Le calcul se fait côté navigateur pour que le jour même d'un événement reste affiché jusqu'à son terme.
+
+**Ce que ça change à l'écran** : la page passe de neuf cartes à trois.
+
+### D-068, Deux blocs de `track-render.js` auraient ouvert la mauvaise date
+
+Le fichier rechargeait les mêmes événements dans deux blocs supplémentaires et rattachait les boutons d'inscription **par position** : le premier bouton recevait le premier événement de leur requête.
+
+Les listes n'ont jamais eu la même définition, l'une filtrant sur `status=eq.Open` et l'autre non. Avec le filtre de date de D-067 elles n'ont même plus la même longueur. Vérifié sur les données réelles : les trois boutons affichés auraient ouvert la fiche d'une journée du 3 avril, du 17 avril et du 9 mai. Un visiteur se serait inscrit à une date révolue en croyant réserver celle qu'il venait de lire.
+
+Les deux blocs sont supprimés. La grille porte déjà l'identifiant de chaque événement dans un attribut `data-` et le lit au clic.
+
+**Retiré au passage** : trois appels à `renderDots` avec des chiffres inventés, « Brignoles 8/12 », « Cuges 4/10 », « Ricard complet », qui visaient des identifiants absents de `track.html` et ne faisaient rien.
+
+### D-069, Un prototype de suivi plutôt qu'un dashboard fonctionnel
+
+Demande de Yoan : « j'ai pas besoin que le dashboard soit fonctionnel à ce stade, tu pourrais faire juste des prototypes en attendant, tu traques les 5 prochains événements et tu les mets, qu'on ait du concret ».
+
+`outil-dev/prototype/evenements.html` s'ouvre dans un navigateur, hors du site, et n'écrit rien. Il montre les dates réelles de la base et affiche en rouge les quatre informations que la table ne sait pas stocker.
+
+**Ce qu'il rend visible** : il reste quatre dates sur l'année 2026, dont une qui n'est pas publique. C'est le chiffre qui compte.
+
+### D-070, Aucune date extérieure n'a été saisie, faute de source vérifiable
+
+La recherche a nommé sept sources de veille : `trackdays.fr`, `calendrier-piste.fr`, `europatrackdays.com`, `circuitduvar.com`, `sambucdrivingacademy.fr`, `circuitpaulricard.com` et l'ancien site `jbemeric.com/calendrier`.
+
+**Aucune n'a pu être ouverte.** Le poste de travail bloque tout accès à ces domaines. La recherche rend un résumé qu'il est impossible de confronter à la source.
+
+Rien n'a donc été écrit dans `events`. Recopier des dates non vérifiées serait la faute de D-065 en plus grave : un client se déplacerait.
+
+### D-071, `robots.txt` écarte l'atelier, la documentation et les archives
+
+`netlify.toml` publie la racine entière. `outil-dev/`, `docs/` et `old/` partent en ligne avec le site depuis toujours. Rien n'y renvoie, mais autant le dire aux robots.
+
+### D-072, Les pages HTML de l'atelier ne sont pas auditées comme des pages du site
+
+Le prototype ajoutait trois relevés hors périmètre, sur l'absence de canonique et de description. Un prototype ouvert en local n'a pas à en avoir. `outil-dev/` est écarté de la liste des pages dans `contexte.js`, ses scripts restant dans le contexte pour que la règle de syntaxe continue de les lire.
+
+---
+
 ## 8 août 2026, le dashboard des événements
 
 ### D-060, Le vote disparaît, du site et du dashboard

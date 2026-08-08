@@ -14,9 +14,12 @@
       el.appendChild(d);
     }
   }
-  renderDots('1', 12, 8);   // Brignoles : 8/12 pris
-  renderDots('2', 10, 4);   // Cuges : 4/10 pris
-  renderDots('ricard', 12, 12); // Ricard : full
+  // Trois appels vivaient ici avec des chiffres inventés, « Brignoles 8/12 »,
+  // « Cuges 4/10 », « Ricard complet ». Ils visaient dots-1, dots-2 et
+  // dots-ricard, trois identifiants absents de track.html : la grille est
+  // construite en entier par le calendrier plus bas, qui pose ses propres
+  // points à partir de nb_inscrits. Ces appels ne faisaient rien, protégés par
+  // le if (!el) return de renderDots. Retirés le 8 août 2026.
 
   /* ── Filtres tabs ── */
   window.filterCards = function(tab, filter) {
@@ -209,9 +212,17 @@
       '</div>'
   }
 
+  // Une date passée n'est pas une offre. La requête n'avait aucun filtre de
+  // date : le 8 août 2026, la page proposait de s'inscrire à six journées
+  // d'avril, mai, juin et juillet, toutes marquées « Inscriptions ouvertes ».
+  // Le filtre se calcule ici plutôt que dans la base pour que le jour même
+  // d'un événement reste affiché jusqu'à son terme.
+  var aujourdhui = new Date().toISOString().slice(0, 10)
+
   try {
     // Charger events visibles
-    var r = await fetch(SB_URL + 'events?visible_site=eq.true&order=date_event.asc&select=id,date_event,type,status,prix,nb_places,nb_inscrits,circuits(nom,region)',
+    var r = await fetch(SB_URL + 'events?visible_site=eq.true&date_event=gte.' + aujourdhui
+      + '&order=date_event.asc&select=id,date_event,type,status,prix,nb_places,nb_inscrits,circuits(nom,region)',
       { headers: SB_H })
     if (!r.ok) throw new Error('HTTP ' + r.status)
     var events = await r.json()
@@ -342,93 +353,21 @@
   }
 })()
 
-// ANCIEN script places : remplacé, garder pour compatibilité
-;(async function() {
-  try {
-    var r = await fetch(
-      'https://fyaybxamuabawerqzuud.supabase.co/rest/v1/inscriptions?select=event_id&event_id=not.is.null',
-      { headers: {
-        'apikey': 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD',
-        'Authorization': 'Bearer sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
-      }}
-    )
-    if (!r.ok) return
-    var inscrits = await r.json()
-
-    // Compter par event_id
-    var counts = {}
-    for (var i = 0; i < inscrits.length; i++) {
-      var eid = inscrits[i].event_id
-      if (eid) counts[eid] = (counts[eid] || 0) + 1
-    }
-
-    // Charger les events ouverts
-    var r2 = await fetch(
-      'https://fyaybxamuabawerqzuud.supabase.co/rest/v1/events?status=eq.Open&visible_site=eq.true&select=id,date_event,type,nb_places,circuit_id,circuits(nom)',
-      { headers: {
-        'apikey': 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD',
-        'Authorization': 'Bearer sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
-      }}
-    )
-    if (!r2.ok) return
-    var events = await r2.json()
-
-    // Mettre à jour les dots de chaque card
-    events.forEach(function(ev, idx) {
-      var taken = counts[ev.id] || 0
-      var total = ev.nb_places || 10
-      var left  = Math.max(0, total - taken)
-      var dotId = 'dots-' + (idx + 1)
-      var leftId = 'left-' + (idx + 1)
-      if (typeof window.renderDots === 'function') {
-        window.renderDots(dotId, total, taken)
-      }
-      var leftEl = document.getElementById(leftId)
-      if (leftEl) leftEl.textContent = left
-      // Si complet → changer le badge
-      if (left === 0) {
-        var card = document.querySelector('[data-status="open"]:nth-of-type(' + (idx+1) + ')')
-        var badge = card && card.querySelector('.sr-badge')
-        if (badge) { badge.textContent = 'Complet'; badge.className = 'sr-badge full' }
-      }
-    })
-  } catch(e) { console.log('[Track] Supabase events:', e.message) }
-})()
-
-// ─────────────────────────────────────────────────────────────
-
-// Charger les events depuis Supabase et lier les boutons S'inscrire
-// Le point-virgule d'ouverture est obligatoire : le bloc precedent se termine
-// par })() sans separateur, et JS lirait sinon un appel sur son resultat.
-;(async function() {
-  try {
-    var r = await fetch(
-      'https://fyaybxamuabawerqzuud.supabase.co/rest/v1/events?status=eq.Open&visible_site=eq.true&order=date_event.asc&select=id,date_event,type,prix,nb_places,circuits(nom)',
-      { headers: {
-        'apikey': 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD',
-        'Authorization': 'Bearer sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
-      }}
-    )
-    if (!r.ok) return
-    var events = await r.json()
-    if (!events || !events.length) return
-
-    // Associer chaque card à son event_id par correspondance de date/type
-    var buttons = document.querySelectorAll('.sr-btn-inscr')
-    buttons.forEach(function(btn, idx) {
-      var ev = events[idx]
-      if (!ev) return
-      // Remplacer le onclick pour inclure l'event_id
-      var circuitNom = ev.circuits ? ev.circuits.nom : ''
-      var d = new Date(ev.date_event)
-      var MONTHS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc']
-      var label = (ev.type || '') + ' · ' + d.getDate() + ' ' + MONTHS[d.getMonth()]
-      btn.onclick = function() {
-        window.openModal(label, ev.prix || 195, circuitNom, ev.id)
-      }
-    })
-  } catch(e) { console.log('[Track events]', e.message) }
-})()
+// ── Deux blocs retirés le 8 août 2026 ───────────────────────────────────────
+// Ils rechargeaient les mêmes événements et rattachaient les boutons par
+// position : le premier bouton de la grille recevait le premier événement de
+// leur requête. Les deux listes n'ont jamais eu la même définition, l'une
+// filtrant sur le statut Open et l'autre non, et depuis que la grille écarte
+// les dates passées elles n'ont même plus la même longueur.
+//
+// Vérifié sur les données réelles du 8 août : les trois boutons affichés
+// auraient ouvert la fiche d'inscription d'une journée d'avril, d'une autre
+// d'avril et d'une de mai. Un visiteur se serait inscrit à une date révolue
+// en croyant réserver celle qu'il venait de lire.
+//
+// La grille ci-dessus porte déjà l'identifiant de chaque événement dans un
+// attribut data- et le lit au clic. Rien ne se perd, le rattachement par
+// position n'avait plus lieu d'être.
 
 // ─────────────────────────────────────────────────────────────
 

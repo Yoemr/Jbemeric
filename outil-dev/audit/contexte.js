@@ -45,8 +45,16 @@ function sansCacheLiveEditor(html) {
   return html.replace(/<script id="jbe-content-cache"[\s\S]*?<\/script>/g, '')
 }
 
+// Les pages HTML de l'atelier ne sont pas des pages du site. Un prototype
+// ouvert en local n'a ni canonique, ni description, ni place dans le plan du
+// site, et se faire reprocher leur absence n'apprend rien. Ses scripts, eux,
+// restent dans le contexte : la regle de syntaxe doit continuer a les lire.
+const PAS_DES_PAGES = ['outil-dev' + path.sep]
+
 function construire() {
-  const pages = listerFichiers(['.html']).map(chemin => {
+  const pages = listerFichiers(['.html'])
+    .filter(chemin => !PAS_DES_PAGES.some(p => chemin.startsWith(p)))
+    .map(chemin => {
     const html = lire(chemin)
     const utile = sansCacheLiveEditor(html)
     return {

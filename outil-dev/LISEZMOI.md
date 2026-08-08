@@ -37,3 +37,15 @@ Les deux derniers ont besoin du serveur local : `node outil-dev/dev-server.js`.
 **Lire `docs/07-acquis.md` section 2.** Sur trois jours, presque toutes les fausses conclusions sont venues d'un instrument fabriqué sur le moment, jamais du site. Le piège que vous vous apprêtez à rencontrer y est probablement déjà décrit.
 
 **Et faire le contrôle négatif.** Avant de croire un « aucune faute », introduire volontairement le défaut et vérifier que l'outil le voit. Chacun des quatre outils ci-dessus a été validé ainsi, dans les deux sens.
+
+---
+
+## Le prototype
+
+`outil-dev/prototype/evenements.html` s'ouvre dans un navigateur, sans serveur ni compilation.
+
+Il montre les dates réelles de la table `events`, et surtout ce qui manque pour les suivre : mode d'engagement, organisateur hôte, lien vers la source, coût pour JB. Ces quatre informations s'affichent en rouge parce que la base ne sait pas encore les stocker.
+
+Il n'écrit rien. Aucun bouton, aucun formulaire. C'est une maquette pour décider, pas un outil.
+
+Les données sont figées au 8 août 2026 et se rafraîchissent toutes seules depuis Supabase quand le poste y a accès. La page dit laquelle des deux situations s'applique.

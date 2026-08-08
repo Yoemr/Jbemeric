@@ -6,6 +6,56 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 8 août 2026, la racine, suite
+
+### D-075, Le formulaire d'inscription n'a jamais pu écrire une seule ligne
+
+**La clé étrangère `inscriptions.event_id` pointe vers `track_days`, pas vers `events`.** Le site envoie l'identifiant tel qu'il vient de `events`. La base refuse donc chaque inscription.
+
+Vérifié en base, rôle `anon`, dans une transaction annulée :
+
+| Essai | Résultat |
+|---|---|
+| identifiant venu de `events`, ce que le site envoie | **refusé** |
+| sans identifiant du tout | accepté |
+| identifiant venu de `track_days` | accepté |
+
+Les deux derniers sont les contrôles : ils montrent que l'insertion fonctionne et que seule la cible de la contrainte fait échouer le premier.
+
+**C'est la vraie raison des zéro inscriptions**, et non les droits ni le formulaire. Le mensonge de la confirmation, corrigé le 7 août par D-052, affichait donc « inscription enregistrée » sur un refus de la base.
+
+`track_days` est morte : une ligne créée le 24 mars 2026, pour une date du 15 juin déjà passée, avec une colonne `votes_count` héritée du vote retiré. **Aucun fichier du dépôt ne la nomme.**
+
+Migration écrite dans `outil-dev/migrations/2026-08-08-inscriptions-vers-events.sql`, avec un garde-fou qui interrompt si des inscriptions orphelines existaient, et son retour arrière. **Non appliquée**, en attente de Yoan. `track_days` n'est pas supprimée : supprimer une table est irréversible.
+
+### D-076, La migration des droits est appliquée
+
+Yoan a répondu « applique la migration » le 8 août. Faite.
+
+Vérifié après coup, en transaction annulée, sur une écriture réelle dans `events` :
+
+| Qui | Lignes modifiables |
+|---|---|
+| admin connecté | 1 |
+| client connecté | 0 |
+| visiteur anonyme | 0 |
+
+Et sur `inscriptions` : un anonyme peut écrire, ne peut rien relire, JB relit tout. Le formulaire public n'a rien perdu.
+
+Plus aucune policy n'interroge le claim de haut niveau.
+
+### D-077, Le prototype gagne les cinq modes et le seuil de rentabilité
+
+Choix de Yoan face à trois propositions. `outil-dev/prototype/evenements.html` permet désormais de choisir un mode et de voir ce qu'il change : ce que JB engage, le risque, qui vend, et surtout **ce que le site peut faire**. Sur un événement organisé par un tiers, le bouton devient « voir chez l'organisateur » au lieu de « s'inscrire ».
+
+Une simulation compare les cinq modes à coût égal. Aucun chiffre n'est inventé : le coût part de zéro et attend d'être saisi, le prix vient de ce que la base facture.
+
+**La ligne qui compte est le seuil**, le nombre de pilotes nécessaire pour couvrir les frais avancés. Dans les modes sans frais avancés il vaut un, ce qui donne raison à la phrase de Yoan : « même un seul client génère des bénéfices ». Avec un circuit loué en entier à 1 800 € et 195 € par pilote, il en faut dix.
+
+**Réserve honnête** : un box et un circuit entier ne coûtent pas la même chose. Les cinq colonnes se lisent à coût égal, pour voir la mécanique de chaque mode, pas pour les départager. C'est écrit sur la page.
+
+---
+
 ## 8 août 2026, la racine
 
 ### D-073, Le rôle admin n'est pas là où les policies le cherchent

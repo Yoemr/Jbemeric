@@ -87,6 +87,59 @@
   ul { padding-left:20px; color:rgba(232,236,245,.78) }
   li { margin-bottom:7px }
   #etat { font-family:var(--mono); font-size:11px; color:var(--gris2) }
+
+  /* ── Les modes ── */
+  .onglets { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px }
+  .onglet {
+    font-family:var(--mono); font-size:10px; letter-spacing:1.4px; text-transform:uppercase;
+    padding:10px 16px; border:1px solid var(--bord); border-radius:4px; background:transparent;
+    color:var(--gris); cursor:pointer; transition:border-color .15s, color .15s;
+  }
+  .onglet:hover { border-color:rgba(255,255,255,.22); color:var(--texte) }
+  .onglet[aria-selected="true"] { border-color:var(--or); color:var(--or); background:rgba(255,207,0,.06) }
+
+  .panneau { border:1px solid var(--bord); border-radius:6px; background:var(--carte); padding:22px 24px }
+  .panneau-grille { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:20px }
+  .gros { font-size:15px; margin-top:4px }
+  .separateur { height:1px; background:var(--bord); margin:22px 0 }
+  .apercu {
+    margin-top:8px; padding:16px 18px; border-radius:5px;
+    border:1px dashed rgba(255,255,255,.16); background:rgba(255,255,255,.02);
+    font-size:15px;
+  }
+  .apercu .bouton {
+    display:inline-block; margin-top:12px; padding:11px 22px; border-radius:4px;
+    font-family:var(--mono); font-size:11px; letter-spacing:1.4px; text-transform:uppercase;
+  }
+  .apercu .bouton.ferme { background:var(--or); color:#000 }
+  .apercu .bouton.ouvre { border:1px solid rgba(255,255,255,.2); color:var(--texte) }
+  .petit { font-size:13px; color:var(--gris) }
+
+  /* ── Simulation ── */
+  .reglages { display:flex; flex-wrap:wrap; gap:22px; margin:20px 0 24px; align-items:center }
+  .reglages label {
+    display:flex; align-items:center; gap:9px;
+    font-family:var(--mono); font-size:10px; letter-spacing:1.2px; text-transform:uppercase; color:var(--gris2);
+  }
+  .reglages input[type=number] {
+    width:92px; padding:8px 10px; border-radius:4px; border:1px solid var(--bord);
+    background:rgba(255,255,255,.04); color:var(--texte); font-family:var(--mono); font-size:14px;
+  }
+  .reglages input[type=range] { width:130px; accent-color:var(--or) }
+  .reglages output { font-family:var(--mono); font-size:14px; color:var(--or); min-width:22px }
+
+  .carte-marge { border:1px solid var(--bord); border-radius:6px; padding:18px 20px; background:var(--carte) }
+  .carte-marge.retenu { border-color:var(--or) }
+  .carte-marge .nom { font-family:var(--mono); font-size:10px; letter-spacing:1.4px; text-transform:uppercase; color:var(--gris2) }
+  .carte-marge .somme { font-size:30px; font-family:var(--mono); margin:8px 0 2px }
+  .carte-marge .somme.positive { color:var(--vert) }
+  .carte-marge .somme.negative { color:var(--rouge) }
+  .carte-marge .detail { font-size:13px; color:var(--gris) }
+  .carte-marge .seuil {
+    margin-top:10px; padding-top:10px; border-top:1px solid var(--bord);
+    font-family:var(--mono); font-size:11px; letter-spacing:.6px; color:var(--or);
+  }
+  .carte-marge .seuil.sans { color:var(--vert) }
 </style>
 </head>
 <body>
@@ -123,6 +176,65 @@
 informations qu'on avait dit vouloir suivre et que la base ne sait pas encore stocker.</p>
 
 <div id="fiches"></div>
+
+<h2>Les cinq modes, et ce qu'ils changent</h2>
+
+<p>Un événement n'est pas seulement d'un type. Il est surtout d'un <strong>mode</strong>, et c'est le
+mode qui décide de l'économie et de ce que le site sait faire. Choisis-en un pour voir.</p>
+
+<div class="onglets" id="onglets-mode"></div>
+
+<div class="panneau">
+  <div class="panneau-grille">
+    <div>
+      <div class="champ-nom">Ce que JB engage</div>
+      <div class="gros" id="m-engage"></div>
+    </div>
+    <div>
+      <div class="champ-nom">Risque</div>
+      <div class="gros" id="m-risque"></div>
+    </div>
+    <div>
+      <div class="champ-nom">Qui vend au client</div>
+      <div class="gros" id="m-vend"></div>
+    </div>
+  </div>
+
+  <div class="separateur"></div>
+
+  <div class="champ-nom">Ce que le site peut faire sur cette date</div>
+  <div class="apercu" id="m-apercu"></div>
+  <p class="petit" id="m-note"></p>
+</div>
+
+<h2>Ce que ça rapporte, selon le mode</h2>
+
+<p>Le prix client seul ne dit rien. C'est l'écart avec ce que JB avance qui dit si une date vaut le
+déplacement. <strong>Personne ici ne connaît le coût réel d'un box.</strong> Entre-le, la page calcule.</p>
+
+<div class="reglages">
+  <label>Coût pour JB, la journée
+    <input type="number" id="r-cout" value="0" min="0" step="10"> €
+  </label>
+  <label>Prix par client
+    <input type="number" id="r-prix" value="195" min="0" step="5"> €
+  </label>
+  <label>Nombre de clients
+    <input type="range" id="r-clients" value="4" min="1" max="12">
+    <output id="r-clients-val">4</output>
+  </label>
+</div>
+
+<div class="duo" id="resultat-marge"></div>
+
+<p class="petit">Deux avertissements sur cette comparaison. Un box et un circuit entier ne coûtent
+pas la même chose, donc les cinq colonnes ne se lisent qu'à coût égal, pour voir la mécanique de
+chaque mode et non pour les départager. Et le mode « moniteur loué » ne dépend pas du nombre de
+pilotes : c'est une école qui paie JB à la journée, le calcul en tient compte.</p>
+
+<p class="petit">La ligne qui compte est la dernière de chaque carte. C'est le nombre de pilotes qu'il
+faut pour rentrer dans les frais. C'est aussi ce qui rend le vote inutile : dans les modes sans frais
+avancés, ce nombre vaut un.</p>
 
 <h2>Ce qui manque pour suivre, et pourquoi</h2>
 
@@ -293,6 +405,170 @@ function dessiner(evenements, origine) {
 }
 
 dessiner(FIGE, 'Données figées au 8 août 2026. Ce poste ne joint pas Supabase.')
+
+// ── Les cinq modes ──────────────────────────────────────────────────────────
+// Repris de docs/chantiers/2026-08-07-page-evenements.md section 2. Le champ
+// « vend » est celui qui compte : il décide de ce que le site sait faire.
+// Sur un événement organisé par un tiers, le client doit s'inscrire chez lui
+// pour rouler et payer JB pour le coaching. Le site ne peut alors qu'orienter.
+var MODES = [
+  {
+    cle:'box', nom:'Box partagé',
+    engage:'la location d\'un box sur l\'événement d\'un tiers',
+    risque:'faible, un seul frais fixe',
+    vend:'l\'organisateur pour la piste, JB pour le box et le coaching',
+    encaisse:'partage',
+    site:'orienter',
+    apercu:'Inscription piste chez l\'organisateur, puis place dans le box de JB et coaching sur la journée.',
+    note:'La formule principale, décision de Yoan. Un box accueille plusieurs voitures : un seul frais fixe, plusieurs payeurs, et sa journée utilisée à plein. Circuits cités comme louant des box : Lédenon, Paul Ricard.',
+  },
+  {
+    cle:'coaching', nom:'Coaching seul',
+    engage:'rien, il se déplace',
+    risque:'nul',
+    vend:'l\'organisateur pour la piste, JB pour le coaching',
+    encaisse:'chacun le sien',
+    site:'orienter',
+    apercu:'JB sera présent ce jour-là. Inscrivez-vous auprès de l\'organisateur, réservez votre créneau de coaching auprès de lui.',
+    note:'Le mode le plus léger. Rien à avancer, rien à remplir. La seule question est de savoir si le déplacement vaut le nombre de pilotes qui le réservent.',
+  },
+  {
+    cle:'greffe', nom:'Greffé',
+    engage:'des frais partagés avec l\'organisateur',
+    risque:'faible',
+    vend:'à préciser selon l\'accord',
+    encaisse:'partage',
+    site:'orienter',
+    apercu:'Journée organisée avec un partenaire. Inscription auprès de lui, encadrement par JB.',
+    note:'C\'est ce que Yoan appelle se greffer à un événement existant pour partager les frais de location du circuit. L\'accord se négocie au cas par cas, donc le site ne peut rien promettre de standard.',
+  },
+  {
+    cle:'entier', nom:'Circuit loué en entier',
+    engage:'la journée complète',
+    risque:'élevé, il faut remplir',
+    vend:'JB seul',
+    encaisse:'JB',
+    site:'inscrire',
+    apercu:'Journée JB EMERIC. Inscription directe sur le site, paiement à JB.',
+    note:'L\'ancien modèle, celui qui a fatigué JB. Il reste possible mais devient l\'exception. C\'est le seul mode où le site peut prendre la réservation de bout en bout.',
+  },
+  {
+    cle:'moniteur', nom:'Moniteur loué',
+    engage:'rien, une autre école le paie',
+    risque:'nul',
+    vend:'l\'école, pas le client',
+    encaisse:'l\'école paie JB',
+    site:'informer',
+    apercu:'JB encadre pour une autre école ce jour-là. Rien à réserver ici.',
+    note:'Le client de JB n\'est pas le pilote, c\'est l\'école. Une date à afficher pour montrer qu\'il roule, sans rien vendre dessus.',
+  },
+]
+
+var modeChoisi = MODES[0]
+
+function dessinerOnglets() {
+  document.getElementById('onglets-mode').innerHTML = MODES.map(function (m) {
+    return '<button class="onglet" role="tab" data-mode="' + m.cle + '"'
+         + ' aria-selected="' + (m.cle === modeChoisi.cle) + '">' + echapper(m.nom) + '</button>'
+  }).join('')
+}
+
+function dessinerPanneau() {
+  var m = modeChoisi
+  document.getElementById('m-engage').textContent = m.engage
+  document.getElementById('m-risque').textContent = m.risque
+  document.getElementById('m-vend').textContent   = m.vend
+  document.getElementById('m-note').textContent   = m.note
+
+  // Le bouton change de nature avec le mode. C'est tout l'enjeu : le site ne
+  // peut encaisser que lorsque JB est le vendeur.
+  var bouton = m.site === 'inscrire'
+    ? '<span class="bouton ferme">S\'inscrire sur le site</span>'
+    : m.site === 'orienter'
+      ? '<span class="bouton ouvre">Voir chez l\'organisateur</span>'
+      : '<span class="bouton ouvre">Aucun bouton, date d\'information</span>'
+
+  document.getElementById('m-apercu').innerHTML = echapper(m.apercu) + '<br>' + bouton
+}
+
+document.getElementById('onglets-mode').addEventListener('click', function (ev) {
+  var b = ev.target.closest('[data-mode]')
+  if (!b) return
+  modeChoisi = MODES.filter(function (m) { return m.cle === b.dataset.mode })[0]
+  dessinerOnglets(); dessinerPanneau(); calculer()
+})
+
+// ── Ce que ça rapporte ──────────────────────────────────────────────────────
+// Aucun chiffre n'est inventé ici. Le coût part de zéro et attend d'être saisi,
+// le prix vient de ce que la base facture aujourd'hui. Le calcul se contente
+// de dire ce que ces deux nombres impliquent selon le mode.
+function calculer() {
+  var cout    = Number(document.getElementById('r-cout').value) || 0
+  var prix    = Number(document.getElementById('r-prix').value) || 0
+  var clients = Number(document.getElementById('r-clients').value) || 1
+  document.getElementById('r-clients-val').value = clients
+
+  var lignes = MODES.map(function (m) {
+    var recette, engage, detail
+
+    if (m.cle === 'entier') {
+      // JB vend la journée entière, il porte le coût quoi qu'il arrive.
+      recette = prix * clients
+      engage  = cout
+      detail  = clients + ' × ' + prix + ' € encaissés, ' + cout + ' € avancés'
+    } else if (m.cle === 'box') {
+      // Le box est un frais fixe, partagé entre les pilotes qu'il accueille.
+      recette = prix * clients
+      engage  = cout
+      detail  = clients + ' pilotes dans le box, ' + cout + ' € de box'
+    } else if (m.cle === 'greffe') {
+      // Frais partagés avec l'organisateur : moitié pour chacun.
+      recette = prix * clients
+      engage  = Math.round(cout / 2)
+      detail  = clients + ' × ' + prix + ' €, la moitié des ' + cout + ' € de frais'
+    } else if (m.cle === 'coaching') {
+      // Rien à avancer, chaque pilote paie son coaching.
+      recette = prix * clients
+      engage  = 0
+      detail  = clients + ' × ' + prix + ' € de coaching, rien à avancer'
+    } else {
+      // Moniteur loué : l'école paie une journée, le nombre de pilotes ne
+      // change rien pour JB.
+      recette = prix
+      engage  = 0
+      detail  = 'une journée facturée à l\'école, quel que soit le nombre de pilotes'
+    }
+
+    // Le seuil est le chiffre qui sert vraiment : combien de pilotes il faut
+    // pour couvrir ce que JB avance. Sans frais avancés, il n'y a pas de seuil.
+    var seuil = engage > 0 && prix > 0 ? Math.ceil(engage / prix) : 0
+
+    return { m:m, marge: recette - engage, detail:detail, seuil:seuil }
+  })
+
+  document.getElementById('resultat-marge').innerHTML = lignes.map(function (l) {
+    var seuil = l.seuil
+      ? '<div class="seuil">' + seuil_texte(l.seuil) + '</div>'
+      : '<div class="seuil sans">rien à couvrir, gagnant dès le premier pilote</div>'
+    return '<div class="carte-marge' + (l.m.cle === modeChoisi.cle ? ' retenu' : '') + '">'
+      + '<div class="nom">' + echapper(l.m.nom) + '</div>'
+      + '<div class="somme ' + (l.marge >= 0 ? 'positive' : 'negative') + '">'
+      + l.marge.toLocaleString('fr-FR') + ' €</div>'
+      + '<div class="detail">' + echapper(l.detail) + '</div>'
+      + seuil
+    + '</div>'
+  }).join('')
+}
+
+function seuil_texte(n) {
+  return n + (n > 1 ? ' pilotes' : ' pilote') + ' pour couvrir les frais'
+}
+
+;['r-cout','r-prix','r-clients'].forEach(function (id) {
+  document.getElementById(id).addEventListener('input', calculer)
+})
+
+dessinerOnglets(); dessinerPanneau(); calculer()
 
 // Rafraîchissement depuis la base. Échoue en silence là où le réseau est
 // coupé : la page reste lisible avec les données figées, et le dit.

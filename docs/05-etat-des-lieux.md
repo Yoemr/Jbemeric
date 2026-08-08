@@ -619,3 +619,17 @@ Sept policies sur huit cherchent le rôle applicatif dans le mauvais claim du je
 Seule `content_admin_write` sur `site_content` emploie le bon chemin, et le live-editor est la seule fonction d'administration qui ait jamais marché.
 
 Migration écrite et non appliquée : `outil-dev/migrations/2026-08-08-role-admin-dans-les-policies.sql`.
+
+### 8.7 Le formulaire d'inscription était refusé par la base
+
+`inscriptions.event_id` porte une clé étrangère vers `track_days`, alors que le site envoie un identifiant de `events`. Chaque inscription est refusée. Voir D-075.
+
+`track_days` est une table morte, une ligne de mars 2026, aucun fichier du dépôt ne la nomme.
+
+Migration écrite, non appliquée : `outil-dev/migrations/2026-08-08-inscriptions-vers-events.sql`.
+
+### 8.8 Les droits sont corrigés
+
+Migration appliquée le 8 août, D-076. Vérifié après coup : un admin connecté peut écrire dans `events`, un client et un anonyme ne peuvent pas. Sur `inscriptions`, l'anonyme écrit sans pouvoir relire, JB relit tout.
+
+**Le dashboard peut donc désormais fonctionner côté base.** Il reste un chantier côté interface, et Yoan a dit ne pas en avoir besoin à ce stade.

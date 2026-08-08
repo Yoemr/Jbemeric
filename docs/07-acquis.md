@@ -83,6 +83,14 @@ Aucun de ces outils ne pouvait le voir. Ils vérifient des formes, pas des faits
 
 `outil-dev/audit/regles/contacts.js` ferme le cas des coordonnées. Les autres catégories restent ouvertes.
 
+### 2.9bis Un profil de navigateur reutilise sert la page d'avant
+
+Le 8 août, trois essais de suite ont montré l'ancien comportement du formulaire de contact **après** sa correction. Le script se chargeait, le formulaire était trouvé, et la page se rechargeait quand même.
+
+C'était le `--user-data-dir` fixe d'un banc d'essai bricolé, qui servait la page mise en cache au premier essai. Il s'en est fallu de peu que je conclue à une correction sans effet et que je reparte casser autre chose.
+
+**Règle** : tout banc d'essai jetable crée son profil avec `mkdtemp`, comme le font `parcours.js` et `fumee.js`, et coupe le cache par `Network.setCacheDisabled`. C'est le même piège que la section 2.2 sur les captures d'écran, sous un autre déguisement.
+
 ### 2.9 Un outil doit distinguer « c'est cassé » de « je n'ai pas pu voir »
 
 Deux parcours ont annoncé « aucune date affichée » sur la page Événements. Le site n'y était pour rien : le poste ne joignait plus Supabase ni jsdelivr. Un outil qui confond les deux ment dans les deux sens, et c'est le sens favorable qu'on croit.

@@ -6,6 +6,58 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 8 août 2026, les chemins de conversion
+
+### D-082, Le formulaire de contact perdait tous les messages
+
+Il n'avait ni `action`, ni gestionnaire, ni le moindre script pour l'écouter. Un `<form>` sans `action` se renvoie sur sa propre URL en GET. Vérifié dans un navigateur :
+
+```
+contact.html?prenom=Jean&nom=Dupont&email=jean%40exemple.fr&message=Bonjour%2C+je...
+```
+
+La page se rechargeait, le formulaire revenait vide, **aucune requête ne partait nulle part**, et rien n'indiquait au visiteur que son message venait de disparaître. Au passage, le message finissait dans l'historique du navigateur et dans les journaux du serveur.
+
+Un `<div id="contact-alert">` attendait déjà dans le balisage : quelqu'un avait prévu un gestionnaire qui n'a jamais été écrit.
+
+**Pourquoi c'est traité alors que la page est hors périmètre.** C'est le seul moyen de contact proposé par le pied de page des neuf pages qui comptent, et le seul que possèdent les pages de l'Académie. Il casse donc le périmètre, cas prévu par la règle 7 de `CLAUDE.md`.
+
+Corrigé par `assets/js/contact-form.js`, qui se branche sur tout formulaire portant `data-contact`. Le message reste à l'écran, un bouton ouvre la messagerie du visiteur avec le texte déjà écrit, et le téléphone de JB sert de repli. **Aucune infrastructure nouvelle**, parce que ce choix revient à Yoan.
+
+**Contrôle négatif** : en retirant l'attribut `data-contact`, le parcours retrouve l'ancien comportement et échoue en le nommant.
+
+### D-083, Les pages de l'Académie n'offrent aucun moyen de joindre JB
+
+Relevé, non corrigé, parce que c'est une décision éditoriale.
+
+| Page | Téléphone | Courriel | Formulaire |
+|---|---|---|---|
+| `index.html` | aucun | aucun | aucun |
+| `academie.html` | aucun | aucun | aucun |
+| `academie/karting-adulte.html` | aucun | aucun | aucun |
+| `academie/competition.html` | aucun | aucun | aucun |
+| `academie/karting-enfant.html` | 1 | aucun | aucun |
+| `coaching.html` | aucun | 5 | aucun |
+| `track.html` | aucun | 3 | l'inscription |
+
+Un visiteur qui lit la page Compétition et veut appeler doit descendre jusqu'au pied de page. Le seul appel à l'action visible en haut de toutes les pages est le bouton or du menu, qui mène à la **création d'un compte**, pas à une prise de contact.
+
+**À trancher par Yoan** : le bouton or du menu reste-t-il sur la création de compte, ou devient-il un appel à joindre JB ?
+
+### D-084, Une table pour les messages, écrite et non appliquée
+
+Le repli par messagerie ne marche pas pour qui lit son courrier dans un navigateur sans logiciel configuré. `outil-dev/migrations/2026-08-08-table-messages.sql` ferme ce trou.
+
+**Elle n'est pas appliquée**, et pas seulement par prudence : appliquée seule, elle ferait arriver les messages dans une table que personne ne regarde. Il faut d'abord une section Messages dans le dashboard, qui est un chantier.
+
+### D-085, Un banc d'essai qui gardait son profil m'a fait croire que la correction ne marchait pas
+
+Trois essais de suite ont montré l'ancien comportement après la correction. Le script se chargeait pourtant, le formulaire était trouvé. C'était le profil Chromium réutilisé d'un essai à l'autre, qui servait la page d'avant.
+
+Les outils de `outil-dev/` n'avaient pas ce défaut, ils créent un profil neuf à chaque exécution. `parcours.js` coupe désormais le cache en plus, parce qu'un parcours qui recharge la page en cours de route pourrait relire un fichier d'avant la correction qu'il teste.
+
+---
+
 ## 8 août 2026, la chaîne d'inscription entière
 
 ### D-078, La clé étrangère est corrigée, le site peut enfin prendre une inscription

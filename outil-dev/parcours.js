@@ -239,6 +239,54 @@ const PARCOURS = [
       return true
     })()`,
   },
+  {
+    nom: 'formulaire de contact, un message n est jamais perdu en silence',
+    page: 'admin/legal/contact.html',
+    largeur: 1300,
+    // Cette page est hors perimetre, mais elle est le seul moyen de contact
+    // propose par le pied de page des neuf pages qui comptent, et le seul que
+    // possedent les pages de l'Academie : ni telephone ni adresse dans leur
+    // corps. A ce titre elle casse le perimetre, donc elle se teste.
+    //
+    // Avant le 8 aout 2026 le formulaire n'avait ni action ni gestionnaire. Un
+    // <form> sans action se renvoie sur sa propre URL en GET : la page se
+    // rechargeait, le formulaire revenait vide, le message partait dans l'URL
+    // et disparaissait. Rien ne le disait au visiteur.
+    action: `(function () {
+      var f = document.querySelector('form[data-contact]') || document.getElementById('contact-form')
+      f.prenom.value  = 'Jean'
+      f.nom.value     = 'Dupont'
+      f.email.value   = 'jean.dupont@exemple.fr'
+      f.message.value = 'Bonjour, je voudrais un coaching au Grand Sambuc.'
+      document.getElementById('contact-btn').click()
+    })()`,
+    attente: 900,
+    attendu: `(function () {
+      if (location.search !== '')
+        return 'la page s est rechargee, le message est parti dans l URL et le formulaire est vide'
+
+      var f = document.getElementById('contact-form')
+      if (!f || !f.message.value)
+        return 'le message a disparu du formulaire'
+
+      var zone = document.getElementById('contact-alert')
+      if (!zone || getComputedStyle(zone).display === 'none')
+        return 'rien n indique au visiteur ce qu il doit faire de son message'
+
+      var courrier = zone.querySelector('a[href^="mailto:"]')
+      if (!courrier) return 'aucun moyen d envoyer le message'
+      var lien = decodeURIComponent(courrier.getAttribute('href'))
+      if (lien.indexOf('Grand Sambuc') === -1)
+        return 'le message du visiteur n est pas repris dans le courrier prepare'
+
+      var tel = zone.querySelector('a[href^="tel:"]')
+      if (!tel) return 'aucun numero de repli si la messagerie ne s ouvre pas'
+      if (tel.getAttribute('href') !== 'tel:+33660188787')
+        return 'numero inattendu : ' + tel.getAttribute('href')
+
+      return true
+    })()`,
+  },
 ]
 
 // ── Pourquoi ce preambule existe ────────────────────────────────────────────
@@ -308,6 +356,14 @@ async function jouer(p) {
     })
     await envoyer('Page.enable')
     await envoyer('Runtime.enable')
+    // Le profil est neuf a chaque execution, donc le cache est deja vide. On le
+    // coupe quand meme : un parcours qui recharge la page en cours de route
+    // pourrait sinon relire un fichier d'avant la correction qu'on teste.
+    // Piege paye le 8 aout sur un banc d'essai bricole qui gardait son profil :
+    // la correction du formulaire de contact a semble ne rien changer pendant
+    // trois essais.
+    await envoyer('Network.enable')
+    await envoyer('Network.setCacheDisabled', { cacheDisabled: true })
     await envoyer('Page.navigate', { url: `${BASE}/${p.page}` })
     await dormir(2500)
 

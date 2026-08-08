@@ -643,3 +643,11 @@ Clé étrangère corrigée, D-078. Formulaire vérifié dans le navigateur, D-07
 ### 8.10 Une décision en attente sur track.html
 
 Le compteur « X dates, Y inscriptions ouvertes » était écrit par le script vers un identifiant absent de la page. Il ne s'est jamais affiché. Le code est retiré. Si Yoan le veut, il faut décider où le placer.
+
+### 8.11 Les chemins de conversion du site
+
+Le formulaire de contact perdait tous les messages, D-082. Corrigé sans créer d'infrastructure.
+
+**Ce qui reste ouvert, et qui revient à Yoan** : aucune page de l'Académie ne propose de joindre JB dans son corps, D-083. Le seul appel à l'action visible en haut de toutes les pages est le bouton or du menu, qui mène à la création d'un compte.
+
+Une table `messages` est écrite et non appliquée, D-084. Elle attend une section Messages dans le dashboard, sans laquelle les messages arriveraient là où personne ne regarde.

@@ -30,7 +30,28 @@ Les six occurrences dans les consignes sont corrigées.
 
 **Elle surveille aussi les consignes**, puisque c'est là que le défaut s'était installé. Avec une exception : un exemple cité entre guillemets pour montrer le défaut n'est pas le défaut, sinon la règle signale la documentation qui la décrit.
 
-**Les textes du site ne sont pas corrigés**, Yoan a demandé qu'on ne touche plus au contenu avant d'avoir validé la structure. Le comptage attend.
+**Les textes du site ont été corrigés le lendemain**, sur autorisation de Yoan. Voir D-049.
+
+### D-049, Les six tournures du périmètre sont réécrites, base de données comprise
+
+Autorisation de Yoan, 7 août : modifier le texte de l'accueil, de l'Académie, du karting adulte et enfant, du Coaching et de la Compétition.
+
+| Page | Avant | Après |
+|---|---|---|
+| `index.html` | JB EMERIC encadre, **pas des volontaires diplômés la veille** | C'est Jean-Baptiste Emeric qui encadre, du briefing au dernier tour |
+| `academie.html` | **Pas de pilote automatique, pas de talent supposé** | Le chrono dit ce que vous savez faire aujourd'hui |
+| `academie.html` | Je l'ai vécu en compétition. **Pas dans un manuel.** | Je l'ai vécu en compétition. Sur la piste, sous pression |
+| `coaching.html` | Vous avez des chronos, **pas les résultats que vous méritez** | Vous tournez vite et vous finissez quand même derrière |
+| `coaching.html` | Il sait ce qu'on ressent dedans, **pas juste ce qu'il faut faire** | Il sait ce qu'on ressent quand l'arrière décroche |
+| `competition.html` | forme des pilotes qui courent en championnat, **pas des clients qui se promènent** | forme des pilotes qui prennent le départ en championnat |
+
+`karting-enfant.html` et `karting-adulte.html` n'en portaient aucune.
+
+**Le point qui aurait fait rater la correction.** Deux de ces textes existaient aussi dans Supabase, `academie__jb-quote-formateur` et `academie__txt-3`, saisis en avril. Le live-editor sert la base avant le HTML, donc corriger le fichier seul n'aurait rien changé pour un visiteur. Les deux lignes ont été mises à jour, et le cache local de la page synchronisé.
+
+**Un piège de vérification à connaître.** Sur cette machine, `cdn.jsdelivr.net` est bloqué, donc `live-editor.js` ne se charge jamais et la page affiche toujours son HTML. Un rendu local ne prouve donc rien sur ce que voit un visiteur dès qu'un texte existe en base. Il faut interroger Supabase.
+
+**Reste à trancher.** Ces deux lignes recopiées en base écraseront toute future modification du HTML sur ces deux éléments. Les supprimer rendrait la main au fichier, ce qui vaudrait mieux pendant une phase de restructuration. Décision de Yoan.
 
 ### D-048, JB aura sa page, et le palmarès ira dedans
 

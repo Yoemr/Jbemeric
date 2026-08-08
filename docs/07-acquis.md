@@ -48,6 +48,7 @@ Quatre fois le même piège, sous quatre habillages.
 - **La classe construite par concaténation.** `palmares.js` écrit `class="pal-year pal-year--heavy' + (isHL ? ' pal-year--highlight' : '')`. Lire le préfixe littéral seul ratait 107 sélecteurs sur 332.
 - **Les balises fabriquées en JS.** `palmares.html` ne contient aucun `<a>` écrit à la main.
 - **Les chemins d'images écrits dans du code.** `track-render.js` réclamait trois fichiers absents, dont l'image de repli. La règle des liens ne lisait que le HTML.
+- **Les ancres construites en JavaScript.** La règle `liens` lisait `sansScripts`, donc le HTML privé de ses balises script. Le menu et le miroir de l'accueil pointaient sur cinq ancres inexistantes, invisibles pendant des mois.
 
 ### 2.4 Le mode de parsing change le verdict
 

@@ -8,6 +8,36 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ## 8 août 2026, le hero qui débordait
 
+### D-054, L'audit ne voyait pas les liens construits en JavaScript
+
+La règle `liens` lisait `p.sansScripts`, c'est-à-dire le HTML **privé de ses balises script**. Une ancre écrite dans du code lui était donc invisible. Elle annonçait zéro ancre cassée alors qu'il y en avait cinq.
+
+**Deux familles ajoutées.**
+
+Les ancres construites en JavaScript, résolues via `routes.js` : `R.track + '#voiture-perso'` devient `/track.html#voiture-perso`, vérifiable.
+
+Les ancres qui visent une autre page. `href="coaching.html#amateur"` était accepté sans jamais regarder si `coaching.html` porte cet identifiant.
+
+**Précaution** : les identifiants fabriqués par un script comptent comme présents, `ctx.pages[].idsJs`. Sans ça, toute ancre vers `palmares.html`, rendue entièrement en JavaScript, passerait pour cassée.
+
+### D-055, Deux ancres manquantes envoyaient les visiteurs de l'accueil au mauvais endroit
+
+`sync-mirror.js` aspire les deux offres de `coaching.html` dans l'accueil et les lie à `coaching.html#amateur` et `#competition`. **Aucune des deux ancres n'existait.** Un visiteur qui cliquait sur « Coaching compétition » depuis l'accueil atterrissait en haut de la page de coaching, à lui de retrouver l'offre.
+
+Corrigé en donnant leur identifiant aux deux cartes d'offre. Aucune section créée, aucun texte touché : les liens existaient déjà, il leur manquait leur cible.
+
+**Sans risque pour le live-editor** : il ignore les éléments qui contiennent un lien ou un champ, et ces deux cartes en contiennent. Leur donner un `id` ne décale aucune clé.
+
+Un parcours de `parcours.js` clique désormais cette carte depuis l'accueil et vérifie l'arrivée.
+
+### D-056, Une entrée de menu mène nulle part, décision à Yoan
+
+« Stages & Track-Days » puis « Votre voiture » pointe sur `track.html#voiture-perso`. Cette ancre n'existe pas et n'a jamais existé. Le sujet est traité dans la page, à l'intérieur de la section `#trackdays`, sans bloc propre.
+
+**Non corrigé volontairement.** Les deux issues touchent le menu, et D-011 le réserve à Yoan. Soit l'entrée disparaît, soit elle pointe sur `#trackdays`, ce qui ferait deux entrées vers la même ancre. La page Événements étant destinée à être refondue, la question se reposera de toute façon.
+
+Signalé dans `docs/05` depuis le 1er août, jamais tranché.
+
 ### D-052, La confirmation d'inscription ne ment plus
 
 `track-render.js` envoyait l'inscription puis affichait l'écran de confirmation **sans attendre la réponse**, avec un `.catch(function(){})` vide qui avalait toute erreur. Un visiteur pouvait repartir persuadé d'avoir sa place alors que rien n'était enregistré. Invisible côté client, invisible côté JB.

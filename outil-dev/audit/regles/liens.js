@@ -7,6 +7,39 @@
 const fs = require('fs')
 const path = require('path')
 
+// Un identifiant peut ne pas figurer dans le HTML : palmares.html est rendu
+// entierement en JavaScript. On accepte donc aussi ceux que les scripts
+// fabriquent, sinon la regle crie sur des ancres parfaitement valides.
+function idConnu(page, id) {
+  return page.ids.has(id) || (page.idsJs && page.idsJs.has(id))
+}
+
+// Ancres construites dans du JavaScript, typiquement le menu :
+//
+//   { href: R.track + '#voiture-perso', label: 'Votre voiture' }
+//
+// La regle ne lisait que le HTML, et p.sansScripts retire meme les balises
+// script. Une entree de menu pouvait donc pointer sur une ancre inexistante
+// pendant des mois sans que rien ne le dise. Constate le 8 aout 2026 :
+// « Votre voiture » menait a #voiture-perso, absente de track.html.
+//
+// C'est le menu, c'est-a-dire exactement ce que JB ne saura pas reparer seul.
+function ancresDuJavaScript(ctx) {
+  const trouvees = []
+  for (const f of ctx.js) {
+    // R.cle + '#ancre'
+    for (const m of f.code.matchAll(/\bR\.([a-zA-Z]+)\s*\+\s*'#([^']+)'/g)) {
+      const chemin = ctx.routes[m[1]]
+      if (chemin) trouvees.push({ fichier: f.chemin, cible: chemin.replace(/^\//, ''), ancre: m[2] })
+    }
+    // '/page.html#ancre' ecrit en clair
+    for (const m of f.code.matchAll(/'\/?([a-zA-Z0-9/_-]+\.html)#([^']+)'/g)) {
+      trouvees.push({ fichier: f.chemin, cible: m[1], ancre: m[2] })
+    }
+  }
+  return trouvees
+}
+
 module.exports = {
   id: 'liens',
   titre: 'Liens, ancres et images',
@@ -33,6 +66,16 @@ module.exports = {
       for (const m of p.sansScripts.matchAll(/href="#([^"]+)"/g)) {
         if (!p.ids.has(m[1])) {
           anomalies.push({ niveau: 'faute', ou: p.chemin, quoi: `ancre #${m[1]} sans element correspondant` })
+        }
+      }
+
+      // 2bis. Ancres qui visent une AUTRE page. Verifiees dans cette page-la.
+      for (const m of p.sansScripts.matchAll(/href="((?!https?:)[^"#]*\.html)#([^"]+)"/g)) {
+        const cible = m[1].replace(/^\.?\//, '')
+        const page = ctx.pages.find(x => x.chemin === cible || x.chemin.endsWith('/' + cible))
+        if (!page) continue   // la page manquante est deja signalee par la regle 3
+        if (!idConnu(page, m[2])) {
+          anomalies.push({ niveau: 'faute', ou: p.chemin, quoi: `ancre #${m[2]} absente de ${page.chemin}` })
         }
       }
 
@@ -66,6 +109,28 @@ module.exports = {
       }
     }
 
-    return { anomalies, resume: `${ctx.pages.length} pages inspectees` }
+    // 5. Ancres construites dans du JavaScript, le menu au premier chef.
+    const ancresJs = ancresDuJavaScript(ctx)
+    for (const a of ancresJs) {
+      const page = ctx.pages.find(x => x.chemin === a.cible || x.chemin.endsWith('/' + a.cible))
+      if (!page) {
+        anomalies.push({ niveau: 'faute', ou: a.fichier, quoi: `pointe vers ${a.cible}, page introuvable` })
+        continue
+      }
+      if (!idConnu(page, a.ancre)) {
+        // Le champ « ou » designe la PAGE visee et non le script : c'est elle
+        // qui doit porter l'ancre, et c'est elle qui decide du perimetre.
+        anomalies.push({
+          niveau: 'faute',
+          ou: page.chemin,
+          quoi: `${a.fichier} pointe sur #${a.ancre}, absente de cette page`,
+        })
+      }
+    }
+
+    return {
+      anomalies,
+      resume: `${ctx.pages.length} pages inspectees, ${ancresJs.length} ancre(s) construite(s) en JS`,
+    }
   },
 }

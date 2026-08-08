@@ -91,6 +91,19 @@ const PARCOURS = [
     attendu: `document.querySelectorAll('[data-videos] iframe').length === 0 || 'des videos sont chargees sur telephone'`,
   },
   {
+    nom: 'carte Coaching de l accueil, vers la bonne offre',
+    page: 'index.html',
+    largeur: 1300,
+    // Les cartes de l'accueil sont aspirees de coaching.html par sync-mirror.js
+    // et pointent sur #amateur et #competition. Ces deux ancres ont manque
+    // pendant des mois : le visiteur atterrissait en haut de la page au lieu
+    // de l'offre sur laquelle il avait clique. Invisible pour un verificateur
+    // de liens, qui ne lisait pas les ancres construites en JavaScript.
+    action: `document.querySelector('#mirror-coaching a[href*="#amateur"]').click()`,
+    attente: 1500,
+    attendu: `(location.pathname.includes('coaching') && !!document.getElementById('amateur')) || 'arrive sur ' + location.pathname + location.hash + ', ancre presente : ' + !!document.getElementById('amateur')`,
+  },
+  {
     nom: 'vote track-day, connu pour ne rien enregistrer',
     page: 'track.html',
     largeur: 1300,

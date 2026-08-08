@@ -63,6 +63,9 @@ function construire() {
       // Sans les blocs script : leurs chaines contiennent des src= et des
       // href= construits par concatenation, qui ne sont pas des liens.
       sansScripts: sansCacheLiveEditor(html).replace(/<script[\s\S]*?<\/script>/gi, ''),
+      // Identifiants que les scripts de la page fabriquent. Sans eux, une
+      // ancre valide vers une page rendue en JavaScript passerait pour cassee.
+      idsJs: new Set(),
     }
   })
 
@@ -150,6 +153,10 @@ function construire() {
       routes[m[1]] = m[2]
     }
   }
+
+  // Les identifiants fabriques en JavaScript sont connus de toutes les pages :
+  // on ne sait pas lequel les cree, seulement qu'ils existent a l'execution.
+  for (const p of pages) p.idsJs = idsJs
 
   return { racine: RACINE, pages, css, js, classesJs, routes, lire }
 }

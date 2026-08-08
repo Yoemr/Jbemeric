@@ -38,12 +38,19 @@ Le reste de l'écriture est libre.
 
 ## 4. Méthode
 
+> **À faire en premier, avant toute vérification : lire `docs/07-acquis.md`.**
+> Il dit ce qui est déjà prouvé et qu'il ne faut pas revérifier, ce que les outils ne voient pas, et les pièges d'instrument déjà payés. Reproche de Yoan du 8 août : « une nouvelle session te ferait sûrement re-re-revérifier des trucs inutiles. » Ce fichier existe pour que ça n'arrive plus.
+
 1. **Cadrer avant de construire.** Un chantier qui touche plus d'une page ou modifie une structure commence par une discussion, puis une fiche courte dans `docs/chantiers/` validée par Yoan. Une retouche ponctuelle se fait directement.
 2. **Règle des 95 %.** Aucune modification de code si la solution n'est pas sûre à 95 %. Dans le doute, poser une question précise.
 3. **Deux tentatives maximum sur un bug.** Au-delà, arrêt et changement d'approche. Aucun retour arrière sans énoncer la cause racine.
 4. **Vérifier, pas affirmer.** Une anomalie se prouve par un test, pas par une lecture de code. **Commencer par `node outil-dev/audit/audit.js`**, jamais par une exploration à la main : l'état du site est calculé, pas rédigé. Ne pas se fier à `docs/05` pour ce qui est mesurable.
-5. **Le périmètre avant tout le reste.** Huit pages comptent : index, académie, karting, compétition, coaching, track, paddock, palmarès. Un défaut ailleurs se signale, il ne se corrige pas sans demander.
-6. **Fin de chantier** : mise à jour de `docs/05-etat-des-lieux.md` et `docs/06-decisions.md`, puis résumé court.
+5. **Contrôle négatif avant toute conclusion favorable.** Avant de croire un « identique », un « aucune faute » ou un « zéro occurrence », introduire volontairement le défaut et vérifier que l'instrument le voit. Une comparaison qui ne sait pas voir une différence dira toujours « identique ». Quatre faux résultats démasqués par cette règle le 7 août.
+6. **Le périmètre avant tout le reste.** Neuf pages comptent : index, académie, karting enfant et adulte, compétition, coaching, track, paddock, palmarès. Un défaut ailleurs se signale, il ne se corrige pas sans demander.
+7. **Un défaut trouvé hors de la demande se note, il ne se corrige pas.** Sauf s'il casse la chose demandée. Sinon il va dans `docs/05` et Yoan décide. C'est la parade à la dérive qui produit 95 % de correction pour 5 % de visible.
+8. **Dire avant de commencer ce que Yoan verra à l'écran quand ce sera fini.** Si la réponse est « rien », le dire tout de suite et le laisser choisir.
+9. **Toute correction de texte se vérifie aussi dans Supabase.** Le live-editor sert la base avant le HTML : corriger un fichier ne change rien pour un visiteur si un texte existe en base sous la même clé.
+10. **Fin de chantier** : mise à jour de `docs/05-etat-des-lieux.md`, `docs/06-decisions.md`, et des pièges rencontrés dans `docs/07-acquis.md`, puis résumé court.
 
 ---
 
@@ -72,6 +79,7 @@ Conventions détaillées dans `docs/03-technique.md`.
 | `docs/04-contenus-seo.md` | Règles éditoriales, mots-clés, metas, glossaire | Rôle éditorial |
 | `docs/05-etat-des-lieux.md` | Inventaire vérifié du site | Tout le monde |
 | `docs/06-decisions.md` | Journal des décisions | Sur demande |
+| `docs/07-acquis.md` | **Ce qui est prouvé, ce que les outils ne voient pas, les pièges d'instrument** | **Tout le monde, en premier** |
 | `docs/audit-plateformes.md` | Empreinte web complète de JB | Rôles éditorial et SEO |
 | `docs/99-matiere-brute.md` | Notes libres de Yoan | Sur demande |
 | `docs/chantiers/` | Une fiche par chantier, datée | Sur demande |

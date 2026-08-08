@@ -48,12 +48,22 @@ const VARIANTES = [
 const EXCLUS = /^outil-dev\/audit\//
 
 function phrases(html) {
-  // On ne garde que le texte entre balises, sans les valeurs d'attributs.
-  return html
+  // Les descriptions meta d'abord. Elles vivent dans des attributs, donc le
+  // nettoyage ci-dessous les effacerait, et ce sont pourtant elles que Google
+  // affiche. Le 8 aout, « une vraie formation pour courir en championnat, pas
+  // du loisir » se cachait la, invisible pour la regle.
+  const metas = [...html.matchAll(/<meta[^>]*(?:name|property)="(?:description|og:description|twitter:description)"[^>]*content="([^"]*)"/gi)]
+    .map(m => m[1])
+    .join('. ')
+
+  // Puis le texte entre balises, sans les valeurs d'attributs.
+  const corps = html
     .replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
     .replace(/&[a-z]+;/gi, ' ')
     .replace(/\s+/g, ' ')
+
+  return metas + '. ' + corps
 }
 
 module.exports = {

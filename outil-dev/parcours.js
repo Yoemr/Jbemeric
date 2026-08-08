@@ -14,10 +14,15 @@
 // correct dans le HTML ne prouve rien de tout ca.
 //
 // ── Ce que ca ne fait pas, volontairement ───────────────────────────────────
-// Aucune ecriture. Ni inscription, ni vote enregistre, ni connexion, ni
-// sauvegarde de texte. Ces parcours ecrivent dans la base de production de JB,
-// et personne n'a demande a y semer des donnees de test. Ils restent a faire,
-// le jour ou on aura un environnement separe ou un compte d'essai.
+// Aucune ecriture dans la base de production de JB. Personne n'a demande a y
+// semer des donnees de test.
+//
+// L'inscription est tout de meme testee, en remplacant fetch le temps du clic :
+// la requete est capturee au lieu de partir, la reponse est simulee. Les deux
+// parcours d'inscription sont donc jouables partout, y compris chez Yoan.
+//
+// Restent hors de portee : la connexion, et la sauvegarde d'un texte par JB.
+// Elles attendent un environnement separe ou un compte d'essai.
 //
 // ── Honnetete sur la methode ────────────────────────────────────────────────
 // Les clics sont declenches par element.click() via le protocole DevTools, pas
@@ -135,6 +140,103 @@ const PARCOURS = [
         if (m && m[1] !== 'all' && !statuts[m[1]]) morts.push(t.textContent.trim())
       })
       return morts.length === 0 || 'onglet(s) sans aucune carte : ' + morts.join(', ')
+    })()`,
+  },
+  {
+    nom: 'inscription, le corps envoye est celui que la base accepte',
+    page: 'track.html',
+    largeur: 1300,
+    // ── Comment ce parcours evite d'ecrire en production ────────────────────
+    // Il remplace fetch le temps du clic. La requete est capturee au lieu de
+    // partir, et la reponse est simulee reussie. Rien n'atteint Supabase, donc
+    // ce parcours est jouable partout, y compris sur le poste de Yoan.
+    //
+    // Ce qu'il verifie, et qui a coute cher : la cle etrangere de
+    // inscriptions.event_id visait track_days alors que le site envoie un
+    // identifiant venu de events. La base refusait chaque inscription depuis
+    // toujours, et personne ne pouvait le voir. Ce parcours fige le contrat
+    // entre ce que la page envoie et ce que la base attend.
+    action: `(function () {
+      var vrai = window.fetch
+      window.__capture = null
+      window.fetch = function (url, options) {
+        if (String(url).indexOf('/inscriptions') !== -1) {
+          window.__capture = { url: String(url), corps: JSON.parse(options.body) }
+          return Promise.resolve({ ok: true, status: 201, json: function () { return Promise.resolve({}) } })
+        }
+        return vrai.apply(this, arguments)
+      }
+      window.openModal('Essai', 195, 'Circuit de Brignoles', '00000000-1111-2222-3333-444444444444')
+      document.getElementById('sr-prenom').value = 'Jean'
+      document.getElementById('sr-nom').value    = 'Dupont'
+      document.getElementById('sr-email').value  = 'jean.dupont@exemple.fr'
+      document.getElementById('sr-tel').value    = '0612345678'
+      window.confirmInscription()
+    })()`,
+    attente: 800,
+    attendu: `(function () {
+      var c = window.__capture
+      if (!c) return 'aucune requete d inscription n a ete construite'
+
+      // Les colonnes obligatoires de la table. user_name et email sont NOT NULL :
+      // les oublier fait echouer l insertion sans que la page le sache.
+      var obligatoires = ['user_name', 'email']
+      var manquants = obligatoires.filter(function (k) { return !c.corps[k] })
+      if (manquants.length) return 'champs obligatoires absents du corps : ' + manquants.join(', ')
+
+      if (c.corps.event_id !== '00000000-1111-2222-3333-444444444444')
+        return 'l identifiant de l evenement ne suit pas, recu : ' + c.corps.event_id
+
+      if (c.corps.user_name !== 'Jean Dupont') return 'user_name mal compose : ' + c.corps.user_name
+      if (c.corps.email !== 'jean.dupont@exemple.fr') return 'email mal transmis : ' + c.corps.email
+
+      // Et la confirmation ne doit s afficher qu apres une reponse favorable.
+      var conf = document.getElementById('sr-confirm-view')
+      if (!conf || getComputedStyle(conf).display === 'none')
+        return 'la base a repondu oui mais la confirmation ne s affiche pas'
+      var rappel = document.getElementById('confirm-email')
+      if (!rappel || rappel.textContent !== 'jean.dupont@exemple.fr')
+        return 'la confirmation ne rappelle pas l adresse saisie, le visiteur ne peut pas voir sa faute de frappe'
+
+      return true
+    })()`,
+  },
+  {
+    nom: 'inscription, un echec ne se deguise jamais en confirmation',
+    page: 'track.html',
+    largeur: 1300,
+    // Le defaut le plus grave possible sur un formulaire, corrige le 8 aout :
+    // l ecran de confirmation s affichait quoi qu il arrive. Le visiteur
+    // repartait en croyant sa place reservee. Ni lui ni JB ne pouvaient le voir.
+    action: `(function () {
+      var vrai = window.fetch
+      window.fetch = function (url) {
+        if (String(url).indexOf('/inscriptions') !== -1) {
+          return Promise.resolve({ ok: false, status: 500 })
+        }
+        return vrai.apply(this, arguments)
+      }
+      window.openModal('Essai', 195, 'Circuit de Brignoles', '00000000-1111-2222-3333-444444444444')
+      document.getElementById('sr-prenom').value = 'Jean'
+      document.getElementById('sr-nom').value    = 'Dupont'
+      document.getElementById('sr-email').value  = 'jean.dupont@exemple.fr'
+      window.confirmInscription()
+    })()`,
+    attente: 800,
+    attendu: `(function () {
+      var conf = document.getElementById('sr-confirm-view')
+      if (conf && getComputedStyle(conf).display !== 'none')
+        return 'la base a refuse et la page affiche pourtant une confirmation'
+
+      var err = document.getElementById('sr-erreur')
+      if (!err) return 'aucun message d erreur, le visiteur ne sait pas que rien n est enregistre'
+
+      var tel = err.querySelector('a[href^="tel:"]')
+      if (!tel) return 'le message d erreur ne donne aucun numero a appeler'
+      if (tel.getAttribute('href') !== 'tel:+33660188787')
+        return 'numero inattendu dans le message d erreur : ' + tel.getAttribute('href')
+
+      return true
     })()`,
   },
 ]
@@ -277,8 +379,9 @@ async function principal() {
     console.log(echecs ? `  ${echecs} parcours cassé(s).` : '  Tous les parcours joues passent.')
     if (sansBase) console.log(`  ${sansBase} parcours non joue(s), faute d acces a Supabase. A rejouer sur un poste connecte.`)
     console.log('')
-    console.log('  Non teste, faute d environnement separe : inscription, connexion,')
-    console.log('  sauvegarde d un texte par JB. Ces parcours ecrivent en base.')
+    console.log('  L inscription est testee sans rien ecrire : fetch est remplace le temps')
+    console.log('  du clic, la requete est capturee et la reponse simulee. Restent hors de')
+    console.log('  portee : la connexion, et la sauvegarde d un texte par JB.')
     console.log('')
   } finally {
     nav.kill()

@@ -633,3 +633,13 @@ Migration écrite, non appliquée : `outil-dev/migrations/2026-08-08-inscription
 Migration appliquée le 8 août, D-076. Vérifié après coup : un admin connecté peut écrire dans `events`, un client et un anonyme ne peuvent pas. Sur `inscriptions`, l'anonyme écrit sans pouvoir relire, JB relit tout.
 
 **Le dashboard peut donc désormais fonctionner côté base.** Il reste un chantier côté interface, et Yoan a dit ne pas en avoir besoin à ce stade.
+
+### 8.9 La chaîne d'inscription est réparée et testée
+
+Clé étrangère corrigée, D-078. Formulaire vérifié dans le navigateur, D-079. Deux parcours permanents le protègent sans jamais écrire en base, D-080.
+
+**Ce qui reste non vérifié** : les deux moitiés tournant ensemble sur le réseau. Ce poste ne joint pas Supabase.
+
+### 8.10 Une décision en attente sur track.html
+
+Le compteur « X dates, Y inscriptions ouvertes » était écrit par le script vers un identifiant absent de la page. Il ne s'est jamais affiché. Le code est retiré. Si Yoan le veut, il faut décider où le placer.

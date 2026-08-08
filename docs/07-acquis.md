@@ -142,6 +142,10 @@ grep -c "^function f\|^window\.f =\|^const f =" fichier.js
 
 > **Le 8 août, `fyaybxamuabawerqzuud.supabase.co` l'a été aussi**, en cours de session. Ce n'est donc pas un acquis stable : le vérifier plutôt que le supposer, dans un sens comme dans l'autre. `curl --noproxy '*' -o /dev/null -w '%{http_code}' https://fyaybxamuabawerqzuud.supabase.co/rest/v1/` répond en une seconde. Quand la base est injoignable en HTTP, le serveur MCP Supabase, lui, continue de répondre : c'est la voie de repli pour lire ou corriger du contenu.
 
+**L'audit ne voit pas le contrat entre la page et la base.** Le 8 août, la clé étrangère de `inscriptions.event_id` visait `track_days` alors que le site envoie un identifiant venu de `events`. Chaque inscription était refusée depuis toujours. Le code était correct, le schéma était cohérent, et c'est l'accord entre les deux qui ne l'était pas. Voir D-075.
+
+> **La façon de tester ça sans rien écrire en production** : remplacer `fetch` le temps du clic, capturer la requête et simuler la réponse. C'est ce que font les deux parcours d'inscription. Ils sont jouables partout, y compris chez Yoan.
+
 **L'audit ne voit pas les droits.** Aucun des quatre outils ne lit les policies de sécurité. Le 8 août, sept policies sur huit se sont révélées fausses en toutes circonstances, et rien ne l'avait jamais signalé : le code est correct, la base est correcte, c'est l'accord entre les deux qui ne l'est pas. Voir D-073.
 
 > **La question à poser avant de conclure qu'un bouton d'administration marche** : est-ce que la policy qui l'autorise cherche le rôle dans `user_metadata` ? Le claim `auth.jwt() ->> 'role'` vaut toujours `authenticated`, jamais le rôle applicatif. Une policy qui l'interroge est fausse par construction.

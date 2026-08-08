@@ -6,6 +6,59 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 8 août 2026, la chaîne d'inscription entière
+
+### D-078, La clé étrangère est corrigée, le site peut enfin prendre une inscription
+
+Yoan a répondu « continue » après avoir lu D-075. Migration appliquée.
+
+Vérifié après coup, rôle `anon`, transaction annulée :
+
+| Essai | Résultat |
+|---|---|
+| la contrainte vise | `events` |
+| le corps exact que le site envoie | **accepté** |
+| un identifiant qui n'existe nulle part | refusé, la contrainte protège toujours |
+| relecture par un anonyme | 0 ligne |
+| relecture par JB | 1 ligne |
+
+Le troisième essai est le contrôle qui compte : repointer la contrainte ne l'a pas désarmée.
+
+`track_days` n'est pas supprimée.
+
+### D-079, Le formulaire vérifié de bout en bout, dans le navigateur
+
+Rempli et envoyé pour de vrai depuis Chromium. Le corps construit par la page :
+
+```
+{"user_name":"Jean Dupont","prenom":"Jean","nom":"Dupont",
+ "email":"jean.dupont@exemple.fr","telephone":"0612345678",
+ "coaching_requested":false,"avec_vehicule":false,"avec_coaching":false,
+ "event_id":"4f6bdf5a-...","statut":"en_attente"}
+```
+
+C'est exactement le corps que la base accepte. Les deux moitiés de la chaîne sont vérifiées séparément et se rejoignent au caractère près. Ce qui reste non vérifié est les deux moitiés tournant ensemble sur le réseau, faute d'accès depuis ce poste.
+
+Le chemin d'échec a été éprouvé au passage, Supabase étant injoignable ici : le formulaire reste à l'écran avec ses valeurs, aucune confirmation n'apparaît, et le message donne le 06 60 18 87 87.
+
+### D-080, Deux parcours d'inscription qui n'écrivent jamais en base
+
+`fetch` est remplacé le temps du clic. La requête est capturée au lieu de partir, la réponse est simulée. Les deux parcours sont donc jouables partout, y compris chez Yoan, sans semer une ligne de test dans la base de JB.
+
+Le premier fige le contrat entre ce que la page envoie et ce que la base attend, c'est-à-dire exactement ce qui a manqué pendant des mois. Le second interdit qu'un échec se déguise en confirmation.
+
+**Contrôles négatifs** : en supprimant l'email du corps, le premier échoue en le nommant. En rebranchant la confirmation sur le `catch`, le second échoue en le disant. Les deux savent donc dire non.
+
+### D-081, Deux identifiants manquants dans track.html
+
+`confirm-email` et `sessions-count` étaient écrits par le script et absents de la page. Aucun ne plantait, tous deux étaient protégés par un `if`, et rien ne s'affichait.
+
+`confirm-email` est ajouté dans l'écran de confirmation. Il rappelle l'adresse saisie, pour qu'une faute de frappe se voie : sans cela JB ne peut jamais joindre le pilote, et le pilote croit sa place réservée.
+
+`sessions-count` devait afficher « X dates, Y inscriptions ouvertes ». Le code est retiré plutôt que de lui inventer une place dans la page. **Où le mettre est une décision de Yoan.**
+
+---
+
 ## 8 août 2026, la racine, suite
 
 ### D-075, Le formulaire d'inscription n'a jamais pu écrire une seule ligne

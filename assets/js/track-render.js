@@ -341,10 +341,10 @@
       })
     })
 
-    // Mettre à jour le compteur total
-    var openCount = events.filter(function(e) { return e.status === 'Open' }).length
-    var countEl = document.getElementById('sessions-count')
-    if (countEl) countEl.textContent = events.length + ' dates · ' + openCount + ' inscriptions ouvertes'
+    // Un compteur « X dates, Y inscriptions ouvertes » etait ecrit ici, vers un
+    // identifiant sessions-count qui n'existe nulle part dans track.html. Il ne
+    // s'est jamais affiche. Le code est retire plutot que de lui inventer une
+    // place dans la page : ou le mettre est une decision de Yoan, pas la mienne.
 
   } catch(e) {
     console.warn('[Track calendrier]', e.message)

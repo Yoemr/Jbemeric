@@ -48,11 +48,6 @@
       Inscriptions
       <span class="sb-pill" id="pill-inscr">…</span>
     </button>
-    <button class="sb-btn" onclick="nav('votes')">
-      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-      Votes Potential
-      <span class="sb-pill vote" id="pill-vote">…</span>
-    </button>
 
     <div class="sb-group">Contenu</div>
     <button class="sb-btn" onclick="nav('coaching')">
@@ -106,7 +101,7 @@
   <div id="v-dashboard" class="section-view active">
     <div class="kpis" id="kpis-container">
       <div class="kpi"><div class="kpi-l">Sessions ouvertes</div><div class="kpi-v" id="k-open">…</div><div class="kpi-s">Inscriptions actives</div></div>
-      <div class="kpi" style="--kc:linear-gradient(90deg,#6366f1,#818cf8)"><div class="kpi-l">Votes en attente</div><div class="kpi-v" id="k-votes">…</div><div class="kpi-s">Dates Potential</div></div>
+      <div class="kpi" style="--kc:linear-gradient(90deg,#6366f1,#818cf8)"><div class="kpi-l">En préparation</div><div class="kpi-v" id="k-preparation">…</div><div class="kpi-s">Dates pas encore ouvertes</div></div>
       <div class="kpi"><div class="kpi-l">Inscrits</div><div class="kpi-v" id="k-inscrits">…</div><div class="kpi-s">Sessions ouvertes</div></div>
       <div class="kpi" style="--kc:linear-gradient(90deg,#059669,#10b981)"><div class="kpi-l">Threads Forum</div><div class="kpi-v" id="k-threads">…</div><div class="kpi-s">Discussions actives</div></div>
       <div class="kpi" style="--kc:linear-gradient(90deg,#0284c7,#38bdf8)"><div class="kpi-l">Docs bibliothèque</div><div class="kpi-v" id="k-docs">…</div><div class="kpi-s">Documents publiés</div></div>
@@ -121,7 +116,7 @@
         </div>
         <div class="tw">
           <table>
-            <thead><tr><th>Date</th><th>Circuit</th><th>Statut</th><th>Places</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Date</th><th>Circuit</th><th>Type</th><th>Statut</th><th>Places</th></tr></thead>
             <tbody id="dash-events-tbody">
               <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Chargement…</td></tr>
             </tbody>
@@ -160,6 +155,12 @@
           <option>Open</option><option>Potential</option>
           <option>Full</option><option>Draft</option>
         </select>
+        <label>Période</label>
+        <select id="filter-periode" onchange="loadEvents()">
+          <option value="tous">Tous</option>
+          <option value="avenir">À venir</option>
+          <option value="passe">Passés</option>
+        </select>
         <input type="text" id="filter-search" placeholder="Rechercher…"
           oninput="filterEventsTable(this.value)" style="flex:1;min-width:160px">
       </div>
@@ -171,7 +172,7 @@
               <th>Prix</th><th>Places</th><th>Visibilité</th><th>Actions</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="events-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -213,24 +214,6 @@
       </div>
     </div>
 
-  <!-- ═══ VOTES ═══ -->
-  <div id="v-votes" class="section-view">
-    <div class="card">
-      <div class="card-head">
-        <div class="card-title"><div class="ctd" style="background:#6366f1"></div>Sessions Potential · Votes clients</div>
-      </div>
-      <div class="tw">
-        <table>
-          <thead><tr>
-            <th>Date</th><th>Circuit</th><th>Votes</th><th>Progression</th><th>Actions</th>
-          </tr></thead>
-          <tbody id="votes-tbody">
-            <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Chargement…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
   
   <!-- ═══ INSCRIPTIONS ══════════════════════════════════════════════ -->

@@ -104,17 +104,57 @@ const PARCOURS = [
     attendu: `(location.pathname.includes('coaching') && !!document.getElementById('amateur')) || 'arrive sur ' + location.pathname + location.hash + ', ancre presente : ' + !!document.getElementById('amateur')`,
   },
   {
-    nom: 'vote track-day, connu pour ne rien enregistrer',
+    nom: 'calendrier Evenements, les dates arrivent de Supabase',
     page: 'track.html',
     largeur: 1300,
-    action: `(document.querySelector('[id^="btn-vote-"]') || {click(){}}).click()`,
-    // Ce parcours documente un defaut connu au lieu de le taire. Le compteur
-    // vit dans une variable du navigateur, rien ne part vers Supabase.
-    // Voir docs/chantiers/2026-08-07-page-evenements.md section 5.
-    attendu: `'defaut connu, le vote n enregistre rien, voir la fiche Evenements'`,
-    tolere: true,
+    // La grille est vide dans le HTML : elle ne contient qu'un « Chargement… »
+    // que track-render.js remplace. Si la requete echoue, le visiteur reste
+    // devant ce mot sans que rien ne signale une panne. L'audit de fichiers ne
+    // peut pas voir ca, il ne lit pas la base.
+    besoinBase: true,
+    action: `null`,
+    attente: 2500,
+    attendu: `document.querySelectorAll('#sr-grid .sr-card').length > 0 || 'aucune date affichee, la grille est restee sur ' + document.getElementById('sr-grid').textContent.trim().slice(0, 40)`,
+  },
+  {
+    nom: 'onglets Evenements, chaque filtre laisse quelque chose a voir',
+    page: 'track.html',
+    largeur: 1300,
+    // L'onglet « Vote en cours » vidait la grille sans un mot d'explication :
+    // aucune carte ne portait ce statut, le filtre ne pouvait qu'echouer. Il a
+    // ete retire. Ce parcours verifie qu'aucun onglet survivant ne refait ca.
+    besoinBase: true,
+    action: `null`,
+    attente: 2500,
+    attendu: `(function () {
+      var statuts = {}
+      document.querySelectorAll('#sr-grid .sr-card').forEach(function (c) { statuts[c.dataset.status] = 1 })
+      var morts = []
+      document.querySelectorAll('.sr-tab').forEach(function (t) {
+        var m = (t.getAttribute('onclick') || '').match(/filterCards\\(this,'([a-z]+)'\\)/)
+        if (m && m[1] !== 'all' && !statuts[m[1]]) morts.push(t.textContent.trim())
+      })
+      return morts.length === 0 || 'onglet(s) sans aucune carte : ' + morts.join(', ')
+    })()`,
   },
 ]
+
+// ── Pourquoi ce preambule existe ────────────────────────────────────────────
+// Le 8 aout, les deux parcours ci-dessus ont echoue en annoncant « aucune date
+// affichee ». Le site n'y etait pour rien : le poste ne joignait plus Supabase.
+// Un outil qui ne sait pas distinguer « la page est cassee » de « le reseau est
+// coupe » ment dans les deux sens, et c'est le pire des deux mensonges qu'on
+// croit. Les parcours marques besoinBase sont donc declares non concluants
+// quand la base est injoignable, au lieu d'etre comptes en echec.
+const BASE_URL = 'https://fyaybxamuabawerqzuud.supabase.co/rest/v1/'
+const BASE_CLE = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
+
+async function baseJoignable() {
+  try {
+    const r = await fetch(BASE_URL, { headers: { apikey: BASE_CLE }, signal: AbortSignal.timeout(10000) })
+    return r.ok || r.status === 401 || r.status === 404   // elle repond, c'est tout ce qui compte
+  } catch (e) { return false }
+}
 
 function dormir(ms) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -205,15 +245,24 @@ async function principal() {
   ], { stdio: 'ignore' })
 
   let echecs = 0
+  let sansBase = 0
   try {
     await attendrePret()
+    const joignable = await baseJoignable()
     console.log('')
     console.log('  PARCOURS JB EMERIC   ' + new Date().toISOString().slice(0, 16).replace('T', ' '))
     console.log('  ' + '-'.repeat(66))
     console.log(`  ${liste.length} parcours, ${BASE}`)
+    if (!joignable) console.log('  Supabase injoignable depuis ce poste : les parcours qui en dependent')
+    if (!joignable) console.log('  seront declares non concluants, pas en echec.')
     console.log('')
 
     for (const p of liste) {
+      if (p.besoinBase && !joignable) {
+        sansBase++
+        console.log(`  SANS BASE ${p.nom}`)
+        continue
+      }
       const r = await jouer(p)
       if (r.ok) { console.log(`  OK       ${p.nom}`); continue }
       if (p.tolere) { console.log(`  CONNU    ${p.nom}`); console.log(`             ${r.pourquoi}`); continue }
@@ -225,10 +274,11 @@ async function principal() {
 
     console.log('')
     console.log('  ' + '-'.repeat(66))
-    console.log(echecs ? `  ${echecs} parcours cassé(s).` : '  Tous les parcours passent.')
+    console.log(echecs ? `  ${echecs} parcours cassé(s).` : '  Tous les parcours joues passent.')
+    if (sansBase) console.log(`  ${sansBase} parcours non joue(s), faute d acces a Supabase. A rejouer sur un poste connecte.`)
     console.log('')
-    console.log('  Non teste, faute d environnement separe : inscription, vote enregistre,')
-    console.log('  connexion, sauvegarde d un texte par JB. Ces parcours ecrivent en base.')
+    console.log('  Non teste, faute d environnement separe : inscription, connexion,')
+    console.log('  sauvegarde d un texte par JB. Ces parcours ecrivent en base.')
     console.log('')
   } finally {
     nav.kill()

@@ -26,6 +26,39 @@ window.saveAllPending = function() { toast('Utilisez le mode édition sur le sit
 window.filterEditor   = function() {}
 
 // ═══════════════════════════════════════════════════════════════════
+//  ACTIONS DE TABLEAU
+// ═══════════════════════════════════════════════════════════════════
+// Un identifiant ne s'écrit jamais dans un attribut onclick. Les clés de
+// toutes les tables sauf circuits sont des UUID, et
+//
+//   onclick="setStatus(53713c81-583c-43b6-a6c9-0b108ae18b48,'Open',this)"
+//
+// n'est pas du JavaScript. Le navigateur lève une erreur de syntaxe au
+// moment du clic, sans rien afficher : le bouton semble simplement inerte.
+// Les sept boutons d'action du dashboard étaient morts pour cette raison,
+// y compris la corbeille et l'interrupteur « visible sur le site ».
+//
+// L'action, la clé et l'éventuel argument passent donc par des attributs
+// data-, relus par un unique écouteur posé sur le document. Plus aucune
+// valeur venue de la base n'est interprétée comme du code, quel que soit
+// le type de la clé, et la délégation survit au remplacement du tbody.
+const ACTIONS = {}
+window.enregistrerAction = (nom, fn) => { ACTIONS[nom] = fn }
+
+document.addEventListener('click', ev => {
+  const el = ev.target.closest('[data-action]')
+  if (!el) return
+  const fn = ACTIONS[el.dataset.action]
+  if (!fn) return
+  ev.preventDefault()
+  fn(el.dataset.id, el, el.dataset.arg)
+})
+
+// Toute valeur insérée dans un attribut passe par ici. Un titre de fil de
+// forum contenant un guillemet suffirait sinon à casser la ligne entière.
+const attr = v => String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
+
+// ═══════════════════════════════════════════════════════════════════
 //  AUTH GUARD : bloquer les non-admins
 // ═══════════════════════════════════════════════════════════════════
 const ALLOWED_ROLES = ['admin', 'moderateur']
@@ -57,7 +90,7 @@ let currentRole = null
   }
 
   // Charger les données initiales
-  await Promise.all([loadKPIs(), loadEvents(), loadVotes(), loadInscriptions()])
+  await Promise.all([loadKPIs(), loadEvents(), loadInscriptions()])
   initEditor(supabase, currentRole)
   startClock()
 })()
@@ -65,74 +98,20 @@ let currentRole = null
 // ═══════════════════════════════════════════════════════════════════
 //  ÉVÉNEMENTS : CRUD
 // ═══════════════════════════════════════════════════════════════════
-async function loadEvents() {
-  const statusFilter = document.getElementById('filter-status')?.value || ''
-  let query = supabase
-    .from('events')
-    .select('id,date_event,type,status,prix,nb_places,nb_inscrits,visible_site,circuit_id,circuits(nom)')
-    .order('date_event', { ascending: true })
-    .limit(50)
-
-  if (statusFilter) query = query.eq('status', statusFilter)
-
-  const { data, error } = await query
-  if (error) { toast('Erreur chargement events: ' + error.message, 'err'); return }
-
-  const tbody = document.querySelector('#v-sessions table tbody')
-  if (!tbody) return
-
-  const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc']
-
-  tbody.innerHTML = (data||[]).map(ev => {
-    const d = new Date(ev.date_event)
-    const dateStr = d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear()
-    const circuit = ev.circuits?.nom || '…'
-    const badge = badgeStatus(ev.status)
-    const vis = ev.visible_site
-      ? '<span style="color:#4ade80;font-size:11px">✓ Visible</span>'
-      : '<span style="color:rgba(255,255,255,.3);font-size:11px">Masqué</span>'
-
-    return `<tr id="erow-${ev.id}">
-      <td class="td-mono">${dateStr}</td>
-      <td>${ev.type || '…'}</td>
-      <td>${circuit}</td>
-      <td>${badge}</td>
-      <td class="td-mono">${ev.prix ? ev.prix + ' €' : '…'}</td>
-      <td class="td-mono">${ev.nb_inscrits || 0} / ${ev.nb_places || 10}</td>
-      <td>${vis}</td>
-      <td><div class="td-acts">
-        <button class="btn btn-sm" onclick="toggleEventVisible('${ev.id}', ${!vis})">
-          ${vis ? '👁 Masquer' : '👁 Publier'}
-        </button>
-        <button class="btn btn-sm btn-err" onclick="deleteEvent('${ev.id}')">✕</button>
-      </div></td>
-    </tr>`
-  }).join('') || `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:24px">Aucun événement</td></tr>`
-}
-
-window.filterEventsTable = function(q) {
-  const rows = document.querySelectorAll('#v-sessions table tbody tr')
-  rows.forEach(row => {
-    row.style.display = row.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none'
-  })
-}
-
-window.toggleEventVisible = async function(id, visible) {
-  const { error } = await supabase.from('events').update({ visible_site: visible }).eq('id', id)
-  if (error) { toast('Erreur: ' + error.message, 'err'); return }
-  toast(visible ? 'Event publié ✓' : 'Event masqué', 'ok')
-  loadEvents()
-}
-
-window.deleteEvent = async function(id, btn) {
-  if (!confirm('Supprimer cet événement ? Cette action est irréversible.')) return
-  const { error } = await supabase.from('events').delete().eq('id', id)
-  if (error) { toast('Erreur: ' + error.message, 'err'); return }
-  toast('Événement supprimé', 'ok')
-  const row = document.getElementById('erow-' + id)
-  if (row) row.remove()
-  loadKPIs()
-}
+// Un premier rendu de la table des événements vivait ici. Il a été retiré le
+// 8 août 2026 au profit de l'unique loadEvents plus bas. Deux raisons, l'une
+// et l'autre visibles chez JB :
+//
+//   1. Les deux versions ne visaient pas le même tableau. Celle-ci rendait au
+//      chargement, l'autre reprenait la main dès que JB touchait un filtre, et
+//      écrivait dans un identifiant absent du HTML. Le filtre et la recherche
+//      étaient donc sans effet.
+//   2. Son bouton de publication passait « ${!vis} » où vis contenait déjà du
+//      HTML. La négation d'une chaîne non vide vaut toujours faux : « Publier »
+//      envoyait visible_site = false, donc ne publiait jamais rien.
+//
+// La suite du fichier définit loadEvents, filterEventsTable, toggleVisible et
+// deleteEvent une seule fois chacun.
 
 // ═══════════════════════════════════════════════════════════════════
 //  FORUM : MODÉRATION
@@ -311,7 +290,6 @@ const TITLES = {
   dashboard:    'Dashboard',
   sessions:     'Track-Days · Sessions',
   inscriptions: 'Inscriptions reçues',
-  votes:        'Votes Potential',
   coaching:     'Coaching',
   paddock:      'Paddock',
   editeur:      'Éditeur de contenu',
@@ -351,13 +329,12 @@ async function loadKPIs() {
       supabase.from('inscriptions').select('id',{count:'exact'}),
     ])
     document.getElementById('k-open').textContent    = open.count    ?? '…'
-    document.getElementById('k-votes').textContent   = potential.count ?? '…'
+    document.getElementById('k-preparation').textContent = potential.count ?? '…'
     document.getElementById('k-full').textContent    = full.count    ?? '…'
     document.getElementById('k-inscrits').textContent =
       inscrits.count ?? 0
 
     document.getElementById('pill-open').textContent = open.count    ?? '?'
-    document.getElementById('pill-vote').textContent = potential.count
     var _pillInscr = document.getElementById('pill-inscr')
     if (_pillInscr) _pillInscr.textContent = inscrits.count ?? '0' ?? '?'
     // KPIs supplémentaires
@@ -399,43 +376,87 @@ async function loadKPIs() {
 // ═══════════════════════════════════════════════════════════════════
 //  EVENTS TABLE
 // ═══════════════════════════════════════════════════════════════════
-window.loadEvents = async () => {
+// Une seule fonction, contrairement à avant. Il en existait deux : une
+// déclaration lue au chargement de la page, et cette affectation sur window
+// qui l'écrasait pour tout ce qui vient du HTML. Elles ne visaient pas le même
+// tableau, et celle branchée sur le filtre Statut et sur la case Rechercher
+// écrivait dans #events-tbody, un identifiant absent du HTML. Résultat chez
+// JB : la liste s'affichait, puis le filtre et la recherche ne répondaient
+// plus. Le tbody porte désormais cet identifiant, et cette fonction est la
+// seule.
+const loadEvents = async () => {
   const status  = document.getElementById('filter-status')?.value
+  const periode = document.getElementById('filter-periode')?.value || 'tous'
   const today   = new Date().toISOString().split('T')[0]
 
+  // Aucun filtre de date par défaut. Le dashboard filtrait sur
+  // date_event >= aujourd'hui, ce qui rendait invisibles les dates passées :
+  // JB ne pouvait plus consulter une session qu'il venait de faire tourner,
+  // ni corriger une erreur de saisie dessus. La demande était que tous les
+  // événements soient sur son dashboard. Le tri par période reste offert,
+  // mais c'est un choix qu'il fait, pas une amputation qu'il subit.
   let q = supabase
     .from('events')
     .select('id,date_event,type,status,prix,nb_places,nb_inscrits,visible_site,circuit_id,circuits(nom)')
-    .gte('date_event', today)
-    .order('date_event')
-    .limit(30)
+    .limit(300)
+
+  if (periode === 'avenir') q = q.gte('date_event', today).order('date_event')
+  else if (periode === 'passe') q = q.lt('date_event', today).order('date_event', { ascending: false })
+  else q = q.order('date_event', { ascending: false })
 
   if (status) q = q.eq('status', status)
 
   const { data, error } = await q
   const tbody = document.getElementById('events-tbody')
   const dashTbody = document.getElementById('dash-events-tbody')
+  if (!tbody) return
   if (error) { tbody.innerHTML = `<tr><td colspan="8" style="color:var(--err);padding:16px;font-size:11px">${error.message}</td></tr>`; return }
 
+  // L'ordre des colonnes suit l'en-tête du tableau dans dashboard.html :
+  // Date, Type, Circuit, Statut, Prix, Places, Visibilité, Actions.
   const rows = (data ?? []).map(ev => `
-    <tr id="erow-${ev.id}">
+    <tr id="erow-${attr(ev.id)}"${ev.date_event < today ? ' class="erow-passe"' : ''}>
+      <td class="td-mono td-main">${fmtDate(ev.date_event)}</td>
+      <td style="font-size:11px">${ev.type ?? '…'}</td>
+      <td class="td-main">${ev.circuits?.nom ?? '…'}</td>
+      <td>${badgeStatus(ev.status)}</td>
+      <td class="td-mono">${ev.prix ? Number(ev.prix).toLocaleString('fr-FR') + ' €' : '…'}</td>
+      <td class="td-mono">${ev.nb_inscrits ?? 0}/${ev.nb_places ?? 10}</td>
+      <td><div class="tog${ev.visible_site?' on':''}"
+        data-action="event-visible" data-id="${attr(ev.id)}"></div></td>
+      <td><div class="td-acts">
+        ${ev.status==='Potential'?`<button class="btn btn-ok btn-sm" data-action="event-statut" data-id="${attr(ev.id)}" data-arg="Open">→ Open</button>`:''}
+        <button class="btn btn-err btn-sm" data-action="event-supprimer" data-id="${attr(ev.id)}">✕</button>
+      </div></td>
+    </tr>`).join('')
+
+  tbody.innerHTML = rows || `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Aucun événement</td></tr>`
+
+  // L'encart du tableau de bord montre les cinq prochaines dates, pas les
+  // cinq premières de la liste : quand JB trie du plus récent au plus ancien,
+  // découper le début de la liste lui montrerait le passé.
+  if (dashTbody) {
+    const prochains = (data ?? [])
+      .filter(ev => ev.date_event >= today)
+      .sort((a, b) => a.date_event < b.date_event ? -1 : 1)
+      .slice(0, 5)
+      .map(ev => `
+    <tr>
       <td class="td-mono td-main">${fmtDate(ev.date_event)}</td>
       <td class="td-main">${ev.circuits?.nom ?? '…'}</td>
       <td style="font-size:11px">${ev.type}</td>
       <td>${badgeStatus(ev.status)}</td>
       <td class="td-mono">${ev.nb_inscrits}/${ev.nb_places}</td>
-      <td class="td-mono">${Number(ev.prix).toLocaleString('fr-FR')} €</td>
-      <td><div class="tog${ev.visible_site?' on':''}"
-        onclick="toggleVisible(${ev.id},this)"></div></td>
-      <td><div class="td-acts">
-        ${ev.status==='Potential'?`<button class="btn btn-ok btn-sm" onclick="setStatus(${ev.id},'Open',this)">→ Open</button>`:''}
-        <button class="btn btn-err btn-sm" onclick="deleteEvent(${ev.id},this)">✕</button>
-      </div></td>
     </tr>`).join('')
-
-  tbody.innerHTML = rows || `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Aucun événement</td></tr>`
-  if (dashTbody) dashTbody.innerHTML = rows.split('</tr>').slice(0,5).join('</tr>')
+    dashTbody.innerHTML = prochains || `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Aucune date à venir</td></tr>`
+  }
 }
+
+window.loadEvents = loadEvents
+
+enregistrerAction('event-visible',   (id, el)      => toggleVisible(id, el))
+enregistrerAction('event-statut',    (id, el, st)  => setStatus(id, st, el))
+enregistrerAction('event-supprimer', (id, el)      => deleteEvent(id, el))
 
 window.filterEventsTable = (q) => {
   document.querySelectorAll('#events-tbody tr').forEach(tr => {
@@ -552,10 +573,10 @@ async function loadForumMod() {
       <td style="font-size:11px">${t.author_name??'…'}</td>
       <td class="td-mono">${t.reply_count}</td>
       <td><div class="td-acts">
-        <button class="btn btn-ok btn-sm" onclick="pinThread(${t.id},${!t.pinned})">
+        <button class="btn btn-ok btn-sm" data-action="fil-epingler" data-id="${attr(t.id)}" data-arg="${t.pinned?'':'1'}">
           ${t.pinned?'Désépingler':'Épingler'}
         </button>
-        <button class="btn btn-err btn-sm" onclick="deleteThread(${t.id})">Suppr.</button>
+        <button class="btn btn-err btn-sm" data-action="fil-supprimer" data-id="${attr(t.id)}">Suppr.</button>
       </div></td>
     </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px;font-family:\'DM Mono\';font-size:9px">Aucun sujet</td></tr>'
 }
@@ -572,6 +593,11 @@ window.deleteThread = async (id) => {
   if (!error) { document.getElementById(`ft-${id}`)?.remove(); toast('Fil supprimé') }
   else toast(error.message, 'err')
 }
+
+// data-arg vaut '1' pour épingler, chaîne vide pour désépingler : un attribut
+// ne transporte que du texte, « false » y serait vrai.
+enregistrerAction('fil-epingler',  (id, el, arg) => pinThread(id, arg === '1'))
+enregistrerAction('fil-supprimer', (id)          => deleteThread(id))
 
 window.openNewEventForm = function() {
   var modal = document.getElementById('new-event-modal')
@@ -604,38 +630,15 @@ window.saveNewEvent = async function() {
   loadEvents()
 }
 
-// ═══════════════════════════════════════════════════════════════════
-//  VOTES TABLE
-// ═══════════════════════════════════════════════════════════════════
-async function loadVotes() {
-  const { data } = await supabase
-    .from('events')
-    .select('id,date_event,nb_votes,circuits(nom)')
-    .eq('status','Potential')
-    .order('nb_votes',{ascending:false})
-    .limit(15)
-
-  const tbody = document.getElementById('votes-tbody')
-  if (!data?.length) { tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Aucun vote</td></tr>`; return }
-
-  const SEUIL = 5
-  tbody.innerHTML = data.map(ev => {
-    const pct = Math.min(100, Math.round((ev.nb_votes||0)/SEUIL*100))
-    return `<tr>
-      <td class="td-mono td-main">${fmtDate(ev.date_event)}</td>
-      <td class="td-main">${ev.circuits?.nom??'…'}</td>
-      <td class="td-mono">${ev.nb_votes||0}</td>
-      <td><div class="vbar-wrap">
-        <div class="vbar"><div class="vbar-fill" style="width:${pct}%"></div></div>
-        <span class="vcnt">${ev.nb_votes||0}/${SEUIL}</span>
-      </div></td>
-      <td><div class="td-acts">
-        <button class="btn btn-ok btn-sm" onclick="setStatus(${ev.id},'Open',this)">✓ Valider</button>
-        <button class="btn btn-err btn-sm" onclick="setStatus(${ev.id},'Annulé',this)">✕</button>
-      </div></td>
-    </tr>`
-  }).join('')
-}
+// Le tableau des votes a été retiré le 8 août 2026. Décision de Yoan :
+// « y a plus besoin de vote car même un seul client génère des bénéfices ».
+// Le seuil de cinq pilotes venait du modèle où JB louait la piste entière et
+// devait la remplir. Il loue désormais un box ou se greffe sur l'événement
+// d'un autre, et sort gagnant dès le premier inscrit.
+//
+// Le statut Potential survit au vote : il désigne maintenant une date que JB
+// prépare et n'a pas encore ouverte. Elle se gère dans la table Événements,
+// avec toutes les autres, par le bouton « → Open ».
 
 // ═══════════════════════════════════════════════════════════════════
 //  UTILISATEURS
@@ -683,7 +686,7 @@ function loadMainEditor() {
 //  UTILS
 // ═══════════════════════════════════════════════════════════════════
 function badgeStatus(s) {
-  const m = {Open:'b-open Open',Potential:'b-potential Vote',Full:'b-full Full',Draft:'b-draft Draft'}
+  const m = {Open:'b-open Open',Potential:'b-potential Préparation',Full:'b-full Full',Draft:'b-draft Draft'}
   const [cls, lbl] = (m[s]||'b-draft '+s).split(' ')
   return `<span class="badge ${cls}">${lbl}</span>`
 }
@@ -912,7 +915,6 @@ window.validateRadarDate = async function(id) {
         visible_site: false,             // Masqué jusqu'à validation manuelle
         source_veille:result.source_url,
         nb_places:    10,
-        nb_votes:     0,
       })
       .select()
       .single()

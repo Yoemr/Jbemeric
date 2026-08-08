@@ -73,6 +73,34 @@ C'est lui qui range l'anomalie dans le périmètre ou dehors. Un libellé libre 
 - Chercher un nom de fichier dans tout le HTML tombe sur les commentaires. `<!-- Chargé par sync-mirror.js -->` signalait un faux désordre de chargement.
 - Un `grep` qui inclut `old/` produit des alertes sur une archive assumée.
 
+### 2.8 Une valeur inventée passe tous les contrôles
+
+Le 8 août, en écrivant un message de repli sur la page Événements, j'ai inventé un numéro de téléphone. Le 06 08 33 10 76 n'appartient à personne dans ce projet. Il a passé l'audit, la fumée et les parcours sans qu'aucun ne bronche : c'est un lien `tel:` parfaitement valide vers un numéro parfaitement syntaxique.
+
+Aucun de ces outils ne pouvait le voir. Ils vérifient des formes, pas des faits. Seule une lecture manuelle l'a attrapé, par hasard, en comptant les numéros du site.
+
+**Règle** : toute donnée du monde réel écrite dans le code (numéro, adresse, prix, date, nom de circuit) se recopie depuis une source du dépôt, jamais depuis la mémoire. Si elle n'existe nulle part dans le dépôt, c'est une question pour Yoan, pas une valeur à choisir.
+
+`outil-dev/audit/regles/contacts.js` ferme le cas des coordonnées. Les autres catégories restent ouvertes.
+
+### 2.9 Un outil doit distinguer « c'est cassé » de « je n'ai pas pu voir »
+
+Deux parcours ont annoncé « aucune date affichée » sur la page Événements. Le site n'y était pour rien : le poste ne joignait plus Supabase ni jsdelivr. Un outil qui confond les deux ment dans les deux sens, et c'est le sens favorable qu'on croit.
+
+**Règle** : un contrôle qui dépend d'une ressource extérieure vérifie d'abord qu'elle répond, et se déclare non concluant sinon. Jamais en échec, jamais en succès. Implémenté par le champ `besoinBase` de `parcours.js`.
+
+### 2.10 Un test de syntaxe ne dit pas quel code s'exécute
+
+`admin.js` définissait deux fois `loadEvents`, deux fois `deleteEvent` et deux fois `deleteThread`. Le fichier compilait. L'audit le déclarait valide, y compris en mode module. Rien n'indiquait que la moitié de ce code était mort, ni surtout **laquelle**.
+
+Dans un module ES, une déclaration `function f()` et une affectation `window.f =` ne se recouvrent pas : le code du module appelle la première, le HTML appelle la seconde. Les deux vivaient, sur deux tableaux différents, et se contredisaient.
+
+**Règle** : avant de corriger une fonction, chercher si son nom est défini plusieurs fois dans le fichier. Une ligne suffit :
+
+```
+grep -c "^function f\|^window\.f =\|^const f =" fichier.js
+```
+
 ---
 
 ## 3. Ce qui est vérifié, ne pas revérifier
@@ -104,13 +132,17 @@ C'est lui qui range l'anomalie dans le périmètre ou dehors. Un libellé libre 
 
 **L'audit ne voit pas l'exécution.** C'est le rôle de `fumee.js`.
 
-> **Trou partiellement bouché le 8 août** : `node outil-dev/parcours.js` clique. Accordéon de la FAQ, portes de l'Académie qui naviguent par `onclick` et non par un `<a>`, menu burger, tirage des vidéos, absence de vidéo sur téléphone. Huit parcours.
+> **Trou partiellement bouché le 8 août** : `node outil-dev/parcours.js` clique. Accordéon de la FAQ, portes de l'Académie qui naviguent par `onclick` et non par un `<a>`, menu burger, tirage des vidéos, absence de vidéo sur téléphone, calendrier des Événements. Dix parcours.
 >
-> **Ce qui reste non testé** : inscription, vote enregistré, connexion, sauvegarde d'un texte par JB. Ces parcours écrivent dans la base de production, et personne n'a demandé à y semer des données de test. Ils attendent un environnement séparé ou un compte d'essai.
+> **Ce qui reste non testé** : inscription, connexion, sauvegarde d'un texte par JB. Ces parcours écrivent dans la base de production, et personne n'a demandé à y semer des données de test. Ils attendent un environnement séparé ou un compte d'essai.
 
 **Un outil neuf peut regarder au mauvais endroit.** Le contrôle négatif dit si un outil voit ce qu'il regarde. Il ne dit pas s'il regarde partout. `base.js` a été écrit le 8 août pour couvrir la base, validé par témoin, et il ratait quand même les tirets cadratins de `events.type` parce qu'il ne lisait que `site_content`. Avant de déclarer un domaine couvert, énumérer les endroits où la chose peut se trouver.
 
 **Sur cette machine, `cdn.jsdelivr.net` est bloqué**, donc `live-editor.js` ne se charge jamais et une page affiche toujours son HTML. Un rendu local ne prouve rien dès qu'un texte existe en base.
+
+> **Le 8 août, `fyaybxamuabawerqzuud.supabase.co` l'a été aussi**, en cours de session. Ce n'est donc pas un acquis stable : le vérifier plutôt que le supposer, dans un sens comme dans l'autre. `curl --noproxy '*' -o /dev/null -w '%{http_code}' https://fyaybxamuabawerqzuud.supabase.co/rest/v1/` répond en une seconde. Quand la base est injoignable en HTTP, le serveur MCP Supabase, lui, continue de répondre : c'est la voie de repli pour lire ou corriger du contenu.
+
+**Le dashboard admin ne se teste pas ici.** Il exige une session authentifiée et importe Supabase depuis jsdelivr. Aucun des quatre outils ne l'atteint, et ce qui y est corrigé se vérifie par lecture, par banc d'essai isolé, ou chez Yoan. Le dire quand c'est le cas plutôt que laisser croire à une vérification.
 
 ---
 

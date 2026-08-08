@@ -114,7 +114,7 @@ Le vote disparaît en tant que mécanisme de seuil, voir section 1.
 
 **Mais il reste utile sous une autre forme.** Avant de faire six cents kilomètres, JB voudra savoir si quelqu'un le suit. Ce n'est plus « votez pour que ça existe », c'est « dites-moi si vous venez ». Même bouton, sens complètement différent, et beaucoup plus léger : ça ne conditionne plus l'événement, ça conditionne son déplacement à lui.
 
-**À trancher par Yoan** : on le garde sous cette forme, ou on n'en met pas du tout.
+**À trancher par Yoan** : on le garde sous cette forme, ou on n'en met pas du tout. **Toujours ouvert au 8 août.** Le mécanisme de vote a été retiré ce jour-là, D-060 ; rien n'a été mis à la place, et rien ne le sera sans réponse.
 
 ---
 
@@ -122,13 +122,15 @@ Le vote disparaît en tant que mécanisme de seuil, voir section 1.
 
 À savoir avant de construire quoi que ce soit, pour ne pas bâtir sur du sable.
 
-**Le vote de `track.html` n'enregistre rien.** Dans `assets/js/track-render.js`, le compteur est écrit en dur : `var voteState = { ledenon: 3, albi: 1 }`. Au clic, le chiffre monte dans le navigateur, le bouton affiche « Votre vote est enregistré », et rien ne part. Un rafraîchissement efface tout.
+> **Réglé le 8 août 2026, D-060.** Tout ce qui suit sur le vote décrit l'état d'avant. Le vote a été retiré du site et du dashboard. Conservé ici parce que la suite de la fiche s'y réfère.
+
+**Le vote de `track.html` n'enregistrait rien.** Dans `assets/js/track-render.js`, le compteur était écrit en dur : `var voteState = { ledenon: 3, albi: 1 }`. Au clic, le chiffre montait dans le navigateur, le bouton affichait « Votre vote est enregistré », et rien ne partait. Un rafraîchissement effaçait tout.
 
 **Deux circuits seulement, écrits en dur** dans ce même fichier : Lédenon et Albi.
 
-**L'admin attend des votes réels que personne ne peut émettre.** Il lit une colonne `nb_votes` de la table `events`, affiche un compteur « Votes Potential » et calcule un pourcentage. Le tuyau est branché côté JB, pas côté client.
+**L'admin attendait des votes réels que personne ne pouvait émettre.** Il lisait une colonne `nb_votes` de la table `events`, affichait un compteur « Votes Potential » et calculait un pourcentage. Le tuyau était branché côté JB, pas côté client.
 
-**Le seuil est une constante.** `const SEUIL = 5` dans `assets/js/admin.js`, le même pour tous les événements. Faux par construction dès lors que le seuil dépend du mode et des frais, et sans objet maintenant que le seuil disparaît.
+**Le seuil était une constante.** `const SEUIL = 5` dans `assets/js/admin.js`, le même pour tous les événements. Faux par construction dès lors que le seuil dépend du mode et des frais, et sans objet une fois le seuil disparu.
 
 **Il existe déjà une vraie table `events` dans Supabase**, avec `date_event`, `type`, `prix`, `status`, `visible_site`, et une table `circuits` liée. C'est une base, pas un obstacle.
 
@@ -152,7 +154,7 @@ Relevé le 8 août 2026, directement dans Supabase. **Bonne nouvelle : la table 
 | **lien vers l'organisateur** | **absent** |
 | **coût de la journée pour JB** | **absent** |
 
-En prime, non demandé mais utile : `nb_places`, `nb_inscrits`, `nb_votes`, `visible_site`.
+En prime, non demandé mais utile : `nb_places`, `nb_inscrits`, `visible_site`. La colonne `nb_votes` existe encore mais plus rien ne l'écrit depuis D-060. La supprimer est irréversible, donc c'est à Yoan.
 
 **Trois constats qui comptent.**
 
@@ -166,7 +168,7 @@ En prime, non demandé mais utile : `nb_places`, `nb_inscrits`, `nb_votes`, `vis
 
 Onze événements, neuf visibles, tous en 2026. Quatre circuits employés sur les quinze de la table : Brignoles, Lédenon, Grand Sambuc, et le karting enfant à Brignoles.
 
-Deux événements en statut `Potential` portent `nb_votes` à 2 et 3. **Aucune action publique ne peut produire ces chiffres**, puisque le vote du site n'enregistre rien, voir section 5. Ils viennent donc de l'admin ou d'une saisie initiale.
+Deux événements en statut `Potential` portaient `nb_votes` à 2 et 3. **Aucune action publique ne pouvait produire ces chiffres**, puisque le vote du site n'enregistrait rien, voir section 5. Ils venaient donc de l'admin ou d'une saisie initiale. Sans objet depuis D-060 : `Potential` désigne maintenant une date que JB prépare et n'a pas encore ouverte.
 
 **Zéro inscription depuis la création de la table.** La permission n'est pas en cause : la politique `inscriptions_public_insert` autorise bien l'écriture anonyme. Personne n'a simplement jamais réservé par le site.
 

@@ -113,7 +113,6 @@ a{text-decoration:none;color:inherit}
     --sr-B:     #0A3D91;
     --sr-open:  #22c55e;
     --sr-full:  #ef4444;
-    --sr-vote:  #6366f1;
     background: var(--sr-bg);
     font-family: 'Outfit', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -176,8 +175,51 @@ a{text-decoration:none;color:inherit}
     gap: 16px;
   }
   .sr-grid[data-filter="open"]   .sr-card:not([data-status="open"])   { display:none }
-  .sr-grid[data-filter="vote"]   .sr-card:not([data-status="vote"])   { display:none }
   .sr-grid[data-filter="full"]   .sr-card:not([data-status="full"])   { display:none }
+
+  /* ── Quand il n'y a rien a montrer ──────────────────────────────────
+     Le calendrier vient de Supabase. Si la base ne repond pas, ou si
+     aucune date n'est ouverte, le visiteur voyait « Chargement du
+     calendrier… » et rien d'autre, indefiniment. Il repart. Ici il a de
+     quoi joindre JB, qui connait son calendrier par coeur. */
+  .sr-vide {
+    grid-column: 1 / -1;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 14px;
+    padding: clamp(36px,6vw,64px) 24px;
+    text-align: center;
+    background: var(--sr-card);
+    border: 1px solid var(--sr-bd);
+    border-radius: 8px;
+  }
+  .sr-vide-titre {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(20px,3vw,28px);
+    letter-spacing: 1px;
+    color: #fff;
+  }
+  .sr-vide-texte {
+    max-width: 46ch;
+    font-size: 13px; line-height: 1.75;
+    color: rgba(255,255,255,.55);
+    margin: 0;
+  }
+  .sr-vide-tel, .sr-vide-mail {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; letter-spacing: 1px;
+    text-decoration: none;
+    padding: 12px 26px; border-radius: 4px;
+  }
+  .sr-vide-tel {
+    background: var(--sr-Y);
+    color: #000;
+  }
+  .sr-vide-mail {
+    color: rgba(255,255,255,.6);
+    border: 1px solid rgba(255,255,255,.14);
+  }
+  .sr-vide-tel:hover  { filter: brightness(1.08) }
+  .sr-vide-mail:hover { border-color: rgba(255,255,255,.3); color: #fff }
 
   /* ── Carte circuit ── */
   .sr-card {
@@ -194,7 +236,6 @@ a{text-decoration:none;color:inherit}
     transform: translateY(-3px);
   }
   .sr-card[data-status="open"]  { border-top: 3px solid var(--sr-open) }
-  .sr-card[data-status="vote"]  { border-top: 3px solid var(--sr-vote) }
   .sr-card[data-status="full"]  { border-top: 3px solid var(--sr-full); opacity:.75 }
 
   /* Photo circuit */

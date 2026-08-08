@@ -6,6 +6,80 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 8 août 2026, le dashboard des événements
+
+### D-060, Le vote disparaît, du site et du dashboard
+
+Décision de Yoan, mot pour mot : « y a plus besoin de vote car même un seul client génère des bénéfices ».
+
+Retiré : l'onglet « Vote en cours » de la page Événements, la phrase d'accroche qui promettait l'ouverture à cinq pilotes, la question de FAQ qui décrivait le mécanisme, les deux fonctions `vote` de `track-render.js`, la section « Votes Potential » du dashboard, sa fonction `loadVotes`, son entrée de menu, son indicateur, et le CSS devenu mort dans `admin.css` et `track.css`.
+
+**Raison** : le seuil de cinq pilotes venait du modèle où JB louait la piste entière et devait la remplir pour ne pas perdre d'argent. Il loue désormais un box, ou se greffe sur l'événement d'un autre. Il sort gagnant dès le premier inscrit. Le vote ne protégeait plus rien.
+
+**Ce que le vote faisait vraiment** : rien. Le compteur vivait dans une variable du navigateur et disparaissait au rechargement. Le visiteur lisait « Votre vote est enregistré » alors qu'aucune requête ne partait. Retirer ce mécanisme supprime aussi ce mensonge.
+
+**Conservé** : la colonne `nb_votes` et la table `votes` en base. Supprimer des colonnes est irréversible et demande la validation de Yoan. Le code n'écrit plus dedans.
+
+**Le statut `Potential` survit au vote.** Il désigne maintenant une date que JB prépare et n'a pas encore ouverte. Il se gère dans la table Événements, avec les autres, par le bouton « → Open ». L'indicateur du dashboard s'appelle désormais « En préparation ».
+
+### D-061, Une seule fonction `loadEvents`, et le filtre du dashboard remarche
+
+`assets/js/admin.js` contenait **deux** fonctions `loadEvents` concurrentes. La déclaration lue au chargement rendait dans `#v-sessions table tbody`. L'affectation sur `window`, celle que le HTML appelle par `onchange="loadEvents()"`, écrivait dans `#events-tbody`, un identifiant **absent du HTML**.
+
+**Ce que ça donnait chez JB** : la liste s'affichait au chargement, puis le filtre Statut et la case Rechercher ne répondaient plus. Une exception partait dans la console, invisible.
+
+Corrigé : le `tbody` porte l'identifiant `events-tbody`, la version morte est supprimée, il reste une seule fonction.
+
+**Défaut trouvé dans la version vivante au passage** : son bouton de publication passait `${!vis}` où `vis` contenait déjà du HTML. La négation d'une chaîne non vide vaut toujours faux, donc « Publier » envoyait `visible_site = false`. Le bouton ne publiait jamais rien.
+
+### D-062, Aucun identifiant ne s'écrit plus dans un attribut `onclick`
+
+Sept boutons du dashboard construisaient leur gestionnaire ainsi :
+
+```
+onclick="setStatus(53713c81-583c-43b6-a6c9-0b108ae18b48,'Open',this)"
+```
+
+Les clés de toutes les tables sauf `circuits` sont des UUID. Ce texte n'est pas du JavaScript : le navigateur lève une `SyntaxError` au moment du clic, sans rien afficher. Un banc d'essai monté pour l'occasion montre que l'ancienne écriture échoue sur un identifiant réel **et** exécute du code venu de la base si l'identifiant en contient.
+
+Ces sept boutons dormaient dans la version morte de `loadEvents` et dans la table du forum. Ils auraient mordu le jour où quelqu'un aurait réparé l'identifiant du `tbody`, c'est-à-dire aujourd'hui.
+
+Remplacé par une mécanique unique : l'action, la clé et l'argument passent par des attributs `data-`, relus par un seul écouteur posé sur le document. Plus aucune valeur venue de la base n'est interprétée comme du code, quel que soit le type de la clé.
+
+**Universel au sens de `CLAUDE.md` section 5** : la correction ne vaut pas pour les événements, elle vaut pour tout tableau du dashboard, présent et futur.
+
+### D-063, Tous les événements sur le dashboard, pas seulement les futurs
+
+Le dashboard filtrait sur `date_event >= aujourd'hui`. Sept des onze dates de la table, d'avril à juillet 2026, étaient invisibles pour JB. Il ne pouvait ni consulter une session qu'il venait de faire tourner, ni corriger une erreur de saisie dessus.
+
+Demande de Yoan : « tous les event doivent être sur le dashboard de mon père ».
+
+Le filtre de date par défaut est retiré. Un sélecteur Période (Tous, À venir, Passés) reste offert : c'est un choix que JB fait, pas une amputation qu'il subit. L'encart « Prochaines dates » du tableau de bord continue de montrer les cinq prochaines, calculées et non découpées en tête de liste.
+
+### D-064, La page Événements ne laisse plus personne devant « Chargement du calendrier… »
+
+La grille des dates ne contient qu'un mot d'attente que `track-render.js` remplace. Son `catch` disait « garder le contenu statique si Supabase échoue », or il n'y a aucun contenu statique. Une panne de la base, un téléphone qui perd le réseau ou une simple lenteur laissaient le visiteur devant ce mot, indéfiniment, sans un numéro à appeler.
+
+Deux messages de repli s'affichent désormais, avec le téléphone et le courriel de JB : un quand la base ne répond pas, un quand elle répond mais qu'aucune date n'est ouverte.
+
+### D-065, Une règle d'audit sur les coordonnées de JB
+
+En écrivant le message de repli ci-dessus, j'ai **inventé un numéro de téléphone**. Le 06 08 33 10 76 n'appartient à personne dans ce projet. Il a passé l'audit, la fumée et les parcours : c'est un lien `tel:` parfaitement valide vers un numéro parfaitement syntaxique. Seule une lecture manuelle l'a attrapé.
+
+`outil-dev/audit/regles/contacts.js` déclare les coordonnées légitimes et refuse toute autre. Elle vérifie aussi que le texte affiché correspond au numéro composé, le piège classique du copier-coller.
+
+**Raison** : sur un site dont le principal appel à l'action est « appelez JB », un numéro faux coûte un client par visiteur qui le compose. C'est le défaut le plus cher du site pour le moins de code.
+
+Trois numéros cohabitent aujourd'hui, tous déclarés : le portable 06 60 18 87 87 (partout), le fixe 04 42 32 87 87 (mentions légales). **Un `06 00 00 00 00` traîne quelque part hors périmètre, laissé tel quel.**
+
+### D-066, Les parcours distinguent une page cassée d'un réseau coupé
+
+Deux parcours ajoutés sur la page Événements ont échoué en annonçant « aucune date affichée ». Le site n'y était pour rien : le poste ne joignait plus Supabase ni le CDN.
+
+Un outil qui ne sait pas faire cette différence ment dans les deux sens, et c'est le sens favorable qu'on croit. Les parcours marqués `besoinBase` sont désormais déclarés non concluants quand la base est injoignable, au lieu d'être comptés en échec.
+
+---
+
 ## 8 août 2026, l'archivage
 
 ### D-057, La page voitures part aux archives

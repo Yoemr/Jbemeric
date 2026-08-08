@@ -509,3 +509,54 @@ Et dans `robots.txt`, remplacer les quatre règles obsolètes par `Disallow: /ad
 ### 6.5 Hors de portée d'une modification de fichier
 
 Le contenu saisi par JB dans le live-editor vit dans la table Supabase `site_content`. Il n'est pas dans le dépôt et n'a pas été traité par la passe D-007. Un cadratin subsiste dans le cache figé de `academie/karting.html` à ce titre, laissé volontairement. La base reste à passer en revue.
+
+---
+
+## 7. Mise à jour du 8 août 2026, le dashboard des événements
+
+Décisions D-060 à D-066. Ce qui suit est l'état après correction.
+
+### 7.1 Le dashboard admin, quatre défauts trouvés, quatre corrigés
+
+Aucun ne se voyait dans l'audit : ils vivent tous à l'exécution, dans une page que l'outillage n'atteint pas.
+
+| Défaut | Ce que JB constatait | État |
+|---|---|---|
+| Deux `loadEvents` concurrentes, la seconde écrivant dans `#events-tbody` absent du HTML | la liste s'affiche, puis le filtre Statut et la recherche ne répondent plus | corrigé, une seule fonction, le `tbody` porte l'identifiant |
+| `${!vis}` sur une chaîne HTML, toujours faux | le bouton « Publier » ne publie jamais | corrigé, mécanique remplacée |
+| UUID injectés sans guillemets dans sept `onclick` | erreur de syntaxe au clic, bouton inerte | corrigé, attributs `data-` et écouteur unique |
+| Filtre `date_event >= aujourd'hui` | sept dates sur onze invisibles | corrigé, plus de filtre par défaut, sélecteur Période ajouté |
+
+**Non vérifiable ici.** Le dashboard exige une session authentifiée et importe Supabase depuis jsdelivr, tous deux hors d'atteinte de cette machine. La nouvelle mécanique d'actions a été éprouvée sur un banc isolé : elle transmet un UUID réel intact et neutralise un identifiant hostile, là où l'ancienne échouait sur le premier et exécutait le second. Le reste attend un passage chez Yoan.
+
+### 7.2 Doublons de fonctions restants dans `assets/js/admin.js`
+
+Relevé, non corrigé, hors de la demande.
+
+`window.togglePin` et `window.toggleThreadVisible` ne sont appelés par personne. `deleteThread` est défini deux fois : la seconde définition gagne, la première est morte. Sans conséquence aujourd'hui, mais c'est la même famille de piège que celle qui a coûté le filtre des événements.
+
+### 7.3 Un numéro de téléphone de plus dans le site
+
+Trois numéros y cohabitent, tous légitimes sauf un :
+
+- **06 60 18 87 87**, le portable de JB, huit occurrences plus le pied de page.
+- **04 42 32 87 87**, le fixe, mentions légales uniquement.
+- **06 00 00 00 00**, un gabarit oublié, hors périmètre, laissé tel quel.
+
+La règle `contacts` de l'audit refuse désormais tout numéro non déclaré et vérifie que le texte affiché correspond au numéro composé.
+
+### 7.4 La page Événements sans sa base
+
+La grille des dates ne contient qu'un mot d'attente que `track-render.js` remplace. Quand Supabase ne répond pas, le visiteur voit maintenant un message avec le téléphone et le courriel de JB, au lieu de « Chargement du calendrier… » indéfiniment. Deuxième message quand la base répond mais qu'aucune date n'est ouverte.
+
+Vérifié à l'écran : le bloc de repli mesure 1051 × 350 px sur écran de 1300, le bouton est en or `#FFCF00` sur texte noir, et il compose bien le 06 60 18 87 87.
+
+### 7.5 Ce qui reste ouvert sur les Événements
+
+Aucun de ces points ne peut avancer sans Yoan.
+
+- **Les quatre colonnes manquantes de `events`** : mode d'engagement, organisateur hôte, lien vers l'organisateur, coût. Proposées, non tranchées.
+- **La forme de la page** : pages filles ou onglets, sachant que chaque type doit avoir son adresse.
+- **Le bouton « je viens »**, sous sa forme allégée « dites-moi si vous venez ». Le vote a été retiré, rien n'a été mis à la place.
+- **Le nombre de circuits et d'organisateurs qui comptent vraiment**, qui décide entre saisie manuelle et collecte automatisée.
+- **La colonne `nb_votes` et la table `votes`**, plus écrites par personne. Les supprimer est irréversible.

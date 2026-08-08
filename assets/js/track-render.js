@@ -1,5 +1,5 @@
 // track-render.js : JB EMERIC
-// Rendu dynamique track.html : dots places, calendrier Supabase, inscriptions, votes
+// Rendu dynamique track.html : dots places, calendrier Supabase, inscriptions
 // Chargé dans track.html
 
 (function() {
@@ -26,37 +26,15 @@
     grid.dataset.filter = filter;
   };
 
-  /* ── Système de vote ── */
-  var voteState = { ledenon: 3, albi: 1 };
-  window.vote = function(circuit, max) {
-    var btn = document.getElementById('btn-vote-' + circuit);
-    if (btn.classList.contains('voted')) return;
-    btn.classList.add('voted');
-    btn.textContent = '✓ Votre vote est enregistré';
+  /* Le vote a été retiré le 8 août 2026, décision de Yoan : « y a plus besoin
+     de vote car même un seul client génère des bénéfices ». Le seuil de cinq
+     pilotes venait du modèle où JB louait la piste entière. Il loue désormais
+     un box, ou se greffe sur l'événement d'un autre.
 
-    voteState[circuit]++;
-    var count = voteState[circuit];
-    var pct = Math.min(100, Math.round(count / max * 100));
-
-    document.getElementById('vote-count-' + circuit).textContent = count;
-    var fill = document.getElementById('vote-fill-' + circuit);
-    fill.style.width = pct + '%';
-    var hint = document.getElementById('vote-hint-' + circuit);
-
-    if (pct >= 100) {
-      fill.className = 'sr-vote-fill full';
-      hint.className = 'sr-vote-hint full';
-      hint.textContent = '✅ Seuil atteint, validation en cours';
-      // Changer le badge
-      var badge = document.getElementById('badge-' + circuit);
-      badge.className = 'sr-badge open';
-      badge.textContent = 'Proche de la validation';
-    } else if (pct >= 60) {
-      fill.className = 'sr-vote-fill almost';
-      hint.className = 'sr-vote-hint almost';
-      hint.textContent = '⚡ Proche de la validation, encore ' + (max - count) + ' vote' + (max - count > 1 ? 's' : '');
-    }
-  };
+     Ces deux fonctions n'écrivaient de toute façon rien en base. Le compteur
+     vivait dans une variable du navigateur et disparaissait au rechargement :
+     le visiteur lisait « Votre vote est enregistré » alors que rien ne partait
+     nulle part. */
 
   /* ── Modal inscription ── */
   var modalBase = 195;
@@ -214,6 +192,23 @@
   var MONTHS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc']
   var DAYS   = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']
 
+  // La grille ne contient qu'un « Chargement du calendrier… » que ce script
+  // remplace. Tant que rien ne le remplaçait, une panne de Supabase, un
+  // téléphone qui perd le réseau ou une simple lenteur laissaient le visiteur
+  // devant ce mot, pour toujours, sans un numéro à appeler. Ces deux fonctions
+  // existent pour qu'il ait toujours quelque chose à faire.
+  function messageGrille(titre, texte) {
+    var grid = document.getElementById('sr-grid')
+    if (!grid) return
+    grid.innerHTML =
+      '<div class="sr-vide">' +
+        '<div class="sr-vide-titre">' + titre + '</div>' +
+        '<p class="sr-vide-texte">' + texte + '</p>' +
+        '<a class="sr-vide-tel" href="tel:+33660188787">06 60 18 87 87</a>' +
+        '<a class="sr-vide-mail" href="mailto:jbemeric@jbemeric.com">jbemeric@jbemeric.com</a>' +
+      '</div>'
+  }
+
   try {
     // Charger events visibles
     var r = await fetch(SB_URL + 'events?visible_site=eq.true&order=date_event.asc&select=id,date_event,type,status,prix,nb_places,nb_inscrits,circuits(nom,region)',
@@ -222,7 +217,12 @@
     var events = await r.json()
 
     var grid = document.getElementById('sr-grid')
-    if (!grid || !events || !events.length) return
+    if (!grid) return
+    if (!events || !events.length) {
+      messageGrille('Aucune date ouverte pour le moment',
+        'Le calendrier se remplit au fil des accords avec les circuits. Appelez JB, il vous dira ce qui se prépare et sur quelle date vous inscrire.')
+      return
+    }
 
     function statusBadge(s) {
       if (s === 'Open')      return '<span class="sr-badge open">Inscriptions ouvertes</span>'
@@ -337,7 +337,8 @@
 
   } catch(e) {
     console.warn('[Track calendrier]', e.message)
-    // Garder le contenu statique si Supabase échoue
+    messageGrille('Le calendrier ne répond pas',
+      'Impossible d\'afficher les dates pour l\'instant. Rechargez la page dans un moment, ou appelez JB directement : il connaît son calendrier par cœur.')
   }
 })()
 
@@ -431,18 +432,6 @@
 
 // ─────────────────────────────────────────────────────────────
 
-function vote(circuitId, pts) {
-  var btn = event.currentTarget
-  if (btn.disabled) return
-  btn.disabled = true
-  btn.textContent = 'Voté ✓'
-  btn.style.background = '#22c55e'
-  btn.style.color = '#000'
-  var cnt = document.getElementById('vote-count-' + circuitId)
-  if (cnt) cnt.textContent = parseInt(cnt.textContent || 0) + 1
-  var fill = document.getElementById('vote-fill-' + circuitId)
-  if (fill) fill.style.width = Math.min(100, parseFloat(fill.style.width||0) + 20) + '%'
-}
 function openModal(id) {
   var m = document.getElementById(id)
   if (!m) return

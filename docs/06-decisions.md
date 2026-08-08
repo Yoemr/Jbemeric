@@ -32,6 +32,26 @@ Les six occurrences dans les consignes sont corrigées.
 
 **Les textes du site ont été corrigés le lendemain**, sur autorisation de Yoan. Voir D-049.
 
+### D-050, La base de données contredisait trois décisions, et l'audit ne le voyait pas
+
+Demande de Yoan, 8 août : « il faut que tu mettes aussi à jour Supabase. »
+
+Le live-editor sert la base avant le HTML. Corriger un fichier ne change donc rien pour un visiteur si un texte existe en base sous la même clé. Onze lignes ont été supprimées, toutes en violation d'une décision déjà prise.
+
+**D-008, l'offre morte.** Cinq lignes vendaient encore le Challenge et sa dotation. La pire : « Le vainqueur du Challenge prend le volant d'une BMW 325i HTCC, voiture, mécanique, licence FFSA, inscriptions. Zéro frais. » Une autre promettait « pour les meilleurs une voiture de course à la clé », retirée du HTML le 6 août et toujours servie depuis la base.
+
+**D-007, l'interdit absolu.** `karting__jbe-u-23` contenait un tiret cadratin, « pièges — avant que vous ne démarriez ». L'audit annonçait zéro tiret sur tout le site.
+
+**D-015, l'antithèse.** Cinq lignes, dont « L'Académie n'est pas une journée isolée. C'est un chemin », « Un pilote ne s'invente pas. Il se construit », « Certaines écoles vendent un parcours type. Ici on part de votre situation », et « On ne vend pas une journée isolée, on construit votre progression ».
+
+**Supprimées plutôt que réécrites.** Le HTML corrigé reprend la main, et il ne peut plus diverger d'une copie en base.
+
+**Ce que ça dit de l'outillage, et c'est le point important.** L'audit lit les fichiers. Il ne voit pas la base. Pendant trois jours il a annoncé zéro tiret cadratin, zéro offre morte et zéro antithèse pendant que la base servait les trois aux visiteurs. Toutes les vérifications de cette période ont ce trou.
+
+La clé publique Supabase est déjà dans le code du site, donc un outil peut lire la table sans secret et lui appliquer les mêmes règles. À construire, sur accord de Yoan.
+
+**Non corrigé, signalé.** La table contient encore des fautes de frappe et des chiffres périmés issus des tests de Yoan : « tet la dernière », « 40 ANs d'experience », « Jb  emeric », un « Merci » resté en fin de phrase sur le coaching, « 39 ans de compétition. Une seul école » et « quatre façons de progresser » alors que le site en annonce trois. Ce sont ses données, pas des violations de décision.
+
 ### D-049, Les six tournures du périmètre sont réécrites, base de données comprise
 
 Autorisation de Yoan, 7 août : modifier le texte de l'accueil, de l'Académie, du karting adulte et enfant, du Coaching et de la Compétition.

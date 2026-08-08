@@ -79,7 +79,7 @@ C'est lui qui range l'anomalie dans le périmètre ou dehors. Un libellé libre 
 Établi entre le 4 et le 8 août 2026. Recalculable par l'audit sauf mention contraire.
 
 - **Les 9 pages du périmètre se chargent sans une seule erreur locale.** Mesuré par `node outil-dev/fumee.js`, exceptions JavaScript, console et requêtes en échec.
-- **Zéro tiret cadratin** dans le site et dans la base.
+- **Zéro tiret cadratin** dans le site, dans `site_content` et dans `events.type`.
 - **Zéro tournure antithétique** dans le périmètre.
 - **Zéro offre morte** dans le texte visible du périmètre et dans la base.
 - **Le footer et le menu sont uniques**, injectés par `footer.js` et `nav.js`.
@@ -106,6 +106,8 @@ C'est lui qui range l'anomalie dans le périmètre ou dehors. Un libellé libre 
 > **Trou partiellement bouché le 8 août** : `node outil-dev/parcours.js` clique. Accordéon de la FAQ, portes de l'Académie qui naviguent par `onclick` et non par un `<a>`, menu burger, tirage des vidéos, absence de vidéo sur téléphone. Huit parcours.
 >
 > **Ce qui reste non testé** : inscription, vote enregistré, connexion, sauvegarde d'un texte par JB. Ces parcours écrivent dans la base de production, et personne n'a demandé à y semer des données de test. Ils attendent un environnement séparé ou un compte d'essai.
+
+**Un outil neuf peut regarder au mauvais endroit.** Le contrôle négatif dit si un outil voit ce qu'il regarde. Il ne dit pas s'il regarde partout. `base.js` a été écrit le 8 août pour couvrir la base, validé par témoin, et il ratait quand même les tirets cadratins de `events.type` parce qu'il ne lisait que `site_content`. Avant de déclarer un domaine couvert, énumérer les endroits où la chose peut se trouver.
 
 **Sur cette machine, `cdn.jsdelivr.net` est bloqué**, donc `live-editor.js` ne se charge jamais et une page affiche toujours son HTML. Un rendu local ne prouve rien dès qu'un texte existe en base.
 

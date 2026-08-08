@@ -8,6 +8,26 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ## 8 août 2026, le hero qui débordait
 
+### D-052, La confirmation d'inscription ne ment plus
+
+`track-render.js` envoyait l'inscription puis affichait l'écran de confirmation **sans attendre la réponse**, avec un `.catch(function(){})` vide qui avalait toute erreur. Un visiteur pouvait repartir persuadé d'avoir sa place alors que rien n'était enregistré. Invisible côté client, invisible côté JB.
+
+Désormais la confirmation n'apparaît que si l'écriture a réussi. En cas d'échec, le formulaire reste à l'écran avec ses valeurs, et un message donne le téléphone et l'email de JB. Le message est créé en JavaScript plutôt qu'écrit dans `track.html` : aucun balisage à maintenir, et il survivra à la refonte de la page.
+
+**Vérifié dans les deux sens**, en profitant de ce que le réseau de cette machine bloque Supabase. Ancienne version : confirmation affichée malgré l'échec. Version corrigée : confirmation absente, message présent.
+
+**Retiré au passage** : `car_model: tel`, qui écrivait le numéro de téléphone dans la colonne du modèle de voiture. Il n'existe aucun champ voiture dans la page, c'était un copier-coller. La colonne `telephone` portait déjà la valeur.
+
+### D-053, Un tiret cadratin vivait dans la table des événements
+
+Cinq événements portaient « Caterham — Voiture perso » ou « Caterham — Fin de saison » dans leur colonne `type`, affichée sur les cartes de `track.html`. L'interdit numéro un, servi aux visiteurs.
+
+Remplacé par le point médian, convention D-015 pour des libellés coordonnés de même rang.
+
+**Ce que ça apprend.** `base.js`, écrit le matin même, ne regardait que `site_content`. Une table de données peut porter de la rédaction. Il lit maintenant aussi `events.type`, et un type d'événement y apparaît comme une ligne ordinaire sous une clé qui dit où le corriger.
+
+C'est la troisième fois qu'un outil de vérification se révèle incomplet le jour de son écriture. Le contrôle négatif dit si un outil voit ce qu'il regarde, il ne dit pas s'il regarde au bon endroit.
+
 ### D-051, Deux feuilles oubliaient de soustraire la hauteur de la nav
 
 `competition.css` et `karting.css` déclaraient `.hero { min-height: 100svh }`. La nav fait 56 pixels et occupe le flux au-dessus. Le hero commençait donc à 56 et s'étendait sur une hauteur d'écran entière, débordant de 56 pixels exactement, sur toute hauteur d'écran.

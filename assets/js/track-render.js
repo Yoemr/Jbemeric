@@ -134,37 +134,73 @@
     var total = document.getElementById('price-total')
     var prix  = total ? total.textContent : '195 €'
     var titre = (document.getElementById('modal-title')||{}).textContent || ''
-    try {
-      fetch('https://fyaybxamuabawerqzuud.supabase.co/rest/v1/inscriptions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD',
-          'Authorization': 'Bearer sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD',
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({
-          user_name: prenom + ' ' + nom,
-          prenom:    prenom,
-          nom:       nom,
-          email:     email,
-          telephone: tel,
-          car_model: tel,
-          coaching_requested: hasCoach || false,
-          avec_vehicule: hasVeh || false,
-          avec_coaching: hasCoach || false,
-          event_id:  window._currentEventId || null,
-          statut:    'en_attente'
-        })
-      }).catch(function(){})
-    } catch(e) {}
-    // Afficher confirmation
-    document.getElementById('sr-form-view').style.display = 'none'
-    var confirmEl = document.getElementById('sr-confirm-view')
-    if (confirmEl) confirmEl.style.display = 'flex'
-    // Mettre à jour l'email de confirmation
-    var emailConf = document.getElementById('confirm-email')
-    if (emailConf) emailConf.textContent = email
+    // Ce qu'on affiche quand l'enregistrement a reellement eu lieu.
+    function afficherConfirmation() {
+      document.getElementById('sr-form-view').style.display = 'none'
+      var confirmEl = document.getElementById('sr-confirm-view')
+      if (confirmEl) confirmEl.style.display = 'flex'
+      var emailConf = document.getElementById('confirm-email')
+      if (emailConf) emailConf.textContent = email
+    }
+
+    // Et quand il a echoue. Le formulaire reste a l'ecran, avec ses valeurs,
+    // et un moyen de joindre JB directement. Le message est cree ici plutot
+    // qu'ecrit dans track.html : aucun balisage a maintenir, et il survivra a
+    // la refonte de la page.
+    function afficherEchec() {
+      var vue = document.getElementById('sr-form-view')
+      if (!vue) return
+      var msg = document.getElementById('sr-erreur')
+      if (!msg) {
+        msg = document.createElement('p')
+        msg.id = 'sr-erreur'
+        msg.style.cssText = 'margin:14px 0 0;padding:12px 14px;border:1px solid rgba(220,38,38,.5);'
+          + 'background:rgba(220,38,38,.12);color:#fca5a5;font-size:13px;line-height:1.6;border-radius:4px'
+        vue.appendChild(msg)
+      }
+      msg.innerHTML = 'Votre inscription n\'a pas pu être enregistrée. '
+        + 'Rien n\'a été retenu de votre côté. Appelez JB au '
+        + '<a href="tel:+33660188787" style="color:#fca5a5;text-decoration:underline">06 60 18 87 87</a> '
+        + 'ou écrivez à <a href="mailto:jbemeric@jbemeric.com" style="color:#fca5a5;text-decoration:underline">jbemeric@jbemeric.com</a>.'
+    }
+
+    // On n'annonce la confirmation que si elle a lieu.
+    //
+    // Avant le 8 aout 2026, l'erreur etait avalee par un « .catch(function(){}) »
+    // et l'ecran de confirmation s'affichait quoi qu'il arrive, sans meme
+    // attendre la reponse. Un visiteur pouvait repartir en croyant sa place
+    // reservee alors que rien n'etait enregistre. C'est le pire defaut
+    // possible sur un formulaire : il ne se voit ni cote client, ni cote JB.
+    //
+    // Retire au passage : « car_model: tel », qui ecrivait le numero de
+    // telephone dans la colonne du modele de voiture. Il n'existe aucun champ
+    // voiture dans la page, c'etait un copier-coller.
+    fetch('https://fyaybxamuabawerqzuud.supabase.co/rest/v1/inscriptions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD',
+        'Authorization': 'Bearer sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        user_name: prenom + ' ' + nom,
+        prenom:    prenom,
+        nom:       nom,
+        email:     email,
+        telephone: tel,
+        coaching_requested: hasCoach || false,
+        avec_vehicule: hasVeh || false,
+        avec_coaching: hasCoach || false,
+        event_id:  window._currentEventId || null,
+        statut:    'en_attente'
+      })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status)
+      afficherConfirmation()
+    }).catch(function () {
+      afficherEchec()
+    })
   };
 })();
 

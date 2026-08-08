@@ -136,6 +136,54 @@ Le vote disparaît en tant que mécanisme de seuil, voir section 1.
 
 ---
 
+## 5bis. Ce que la table `events` sait déjà porter
+
+Relevé le 8 août 2026, directement dans Supabase. **Bonne nouvelle : la table couvre les deux tiers du modèle « présence » de la section 3.**
+
+| Ce que demande la section 3 | Colonne existante |
+|---|---|
+| date | `date_event` |
+| circuit | `circuit_id`, clé vers la table `circuits`, 15 circuits recensés |
+| type | `type`, texte libre, défaut `Track-Day` |
+| prix | `prix`, défaut 195 |
+| statut | `status`, défaut `Potential` |
+| **mode** | **absent** |
+| **organisateur hôte** | **absent** |
+| **lien vers l'organisateur** | **absent** |
+| **coût de la journée pour JB** | **absent** |
+
+En prime, non demandé mais utile : `nb_places`, `nb_inscrits`, `nb_votes`, `visible_site`.
+
+**Trois constats qui comptent.**
+
+**La veille était déjà prévue.** Une colonne `source_veille` existe. Elle n'a jamais été remplie, zéro ligne sur onze. Quelqu'un avait vu le besoin avant nous.
+
+**Le type est un texte libre.** La contrainte dure de Yoan, « ajouter un type doit être une ligne à saisir », est donc déjà satisfaite côté base. Cinq types coexistent aujourd'hui sans qu'aucun code ne les énumère.
+
+**Les quatre colonnes manquantes sont exactement celles qui décident.** Le mode dit qui porte le risque, l'organisateur dit qui encaisse, le coût dit s'il faut y aller. Sans elles, le tableau de bord de la section 7 ne peut rien trier.
+
+### État réel des données au 8 août
+
+Onze événements, neuf visibles, tous en 2026. Quatre circuits employés sur les quinze de la table : Brignoles, Lédenon, Grand Sambuc, et le karting enfant à Brignoles.
+
+Deux événements en statut `Potential` portent `nb_votes` à 2 et 3. **Aucune action publique ne peut produire ces chiffres**, puisque le vote du site n'enregistre rien, voir section 5. Ils viennent donc de l'admin ou d'une saisie initiale.
+
+**Zéro inscription depuis la création de la table.** La permission n'est pas en cause : la politique `inscriptions_public_insert` autorise bien l'écriture anonyme. Personne n'a simplement jamais réservé par le site.
+
+---
+
+## 5ter. Deux défauts du formulaire d'inscription, corrigés le 8 août
+
+Trouvés en lisant le chemin d'écriture, pas en naviguant.
+
+**La confirmation s'affichait même quand rien n'était enregistré.** L'appel réseau était suivi d'un `.catch(function(){})` vide, et l'écran de confirmation s'affichait sans attendre la réponse. Un visiteur pouvait repartir persuadé d'avoir sa place alors que rien n'était parti. C'est le pire défaut possible sur un formulaire : invisible côté client, invisible côté JB.
+
+Vérifié dans les deux sens en simulant une panne réseau. Ancienne version : confirmation affichée. Version corrigée : formulaire conservé, message honnête, téléphone et email de JB.
+
+**Le numéro de téléphone était écrit dans la colonne du modèle de voiture.** `car_model: tel`, un copier-coller. Il n'existe aucun champ voiture dans la page. La ligne est retirée, `telephone` portait déjà la valeur.
+
+---
+
 ## 6. D'où vient l'information
 
 C'est le nerf de l'affaire, plus que la qualité du site. À partir du moment où JB vit sur les calendriers des autres, **il est aveugle si ces calendriers sont incomplets ou en retard**.

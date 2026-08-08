@@ -80,23 +80,45 @@ function listerPages(dossier, trouves) {
   return trouves
 }
 
+function interroger(chemin) {
+  return new Promise((ok, ko) => {
+    https.get(SUPABASE_URL + '/rest/v1/' + chemin,
+      { headers: { apikey: SUPABASE_ANON, Authorization: 'Bearer ' + SUPABASE_ANON } }, res => {
+        let data = ''
+        res.on('data', c => (data += c))
+        res.on('end', () => {
+          if (res.statusCode !== 200) return ko(new Error(`Supabase a repondu ${res.statusCode}`))
+          try { ok(JSON.parse(data)) } catch (e) { ko(new Error('reponse illisible : ' + e.message)) }
+        })
+      }).on('error', e => ko(new Error('Supabase injoignable : ' + e.message)))
+  })
+}
+
+// Deux tables portent du texte lu par un visiteur.
+//
+// site_content, ce que JB ecrit dans le live-editor.
+//
+// events.type, qui s'affiche sur les cartes de track.html. Oubliee d'abord, et
+// elle contenait cinq tirets cadratins le 8 aout, « Caterham — Voiture perso ».
+// L'interdit numero un, servi aux visiteurs, dans une table que l'outil ne
+// regardait pas. Une table de donnees peut porter de la redaction.
 function chargerBase() {
   const arg = process.argv.find(a => a.startsWith('--fichier='))
   if (arg) {
-    const chemin = arg.slice('--fichier='.length)
-    return Promise.resolve(JSON.parse(fs.readFileSync(chemin, 'utf8')))
+    return Promise.resolve(JSON.parse(fs.readFileSync(arg.slice('--fichier='.length), 'utf8')))
   }
-  return new Promise((ok, ko) => {
-    const url = SUPABASE_URL + '/rest/v1/site_content?select=id,content,media_type&order=id'
-    https.get(url, { headers: { apikey: SUPABASE_ANON, Authorization: 'Bearer ' + SUPABASE_ANON } }, res => {
-      let data = ''
-      res.on('data', c => (data += c))
-      res.on('end', () => {
-        if (res.statusCode !== 200) return ko(new Error(`Supabase a repondu ${res.statusCode}`))
-        try { ok(JSON.parse(data)) } catch (e) { ko(new Error('reponse illisible : ' + e.message)) }
-      })
-    }).on('error', e => ko(new Error('Supabase injoignable : ' + e.message)))
-  })
+  return Promise.all([
+    interroger('site_content?select=id,content,media_type&order=id'),
+    interroger('events?select=id,type,status&order=date_event'),
+  ]).then(([contenus, evenements]) => contenus.concat(
+    // Un type d'evenement devient une ligne comme une autre, sous une cle qui
+    // dit ou le corriger. La page qui l'affiche est track.html.
+    evenements.filter(e => e.type).map(e => ({
+      id: 'track__type-' + String(e.id).slice(0, 8),
+      content: e.type,
+      media_type: null,
+    }))
+  ))
 }
 
 function principal() {

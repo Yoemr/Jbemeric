@@ -142,6 +142,10 @@ grep -c "^function f\|^window\.f =\|^const f =" fichier.js
 
 > **Le 8 août, `fyaybxamuabawerqzuud.supabase.co` l'a été aussi**, en cours de session. Ce n'est donc pas un acquis stable : le vérifier plutôt que le supposer, dans un sens comme dans l'autre. `curl --noproxy '*' -o /dev/null -w '%{http_code}' https://fyaybxamuabawerqzuud.supabase.co/rest/v1/` répond en une seconde. Quand la base est injoignable en HTTP, le serveur MCP Supabase, lui, continue de répondre : c'est la voie de repli pour lire ou corriger du contenu.
 
+**L'audit ne voit pas les droits.** Aucun des quatre outils ne lit les policies de sécurité. Le 8 août, sept policies sur huit se sont révélées fausses en toutes circonstances, et rien ne l'avait jamais signalé : le code est correct, la base est correcte, c'est l'accord entre les deux qui ne l'est pas. Voir D-073.
+
+> **La question à poser avant de conclure qu'un bouton d'administration marche** : est-ce que la policy qui l'autorise cherche le rôle dans `user_metadata` ? Le claim `auth.jwt() ->> 'role'` vaut toujours `authenticated`, jamais le rôle applicatif. Une policy qui l'interroge est fausse par construction.
+
 **Le dashboard admin ne se teste pas ici.** Il exige une session authentifiée et importe Supabase depuis jsdelivr. Aucun des quatre outils ne l'atteint, et ce qui y est corrigé se vérifie par lecture, par banc d'essai isolé, ou chez Yoan. Le dire quand c'est le cas plutôt que laisser croire à une vérification.
 
 ---

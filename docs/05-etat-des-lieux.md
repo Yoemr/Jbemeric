@@ -601,3 +601,21 @@ Trois circuits seulement sont employés sur les onze dates : Brignoles, Lédenon
 ### 8.5 Tout le dépôt est publié
 
 `netlify.toml` déclare `publish = "."`. `outil-dev/`, `docs/` et `old/` sont donc en ligne. `robots.txt` les écarte désormais des robots, D-071. Ils restent accessibles à qui connaît l'adresse.
+
+### 8.6 Les droits, cause première de « rien ne fonctionne »
+
+Sept policies sur huit cherchent le rôle applicatif dans le mauvais claim du jeton. Elles sont fausses en toutes circonstances. Voir D-073.
+
+| Table | Policy | Ce qui est refusé à JB |
+|---|---|---|
+| `events` | `events_admin_all` | ouvrir, masquer, supprimer, créer une date |
+| `inscriptions` | `inscriptions_admin_read` | lire les inscriptions reçues |
+| `circuits` | `circuits_admin_all` | ajouter un circuit |
+| `docs` | `docs_admin_all` | publier un document |
+| `users` | `users_admin_read` | voir la liste des utilisateurs |
+| `forum_threads` | `threads_auth_update` | modérer un fil dont il n'est pas l'auteur |
+| `forum_replies` | `replies_auth_update` | modérer une réponse dont il n'est pas l'auteur |
+
+Seule `content_admin_write` sur `site_content` emploie le bon chemin, et le live-editor est la seule fonction d'administration qui ait jamais marché.
+
+Migration écrite et non appliquée : `outil-dev/migrations/2026-08-08-role-admin-dans-les-policies.sql`.

@@ -6,6 +6,45 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 8 août 2026, la racine
+
+### D-073, Le rôle admin n'est pas là où les policies le cherchent
+
+**C'est la cause première de « rien ne fonctionne dans le dashboard ».**
+
+Sept policies sur huit cherchent le rôle applicatif dans `auth.jwt() ->> 'role'`. Supabase met toujours `authenticated` dans ce claim pour un utilisateur connecté, jamais `admin`. Le rôle vit dans `user_metadata`, et c'est bien là que `admin.js` va le chercher.
+
+Vérifié en base avec un jeton d'admin simulé :
+
+| | valeur |
+|---|---|
+| `auth.jwt() ->> 'role'` | `authenticated` |
+| `auth.jwt() -> 'user_metadata' ->> 'role'` | `admin` |
+| policy actuelle | **false** |
+| policy corrigée | true |
+
+**Contrôle négatif** : avec `user_metadata.role = 'client'`, la policy corrigée rend `false`. Elle sait dire non, elle n'ouvre pas à tout le monde.
+
+Une seule policy emploie le bon chemin, `content_admin_write` sur `site_content`. C'est exactement pourquoi le live-editor est la seule fonction d'administration qui ait jamais marché.
+
+**Ce que ça empêche** : JB ne peut ni ouvrir une date, ni la masquer, ni la supprimer, ni en créer une. Il ne peut pas lire les inscriptions, donc si un client s'inscrivait demain il ne le verrait jamais. Ni ajouter un circuit, ni publier un document, ni voir la liste des utilisateurs, ni modérer un fil dont il n'est pas l'auteur.
+
+**Conséquence sur les corrections du 8 août** : les boutons du dashboard réparés dans D-061 et D-062 enverront désormais une requête correcte, que la base refusera. Le code était faux et les droits aussi. Corriger l'un sans l'autre ne donne rien de visible.
+
+La migration est écrite dans `outil-dev/migrations/2026-08-08-role-admin-dans-les-policies.sql`, avec sa vérification et son retour arrière. **Elle n'est pas appliquée.** Changer le contrôle d'accès d'une base de production est une décision de Yoan, d'autant qu'il a dit ne pas avoir besoin d'un dashboard fonctionnel à ce stade.
+
+**Ce que la migration n'ouvre pas** : rien de public ne change. Les lectures publiques et l'insertion publique dans `inscriptions` ne sont pas touchées. Un visiteur anonyme n'a pas de `user_metadata.role`, donc aucune policy corrigée ne lui répond oui.
+
+### D-074, Zéro inscription depuis toujours, et l'explication
+
+La table `inscriptions` compte zéro ligne. La policy d'insertion publique est pourtant correcte, `with check (true)` : le formulaire du site **peut** écrire.
+
+Deux raisons possibles subsistent, et elles ne s'excluent pas. Personne ne s'est jamais inscrit. Ou quelqu'un l'a fait et JB ne l'a jamais su, faute de pouvoir lire la table, D-073. Le formulaire mentait par ailleurs sur sa confirmation jusqu'au 7 août, D-052.
+
+La table `users` publique est vide elle aussi, alors qu'un compte existe dans `auth.users`. Relevé, non traité.
+
+---
+
 ## 8 août 2026, les événements réels
 
 ### D-067, La page Événements proposait six dates déjà passées

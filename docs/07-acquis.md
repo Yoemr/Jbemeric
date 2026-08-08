@@ -95,11 +95,17 @@ C'est lui qui range l'anomalie dans le périmètre ou dehors. Un libellé libre 
 
 **L'audit ne voit pas la base de données.** Pendant trois jours il a annoncé zéro tiret cadratin, zéro offre morte et zéro antithèse pendant que Supabase servait les trois aux visiteurs. Onze lignes ont dû être supprimées le 8 août, dont une promesse de BMW 325i en dotation et un tiret cadratin.
 
+> **Trou bouché le 8 août** : `node outil-dev/base.js` applique les mêmes règles au contenu de Supabase. Il ne réécrit aucun critère, il présente chaque ligne de la base comme une page et fait tourner les règles existantes dessus.
+
 > Le live-editor sert la base **avant** le HTML. Corriger un fichier ne change rien pour un visiteur si un texte existe en base sous la même clé. **Toute correction de texte doit être suivie d'une vérification en base.**
 
 **L'audit ne voit pas le rendu.** Il ne dira jamais qu'un filet est invisible sur fond sombre, qu'un bloc est sauté par le scroll snap, ou qu'un bouton tombe sous la ligne de flottaison.
 
-**L'audit ne voit pas l'exécution.** C'est le rôle de `fumee.js`, qui ne clique sur rien non plus : aucun formulaire, aucun vote, aucune connexion n'a jamais été testé de bout en bout.
+**L'audit ne voit pas l'exécution.** C'est le rôle de `fumee.js`.
+
+> **Trou partiellement bouché le 8 août** : `node outil-dev/parcours.js` clique. Accordéon de la FAQ, portes de l'Académie qui naviguent par `onclick` et non par un `<a>`, menu burger, tirage des vidéos, absence de vidéo sur téléphone. Huit parcours.
+>
+> **Ce qui reste non testé** : inscription, vote enregistré, connexion, sauvegarde d'un texte par JB. Ces parcours écrivent dans la base de production, et personne n'a demandé à y semer des données de test. Ils attendent un environnement séparé ou un compte d'essai.
 
 **Sur cette machine, `cdn.jsdelivr.net` est bloqué**, donc `live-editor.js` ne se charge jamais et une page affiche toujours son HTML. Un rendu local ne prouve rien dès qu'un texte existe en base.
 
@@ -139,10 +145,20 @@ La partie que la documentation ne résout pas, et qui demande un changement de m
 4. **Un piège d'instrument rencontré s'écrit ici, dans la minute.** C'est ce qui rend la prochaine session moins chère.
 5. **Le cadrage avant la construction.** Le 7 août, Yoan a dû arrêter le travail pour parler de structure. La fiche `docs/chantiers/2026-08-07-page-evenements.md` en est sortie en une conversation. Elle aurait évité plusieurs jours de corrections sur une structure jamais validée.
 
-### 6.3 Ce qui reste à faire pour fermer le trou
+### 6.3 L'outillage, et ce qu'il couvre
 
-- **Un outil qui vérifie la base**, sur le modèle de `fumee.js`. La clé publique Supabase est déjà dans le code du site, donc aucun secret n'est nécessaire. Sans lui, « zéro faute » restera une phrase fausse.
-- **Un test qui clique.** Inscription, vote, connexion, sauvegarde d'un texte par JB. Rien de tout ça n'a jamais été essayé.
+Quatre outils, tous dans `outil-dev/`, dossier forcé en 404 par `_redirects` avec `docs/` et `.claude/`. Aucun n'est servi au public.
+
+| Outil | Répond à |
+|---|---|
+| `node outil-dev/audit/audit.js` | ce qui est écrit dans les fichiers est-il correct |
+| `node outil-dev/base.js` | ce qui est enregistré dans Supabase est-il correct |
+| `node outil-dev/fumee.js` | les pages tournent-elles sans erreur |
+| `node outil-dev/parcours.js` | les boutons font-ils quelque chose |
+
+Les deux derniers ont besoin du serveur local, `node outil-dev/dev-server.js`.
+
+**Ce qui n'est toujours pas couvert** : le rendu visuel, qui demande un œil, et tout parcours qui écrit en base.
 
 ---
 

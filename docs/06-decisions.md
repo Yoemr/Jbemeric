@@ -6,6 +6,40 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 8 août 2026, l'archivage
+
+### D-057, La page voitures part aux archives
+
+**Demande de Yoan** : « Mets voiture dans archives. »
+
+`paddock/nos-voitures.html` et `assets/css/nos-voitures.css` sont déplacés dans `old/pages-archivees/`. Déplacés, pas supprimés, comme les fichiers morts du 1er août.
+
+**Elle était déjà morte.** Sa ligne 10 portait `<meta http-equiv="refresh" content="0;url=track.html#voitures">` : elle se sabordait au chargement et personne ne la voyait, ni visiteur, ni moteur de recherche. Rien ne la citait sauf `routes.js`.
+
+Retirés avec elle : l'entrée `voitures` de `routes.js`, ses raccourcis dans `_redirects`, et l'entrée de menu « Votre voiture » qui pointait sur `track.html#voiture-perso`, ancre inexistante. Cela règle la faute laissée ouverte en D-056.
+
+**Vérifié après coup** : zéro faute à l'audit, les dix-neuf pages se chargent sans erreur, les neuf parcours passent.
+
+### D-058, Une seule page était réellement en chantier
+
+**Demande de Yoan** : « fais de même avec les pages en chantier. »
+
+Vérification faite avant d'archiver quoi que ce soit d'autre. Les seules candidates étaient `paddock/articles.html` et `paddock/article.html`, marquées en chantier dans le relevé parce que leur contenu est rendu en JavaScript.
+
+**Elles portent du vrai contenu** : 51 documents, 29 sujets de forum et 25 réponses en base. Les archiver supprimerait de la matière. Elles restent.
+
+Les pages `admin/` sont l'outil de travail de JB et les pages `legal/` sont obligatoires. Il ne restait donc que la page voitures.
+
+### D-059, On ne parle plus des pages hors périmètre
+
+Reproche de Yoan : « tu m'as gonflé à toujours me parler de pages qu'on a jamais travaillé, et ça me gonfle ».
+
+Il a raison, et le défaut était dans mes réponses, pas dans l'outil : l'audit range déjà le hors périmètre à part et le masque par défaut. C'est moi qui les remontais quand même.
+
+Nouvelle règle, `CLAUDE.md` section 4 point 8 : ne jamais mentionner une page hors périmètre à Yoan, ni pour signaler, ni pour proposer, ni en passant. Sauf si elle casse quelque chose du périmètre, et alors en disant en quoi.
+
+---
+
 ## 8 août 2026, le hero qui débordait
 
 ### D-054, L'audit ne voyait pas les liens construits en JavaScript

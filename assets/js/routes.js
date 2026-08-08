@@ -35,7 +35,6 @@
 
     // ── Paddock ────────────────────────────────────────────────────
     palmares:   '/paddock/palmares.html',
-    voitures:   '/paddock/nos-voitures.html',
     articles:   '/paddock/articles.html',
     article:    '/paddock/article.html',
 

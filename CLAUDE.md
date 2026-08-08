@@ -48,9 +48,10 @@ Le reste de l'écriture est libre.
 5. **Contrôle négatif avant toute conclusion favorable.** Avant de croire un « identique », un « aucune faute » ou un « zéro occurrence », introduire volontairement le défaut et vérifier que l'instrument le voit. Une comparaison qui ne sait pas voir une différence dira toujours « identique ». Quatre faux résultats démasqués par cette règle le 7 août.
 6. **Le périmètre avant tout le reste.** Neuf pages comptent : index, académie, karting enfant et adulte, compétition, coaching, track, paddock, palmarès. Un défaut ailleurs se signale, il ne se corrige pas sans demander.
 7. **Un défaut trouvé hors de la demande se note, il ne se corrige pas.** Sauf s'il casse la chose demandée. Sinon il va dans `docs/05` et Yoan décide. C'est la parade à la dérive qui produit 95 % de correction pour 5 % de visible.
-8. **Dire avant de commencer ce que Yoan verra à l'écran quand ce sera fini.** Si la réponse est « rien », le dire tout de suite et le laisser choisir.
-9. **Toute correction de texte se vérifie aussi dans Supabase.** Le live-editor sert la base avant le HTML : corriger un fichier ne change rien pour un visiteur si un texte existe en base sous la même clé.
-10. **Fin de chantier** : mise à jour de `docs/05-etat-des-lieux.md`, `docs/06-decisions.md`, et des pièges rencontrés dans `docs/07-acquis.md`, puis résumé court.
+8. **Ne jamais parler à Yoan d'une page hors périmètre.** Ni pour signaler, ni pour proposer, ni en passant. Reproche du 8 août : « tu m'as gonflé à toujours me parler de pages qu'on a jamais travaillé ». L'audit les range déjà à part et les masque : faire pareil dans les réponses. Si une de ces pages casse quelque chose du périmètre, alors seulement en parler, en disant en quoi elle le casse.
+9. **Dire avant de commencer ce que Yoan verra à l'écran quand ce sera fini.** Si la réponse est « rien », le dire tout de suite et le laisser choisir.
+10. **Toute correction de texte se vérifie aussi dans Supabase.** Le live-editor sert la base avant le HTML : corriger un fichier ne change rien pour un visiteur si un texte existe en base sous la même clé.
+11. **Fin de chantier** : mise à jour de `docs/05-etat-des-lieux.md`, `docs/06-decisions.md`, et des pièges rencontrés dans `docs/07-acquis.md`, puis résumé court.
 
 ---
 

@@ -32,7 +32,6 @@
         { href:R.track + '#stages',        label:'Stages voiture' },
         { href:R.track + '#trackdays',     label:'Track-Days' },
         { href:R.track + '#voitures',      label:'Nos voitures' },
-        { href:R.track + '#voiture-perso', label:'Votre voiture' },
         { href:R.boutique, label:'Boutique 4x sans frais' },
       ]
     },

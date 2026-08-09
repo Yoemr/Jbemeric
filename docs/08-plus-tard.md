@@ -74,6 +74,7 @@ Aucune ne se prend sans lui.
 
 **Sur le contenu**
 
+- **Où la FAQ mérite d'être, et où elle ne sert à rien.** Mot de Yoan, 9 août : « faudrait aussi réfléchir à la pertinence de la FAQ, elle est peut-être à des endroits pas forcément essentiels, mais pour l'instant pas grave. Une fois que le système marche c'est très facile d'ajouter ou supprimer une section sur une page. » Elle est aujourd'hui sur six pages, par héritage et non par choix. À reprendre page par page quand le site tournera. Le bloc d'avis pose la même question.
 - La page JB, validée dans le principe, avec le palmarès dedans. Entrée de menu à décider.
 - La page « nos voitures », sujet séparé. Idées de Yoan dans `docs/99` : louer aux équipes, s'appuyer sur les clients qui en possèdent, reconstruire un parc avec des investisseurs rémunérés.
 - Photos et vidéos, reprise complète avec JB. Beaucoup sont provisoires.

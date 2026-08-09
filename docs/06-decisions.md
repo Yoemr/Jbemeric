@@ -6,6 +6,28 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, recadrage
+
+### D-093, La règle sur les circuits est retirée
+
+Reproche de Yoan, mot pour mot : « le site n'est pas fonctionnel et n'est pas en ligne, tu te prends la tête sur des détails non techniques qui servent à rien, tu pars dans tous les sens, c'est chiant. On s'en fout des événements passés. Des voitures qui n'existent plus. Quand toute la partie technique fonctionnera on pourra en 5 min mettre à jour les événements. »
+
+Il a raison. La règle `circuits` faisait remonter sept fautes dans le périmètre pour des données qu'il dit lui-même sans importance, et qui seront corrigées en cinq minutes le jour venu. Elle ajoutait du bruit à un audit qui doit rester un instrument de décision.
+
+Le constat reste écrit dans `docs/05` section 9. La règle est supprimée.
+
+**Ce qui est acté, et qui vaut pour la suite** : tant que le site n'est pas en ligne et fonctionnel, la justesse des données passe après la technique. Les événements se mettent à jour en cinq minutes, et seront automatisés plus tard.
+
+### D-094, Le bouton « nouveau sujet » du forum ne peut pas fonctionner
+
+`paddock-modules.js` cherche `new-thread-modal`, absent de `paddock.html`. Le bouton tombe dans la branche de repli et affiche « Connectez-vous pour poster un sujet », donc il **accuse le visiteur d'un défaut qui n'est pas le sien**. Un visiteur déjà connecté verra le même message.
+
+Même famille que le filtre du dashboard et le formulaire de contact : du code qui parle à un élément absent de la page.
+
+Non corrigé, faute de savoir si le forum compte à ce stade.
+
+---
+
 ## 9 août 2026, karting et automobile
 
 ### D-090, Cinq événements placent une voiture sur une piste de karting

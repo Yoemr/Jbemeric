@@ -39,6 +39,47 @@ const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
 const BASE = process.env.JBE_BASE || 'http://localhost:3000'
 const PORT = 9334
 
+// Les trois evenements de travail, servis a la place de Supabase. Ecrits une
+// seule fois : trois parcours s'en servent, et deux definitions du meme jeu de
+// donnees finiraient par diverger.
+const PRELUDE_EVENEMENTS = `(function () {
+  var tout = [
+    { id:'p1', slug:'track-day-ledenon-19-septembre', date_event:'2099-09-19',
+      type:'Track-Day GT & Tourisme', status:'Open', prix:'245.00', nb_places:10, nb_inscrits:0,
+      visible_site:true, mode:'box', organisateur:'Circuit de Lédenon',
+      lien_organisateur:'https://exemple.test/ledenon',
+      photo:'assets/images/porsche-gt3-circuit-albi.jpg',
+      resume:'Le circuit le plus technique du sud.',
+      description:'Premier paragraphe de la journee.\\n\\nSecond paragraphe, apres une ligne vide.',
+      circuits:{ nom:'Circuit de Lédenon', region:'Gard (30)' } },
+    { id:'p2', slug:'stage-206-grand-sambuc-10-octobre', date_event:'2099-10-10',
+      type:'Stage 206 S16', status:'Open', prix:'195.00', nb_places:8, nb_inscrits:0,
+      visible_site:true, mode:'entier', organisateur:null, lien_organisateur:null,
+      photo:'assets/images/peugeot-206-s16-ricard.jpg',
+      resume:'Une journee entiere dans la 206 S16 preparee.',
+      description:'Un paragraphe.\\n\\nUn autre paragraphe.',
+      circuits:{ nom:'Circuit du Grand Sambuc', region:'Bouches-du-Rhône' } },
+    { id:'p3', slug:'track-day-le-luc-7-novembre', date_event:'2099-11-07',
+      type:'Track-Day voiture personnelle', status:'Open', prix:'175.00', nb_places:12, nb_inscrits:0,
+      visible_site:true, mode:'greffe', organisateur:'Circuit du Var',
+      lien_organisateur:'https://exemple.test/var',
+      photo:'assets/images/lotus-circuit-du-luc.jpg',
+      resume:'Le plus accessible des circuits du Var.',
+      description:'Un paragraphe.\\n\\nUn autre paragraphe.',
+      circuits:{ nom:'Circuit du Luc', region:'Var (83)' } }
+  ]
+  var vrai = window.fetch
+  window.fetch = function (url) {
+    var u = String(url)
+    if (u.indexOf('/events?') !== -1) {
+      var m = u.match(/slug=eq\\.([a-z0-9-]+)/)
+      var r = m ? tout.filter(function (e) { return e.slug === m[1] }) : tout
+      return Promise.resolve({ ok:true, status:200, json:function () { return Promise.resolve(r) } })
+    }
+    return vrai.apply(this, arguments)
+  }
+})()`
+
 // Un parcours : une page, une largeur, une action, et ce qu'on attend apres.
 // « action » et « attendu » sont evalues dans la page. « attendu » rend un
 // booleen, ou une chaine expliquant l'echec.
@@ -288,76 +329,82 @@ const PARCOURS = [
     })()`,
   },
   {
-    nom: 'Evenements, le mode decide de ce que le site propose',
+    nom: 'carte d evenement, une photo, une date, un seul bouton',
     page: 'track.html',
     largeur: 1300,
-    // ── Ce que ce parcours protege ──────────────────────────────────────────
-    // JB ne loue plus le circuit a la journee. La plupart du temps il se greffe
-    // sur l'evenement d'un autre, et le pilote doit alors faire deux choses :
-    // s'inscrire chez l'organisateur pour rouler, et payer JB pour le coaching.
-    // Le site ne peut encaisser que lorsque JB est le vendeur.
-    //
-    // Afficher partout le meme « S'inscrire » promettrait une reservation que
-    // la page ne sait pas tenir. Ce parcours verifie que chaque mode produit
-    // bien l'action qui lui correspond, et qu'une date sans mode se comporte
-    // comme avant.
-    //
-    // Aucune ecriture : la reponse de Supabase est remplacee avant que la page
-    // ne charge ses scripts. Jouable partout, y compris chez Yoan.
-    prelude: `(function () {
-      var faux = [
-        { id:'a1', date_event:'2099-12-01', type:'Essai', status:'Open', prix:'195', nb_places:10, nb_inscrits:0,
-          mode:null, organisateur:null, lien_organisateur:null, circuits:{nom:'Sans mode',region:'x'} },
-        { id:'a2', date_event:'2099-12-02', type:'Essai', status:'Open', prix:'195', nb_places:10, nb_inscrits:0,
-          mode:'entier', organisateur:null, lien_organisateur:null, circuits:{nom:'JB organise',region:'x'} },
-        { id:'a3', date_event:'2099-12-03', type:'Essai', status:'Open', prix:'245', nb_places:10, nb_inscrits:0,
-          mode:'box', organisateur:'Hote Test', lien_organisateur:'https://exemple.test/i',
-          circuits:{nom:'Box partage',region:'x'} },
-        { id:'a4', date_event:'2099-12-04', type:'Essai', status:'Open', prix:'150', nb_places:10, nb_inscrits:0,
-          mode:'coaching', organisateur:'Hote Test', lien_organisateur:null,
-          circuits:{nom:'Sans adresse',region:'x'} },
-        { id:'a5', date_event:'2099-12-05', type:'Essai', status:'Open', prix:'0', nb_places:10, nb_inscrits:0,
-          mode:'moniteur', organisateur:'Ecole', lien_organisateur:null,
-          circuits:{nom:'Moniteur loue',region:'x'} }
-      ]
-      var vrai = window.fetch
-      window.fetch = function (url) {
-        if (String(url).indexOf('/events?') !== -1) {
-          return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve(faux) } })
-        }
-        return vrai.apply(this, arguments)
-      }
-    })()`,
+    // Une carte ne decide plus rien. Elle montre, et elle mene a la page de
+    // l'evenement. Empiler le prix, le mode et deux boutons dessus donnait une
+    // grille illisible et forcait a choisir avant d'avoir lu.
+    prelude: PRELUDE_EVENEMENTS,
     action: `null`,
     attente: 2500,
     attendu: `(function () {
       var cartes = document.querySelectorAll('#sr-grid .sr-card')
-      if (cartes.length !== 5) return 'attendu 5 cartes, trouve ' + cartes.length
+      if (cartes.length !== 3) return 'attendu 3 cartes, trouve ' + cartes.length
 
-      function pied(i) { return cartes[i].querySelector('.sr-card-foot') }
-      function texte(i) { return pied(i).textContent.replace(/\\s+/g, ' ').trim() }
+      for (var i = 0; i < cartes.length; i++) {
+        var c = cartes[i]
+        if (!c.querySelector('.sr-card-img img')) return 'carte ' + (i+1) + ' sans photo'
+        if (!c.querySelector('.sr-card-date'))    return 'carte ' + (i+1) + ' sans date'
+        if (!c.querySelector('.sr-card-resume'))  return 'carte ' + (i+1) + ' sans resume'
 
-      // Sans mode et mode « entier » : JB vend, le site encaisse.
-      for (var i = 0; i < 2; i++) {
-        if (pied(i).children.length !== 1 || !/S'inscrire/.test(texte(i)))
-          return 'carte ' + (i + 1) + ' devrait proposer la seule inscription du site, elle propose : ' + texte(i)
+        var boutons = c.querySelectorAll('.sr-btn-savoir')
+        if (boutons.length !== 1) return 'carte ' + (i+1) + ' porte ' + boutons.length + ' bouton(s), il en faut un'
+
+        var lien = c.querySelector('.sr-card-lien')
+        if (!lien) return 'carte ' + (i+1) + ' n est pas cliquable en entier'
+        // Pas d'expression reguliere ici : dans un gabarit de chaine, le \/
+        // d'une regex est avale a l'ecriture et le navigateur recoit une
+        // division. indexOf ne pose pas ce probleme.
+        if (String(lien.getAttribute('href')).indexOf('evenement/') !== 0)
+          return 'carte ' + (i+1) + ' ne mene pas a la page de l evenement, mais a ' + lien.getAttribute('href')
       }
+      return true
+    })()`,
+  },
+  {
+    nom: 'page d evenement, le mode decide de ce qu on peut faire',
+    page: 'evenement.html?e=track-day-ledenon-19-septembre',
+    largeur: 1300,
+    // C'est ici que le basculement se joue. JB ne loue plus le circuit a la
+    // journee : le plus souvent le pilote s'inscrit chez l'organisateur pour
+    // rouler, et paie JB pour le coaching. Le site ne peut encaisser que
+    // lorsque JB est le vendeur.
+    prelude: PRELUDE_EVENEMENTS,
+    action: `null`,
+    attente: 2500,
+    attendu: `(function () {
+      if (!document.querySelector('.ev-titre')) return 'la page ne s est pas remplie'
+      if (!/Lédenon/.test(document.querySelector('.ev-titre').textContent))
+        return 'mauvais evenement affiche : ' + document.querySelector('.ev-titre').textContent
+      if (document.querySelectorAll('.ev-texte p').length < 2)
+        return 'la description n a pas ete decoupee en paragraphes'
+      if (!/Lédenon/.test(document.title)) return 'le titre de la page ne nomme pas l evenement : ' + document.title
 
-      // Box partage avec adresse : un lien sortant, puis la reservation de JB.
-      var lien = pied(2).querySelector('a[href="https://exemple.test/i"]')
-      if (!lien) return 'le lien vers l organisateur manque sur le box partage'
-      if (lien.target !== '_blank') return 'le lien vers l organisateur ne s ouvre pas dans un nouvel onglet'
-      if (!/Hote Test/.test(lien.textContent)) return 'le lien ne nomme pas l organisateur'
-      if (!pied(2).querySelector('[data-inscr]')) return 'la reservation de JB manque sur le box partage'
+      // Mode box : deux gestes, l organisateur puis JB.
+      var vers = document.querySelector('.ev-btn-creux[href]')
+      if (!vers) return 'aucun lien vers l organisateur sur un mode box'
+      if (vers.target !== '_blank') return 'le lien vers l organisateur reste dans l onglet'
+      if (!document.querySelector('[data-inscr]')) return 'aucun moyen de reserver JB'
 
-      // Sans adresse d organisateur : surtout pas de lien mort.
-      if (pied(3).querySelector('a')) return 'un lien a ete fabrique alors qu aucune adresse n est connue'
-      if (!pied(3).querySelector('[data-inscr]')) return 'la reservation de JB manque quand l adresse est inconnue'
-
-      // Moniteur loue : le pilote n a rien a reserver ici.
-      if (pied(4).querySelector('[data-inscr]') || pied(4).querySelector('a'))
-        return 'le mode moniteur ne doit rien proposer a reserver, il propose : ' + texte(4)
-
+      // Et de quoi le joindre, quoi qu il arrive.
+      if (!document.querySelector('.ev-joindre a[href^="tel:+33660188787"]'))
+        return 'le telephone de JB manque sur la page'
+      return true
+    })()`,
+  },
+  {
+    nom: 'page d evenement, une adresse inconnue ne laisse pas dans le vide',
+    page: 'evenement.html?e=cette-date-nexiste-pas',
+    largeur: 1300,
+    prelude: PRELUDE_EVENEMENTS,
+    action: `null`,
+    attente: 2000,
+    attendu: `(function () {
+      var bloc = document.querySelector('.ev-absent')
+      if (!bloc) return 'aucun message, la page reste sur son chargement'
+      if (/Chargement/.test(bloc.textContent)) return 'la page est restee sur « Chargement »'
+      if (!bloc.querySelector('a[href="track.html"]')) return 'aucun retour vers le calendrier'
       return true
     })()`,
   },

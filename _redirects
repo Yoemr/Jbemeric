@@ -1,5 +1,12 @@
 # Redirections JB EMERIC
 
+# ── LA page d'evenement ─────────────────────────────────────────
+# Reecriture, pas redirection : le code 200 sert evenement.html sans
+# changer l'adresse affichee. Chaque evenement a donc sa propre URL,
+# /evenement/track-day-ledenon-19-septembre, sans qu'aucun fichier
+# n'existe pour lui. evenement.js lit le slug dans le chemin.
+/evenement/*     /evenement.html                      200
+
 # ── Raccourcis SEO-friendly ─────────────────────────────────────
 /stages          /track.html                          301
 /karting         /academie/karting-adulte.html        301

@@ -1,0 +1,142 @@
+/* evenement.css : LA page d'un événement, quel qu'il soit.
+   ══════════════════════════════════════════════════════════════════
+   Une seule feuille pour tous les événements. Ce qui varie vient de la
+   base, jamais du CSS : la photo, la date, le texte, l'action.
+
+   Les couleurs sortent de theme.css. Aucune valeur en dur ici sauf les
+   transparences, qui n'ont pas de variable. */
+
+.ev-page { background: var(--BN); color: rgba(255,255,255,.86) }
+
+/* ── En-tête : la photo, la date, le lieu ─────────────────────── */
+.ev-hero {
+  position: relative;
+  min-height: calc(72svh - 56px);
+  display: flex; align-items: flex-end;
+  overflow: hidden;
+}
+.ev-hero img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.ev-hero-voile {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(4,10,30,.35) 0%, rgba(4,10,30,.82) 62%, var(--BN) 100%);
+}
+.ev-hero-dedans {
+  position: relative;
+  padding: clamp(32px,6vw,72px) clamp(20px,5vw,72px);
+  max-width: 1080px; width: 100%; margin: 0 auto;
+}
+
+.ev-fil {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(255,207,0,.7); margin-bottom: 18px;
+}
+.ev-fil a { color: inherit; text-decoration: none }
+.ev-fil a:hover { color: var(--Y) }
+
+.ev-quand {
+  font-family: 'DM Mono', monospace; font-size: clamp(12px,1.6vw,14px);
+  letter-spacing: 2px; color: var(--Y); margin-bottom: 10px;
+}
+.ev-titre {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: clamp(38px,7vw,80px); line-height: .96;
+  letter-spacing: 1px; color: #fff; margin: 0 0 14px;
+}
+.ev-ou { font-size: clamp(15px,2vw,18px); color: rgba(255,255,255,.72); margin: 0 }
+
+/* Les faits, sur une ligne, sans décoration. */
+.ev-faits {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px;
+}
+.ev-fait {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 9px 15px; border-radius: 3px;
+  border: 1px solid rgba(255,255,255,.16);
+  color: rgba(255,255,255,.72);
+}
+.ev-fait strong { color: var(--Y); font-weight: 500 }
+
+/* ── Corps : le texte à gauche, l'action à droite ──────────────── */
+.ev-corps {
+  max-width: 1080px; margin: 0 auto;
+  padding: clamp(40px,6vw,72px) clamp(20px,5vw,72px);
+  display: grid; grid-template-columns: 1fr 340px; gap: clamp(28px,4vw,56px);
+  align-items: start;
+}
+@media (max-width: 860px) { .ev-corps { grid-template-columns: 1fr } }
+
+.ev-texte p {
+  font-size: clamp(15px,1.8vw,17px); line-height: 1.85;
+  color: rgba(255,255,255,.78); margin: 0 0 20px;
+}
+.ev-texte p:last-child { margin-bottom: 0 }
+
+/* Le panneau d'action colle en haut pendant qu'on lit. */
+.ev-agir {
+  position: sticky; top: 72px;
+  border: 1px solid rgba(255,255,255,.1); border-radius: 8px;
+  background: rgba(255,255,255,.03);
+  padding: 24px;
+}
+@media (max-width: 860px) { .ev-agir { position: static } }
+
+.ev-prix { font-family: 'DM Mono', monospace; font-size: 30px; color: #fff; line-height: 1.1 }
+.ev-prix small {
+  display: block; margin-top: 6px;
+  font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase;
+  color: rgba(255,255,255,.42);
+}
+.ev-places {
+  margin: 18px 0; padding: 12px 0;
+  border-top: 1px solid rgba(255,255,255,.08);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  font-size: 13px; color: rgba(255,255,255,.6);
+}
+.ev-places strong { color: #fff }
+
+.ev-boutons { display: flex; flex-direction: column; gap: 10px }
+.ev-btn {
+  display: block; text-align: center; text-decoration: none;
+  border: none; cursor: pointer; width: 100%;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 1.8px; text-transform: uppercase;
+  padding: 15px 18px; border-radius: 6px;
+  transition: filter .18s, border-color .18s, color .18s;
+}
+.ev-btn-or { background: var(--Y); color: #000; font-weight: 500 }
+.ev-btn-or:hover { filter: brightness(1.08) }
+.ev-btn-creux { background: none; border: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.85) }
+.ev-btn-creux:hover { border-color: rgba(255,207,0,.5); color: #fff }
+
+/* Quand il n'y a rien à réserver, on le dit au lieu d'inventer un bouton. */
+.ev-info {
+  padding: 13px 15px; border-radius: 6px;
+  border: 1px dashed rgba(255,255,255,.15);
+  color: rgba(255,255,255,.55); font-size: 12.5px; line-height: 1.6;
+  text-align: center;
+}
+
+.ev-joindre {
+  margin-top: 18px; padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  font-size: 12.5px; color: rgba(255,255,255,.5); line-height: 1.7;
+}
+.ev-joindre a { color: var(--Y); text-decoration: none }
+.ev-joindre a:hover { text-decoration: underline }
+
+/* ── Quand l'événement n'existe pas, ou que la base ne répond pas ─ */
+.ev-absent {
+  max-width: 640px; margin: 0 auto;
+  padding: clamp(60px,12vw,140px) 24px; text-align: center;
+}
+.ev-absent h1 {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: clamp(30px,5vw,48px); color: #fff; margin: 0 0 16px; letter-spacing: 1px;
+}
+.ev-absent p { color: rgba(255,255,255,.6); line-height: 1.8; margin: 0 0 26px }
+.ev-absent .ev-btn { display: inline-block; width: auto; padding-left: 30px; padding-right: 30px }

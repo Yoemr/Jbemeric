@@ -6,6 +6,61 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, LA page d'événement
+
+Architecture posée par Yoan. Trois idées, dans son ordre.
+
+### D-099, Ce qui est commun s'écrit une fois, ce qui varie vit dans la base
+
+Mot de Yoan : « le fonctionnement est le même partout donc un seul code suffit, mais le contenu varie et s'adapte en fonction de la page. Faut bien comprendre la différence technique entre ce qui est commun et ce qui est spécifique afin d'avoir un code intelligent et léger. »
+
+C'est le principe que la page d'événement applique. Il reste à l'appliquer à la FAQ et à TripAdvisor, chantier suivant.
+
+### D-100, Une seule page pour tous les événements
+
+`evenement.html` est un patron, pas une page. Elle ne contient aucun texte d'événement.
+
+L'adresse réelle est `/evenement/<slug>`, servie par une **réécriture** et non une redirection : `_redirects` rend `evenement.html` sous le code 200, donc l'URL affichée reste celle de l'événement. Chaque date a son adresse, sans qu'aucun fichier n'existe pour elle.
+
+**Ajouter une ligne dans la base créera donc une page**, sans écrire de fichier ni redéployer. C'est ce que le dashboard pilotera.
+
+Quatre colonnes ajoutées pour ça : `slug`, `photo`, `resume`, `description`.
+
+- `slug` est unique et contraint à des minuscules, chiffres et tirets. **Vérifié** : un slug propre passe, un slug accentué est refusé, un slug en double est refusé. Sans l'unicité, la page servirait un événement au hasard.
+- `description` est du texte libre. Les lignes vides séparent les paragraphes, et rien n'y est interprété comme du HTML : ce que JB écrit reste du texte.
+
+### D-101, La carte ne décide plus rien
+
+Demande de Yoan : « pour chaque track-day tu crées une card. Bien jolie. Qui importe la photo de l'événement, la date, un bref résumé, et avec un seul bouton en savoir plus. »
+
+La carte porte donc une photo, une date, deux phrases, un bouton. Le prix, le mode et la manière de s'inscrire ont quitté la grille pour la page de l'événement.
+
+**Conséquence technique** : le choix de l'action selon le mode, écrit le matin même dans `track-render.js`, a déménagé dans `evenement.js`. Deux endroits qui décident la même chose finissent par ne plus dire la même chose. `track-render.js` perd 60 lignes.
+
+La carte entière est cliquable, pas seulement son bouton : viser une petite cible est le geste le plus raté d'une grille sur téléphone.
+
+### D-102, Trois événements de travail en base
+
+Autorisés par Yoan : « pour travailler tu peux faire des événements prototypes ».
+
+Ils portent `source_veille = 'PROTOTYPE'`. Une seule commande les efface tous :
+
+```sql
+delete from events where source_veille = 'PROTOTYPE';
+```
+
+Les trois circuits choisis sont automobiles, pour ne pas rejouer la confusion avec Brignoles : Lédenon en box partagé, Grand Sambuc en journée organisée par JB, Le Luc en journée greffée.
+
+### D-103, Ce qui manque encore sur la page d'événement
+
+**La fiche d'inscription n'y est pas.** Le bouton « Réserver JB » renvoie pour l'instant vers `track.html`, où vit la fiche. C'est la même question que la FAQ : un bloc commun employé par plusieurs pages, qui doit sortir de `track.html` pour devenir un composant.
+
+Trois parcours protègent l'ensemble, tous jouables sans écrire en base. Le jeu de données de travail est écrit une seule fois et partagé par les trois.
+
+**Piège payé au passage** : dans un gabarit de chaîne JavaScript, le `\/` d'une expression régulière est avalé à l'écriture, et le navigateur reçoit une division. Le parcours échouait sur une faute de syntaxe qui n'existait pas dans le fichier.
+
+---
+
 ## 9 août 2026, le moteur des événements
 
 ### D-095, Le dashboard attend que les pages soient faites

@@ -36,13 +36,20 @@ Yoan, 9 août : « on s'en fout des événements passés, des voitures qui n'exi
 
 ---
 
+## B bis. Chantier suivant, déjà cadré
+
+- **La FAQ et TripAdvisor deviennent des composants.** Le comportement est déjà partagé par `faq.js`, mais le contenu reste recopié dans chaque page. Un seul code, un contenu filtré par page, une couleur de fond qui s'adapte. Demande de Yoan du 9 août.
+- **La fiche d'inscription doit sortir de `track.html`.** La page d'événement en a besoin, et son bouton « Réserver JB » renvoie pour l'instant vers `track.html`. Même famille que la FAQ.
+- **Les trois événements de travail** portent `source_veille = 'PROTOTYPE'`. À effacer le jour où de vraies dates les remplacent : `delete from events where source_veille = 'PROTOTYPE';`
+
+---
+
 ## C. Décisions en attente de Yoan
 
 Aucune ne se prend sans lui.
 
 **Sur les événements**
 
-- Les quatre colonnes manquantes de `events` : mode d'engagement, organisateur hôte, lien vers l'organisateur, coût pour JB. Sans elles, la page Événements refaite ne peut pas se fabriquer toute seule.
 - Le bouton « je viens », sous la forme allégée « dites-moi si vous venez ». Le vote a été retiré, rien n'a été mis à la place.
 - La forme de la page : pages filles, onglets, ou page unique avec filtres. Contrainte déjà actée : ce qui mérite une adresse doit en avoir une.
 - Où placer le compteur « X dates, Y inscriptions ouvertes », dont le code a été retiré faute d'endroit où l'afficher.

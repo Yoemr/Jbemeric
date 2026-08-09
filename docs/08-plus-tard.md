@@ -39,8 +39,7 @@ Yoan, 9 août : « on s'en fout des événements passés, des voitures qui n'exi
 ## B bis. Chantier suivant, déjà cadré
 
 - **TripAdvisor devient un composant**, sur le modèle de la FAQ. Demande de Yoan du 9 août.
-- **La section FAQ du dashboard**, où JB créera les questions et cochera les pages concernées. La table et le filtrage public sont faits, D-109.
-- **Deux noms de conteneur de FAQ cohabitent**, `jbe-faq` et `faq-section`. Le composant s'en moque, il lit `data-faq`. Unifier le jour où le CSS sera repris.
+- **Un onglet par fonction restante** dans `admin/gestion.html` : inscriptions, circuits, documents, forum, utilisateurs. Un fichier chacun, sur le modèle de `gestion-faq.js`.
 - **La fiche d'inscription doit sortir de `track.html`.** La page d'événement en a besoin, et son bouton « Réserver JB » renvoie pour l'instant vers `track.html`. Même famille que la FAQ.
 - **Le référencement des pages d'événement.** `build-cache.js` doit pré-générer un fichier par date, avec titre, description, texte dans le HTML, `schema.org/Event` et sitemap. Aujourd'hui un robot lit « Chargement » sur toutes les dates. Chantier suivant, D-108.
 - **`track-render.js` porte encore son ancien nom** et contient la fiche d'inscription. Le renommer quand la fiche en sera sortie, pas avant : deux churn pour un seul gain.

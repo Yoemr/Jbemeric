@@ -105,6 +105,37 @@ const PRELUDE_FAQ = `(function () {
   }
 })()`
 
+// La fenetre de gestion, servie sans toucher a Supabase. Les lectures rendent
+// un jeu fixe, les ecritures sont capturees dans window.__envois au lieu de
+// partir. C'est ce qui rend ce parcours jouable partout, y compris chez Yoan,
+// sur une page qui ecrit dans la base de production.
+const PRELUDE_GESTION = `(function () {
+  var FAQ = [
+    { id:'f1', question:'Faut-il un niveau minimum ?', reponse:'Aucun.', tags:['coaching'], ordre:10, visible:true },
+    { id:'f2', question:'Puis-je venir avec ma voiture ?', reponse:'Oui.', tags:['coaching','evenements'], ordre:20, visible:true },
+    { id:'f3', question:'Question masquee', reponse:'Texte.', tags:[], ordre:30, visible:false }
+  ]
+  var EV = [
+    { id:'e1', date_event:'2099-09-19', type:'Track-Day GT', mode:'box', slug:'essai-ledenon',
+      visible_site:true, status:'Open', prix:245, nb_places:10, circuit_id:8 },
+    { id:'e2', date_event:'2099-10-10', type:'Stage 206', mode:null, slug:null,
+      visible_site:false, status:'Potential', prix:195, nb_places:8, circuit_id:7 }
+  ]
+  var CIRCUITS = [{ id:7, nom:'Circuit du Grand Sambuc' }, { id:8, nom:'Circuit de Lédenon' }]
+  window.__envois = []
+  var vrai = window.fetch
+  window.fetch = function (url, opt) {
+    var u = String(url); opt = opt || {}
+    if (u.indexOf('/rest/v1/') === -1) return vrai.apply(this, arguments)
+    if (opt.method && opt.method !== 'GET') {
+      window.__envois.push({ methode: opt.method, url: u.split('/rest/v1/')[1], corps: opt.body })
+      return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve([{}]) } })
+    }
+    var jeu = u.indexOf('/faq?') !== -1 ? FAQ : u.indexOf('/events?') !== -1 ? EV : CIRCUITS
+    return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve(jeu) } })
+  }
+})()`
+
 // Un parcours : une page, une largeur, une action, et ce qu'on attend apres.
 // « action » et « attendu » sont evalues dans la page. « attendu » rend un
 // booleen, ou une chaine expliquant l'echec.
@@ -474,6 +505,73 @@ const PARCOURS = [
       var qs = bloc.querySelectorAll('.fq')
       if (!qs.length) return 'la FAQ est vide alors que la page en portait'
       if (!bloc.querySelector('.fq.open')) return 'l accordeon ne repond plus sans la base'
+      return true
+    })()`,
+  },
+  {
+    nom: 'gestion, les onglets et le formulaire',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    // ── La fenetre de gestion ───────────────────────────────────────────────
+    // Une coquille a onglets. Elle ne connait aucun onglet : chacun declare sa
+    // table, ses colonnes et ses champs, et la coquille fabrique le tableau et
+    // le formulaire. Ajouter une fonction se fait en ajoutant un fichier.
+    //
+    // Ce parcours verifie la chaine entiere sans jamais ecrire en base : la
+    // requete d'enregistrement est capturee au lieu de partir.
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+    })()`,
+    attente: 1400,
+    attendu: `(function () {
+      var onglets = document.querySelectorAll('.g-onglet')
+      if (onglets.length < 2) return 'attendu au moins deux onglets, trouve ' + onglets.length
+      if (!document.querySelector('.g-onglet.actif')) return 'aucun onglet actif au demarrage'
+      if (!document.querySelector('.g-table tbody tr')) return 'le tableau du premier onglet est vide'
+      return true
+    })()`,
+  },
+  {
+    nom: 'gestion, modifier une question envoie le bon corps',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      return new Promise(function (fini) {
+        setTimeout(function () {
+          document.querySelector('[data-onglet="faq"]').click()
+          setTimeout(function () {
+            document.querySelector('[data-modifier]').click()
+            setTimeout(function () {
+              document.getElementById('ch-question').value = 'Question modifiee'
+              var c = [].filter.call(document.querySelectorAll('.g-case input'), function (x) {
+                return x.value === 'evenements'
+              })[0]
+              c.checked = true
+              document.querySelector('[data-enregistrer]').click()
+              setTimeout(fini, 600)
+            }, 500)
+          }, 700)
+        }, 900)
+      })
+    })()`,
+    attente: 400,
+    attendu: `(function () {
+      var e = window.__envois || []
+      if (e.length !== 1) return 'attendu un envoi, trouve ' + e.length
+      if (e[0].methode !== 'PATCH') return 'methode inattendue : ' + e[0].methode
+      if (e[0].url.indexOf('faq?id=eq.') !== 0) return 'mauvaise cible : ' + e[0].url
+
+      var corps = JSON.parse(e[0].corps)
+      if (corps.question !== 'Question modifiee') return 'la question saisie n est pas transmise'
+      if (corps.tags.indexOf('evenements') === -1) return 'le tag coche n est pas transmis'
+      if (corps.tags.indexOf('coaching') === -1)   return 'le tag deja present a ete perdu'
+      if (corps.visible !== true) return 'la bascule visible n est pas transmise'
+
+      if (document.getElementById('g-modale').classList.contains('ouverte'))
+        return 'la fenetre reste ouverte apres enregistrement'
       return true
     })()`,
   },

@@ -6,6 +6,56 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, le CSS de la FAQ, et la fenêtre de gestion
+
+### D-113, Une seule feuille pour la FAQ, deux jeux de couleurs
+
+Mot de Yoan : « globalement c'est toujours le même. Y a un seul truc qui peut changer, c'est les couleurs de fond et de texte. »
+
+Trois implémentations quasi identiques cohabitaient : `.jbe-faq` dans `theme.css`, `.faq-section` dans `competition.css`, et la même dans `karting.css`. Elles divergeaient en silence, et `competition.css` portait un commentaire expliquant comment il luttait contre les bordures de `theme.css`. C'est le symptôme classique de la duplication : on n'ajoute plus des règles, on écrit des contre-règles.
+
+`assets/css/faq.css` les remplace. **Sept variables portent tout ce qui varie.** Une page claire ne déclare rien, une page sombre pose un attribut :
+
+```html
+<section class="jbe-faq" data-faq="competition" data-faq-fond="sombre">
+```
+
+Le balisage est unifié sur les six pages, chacune gardant son kicker et son titre. `academie.css` posait en plus son propre fond et sa propre largeur, ce qui rendait la page différente des cinq autres sans raison.
+
+**Vérifié** sur trois pages : la claire rend blanc sur texte sombre, la sombre rend `#0b1120` sur texte blanc, l'accordéon ouvre partout.
+
+### D-114, Une fenêtre à onglets, et la coquille ne connaît aucun onglet
+
+Demande de Yoan : « cette page sera un peu comme un logiciel au bout du compte. À la limite tu peux faire juste une fenêtre avec plein d'onglets. Pour l'instant on crée un onglet pour chaque truc qu'on manage, pour chaque fonction. Plus tard on aura uniquement à bouger les onglets comme on veut. »
+
+`admin/gestion.html`, séparée du dashboard qui reste un chantier.
+
+**La règle qui rend ça tenable** : la coquille sait ouvrir, fermer, retenir l'onglet courant, et rien de plus. Un onglet s'enregistre lui-même en déclarant une table, des colonnes et des champs :
+
+```js
+JBE.onglet({ cle:'faq', titre:'FAQ', table:'faq', colonnes:[…], champs:[…] })
+```
+
+Ajouter une fonction se fait donc **en ajoutant un fichier**, sans toucher à la coquille. Les déplacer se fait en changeant l'ordre des balises `<script>`, exactement ce que Yoan demandait.
+
+Deux onglets pour l'instant : Track-days et FAQ.
+
+### D-115, Le formulaire se déclare, il ne s'écrit pas
+
+Chaque onglet gère une table : lister, créer, modifier, supprimer. Écrire ce code une fois par onglet donnerait quatre versions du même qui divergeraient, ce que ce projet vient de payer trois fois avec la FAQ.
+
+La coquille fabrique donc le tableau et le formulaire à partir de la déclaration. Ajouter une colonne à `events` revient à ajouter une ligne dans `gestion-evenements.js`, sans écrire une balise ni un gestionnaire de clic.
+
+**Deux choses héritées des fautes précédentes.** Aucun identifiant ne s'écrit dans un attribut `onclick`, c'est ce qui avait tué les boutons du dashboard le 8 août. Et les tags s'affichent avec leur nom lisible : `karting-enfant` est une clé technique que JB ne devrait jamais avoir à déchiffrer.
+
+### D-116, Ce que les parcours protègent, sans jamais écrire en base
+
+Deux parcours sur `admin/gestion.html`. Les lectures rendent un jeu fixe, les écritures sont capturées au lieu de partir. La page écrit pourtant dans la base de production : le parcours reste donc jouable partout, y compris chez Yoan.
+
+Le second vérifie la chaîne entière : ouvrir l'onglet FAQ, ouvrir une question, cocher une page de plus, enregistrer, et contrôler le corps envoyé. **Contrôles négatifs** : perdre les tags déjà cochés, et laisser la fenêtre ouverte après enregistrement. Les deux font échouer le parcours en nommant le défaut.
+
+---
+
 ## 9 août 2026, la FAQ devient une table à tags
 
 ### D-109, Une question s'écrit une fois et porte les tags des pages où elle sert

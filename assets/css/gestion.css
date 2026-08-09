@@ -1,0 +1,191 @@
+/* gestion.css : la fenêtre à onglets.
+   ══════════════════════════════════════════════════════════════════════════
+   Une seule feuille pour tous les onglets, présents et à venir. Un onglet
+   déclare des colonnes et des champs, il n'écrit pas de CSS.
+
+   Contrainte « papa proof » de CLAUDE.md : JB a 65 ans et casse les
+   structures sans s'en rendre compte. Les cibles sont donc grandes, les
+   actions dangereuses sont rouges, et rien n'est caché derrière un survol. */
+
+:root {
+  --g-fond:    #0a0e1a;
+  --g-carte:   #121826;
+  --g-carte2:  #161d2e;
+  --g-bord:    rgba(255,255,255,.09);
+  --g-bord2:   rgba(255,255,255,.16);
+  --g-texte:   #e9edf6;
+  --g-gris:    rgba(233,237,246,.58);
+  --g-gris2:   rgba(233,237,246,.34);
+  --g-or:      #FFCF00;
+  --g-vert:    #22c55e;
+  --g-rouge:   #ef4444;
+  --g-mono:    'DM Mono', ui-monospace, Menlo, monospace;
+}
+
+* { box-sizing: border-box }
+body {
+  margin: 0; background: var(--g-fond); color: var(--g-texte);
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  font-size: 15px; line-height: 1.6;
+}
+
+/* ── Barre du haut ─────────────────────────────────────────────────────── */
+.g-barre {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 16px clamp(16px,3vw,32px);
+  background: var(--g-carte); border-bottom: 1px solid var(--g-bord);
+}
+.g-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1px }
+.g-logo em { color: var(--g-or); font-style: normal }
+.g-qui { margin-left: auto; font-family: var(--g-mono); font-size: 11px; color: var(--g-gris2) }
+.g-qui a { color: var(--g-gris); text-decoration: none; margin-left: 14px }
+.g-qui a:hover { color: var(--g-or) }
+
+/* ── Les onglets ───────────────────────────────────────────────────────── */
+.g-onglets {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  padding: 0 clamp(16px,3vw,32px);
+  background: var(--g-carte); border-bottom: 1px solid var(--g-bord);
+}
+.g-onglet {
+  border: none; background: none; cursor: pointer;
+  padding: 14px 20px; margin-bottom: -1px;
+  font-family: var(--g-mono); font-size: 11px; letter-spacing: 1.6px; text-transform: uppercase;
+  color: var(--g-gris); border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.g-onglet:hover { color: var(--g-texte) }
+.g-onglet.actif { color: var(--g-or); border-bottom-color: var(--g-or) }
+
+/* ── Contenu ───────────────────────────────────────────────────────────── */
+.g-page { padding: clamp(20px,3vw,32px); max-width: 1400px; margin: 0 auto }
+.g-tete { display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; margin-bottom: 20px }
+.g-tete h2 { font-family: 'Bebas Neue', sans-serif; font-size: 30px; margin: 0; letter-spacing: .5px }
+.g-compte { margin: 2px 0 0; font-family: var(--g-mono); font-size: 11px; color: var(--g-gris2) }
+.g-tete .g-btn { margin-left: auto }
+
+.g-attente, .g-vide, .g-erreur {
+  padding: 40px 24px; text-align: center; color: var(--g-gris);
+  border: 1px dashed var(--g-bord2); border-radius: 8px;
+}
+.g-erreur { border-color: rgba(239,68,68,.4); color: #fca5a5; text-align: left }
+
+/* ── Le tableau ────────────────────────────────────────────────────────── */
+.g-table-cadre { border: 1px solid var(--g-bord); border-radius: 8px; overflow: auto }
+.g-table { width: 100%; border-collapse: collapse; font-size: 14px }
+.g-table th {
+  text-align: left; padding: 12px 14px;
+  font-family: var(--g-mono); font-size: 9px; letter-spacing: 1.6px; text-transform: uppercase;
+  color: var(--g-gris2); font-weight: 500;
+  background: var(--g-carte2); border-bottom: 1px solid var(--g-bord);
+  position: sticky; top: 0;
+}
+.g-table td { padding: 13px 14px; border-bottom: 1px solid var(--g-bord); vertical-align: middle }
+.g-table tr:last-child td { border-bottom: none }
+.g-table tbody tr:hover { background: rgba(255,255,255,.02) }
+
+.g-actions { display: flex; gap: 8px; justify-content: flex-end; white-space: nowrap }
+
+.g-tag {
+  display: inline-block; margin: 2px 4px 2px 0; padding: 3px 9px; border-radius: 3px;
+  background: rgba(255,207,0,.12); color: var(--g-or);
+  font-family: var(--g-mono); font-size: 10px;
+}
+.g-fade { color: var(--g-gris2); font-style: italic }
+.g-oui  { color: var(--g-vert); font-family: var(--g-mono); font-size: 11px }
+.g-non  { color: var(--g-gris2); font-family: var(--g-mono); font-size: 11px }
+.g-lien { color: var(--g-or); font-family: var(--g-mono); font-size: 11px }
+
+/* ── Boutons ───────────────────────────────────────────────────────────── */
+.g-btn {
+  border: 1px solid var(--g-bord2); background: none; color: var(--g-texte);
+  cursor: pointer; border-radius: 6px; padding: 11px 18px;
+  font-family: var(--g-mono); font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.g-btn:hover { border-color: var(--g-bord2); background: rgba(255,255,255,.05) }
+.g-btn-or { background: var(--g-or); border-color: var(--g-or); color: #000; font-weight: 500 }
+.g-btn-or:hover { filter: brightness(1.08); background: var(--g-or) }
+.g-btn-mini { padding: 7px 12px; font-size: 9px }
+.g-btn-rouge { border-color: rgba(239,68,68,.45); color: #fca5a5 }
+.g-btn-rouge:hover { background: rgba(239,68,68,.14) }
+
+/* ── La fenêtre d'édition ──────────────────────────────────────────────── */
+.g-modale {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,.72); backdrop-filter: blur(4px);
+  display: none; align-items: flex-start; justify-content: center;
+  padding: clamp(12px,4vh,48px) 16px; overflow: auto;
+}
+.g-modale.ouverte { display: flex }
+.g-modale-boite {
+  width: 100%; max-width: 720px;
+  background: var(--g-carte); border: 1px solid var(--g-bord); border-radius: 10px;
+}
+.g-modale-tete {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 22px; border-bottom: 1px solid var(--g-bord);
+}
+.g-modale-tete h3 { margin: 0; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: .5px }
+.g-fermer {
+  margin-left: auto; border: none; background: none; cursor: pointer;
+  color: var(--g-gris); font-size: 26px; line-height: 1; padding: 0 6px;
+}
+.g-fermer:hover { color: var(--g-texte) }
+.g-modale-corps { padding: 22px; display: flex; flex-direction: column; gap: 20px }
+.g-modale-pied {
+  display: flex; gap: 10px; justify-content: flex-end;
+  padding: 16px 22px; border-top: 1px solid var(--g-bord);
+  position: sticky; bottom: 0; background: var(--g-carte);
+}
+
+/* ── Les champs ────────────────────────────────────────────────────────── */
+.g-groupe { display: flex; flex-direction: column; gap: 7px }
+.g-label {
+  font-family: var(--g-mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--g-gris);
+}
+.g-requis { color: var(--g-or); letter-spacing: 1px }
+.g-aide { font-size: 12.5px; color: var(--g-gris2); line-height: 1.55; margin-top: -2px }
+
+.g-champ {
+  width: 100%; padding: 12px 14px;
+  background: var(--g-fond); color: var(--g-texte);
+  border: 1px solid var(--g-bord); border-radius: 6px;
+  font-family: inherit; font-size: 14.5px; line-height: 1.6;
+}
+.g-champ:focus { outline: none; border-color: rgba(255,207,0,.5) }
+textarea.g-champ { resize: vertical; min-height: 90px }
+
+/* Les cases servent aux tags. Elles sont larges parce qu'un doigt vise mal. */
+.g-cases { display: flex; flex-wrap: wrap; gap: 8px }
+.g-case {
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 9px 14px; border: 1px solid var(--g-bord); border-radius: 6px;
+  font-size: 13.5px; color: var(--g-gris);
+  transition: border-color .15s, color .15s, background .15s;
+}
+.g-case:hover { border-color: var(--g-bord2); color: var(--g-texte) }
+.g-case.coche { border-color: rgba(255,207,0,.5); background: rgba(255,207,0,.08); color: var(--g-texte) }
+.g-case input { accent-color: var(--g-or); width: 16px; height: 16px }
+
+.g-bascule { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px }
+.g-bascule input { accent-color: var(--g-or); width: 18px; height: 18px }
+
+/* ── Le message ────────────────────────────────────────────────────────── */
+.g-message {
+  position: fixed; left: 50%; bottom: 26px; transform: translate(-50%, 90px);
+  padding: 13px 22px; border-radius: 8px; z-index: 200;
+  font-size: 14px; opacity: 0; pointer-events: none;
+  transition: transform .28s, opacity .28s;
+  background: var(--g-carte2); border: 1px solid var(--g-bord2);
+  max-width: min(560px, 92vw);
+}
+.g-message.visible { transform: translate(-50%, 0); opacity: 1 }
+.g-message.err { border-color: rgba(239,68,68,.5); color: #fca5a5 }
+.g-message.ok  { border-color: rgba(34,197,94,.45); color: #7ee2a8 }
+
+@media (max-width: 720px) {
+  .g-table th:nth-child(3), .g-table td:nth-child(3) { display: none }
+  .g-actions { flex-direction: column; gap: 6px }
+}

@@ -52,3 +52,19 @@ Elle s'ouvre dans un navigateur, elle n'est branchée sur rien, et elle ne vit p
 ## Migrations
 
 `outil-dev/migrations/` ne garde que ce qui n'est pas encore appliqué. Une migration appliquée n'a plus rien à faire ici : son effet est dans la base, et son histoire dans `docs/06-decisions.md`.
+
+---
+
+## La fenêtre de gestion
+
+`admin/gestion.html` est une coquille à onglets. Elle ne connaît aucun onglet.
+
+Ajouter une fonction gérée se fait en trois gestes :
+
+1. écrire `assets/js/gestion-<nom>.js`, qui déclare une table, des colonnes et des champs ;
+2. ajouter sa balise `<script>` dans `admin/gestion.html` ;
+3. rien d'autre.
+
+L'ordre des balises est l'ordre des onglets à l'écran.
+
+Le dashboard `admin/dashboard.html` reste un chantier à part, décision de Yoan du 9 août 2026 : il attend que les pages du site soient finies.

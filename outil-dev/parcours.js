@@ -472,6 +472,47 @@ const PARCOURS = [
     })()`,
   },
   {
+    nom: 'page d evenement, la fiche d inscription s ouvre vraiment',
+    page: 'evenement.html?e=track-day-ledenon-19-septembre',
+    largeur: 1300,
+    // Le point d'arrivee du chantier. Jusqu'au 9 aout 2026 la fiche vivait
+    // dans le HTML de evenements.html : ce bouton renvoyait vers la liste,
+    // et le visiteur qui venait de lire SA date repartait au debut.
+    //
+    // La fiche est maintenant un composant qui ecrit son propre balisage.
+    // Ce parcours verifie qu'elle s'ouvre ici, qu'elle est habillee, et
+    // qu'elle porte le prix de cette date et non un prix par defaut.
+    prelude: PRELUDE_EVENEMENTS,
+    action: `(function () {
+      document.querySelector('[data-inscr]').click()
+    })()`,
+    attente: 800,
+    attendu: `(function () {
+      var voile = document.getElementById('sr-modal-overlay')
+      if (!voile) return 'la fiche ne s est pas posee sur la page'
+      if (getComputedStyle(voile).display === 'none') return 'la fiche est posee mais fermee'
+
+      // Habillee : sans inscription.css elle s afficherait nue, et le reste
+      // de ce parcours passerait quand meme.
+      if (!getComputedStyle(voile).getPropertyValue('--sr-Y').trim())
+        return 'inscription.css n est pas chargee sur cette page'
+      var boite = document.getElementById('sr-modal')
+      var fond = getComputedStyle(boite).backgroundColor
+      if (fond === 'rgba(0, 0, 0, 0)' || fond === 'transparent')
+        return 'la boite n a pas de fond : les couleurs ne sont pas resolues'
+
+      // Le prix vient de la date ouverte, pas d une valeur par defaut.
+      var base = document.getElementById('price-base').textContent
+      if (base.indexOf('195') !== -1) return 'la fiche affiche le prix par defaut : ' + base
+
+      // Et les champs que la base attend sont bien la.
+      var champs = ['sr-prenom', 'sr-nom', 'sr-email', 'sr-tel']
+      for (var i = 0; i < champs.length; i++)
+        if (!document.getElementById(champs[i])) return 'champ manquant : ' + champs[i]
+      return true
+    })()`,
+  },
+  {
     nom: 'page d evenement, une adresse inconnue ne laisse pas dans le vide',
     page: 'evenement.html?e=cette-date-nexiste-pas',
     largeur: 1300,
@@ -533,6 +574,29 @@ const PARCOURS = [
         return 'les questions de l Academie n arrivent pas ici : ' + qs.join(' | ')
       if (qs.indexOf('Question tag coaching') !== -1)
         return 'une question d une autre page s affiche : ' + qs.join(' | ')
+      return true
+    })()`,
+  },
+  {
+    nom: 'inscription, Echap ferme vraiment la fiche',
+    page: 'evenements.html',
+    largeur: 1300,
+    // La fiche s'ouvre par-dessus la page. Echap est le geste attendu pour la
+    // fermer, et il doit fermer le voile en meme temps que la boite : sinon le
+    // visiteur reste devant un ecran sombre et vide, sans rien a cliquer.
+    action: `(function () {
+      window.openModal('Essai', 195, 'Circuit de Brignoles', '00000000-1111-2222-3333-444444444444')
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    })()`,
+    attente: 500,
+    attendu: `(function () {
+      var voile = document.getElementById('sr-modal-overlay')
+      if (!voile) return 'le voile de la fiche est introuvable'
+      var vu = getComputedStyle(voile)
+      if (vu.display !== 'none' && vu.visibility !== 'hidden' && vu.opacity !== '0')
+        return 'Echap laisse le voile affiche : display ' + vu.display + ', opacity ' + vu.opacity
+      if (document.body.style.overflow === 'hidden')
+        return 'Echap laisse la page bloquee au defilement'
       return true
     })()`,
   },

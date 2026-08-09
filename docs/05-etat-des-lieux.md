@@ -751,3 +751,37 @@ Le bloc était en dur sur les deux premières, avec les mêmes trois avis dans u
 Il s'agit du bloc « page suivante » au complet : 7 règles `.next-link` et `.nl-*`, plus 25 variables `--next-*` qui n'existent que pour les alimenter. Aucune page du site ne porte ce balisage. `live-editor.js` en déclare encore trois comme modifiables.
 
 Rien n'est supprimé : c'est une décision, elle est notée dans `docs/08` section C.
+
+---
+
+## 12. Mise à jour du 9 août 2026, la fiche d'inscription
+
+### 12.1 Où vit quoi
+
+| Fichier | Rôle |
+|---|---|
+| `assets/js/inscription.js` | le balisage et les gestionnaires |
+| `assets/css/inscription.css` | la forme, ses couleurs comprises |
+
+Deux pages la chargent : `evenements.html` et `evenement.html`. La seconde peut désormais ouvrir la fiche, ce qui n'était pas le cas. Voir D-123 à D-126.
+
+Bilan des lignes : `evenements.html` perd 140 lignes de balisage, `track.css` 187, `track-render.js` 155. Ce dernier ne s'occupe plus que de la grille et de ses filtres.
+
+### 12.2 Deux défauts trouvés en chemin, tous deux corrigés
+
+`track-render.js` définissait sept fonctions **deux fois**. Le fichier étant chargé en module, c'est la série du haut qui servait, et la série du bas était morte. Elle était aussi fausse : elle cherchait deux champs absents de la page et envoyait un `mailto` au lieu d'écrire en base.
+
+L'écoute de la touche Échap, en dernière ligne du fichier, appelait la version morte de `closeModal`. Elle ne fermait que la boîte et laissait le voile. Un visiteur qui ouvrait la fiche puis appuyait sur Échap se retrouvait devant un écran sombre et vide. Prouvé par un parcours écrit avant la correction, corrigé, reprouvé.
+
+### 12.3 Ce que l'audit signale depuis
+
+Deux fautes, toutes deux du même genre, et toutes deux des seuils franchis par des fichiers qui ont maigri.
+
+| Feuille | Sélecteurs morts | Origine |
+|---|---|---|
+| `theme.css` | 7 sur 16, soit 44 % | le bloc « page suivante », antérieur, décrit en 11.3 |
+| `track.css` | 48 sur 118, soit 41 % | débris de la réécriture de `track.html` en `evenements.html` |
+
+Les 48 de `track.css` sont les règles de l'ancienne mise en page, `.sec`, `.kick` et leurs voisines, restées quand le balisage a été refait. Ils étaient déjà relevés comme tâche, à 50 sur 176. Le pourcentage a bougé quand la fiche est sortie du fichier.
+
+Rien n'est supprimé. Les deux attendent une réponse, notées dans `docs/08` section C.

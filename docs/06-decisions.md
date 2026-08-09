@@ -6,6 +6,51 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, la fiche d'inscription devient un composant
+
+### D-123, Une seconde version de sept fonctions dormait dans `track-render.js`
+
+Le fichier définissait `openModal`, `closeModal`, `closeModalOutside`, `confirmInscription`, `filterCards`, `selectVeh`, `toggleCoaching` et `toggleCheck` **deux fois**. La première série dans l'IIFE du haut, la seconde en bas du fichier, hors de toute portée.
+
+Le fichier est chargé en module. Les déclarations du bas ne deviennent donc pas des globales : c'est la série du haut qui sert, et le site fonctionnait. La série du bas était morte, et fausse : elle cherchait `insc-nom` et `insc-email`, deux champs absents de la page, et envoyait un `mailto` au lieu d'écrire dans Supabase.
+
+Même famille que `admin.js` le 8 août, `docs/07` section 2.10. Un fichier qui compile ne dit pas quel code s'exécute.
+
+### D-124, La touche Échap laissait un écran noir et vide
+
+La dernière ligne du fichier écoutait Échap et appelait `closeModal`. Elle était **sous** la seconde série, donc elle appelait la version morte, qui ne fermait que la boîte et laissait le voile en place.
+
+Résultat pour un visiteur : ouvrir la fiche d'inscription, appuyer sur Échap, se retrouver devant un écran sombre et vide, sans rien à cliquer, avec le défilement de la page rétabli derrière.
+
+**Prouvé** par un parcours écrit avant la correction, qui a nommé le défaut : « Échap laisse le voile affiché : display flex, opacity 1 ». L'écoute vit maintenant à côté de la fonction qu'elle appelle.
+
+### D-125, La fiche écrit son propre balisage
+
+Troisième composant de la même famille, après la FAQ et les avis, et le seul qui débloque une page.
+
+140 lignes de balisage vivaient dans `evenements.html`, les gestionnaires dans `track-render.js` mêlés au calendrier. La page d'une date ne pouvait pas ouvrir la fiche : son bouton « Réserver JB » renvoyait vers la liste, et le visiteur qui venait de lire SA date repartait au début.
+
+| Fichier | Ce qu'il tient |
+|---|---|
+| `assets/js/inscription.js` | le balisage et les gestionnaires |
+| `assets/css/inscription.css` | la forme, sortie de `track.css` |
+
+Une page charge les deux et appelle `openModal(titre, prix, circuit, id)`. `evenements.html` perd 140 lignes, `track.css` en perd 187, `track-render.js` 155. Ce dernier ne s'occupe plus que de la grille et de ses filtres.
+
+**Le balisage est posé en fin de `<body>`, à la première ouverture.** Deux conséquences assumées. Il sort de `.sessions-root`, qui portait les couleurs `--sr-*` : la fiche les déclare donc elle-même, condition pour qu'elle s'ouvre sur une page sans calendrier. Et le visiteur qui n'ouvre jamais la fiche ne paie pas sa construction.
+
+Les noms globaux sont gardés tels quels. Les renommer aurait cassé le balisage construit, `evenement.js` et trois parcours, sans rien apporter.
+
+### D-126, Ce que les parcours protègent
+
+Deux nouveaux. « Échap ferme vraiment la fiche », écrit avant la correction pour prouver le défaut. Et « la fiche d'inscription s'ouvre vraiment » sur la page d'une date, qui est le point d'arrivée du chantier.
+
+Le second vérifie quatre choses d'un coup : la fiche se pose, elle est habillée (la variable `--sr-Y` n'existe que dans `inscription.css`), sa boîte a bien un fond, et elle affiche le prix de **cette** date et non les 195 € par défaut.
+
+**Contrôles négatifs**, trois, tous concluants : retirer `inscription.css` est nommé tel quel, retirer `inscription.js` donne « la fiche ne s'est pas posée », figer le prix donne « la fiche affiche le prix par défaut ».
+
+---
+
 ## 9 août 2026, TripAdvisor devient un composant
 
 ### D-118, Le bloc d'avis suit exactement le régime de la FAQ

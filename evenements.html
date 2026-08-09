@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="assets/css/theme.css">
   <link rel="stylesheet" href="assets/css/nav.css">
   <link rel="stylesheet" href="assets/css/track.css">
+  <link rel="stylesheet" href="assets/css/inscription.css">
   <link rel="stylesheet" href="assets/css/avis.css">
   <link rel="stylesheet" href="assets/css/faq.css">
 <title>Où sera JB · Calendrier des journées circuit 2026 · JB EMERIC</title>
@@ -100,147 +101,6 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     MODAL INSCRIPTION
-     ═══════════════════════════════════════════ -->
-<div class="sr-modal-overlay" id="sr-modal-overlay" onclick="closeModalOutside(event)">
-  <div class="sr-modal" id="sr-modal">
-
-    <!-- Formulaire -->
-    <div id="sr-form-view">
-      <div class="sr-modal-header">
-        <div>
-          <div class="sr-modal-title" id="modal-title">S'inscrire</div>
-          <div class="sr-modal-sub" id="modal-sub">Session · JB EMERIC</div>
-        </div>
-        <button class="sr-modal-close" onclick="closeModal()">✕</button>
-      </div>
-
-      <div class="sr-modal-body">
-
-        <!-- Infos pilote -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div class="sr-field">
-            <label class="sr-label">Prénom</label>
-            <input class="sr-input" type="text" id="sr-prenom" placeholder="Jean" autocomplete="given-name">
-          </div>
-          <div class="sr-field">
-            <label class="sr-label">Nom</label>
-            <input class="sr-input" type="text" id="sr-nom" placeholder="Dupont" autocomplete="family-name">
-          </div>
-        </div>
-        <div class="sr-field">
-          <label class="sr-label">Email</label>
-          <input class="sr-input" type="email" id="sr-email" placeholder="pilote@email.com" autocomplete="email">
-        </div>
-        <div class="sr-field">
-          <label class="sr-label">Téléphone</label>
-          <input class="sr-input" type="tel" id="sr-tel" placeholder="06 XX XX XX XX" autocomplete="tel">
-        </div>
-
-        <!-- Choix véhicule -->
-        <div class="sr-field">
-          <label class="sr-label">Véhicule</label>
-          <div class="sr-veh-grid">
-            <div class="sr-veh-option selected" onclick="selectVeh(this,0)">
-              <div class="sr-veh-icon">🏎️</div>
-              <div class="sr-veh-name">Ma propre voiture</div>
-              <div class="sr-veh-sub">Inclus dans le tarif</div>
-            </div>
-            <div class="sr-veh-option" onclick="selectVeh(this,60)">
-              <div class="sr-veh-icon">⭐</div>
-              <div class="sr-veh-name">Location JB EMERIC</div>
-              <div class="sr-veh-sub">+ 60 € / session</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Checklist équipements -->
-        <div class="sr-field">
-          <label class="sr-label">Équipements (cocher pour confirmer)</label>
-          <div class="sr-checklist">
-            <div class="sr-check-item" onclick="toggleCheck(this)">
-              <div class="sr-check-box"></div>
-              <div class="sr-check-text">J'ai mon assurance Responsabilité Civile Sport Auto</div>
-              <div class="sr-check-icon">🛡️</div>
-            </div>
-            <div class="sr-check-item" onclick="toggleCheck(this)">
-              <div class="sr-check-box"></div>
-              <div class="sr-check-text">J'ai mon casque homologué (ou je souhaite en louer un)</div>
-              <div class="sr-check-icon">⛑️</div>
-            </div>
-            <div class="sr-check-item" onclick="toggleCheck(this)">
-              <div class="sr-check-box"></div>
-              <div class="sr-check-text">J'ai un crochet de remorquage sur mon véhicule</div>
-              <div class="sr-check-icon">🔗</div>
-            </div>
-            <div class="sr-check-item" onclick="toggleCheck(this)">
-              <div class="sr-check-box"></div>
-              <div class="sr-check-text">J'ai lu et accepté le règlement intérieur JB EMERIC</div>
-              <div class="sr-check-icon">📋</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Option coaching -->
-        <div class="sr-field">
-          <label class="sr-label">Option Coaching</label>
-          <div class="sr-coaching-opt" id="coaching-opt" onclick="toggleCoaching()">
-            <div class="sr-coaching-toggle"></div>
-            <div class="sr-coaching-info">
-              <div class="sr-coaching-name">Coaching personnalisé JB sur place</div>
-              <div class="sr-coaching-sub">+ 80 € · Suivi individuel toute la journée</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Récap prix -->
-        <div class="sr-recap">
-          <div class="sr-recap-row">
-            <span class="sr-recap-label">Session Track-Day</span>
-            <span class="sr-recap-val" id="price-base">195 €</span>
-          </div>
-          <div class="sr-recap-row" id="recap-veh-row" style="display:none">
-            <span class="sr-recap-label">Location véhicule JB</span>
-            <span class="sr-recap-val">+ 60 €</span>
-          </div>
-          <div class="sr-recap-row" id="recap-coach-row" style="display:none">
-            <span class="sr-recap-label">Coaching JB sur place</span>
-            <span class="sr-recap-val">+ 80 €</span>
-          </div>
-          <div class="sr-recap-row sr-recap-total">
-            <span class="sr-recap-label">Total</span>
-            <span class="sr-recap-val" id="price-total">195 €</span>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="sr-modal-footer">
-        <button class="sr-btn-cancel" onclick="closeModal()">Annuler</button>
-        <button class="sr-btn-confirm" onclick="confirmInscription()">
-          Confirmer l'inscription →
-        </button>
-      </div>
-    </div>
-
-    <!-- Écran de confirmation -->
-    <div class="sr-confirm-screen" id="sr-confirm-view">
-      <div class="sr-confirm-icon">✓</div>
-      <div class="sr-confirm-title">Inscription envoyée !</div>
-      <p class="sr-confirm-sub">
-        JB vous contactera dans les 24h pour confirmer votre place et vous envoyer les détails pratiques.<br>
-        Il écrira à <strong id="confirm-email" style="color:#fff">votre adresse</strong>, vérifiez qu'elle est juste.<br><br>
-        <strong style="color:#fff"><a href="mailto:jbemeric@jbemeric.com">jbemeric@jbemeric.com</a> · 06 60 18 87 87</strong>
-      </p>
-      <button class="sr-btn-inscr" style="margin-top:8px;padding:12px 28px" onclick="closeModal()">
-        Fermer
-      </button>
-    </div>
-
-  </div>
-</div>
-
 <!-- ═══ AVIS ═════════════════════════════════════════════ -->
 <div class="jbe-avis" id="avis" data-avis="evenements">
   <div class="jbe-avis-in">
@@ -304,6 +164,7 @@
 
 <div id="footer-root"></div>
 
+<script src="assets/js/inscription.js"></script>
 <script src="assets/js/avis.js"></script>
 <script src="assets/js/faq.js"></script>
 <script type="module" src="assets/js/live-editor.js"></script>

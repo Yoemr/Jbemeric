@@ -40,9 +40,8 @@ Yoan, 9 août : « on s'en fout des événements passés, des voitures qui n'exi
 ## B bis. Chantier suivant, déjà cadré
 
 - **Un onglet par fonction restante** dans `admin/gestion.html` : inscriptions, circuits, documents, forum, utilisateurs. Un fichier chacun, sur le modèle de `gestion-faq.js`.
-- **La fiche d'inscription doit sortir de `track.html`.** La page d'événement en a besoin, et son bouton « Réserver JB » renvoie pour l'instant vers `track.html`. Même famille que la FAQ.
 - **Le référencement des pages d'événement.** `build-cache.js` doit pré-générer un fichier par date, avec titre, description, texte dans le HTML, `schema.org/Event` et sitemap. Aujourd'hui un robot lit « Chargement » sur toutes les dates. Chantier suivant, D-108.
-- **`track-render.js` porte encore son ancien nom** et contient la fiche d'inscription. Le renommer quand la fiche en sera sortie, pas avant : deux churn pour un seul gain.
+- **`track-render.js` porte encore son ancien nom.** La fiche en est sortie le 9 août, il ne reste que la grille et ses filtres. Le renommer en `evenements-grille.js` est maintenant sans risque, mais sans urgence non plus.
 - **Les trois événements de travail** portent `source_veille = 'PROTOTYPE'`. À effacer le jour où de vraies dates les remplacent : `delete from events where source_veille = 'PROTOTYPE';`
 
 ---
@@ -69,7 +68,9 @@ Aucune ne se prend sans lui.
 
 **Sur le code**
 
+- **Deux feuilles au-dessus du seuil de sélecteurs morts.** `theme.css` à 44 %, `track.css` à 41 %. Les deux sont du code mort qui vient de franchir un seuil parce que le fichier a maigri, pas un défaut nouveau. Un oui les nettoie ensemble.
 - **Le bloc « page suivante » de `theme.css` est mort en entier** : 7 règles `.next-link` et `.nl-*`, 25 variables `--next-*` qui n'alimentent qu'elles, et trois entrées dans la liste des sélecteurs modifiables de `live-editor.js`. Aucune page ne porte ce balisage. C'est ce qui fait passer l'audit à 1 faute depuis que `theme.css` a maigri de 96 lignes. La suppression est bornée et prouvable, elle attend un oui.
+- **48 sélecteurs morts dans `track.css`** : `.sec`, `.sec-w`, `.kick` et leurs voisines, les règles de l'ancienne mise en page de `track.html`, restées quand le balisage a été refait en `evenements.html`. Suppression bornée, elles ne servent nulle part.
 - La page d'une date, `evenement.html`, n'a ni bloc d'avis ni FAQ. Les deux composants sont prêts, il suffit de poser `data-avis` et `data-faq` dessus. Sa structure n'a pas été décidée.
 
 **Sur le contenu**

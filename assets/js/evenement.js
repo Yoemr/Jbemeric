@@ -158,16 +158,17 @@
     var canon = document.querySelector('link[rel="canonical"]')
     if (canon && ev.slug) canon.setAttribute('href', location.origin + '/evenements/' + ev.slug)
 
-    // La fiche d'inscription est celle de evenements.html, chargée par le même
-    // script. Elle n'est pas réécrite ici.
+    // La fiche d'inscription est un composant, `assets/js/inscription.js`.
+    // Elle écrit son propre balisage, cette page n'a donc rien à porter : elle
+    // charge le script et l'ouvre. Avant le 9 août 2026, la fiche vivait dans
+    // le HTML de `evenements.html` et ce bouton se contentait d'y renvoyer.
     var bouton = document.querySelector('[data-inscr]')
     if (bouton && typeof window.openModal === 'function') {
       bouton.addEventListener('click', function () {
         window.openModal(ev.type || 'Journée circuit', prix || 195, circuit, ev.id)
       })
     } else if (bouton) {
-      // Sans la fiche, le bouton renverrait dans le vide. On l'envoie sur la
-      // page qui la porte plutôt que de ne rien faire.
+      // Le script n'a pas été chargé. Plutôt qu'un bouton mort, la liste.
       bouton.addEventListener('click', function () { location.href = 'evenements.html#sessions' })
     }
   }

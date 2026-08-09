@@ -683,3 +683,33 @@ Où ont réellement lieu les journées Caterham ? Une réponse corrige cinq lign
 ### 9.3 Ce qui a été mis en place
 
 `outil-dev/audit/regles/circuits.js` signale désormais tout véhicule nommé attaché à une piste de karting. Sept fautes au 9 août, toutes vraies, contrôle négatif fait.
+
+---
+
+## 10. Mise à jour du 9 août 2026, l'état de la FAQ
+
+### 10.1 Une table, trois tags
+
+Les questions vivent dans la table `faq` : `question`, `reponse`, `tags text[]`, `ordre`, `visible`. Plus une seule question n'est écrite en dur comme source : le HTML des six pages garde les siennes en filet, servies uniquement si Supabase ne répond pas.
+
+Le vocabulaire des tags compte trois valeurs, une par page qui porte un bloc FAQ. Voir D-117.
+
+| Tag | Questions | Pages qui l'affichent |
+|---|---|---|
+| `academie` | 21 | `academie.html` et ses trois sous-pages |
+| `coaching` | 5 | `coaching.html` |
+| `evenements` | 4 | `evenements.html` |
+
+29 lignes en base : une question porte à la fois `coaching` et `evenements`, « Puis-je venir avec ma propre voiture ? ».
+
+La contrainte `faq_tags_connus` refuse toute autre valeur. Elle doit rester identique à `PAGES` dans `assets/js/gestion-faq.js`, sans quoi JB verrait un enregistrement refusé sans explication.
+
+### 10.2 Ce qui reste à trancher, par JB et non par le code
+
+Les quatre pages de l'Académie affichent la même liste de 21 questions. Une question née sur la page du karting enfant s'affiche donc aussi sur celle de la compétition. C'est la règle voulue par Yoan, et c'est à JB de trancher question par question dans l'onglet FAQ de `admin/gestion.html`, en décochant ou en masquant.
+
+### 10.3 Ce que les instruments couvrent
+
+Trois parcours : une page ne reçoit que les questions de son tag, une sous-page de l'Académie reçoit celles du parent, et la base coupée laisse les questions écrites dans la page. Les trois ont leur contrôle négatif.
+
+Aucun ne touche la base : `fetch` est remplacé le temps du parcours.

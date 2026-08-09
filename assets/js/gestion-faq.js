@@ -8,21 +8,22 @@
 // ci-dessous, sans écrire une balise ni un gestionnaire de clic.
 
 ;(function () {
-  // Les pages où une question peut apparaître. Cette liste doit rester
-  // identique à la contrainte `faq_tags_connus` de la base : un tag absent
-  // de la contrainte serait refusé à l'enregistrement, sans que JB comprenne
-  // pourquoi. Le jour où une page s'ajoute, les deux se complètent ensemble.
+  // Un tag par page qui porte un bloc FAQ, et rien de plus. Règle donnée par
+  // Yoan le 9 août 2026 : « on crée le tag sur la page où on insère la FAQ, pas
+  // pour les sous-pages, ce sont les mêmes questions ».
+  //
+  // Les trois pages de l'Académie (karting enfant, karting adulte,
+  // compétition) affichent donc le tag du parent. Accueil, Paddock, Palmarès
+  // et la page d'une date n'ont pas de bloc FAQ : elles n'ont pas de tag.
+  //
+  // Cette liste doit rester identique à la contrainte `faq_tags_connus` de la
+  // base : un tag absent de la contrainte serait refusé à l'enregistrement,
+  // sans que JB comprenne pourquoi. Le jour où une page reçoit une FAQ, les
+  // deux se complètent ensemble.
   var PAGES = [
-    { valeur: 'index',          titre: 'Accueil' },
-    { valeur: 'academie',       titre: 'Académie' },
-    { valeur: 'karting-enfant', titre: 'Karting enfant' },
-    { valeur: 'karting-adulte', titre: 'Karting adulte' },
-    { valeur: 'competition',    titre: 'Compétition' },
-    { valeur: 'coaching',       titre: 'Coaching' },
-    { valeur: 'evenements',     titre: 'Événements' },
-    { valeur: 'evenement',      titre: 'Page d\'une date' },
-    { valeur: 'paddock',        titre: 'Paddock' },
-    { valeur: 'palmares',       titre: 'Palmarès' },
+    { valeur: 'academie',   titre: 'Académie' },
+    { valeur: 'coaching',   titre: 'Coaching' },
+    { valeur: 'evenements', titre: 'Événements' },
   ]
   var NOMS = {}
   PAGES.forEach(function (p) { NOMS[p.valeur] = p.titre })
@@ -39,8 +40,8 @@
       { cle: 'question', titre: 'Question' },
       {
         titre: 'Pages',
-        // Les tags s'affichent avec leur nom lisible. « karting-enfant » est
-        // une clé technique, JB ne devrait jamais avoir à la déchiffrer.
+        // Les tags s'affichent avec leur nom lisible. « evenements » est une
+        // clé technique, JB ne devrait jamais avoir à la déchiffrer.
         rendu: function (l) {
           var t = l.tags || []
           if (!t.length) return '<span class="g-fade">nulle part</span>'
@@ -66,7 +67,7 @@
       { cle: 'reponse', titre: 'La réponse', type: 'texte-long', lignes: 7, obligatoire: true,
         aide: 'Du texte simple. Une ligne vide fait un nouveau paragraphe.' },
       { cle: 'tags', titre: 'Sur quelles pages ?', type: 'cases', options: PAGES, obligatoire: true,
-        aide: 'La question apparaît sur toutes les pages cochées. Une seule ligne, plusieurs pages.' },
+        aide: 'La question apparaît sur toutes les pages cochées. Académie couvre aussi karting enfant, karting adulte et compétition.' },
       { cle: 'ordre', titre: 'Ordre d\'affichage', type: 'number', defaut: 50,
         aide: 'Les plus petits nombres passent en premier.' },
       { cle: 'visible', titre: 'Afficher sur le site', type: 'bascule', defaut: true, oui: 'visible' },

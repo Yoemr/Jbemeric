@@ -6,6 +6,34 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, le vocabulaire des tags de FAQ
+
+### D-117, Un tag par page qui porte une FAQ, et rien de plus
+
+Mot de Yoan : « on crée le tag sur la page où on insère la FAQ. Je ne pense pas nécessaire de le faire pour les sous-pages. Par exemple un tag académie oui mais un tag karting non, pour une raison simple : ça va être les mêmes questions donc inutile. Et dans le dashboard mon père peut décider quel tag il met pour chaque question, c'est lui qui gère le contenu. »
+
+Le vocabulaire posé la veille comptait dix valeurs. Il en compte trois :
+
+| Tag | Pages qui l'affichent |
+|---|---|
+| `academie` | `academie.html`, `academie/karting-enfant.html`, `academie/karting-adulte.html`, `academie/competition.html` |
+| `coaching` | `coaching.html` |
+| `evenements` | `evenements.html` |
+
+Quatre valeurs sont supprimées parce qu'aucune page ne porte de bloc FAQ : `index`, `evenement`, `paddock`, `palmares`. Aucune ligne ne les employait. Trois valeurs sont fondues dans `academie` : `karting-enfant`, `karting-adulte`, `competition`.
+
+**Aucune question n'est perdue.** Les 16 questions des trois sous-pages passent sous le tag du parent et sont renumérotées derrière les 5 de l'Académie, dans leur ordre d'origine : Académie 10 à 50, karting enfant 60 à 120, karting adulte 130 à 160, compétition 170 à 210. Le groupe `academie` compte donc 21 questions, `coaching` 5, `evenements` 4, pour 29 lignes en base, une question étant partagée entre Coaching et Événements.
+
+**Conséquence à connaître** : les quatre pages de l'Académie affichent maintenant la même liste de 21 questions, celle de la compétition comprise sur la page du karting enfant. C'est exactement ce que la règle produit. C'est à JB de trancher dans le dashboard, question par question, puisque c'est lui qui gère le contenu.
+
+**La contrainte suit le code.** `faq_tags_connus` n'accepte plus que les trois valeurs, et `PAGES` dans `assets/js/gestion-faq.js` porte la même liste. Les deux doivent se compléter ensemble le jour où une page reçoit une FAQ, sans quoi JB verrait un enregistrement refusé sans explication.
+
+**Contrôle négatif** : à l'insertion, `karting-enfant`, `competition` et `palmares` sont refusés, `academie`, `coaching` et `evenements` acceptés. L'instrument voit donc les deux sens.
+
+Un parcours garde la décision : `FAQ, une sous-page de l'Académie reçoit les questions du parent`. Rendre son tag à `academie/karting-enfant.html` le fait échouer en nommant le tag fautif.
+
+---
+
 ## 9 août 2026, le CSS de la FAQ, et la fenêtre de gestion
 
 ### D-113, Une seule feuille pour la FAQ, deux jeux de couleurs

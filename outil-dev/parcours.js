@@ -87,7 +87,8 @@ const PRELUDE_FAQ = `(function () {
   var tout = [
     { question:'Question tag coaching',   reponse:'Reponse A.', tags:['coaching'], ordre:10 },
     { question:'Question deux tags',      reponse:'Reponse B.', tags:['coaching','evenements'], ordre:20 },
-    { question:'Question tag evenements', reponse:'Reponse C.', tags:['evenements'], ordre:30 }
+    { question:'Question tag evenements', reponse:'Reponse C.', tags:['evenements'], ordre:30 },
+    { question:'Question tag academie',   reponse:'Reponse D.', tags:['academie'], ordre:40 }
   ]
   // On rend TOUT, sans filtrer. Un banc qui filtre a la place du code ne
   // teste que lui-meme : le 9 aout, retirer le filtre de faq.js n'a fait
@@ -481,6 +482,35 @@ const PARCOURS = [
       if (qs.indexOf('Question tag coaching') === -1) return 'la question de la page manque'
       if (qs.indexOf('Question deux tags') === -1)   return 'la question partagee ne sort pas ici'
       if (qs.indexOf('Question tag evenements') !== -1)
+        return 'une question d une autre page s affiche : ' + qs.join(' | ')
+      if (qs.indexOf('Question tag academie') !== -1)
+        return 'une question d une autre page s affiche : ' + qs.join(' | ')
+      return true
+    })()`,
+  },
+  {
+    nom: 'FAQ, une sous-page de l Academie recoit les questions du parent',
+    page: 'academie/karting-enfant.html',
+    largeur: 1300,
+    // Regle donnee par Yoan le 9 aout 2026 : le tag se cree sur la page ou on
+    // insere la FAQ, pas pour les sous-pages, ce sont les memes questions. Les
+    // trois pages de l'Academie portent donc « academie » et rien d'autre.
+    //
+    // Ce parcours garde cette decision : si quelqu'un rendait a une sous-page
+    // un tag a elle, elle cesserait de recevoir les questions du parent et ce
+    // parcours le dirait.
+    prelude: PRELUDE_FAQ,
+    action: `null`,
+    attente: 2000,
+    attendu: `(function () {
+      var bloc = document.querySelector('[data-faq]')
+      if (!bloc) return 'la page ne declare aucun tag de FAQ'
+      var tag = bloc.getAttribute('data-faq')
+      if (tag !== 'academie') return 'la sous-page porte un tag a elle : ' + tag
+      var qs = [].map.call(bloc.querySelectorAll('.fq-q'), function (e) { return e.textContent.trim() })
+      if (qs.indexOf('Question tag academie') === -1)
+        return 'les questions de l Academie n arrivent pas ici : ' + qs.join(' | ')
+      if (qs.indexOf('Question tag coaching') !== -1)
         return 'une question d une autre page s affiche : ' + qs.join(' | ')
       return true
     })()`,

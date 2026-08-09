@@ -52,6 +52,9 @@ Le reste de l'écriture est libre.
 9. **Dire avant de commencer ce que Yoan verra à l'écran quand ce sera fini.** Si la réponse est « rien », le dire tout de suite et le laisser choisir.
 10. **Toute correction de texte se vérifie aussi dans Supabase.** Le live-editor sert la base avant le HTML : corriger un fichier ne change rien pour un visiteur si un texte existe en base sous la même clé.
 11. **Fin de chantier** : mise à jour de `docs/05-etat-des-lieux.md`, `docs/06-decisions.md`, et des pièges rencontrés dans `docs/07-acquis.md`, puis résumé court.
+12. **Ultra focus sur la technique.** Demande de Yoan du 9 août : « le site n'est pas fonctionnel et n'est pas en ligne, tu te prends la tête sur des détails non techniques qui servent à rien, tu pars dans tous les sens ». Tant que le site ne tourne pas, la structure et la technique passent avant la justesse des données. Un événement faux se corrige en cinq minutes le jour venu, et sera automatisé plus tard.
+13. **Un détail se note dans `docs/08-plus-tard.md`, et nulle part ailleurs.** Il ne se corrige pas, il ne se mentionne pas dans une réponse, sauf si Yoan pose la question ou si le détail casse le sujet en cours. C'est le seul fichier de ce genre, et il n'en sera pas créé d'autre.
+14. **Aucun fichier annexe sans justification qui survive à la session.** Reproche de Yoan : « tu as tendance à créer énormément de fichiers annexes qui au final ne servent à rien et sont supprimés plus tard ». Avant d'écrire un fichier neuf, dire à quoi il servira dans un mois. Un outil de vérification se justifie s'il tourne à chaque session. Une note se range dans `docs/08`. Un prototype se supprime dès que Yoan a tranché.
 
 ---
 
@@ -81,6 +84,7 @@ Conventions détaillées dans `docs/03-technique.md`.
 | `docs/05-etat-des-lieux.md` | Inventaire vérifié du site | Tout le monde |
 | `docs/06-decisions.md` | Journal des décisions | Sur demande |
 | `docs/07-acquis.md` | **Ce qui est prouvé, ce que les outils ne voient pas, les pièges d'instrument** | **Tout le monde, en premier** |
+| `docs/08-plus-tard.md` | **Les détails repoussés. Le seul endroit où ils vont** | Sur demande de Yoan uniquement |
 | `docs/audit-plateformes.md` | Empreinte web complète de JB | Rôles éditorial et SEO |
 | `docs/99-matiere-brute.md` | Notes libres de Yoan | Sur demande |
 | `docs/chantiers/` | Une fiche par chantier, datée | Sur demande |

@@ -6,6 +6,42 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, les notifications vers le téléphone de Yoan
+
+### D-127, Trois par 24 heures, et un compteur au démarrage
+
+Mot de Yoan : « tu recommences à envoyer sur Notify sans me demander, sauf que ça coûte cher. Alors tu as le droit, mais maximum 3 fois par tranche de 24 h pour ne pas dépasser les 300. M'afficher un compteur mensuel pourrait être cool. »
+
+**Ce qui envoyait réellement.** Aucun envoi volontaire n'a eu lieu : le dépôt ne contient pas une ligne de code de notification, et je n'ai appelé aucun outil d'envoi. Ce qui est parti sur son téléphone, ce sont les avis automatiques de l'outillage. Trois tâches sont passées en arrière-plan le 9 août, à 08:50, 10:52 et 22:08, parce que les commandes dépassaient le délai de deux minutes et étaient basculées pour ne pas bloquer. Chaque fin de tâche déclenche un avis. S'y ajoutent les agents lancés depuis son téléphone, qui en déclenchent un en se terminant.
+
+La distinction compte, sinon la règle ne corrige rien.
+
+### D-128, Les deux sortes se traitent différemment
+
+**Les envois volontaires se comptent.** `node outil-dev/notify.js --envoi "la raison"` enregistre avant de partir. La commande refuse au-delà de trois dans les 24 heures et annonce l'heure à laquelle la suivante sera possible. Ce n'est pas une note dans un document, c'est une porte : la règle tient même si je l'oublie.
+
+**Les avis automatiques ne se comptent pas, ils s'évitent.** Une commande longue reçoit un délai explicite pour finir au premier plan. `parcours.js` et `fumee.js` dépassent les deux minutes par défaut, il leur faut 300 000 ms. C'est la seule chose qui supprime la cause.
+
+`CLAUDE.md` porte la règle en section 3 bis, avant la méthode : elle s'applique à chaque session, pas à un chantier.
+
+### D-129, Le compteur s'affiche là où Yoan regarde déjà
+
+Sous l'audit, à chaque ouverture de session, par le hook `SessionStart` :
+
+```
+  NOTIFICATIONS   0 / 3 dans les 24 h   0 en août 2026   300 restantes sur 300
+```
+
+L'audit garde sa sortie et sa logique intactes : le hook enchaîne deux commandes plutôt que d'ajouter au premier outil une préoccupation qui n'est pas la sienne. Le `; true` final préserve le code de sortie du hook, que l'audit met à 1 dès qu'une faute existe.
+
+Le registre vit dans `outil-dev/notifications.json`, versionné : le conteneur est jetable, le dépôt non.
+
+**Le compteur dit ce qu'il sait et rien de plus.** Il ne voit pas les avis automatiques, et son texte le dit en toutes lettres. Un compteur qui prétendrait tout voir donnerait un faux calme.
+
+**Contrôles**, quatre, tous concluants : trois enregistrements passent, le quatrième est refusé avec l'heure de déblocage et sort en code 1, un envoi sans raison est refusé en code 2, et le hook sort en 0 même quand l'audit compte des fautes.
+
+---
+
 ## 9 août 2026, la fiche d'inscription devient un composant
 
 ### D-123, Une seconde version de sept fonctions dormait dans `track-render.js`

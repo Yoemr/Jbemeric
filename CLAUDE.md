@@ -36,6 +36,18 @@ Le reste de l'écriture est libre.
 
 ---
 
+## 3 bis. Notifications vers le téléphone de Yoan
+
+Elles coûtent cher. Règle du 9 août 2026 : **trois au maximum par tranche de 24 heures**, pour ne pas dépasser les 300.
+
+Deux sortes, et une seule se compte.
+
+**Les envois volontaires.** S'enregistrer avant de partir, avec `node outil-dev/notify.js --envoi "la raison"`. La commande refuse au-delà de trois et dit à quelle heure la suivante sera possible. Le compteur s'affiche à chaque ouverture de session, sous l'audit.
+
+**Les avis automatiques**, déclenchés par l'outillage quand une commande longue bascule en arrière-plan ou qu'un agent se termine. Ils ne se comptent pas, ils s'évitent : **une commande longue reçoit un délai explicite pour finir au premier plan.** `parcours.js` et `fumee.js` dépassent les deux minutes par défaut, il leur faut 300 000 ms.
+
+---
+
 ## 4. Méthode
 
 > **À faire en premier, avant toute vérification : lire `docs/07-acquis.md`.**

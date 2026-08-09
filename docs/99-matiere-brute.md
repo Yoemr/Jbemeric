@@ -43,3 +43,19 @@ Sur l'accueil :
 > J'étais parti sur des aperçus de chaque page avec des effets miroir. Honnêtement je ne suis plus trop sûr. Je me suis peut-être obstiné avec ça pour rien. Je ne dis pas qu'il faut annuler mais il faut y réfléchir.
 
 > La seule chose que je pense garder c'est le jaune présent dans le logo et le bleu nuit présent dans le menu. Ce sont ces deux couleurs historiques à mon père.
+
+Sur les voitures, 8 août 2026. **Sujet séparé, à ne pas construire pour l'instant.**
+
+> On a encore quelques voitures. De sûr et certain la 206. Mais parfois il fait des partenariats avec des gens et loue la voiture.
+
+> J'ai aussi des idées ambitieuses sur ce point-là. Donc sûrement une page entière plus tard sur « nos voitures » etc. Je te balance des idées mais y a des teams qui ont des voitures de course qu'on peut louer.
+
+> Il y a des clients qui ont des voitures de course dans le garage aussi. On peut peut-être reconstruire notre parc de voitures via des investisseurs en leur proposant un taux de rendement. C'est vraiment un sujet séparé.
+
+Ce que ces trois notes changent tout de suite, et rien de plus :
+
+- **La 206 existe.** C'est le seul véhicule dont on soit certain. La base vend d'ailleurs des dates « Stage 206 S16 ».
+- **Le parc n'est pas la question.** Louer la voiture d'un partenaire, celle d'une équipe, ou celle du client lui-même sont trois façons d'arriver au même résultat. Le site n'a donc pas à promettre un parc, il a à dire dans quelle voiture on roule ce jour-là.
+- **Trois pistes pour plus tard** : louer aux équipes qui en ont, s'appuyer sur les clients qui en possèdent déjà une, reconstruire un parc avec des investisseurs rémunérés. Aucune n'est engagée. Aucune ne se code aujourd'hui.
+
+Conséquence sur la page Événements refaite : **elle ne promet aucun véhicule**. Elle dit ce qui roule sur une date donnée, et laisse la question du parc à la page « nos voitures » quand elle existera.

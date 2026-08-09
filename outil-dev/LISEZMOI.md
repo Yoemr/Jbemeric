@@ -49,3 +49,11 @@ Il montre les dates réelles de la table `events`, et surtout ce qui manque pour
 Il n'écrit rien. Aucun bouton, aucun formulaire. C'est une maquette pour décider, pas un outil.
 
 Les données sont figées au 8 août 2026 et se rafraîchissent toutes seules depuis Supabase quand le poste y a accès. La page dit laquelle des deux situations s'applique.
+
+## Le second prototype
+
+`outil-dev/prototype/evenements-page.html` est la page Événements refaite de zéro, décision du 9 août 2026.
+
+Elle s'ouvre dans un navigateur, elle n'est branchée sur rien, et elle ne vit pas dans le site. Six encarts jaunes signalent les choix que j'ai faits, pour que Yoan les défasse un par un plutôt que d'avoir à tout reprendre.
+
+Les trois dates affichées sont réelles. Ce qui les entoure, l'organisateur et le mode d'engagement, est écrit à la main : la base ne stocke pas encore ces colonnes.

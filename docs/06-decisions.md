@@ -6,6 +6,44 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, la page Événements repart de zéro
+
+### D-086, Feuille blanche plutôt que correction
+
+Décision de Yoan : « plutôt que de corriger la page c'est peut-être mieux de repartir d'une feuille blanche ».
+
+La page actuelle promet encore un parc de voitures, la location de trois véhicules, Spa et Barcelone dans sa description pour Google, et « votre voiture ou celle de l'école ». Corriger ces phrases une par une reviendrait à repeindre une façade sur une maison dont on vient de changer le plan.
+
+Proposition dessinée dans `outil-dev/prototype/evenements-page.html`, hors du site, non branchée sur la base. Six choix y sont signalés en jaune pour que Yoan puisse les défaire un par un.
+
+### D-087, Ce que la nouvelle page raconte
+
+**Le titre devient « Où sera JB ».** La page arrête de vendre un catalogue de journées et dit où trouver l'homme. C'est la phrase de `docs/00-vision.md`, appliquée.
+
+**Chaque date porte son adresse**, `#date-16-octobre`. Partageable, et transformable en vraie page plus tard si le référencement le justifie. La contrainte de la fiche section 4.1 est donc respectée sans trancher entre onglets et pages filles.
+
+**Le bouton change selon qui vend.** Sur une journée organisée par un tiers il y en a deux, parce que le pilote doit s'inscrire chez l'organisateur **et** réserver JB. C'est ce que la vision appelait la difficulté de la marge, et qui est en réalité une question de qui vend. La page l'explique au lieu de la cacher.
+
+**Trois situations côté client**, et non cinq modes côté JB. Le pilote se moque de savoir qui loue la piste : il veut savoir dans quelle voiture il roule et qui il paie.
+
+**Un bloc pour joindre JB dans la page.** Aucune page de l'Académie n'en a un aujourd'hui, D-083.
+
+### D-088, La page ne promet aucun véhicule
+
+Yoan, 9 août : « On a encore quelques voitures. De sûr et certain la 206. Mais parfois il fait des partenariats avec des gens et loue la voiture. »
+
+La page nomme donc la 206 S16, seul véhicule certain, et dit que le reste dépend de la date. Elle ne promet ni parc, ni catalogue de location.
+
+**Les voitures sont un sujet séparé**, mot de Yoan. Ses idées sont rangées dans `docs/99-matiere-brute.md` : louer aux équipes qui en possèdent, s'appuyer sur les clients qui en ont une au garage, reconstruire un parc avec des investisseurs rémunérés. Aucune n'est engagée, aucune ne se code. Une page « nos voitures » viendra plus tard.
+
+### D-089, Deux endroits où j'ai refusé d'inventer
+
+**La politique en cas de pluie.** La FAQ pose la question et répond qu'elle est à écrire avec JB. Inventer une règle d'annulation sur un site qui prend de l'argent serait la pire chose à faire.
+
+**La limite de dix pilotes par journée.** Elle vient de la colonne `nb_places` de la base, pas de la bouche de JB. Signalée comme à confirmer.
+
+---
+
 ## 8 août 2026, les chemins de conversion
 
 ### D-082, Le formulaire de contact perdait tous les messages

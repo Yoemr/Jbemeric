@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Prototype · la page Événements refaite</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --nuit:#070b18; --nuit2:#0b1120; --carte:#111726;
+    --bord:rgba(255,255,255,.08); --bord2:rgba(255,255,255,.14);
+    --blanc:#eef1f7; --gris:rgba(238,241,247,.58); --gris2:rgba(238,241,247,.34);
+    --Y:#FFCF00; --vert:#22c55e; --bleu:#6366f1;
+    --titre:'Bebas Neue',Impact,sans-serif;
+    --mono:'DM Mono',ui-monospace,Menlo,monospace;
+    --texte:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  * { box-sizing:border-box }
+  body { margin:0; background:var(--nuit); color:var(--blanc); font-family:var(--texte); line-height:1.7 }
+  a { color:inherit }
+
+  .bandeau {
+    background:rgba(255,207,0,.07); border-bottom:1px solid rgba(255,207,0,.3);
+    padding:14px 24px; font-size:13px; color:var(--gris);
+  }
+  .bandeau strong { color:var(--Y) }
+  .bandeau .dedans { max-width:1080px; margin:0 auto }
+
+  section { padding:clamp(48px,7vw,88px) clamp(20px,5vw,72px) }
+  .dedans { max-width:1080px; margin:0 auto }
+
+  .rubrik {
+    font-family:var(--mono); font-size:9px; letter-spacing:3px; text-transform:uppercase;
+    color:rgba(255,207,0,.6); margin-bottom:16px; display:flex; align-items:center; gap:12px;
+  }
+  .rubrik::before { content:''; width:26px; height:1px; background:rgba(255,207,0,.6) }
+
+  h1 { font-family:var(--titre); font-size:clamp(46px,8vw,92px); line-height:.94; margin:0 0 20px; letter-spacing:1px }
+  h1 em { color:var(--Y); font-style:normal }
+  h2 { font-family:var(--titre); font-size:clamp(30px,4.4vw,50px); line-height:1; margin:0 0 18px; letter-spacing:.5px }
+  h2 em { color:var(--Y); font-style:normal }
+  h3 { font-size:17px; margin:0 0 8px; font-weight:600 }
+  p  { margin:0 0 16px; color:rgba(238,241,247,.76) }
+  .chapeau { font-size:clamp(16px,2vw,19px); max-width:58ch; color:rgba(238,241,247,.82) }
+
+  /* ── Ouverture ── */
+  .ouverture { background:var(--nuit2); border-bottom:1px solid var(--bord) }
+  .compteur {
+    display:flex; flex-wrap:wrap; gap:14px; margin-top:32px;
+  }
+  .compteur span {
+    font-family:var(--mono); font-size:10px; letter-spacing:1.6px; text-transform:uppercase;
+    padding:9px 16px; border:1px solid var(--bord2); border-radius:3px; color:var(--gris);
+  }
+  .compteur span strong { color:var(--Y) }
+
+  /* ── Une date ── */
+  .dates { display:flex; flex-direction:column; gap:18px; margin-top:8px }
+  .date {
+    border:1px solid var(--bord); border-radius:8px; background:var(--carte);
+    overflow:hidden; scroll-margin-top:70px;
+  }
+  .date-tete {
+    display:flex; flex-wrap:wrap; gap:6px 20px; align-items:baseline;
+    padding:22px 26px 18px; border-bottom:1px solid var(--bord);
+  }
+  .date-quand { font-family:var(--mono); font-size:13px; letter-spacing:1px; color:var(--Y); min-width:180px }
+  .date-ou    { font-family:var(--titre); font-size:28px; letter-spacing:.6px; flex:1; min-width:220px }
+  .date-etat {
+    font-family:var(--mono); font-size:9px; letter-spacing:1.5px; text-transform:uppercase;
+    padding:5px 11px; border-radius:3px; white-space:nowrap;
+  }
+  .etat-ouvert { background:rgba(34,197,94,.14); color:#7ee2a8 }
+  .etat-chez   { background:rgba(99,102,241,.16); color:#a5a8f5 }
+  .etat-prepa  { background:rgba(255,255,255,.07); color:var(--gris) }
+
+  .date-corps { display:grid; grid-template-columns:1.35fr 1fr; gap:0 }
+  @media (max-width:760px) { .date-corps { grid-template-columns:1fr } }
+
+  .date-quoi { padding:22px 26px }
+  .date-quoi h3 { font-family:var(--mono); font-size:9px; letter-spacing:1.6px; text-transform:uppercase;
+                  color:var(--gris2); font-weight:500; margin-bottom:10px }
+  .date-quoi p:last-child { margin-bottom:0 }
+
+  .date-agir {
+    padding:22px 26px; border-left:1px solid var(--bord);
+    background:rgba(255,255,255,.015); display:flex; flex-direction:column; gap:12px;
+  }
+  @media (max-width:760px) { .date-agir { border-left:none; border-top:1px solid var(--bord) } }
+  .prix { font-family:var(--mono); font-size:22px; color:var(--blanc) }
+  .prix small { font-size:11px; color:var(--gris2); letter-spacing:1px }
+
+  .btn {
+    display:inline-block; text-align:center; text-decoration:none;
+    font-family:var(--mono); font-size:10px; letter-spacing:1.8px; text-transform:uppercase;
+    padding:14px 22px; border-radius:4px;
+  }
+  .btn-plein  { background:var(--Y); color:#000; font-weight:500 }
+  .btn-creux  { border:1px solid var(--bord2); color:var(--blanc) }
+  .btn-mou    { color:var(--gris); font-size:10px; text-decoration:underline; text-align:left; padding:0 }
+
+  .avec-qui { font-size:13px; color:var(--gris) }
+  .avec-qui strong { color:var(--blanc) }
+
+  /* ── Comment ça marche ── */
+  .trois { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; margin-top:8px }
+  .cas { border:1px solid var(--bord); border-radius:8px; padding:26px 24px; background:var(--carte) }
+  .cas .num { font-family:var(--titre); font-size:40px; color:rgba(255,207,0,.28); line-height:1 }
+  .cas h3 { margin-top:10px }
+  .cas p { font-size:14px; margin-bottom:0 }
+
+  /* ── JB ── */
+  .jb { background:var(--nuit2); border-top:1px solid var(--bord); border-bottom:1px solid var(--bord) }
+  .jb-grille { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:20px; margin-top:30px }
+  .jb-chiffre { font-family:var(--titre); font-size:46px; color:var(--Y); line-height:1 }
+  .jb-quoi { font-family:var(--mono); font-size:10px; letter-spacing:1.4px; text-transform:uppercase; color:var(--gris2) }
+
+  /* ── Contact ── */
+  .contact { text-align:center }
+  .contact .boutons { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin-top:26px }
+
+  /* ── FAQ ── */
+  .fq { border-bottom:1px solid var(--bord) }
+  .fq-q { padding:20px 0; cursor:pointer; font-weight:500; display:flex; justify-content:space-between; gap:20px }
+  .fq-q::after { content:'+'; color:var(--Y); font-family:var(--mono) }
+  .fq.open .fq-q::after { content:'–' }
+  .fq-a { display:none; padding:0 0 20px; color:var(--gris); font-size:15px }
+  .fq.open .fq-a { display:block }
+
+  .note-proto {
+    margin-top:14px; padding:12px 16px; border-left:3px solid rgba(255,207,0,.4);
+    background:rgba(255,207,0,.04); font-size:13px; color:var(--gris);
+  }
+  .note-proto strong { color:var(--Y) }
+</style>
+</head>
+<body>
+
+<div class="bandeau"><div class="dedans">
+  <strong>Prototype, feuille blanche.</strong>
+  Rien n'est en ligne, rien n'est branché sur la base. Les trois dates sont réelles.
+  Les encarts jaunes signalent mes choix, pour que tu puisses les défaire.
+</div></div>
+
+<!-- ═══ OUVERTURE ═══════════════════════════════════════════ -->
+<section class="ouverture"><div class="dedans">
+  <div class="rubrik">Calendrier 2026</div>
+  <h1>OÙ SERA <em>JB</em></h1>
+  <p class="chapeau">
+    Jean-Baptiste Emeric roule toute l'année, sur ses journées et sur celles des autres.
+    Cette page dit où il sera, et ce qu'il faut faire pour rouler avec lui ce jour-là.
+  </p>
+
+  <div class="compteur">
+    <span><strong>3</strong> dates ouvertes</span>
+    <span><strong>1</strong> en préparation</span>
+    <span><strong>3</strong> circuits</span>
+  </div>
+
+  <div class="note-proto">
+    <strong>Choix numéro 1.</strong> Le titre n'est plus « Track-Days &amp; Stages » mais « Où sera JB ».
+    La page arrête de vendre un catalogue de journées, elle dit où trouver l'homme. C'est la phrase de
+    la vision : le site vend un homme et sa méthode.
+  </div>
+</div></section>
+
+<!-- ═══ LES DATES ═══════════════════════════════════════════ -->
+<section><div class="dedans">
+  <div class="rubrik">Les prochaines dates</div>
+  <h2>ROULER <em>AVEC LUI</em></h2>
+  <p class="chapeau">
+    Chaque date ne se réserve pas de la même façon. Quand JB organise, vous vous inscrivez ici.
+    Quand il est invité chez quelqu'un d'autre, vous passez par l'organisateur et vous réservez
+    JB à côté. C'est écrit sur chaque date.
+  </p>
+
+  <div class="dates">
+
+    <!-- Cas 1 : JB organise, le site encaisse -->
+    <article class="date" id="date-16-octobre">
+      <div class="date-tete">
+        <div class="date-quand">vendredi 16 octobre 2026</div>
+        <div class="date-ou">Circuit de Brignoles</div>
+        <div class="date-etat etat-ouvert">Inscriptions ouvertes</div>
+      </div>
+      <div class="date-corps">
+        <div class="date-quoi">
+          <h3>Ce qui se passe ce jour-là</h3>
+          <p>
+            Journée organisée par JB. Vous roulez avec votre propre voiture, il monte à côté de vous
+            et vous suivez ensemble sur la journée entière. Groupes de dix pilotes au maximum, pour
+            qu'il ait le temps de passer sur chacun.
+          </p>
+          <p class="avec-qui">Dans quelle voiture : <strong>la vôtre.</strong></p>
+        </div>
+        <div class="date-agir">
+          <div class="prix">195 €<br><small>par pilote, la journée</small></div>
+          <a class="btn btn-plein" href="#">S'inscrire</a>
+          <a class="btn btn-mou" href="#">Voir le détail de la journée</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Cas 2 : evenement d'un tiers, JB y est -->
+    <article class="date" id="date-15-novembre">
+      <div class="date-tete">
+        <div class="date-quand">dimanche 15 novembre 2026</div>
+        <div class="date-ou">Circuit du Grand Sambuc</div>
+        <div class="date-etat etat-chez">JB y sera</div>
+      </div>
+      <div class="date-corps">
+        <div class="date-quoi">
+          <h3>Ce qui se passe ce jour-là</h3>
+          <p>
+            La journée est organisée par le circuit. JB y vient avec la 206 S16 préparée et prend
+            les pilotes en coaching à la séance. Vous pouvez rouler dans la 206 ou dans votre voiture,
+            c'est la même méthode.
+          </p>
+          <p class="avec-qui">Dans quelle voiture : <strong>la 206 S16, ou la vôtre.</strong></p>
+        </div>
+        <div class="date-agir">
+          <div class="prix">195 €<br><small>le coaching, la journée</small></div>
+          <a class="btn btn-creux" href="#">S'inscrire chez l'organisateur</a>
+          <a class="btn btn-plein" href="#">Réserver JB pour cette date</a>
+          <a class="btn btn-mou" href="#">Voir le détail de la journée</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Cas 3 : date en preparation -->
+    <article class="date" id="date-12-decembre">
+      <div class="date-tete">
+        <div class="date-quand">samedi 12 décembre 2026</div>
+        <div class="date-ou">Circuit de Brignoles</div>
+        <div class="date-etat etat-ouvert">Inscriptions ouvertes</div>
+      </div>
+      <div class="date-corps">
+        <div class="date-quoi">
+          <h3>Ce qui se passe ce jour-là</h3>
+          <p>
+            La journée de fin de saison. Même format que les autres, avec un debrief collectif à la
+            fin de la journée sur ce que chacun a gagné dans l'année.
+          </p>
+          <p class="avec-qui">Dans quelle voiture : <strong>la vôtre.</strong></p>
+        </div>
+        <div class="date-agir">
+          <div class="prix">195 €<br><small>par pilote, la journée</small></div>
+          <a class="btn btn-plein" href="#">S'inscrire</a>
+          <a class="btn btn-mou" href="#">Voir le détail de la journée</a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="note-proto">
+    <strong>Choix numéro 2.</strong> Une date porte son adresse à elle, par exemple
+    <code>evenements.html#date-16-octobre</code>. Chaque date peut donc être partagée, et plus tard
+    devenir une vraie page si ça vaut le coup pour le référencement. C'est la contrainte de la
+    fiche, section 4.1, respectée sans décider tout de suite entre onglets et pages filles.
+  </div>
+
+  <div class="note-proto">
+    <strong>Choix numéro 3.</strong> Le bouton change selon qui vend. Sur le 15 novembre il y en a
+    deux, parce que le pilote doit faire deux choses : s'inscrire à la journée chez l'organisateur,
+    et réserver JB. C'est la difficulté que tu appelais la marge, et c'est en réalité une question
+    de qui vend. La page ne la cache pas, elle l'explique.
+  </div>
+
+  <div class="note-proto">
+    <strong>Ce que la base ne sait pas encore.</strong> Qui organise la journée, le lien vers son
+    inscription, et le mode d'engagement. Ce sont les colonnes en attente de ton accord. Sans elles,
+    les trois cartes ci-dessus ne peuvent pas être fabriquées automatiquement.
+  </div>
+</div></section>
+
+<!-- ═══ COMMENT ÇA MARCHE ═══════════════════════════════════ -->
+<section style="background:var(--nuit2);border-top:1px solid var(--bord)"><div class="dedans">
+  <div class="rubrik">Comment ça marche</div>
+  <h2>TROIS FAÇONS DE <em>ROULER</em></h2>
+  <p class="chapeau">
+    Peu importe qui loue la piste. De votre côté, il n'y a que trois situations.
+  </p>
+
+  <div class="trois">
+    <div class="cas">
+      <div class="num">01</div>
+      <h3>Avec votre voiture</h3>
+      <p>
+        Vous venez avec la vôtre, en état de marche, sans préparation particulière.
+        JB monte à côté de vous. C'est la façon la plus courante et la moins chère.
+      </p>
+    </div>
+    <div class="cas">
+      <div class="num">02</div>
+      <h3>Dans une voiture fournie</h3>
+      <p>
+        Vous n'avez pas de voiture à emmener sur circuit. Selon la date, JB vient avec
+        la 206 S16 préparée, ou loue une voiture auprès d'un partenaire pour la journée.
+        Demandez-lui ce qui roule sur la date qui vous intéresse.
+      </p>
+    </div>
+    <div class="cas">
+      <div class="num">03</div>
+      <h3>Sur la journée d'un autre</h3>
+      <p>
+        Le circuit ou une autre école organise, JB y est présent. Vous vous inscrivez
+        auprès d'eux pour rouler, et vous réservez JB pour qu'il vous suive sur la journée.
+      </p>
+    </div>
+  </div>
+
+  <div class="note-proto">
+    <strong>Choix numéro 4.</strong> La page ne promet aucun parc de voitures. Elle nomme la 206,
+    la seule dont on soit certain, et dit que le reste dépend de la date. Les voitures sont un sujet
+    à part, avec leur propre page le jour venu.
+  </div>
+</div></section>
+
+<!-- ═══ JB ═════════════════════════════════════════════════ -->
+<section class="jb"><div class="dedans">
+  <div class="rubrik">L'homme</div>
+  <h2>CE QUE VOUS VENEZ <em>CHERCHER</em></h2>
+  <p class="chapeau">
+    Une journée sur circuit s'achète partout. Ce qui ne s'achète pas partout, c'est quelqu'un
+    qui a passé trente-sept ans à regarder des pilotes conduire et qui sait, au bout de deux tours,
+    ce qui vous coûte une seconde.
+  </p>
+  <div class="jb-grille">
+    <div><div class="jb-chiffre">37</div><div class="jb-quoi">ans d'enseignement</div></div>
+    <div><div class="jb-chiffre">65</div><div class="jb-quoi">ans, et il roule encore</div></div>
+    <div><div class="jb-chiffre">10</div><div class="jb-quoi">pilotes par journée au maximum</div></div>
+  </div>
+
+  <div class="note-proto">
+    <strong>Choix numéro 5.</strong> Cette section est courte et sans photo. Elle renvoie vers la
+    page JB dont on a parlé, quand elle existera. Les trois chiffres viennent de ce qui est écrit
+    dans la documentation du projet. <strong>À faire confirmer par ton père</strong>, en particulier
+    la limite de dix pilotes, que j'ai lue dans la base et non dans sa bouche.
+  </div>
+</div></section>
+
+<!-- ═══ QUESTIONS ══════════════════════════════════════════ -->
+<section><div class="dedans">
+  <div class="rubrik">Questions</div>
+  <h2>AVANT DE <em>VENIR</em></h2>
+
+  <div class="fq"><div class="fq-q">Faut-il de l'expérience sur circuit ?</div>
+    <div class="fq-a">Non. JB commence par deux tours de découverte à côté de vous, puis il adapte.
+    Un pilote qui n'a jamais roulé et un pilote qui court en championnat ne travaillent pas les
+    mêmes choses, mais ils tiennent tous les deux dans la même journée.</div></div>
+
+  <div class="fq"><div class="fq-q">Ma voiture doit-elle être préparée ?</div>
+    <div class="fq-a">Elle doit être en bon état de marche, avec des freins et des pneus sains.
+    Rien de plus pour commencer. Si vous roulez souvent, JB vous dira quoi changer en premier, et
+    dans quel ordre.</div></div>
+
+  <div class="fq"><div class="fq-q">Je n'ai pas de voiture à emmener sur circuit.</div>
+    <div class="fq-a">Cela dépend de la date. Sur certaines journées JB vient avec la 206 S16
+    préparée, sur d'autres il loue une voiture auprès d'un partenaire. Appelez-le, il vous dira ce
+    qui roule sur la date qui vous intéresse.</div></div>
+
+  <div class="fq"><div class="fq-q">Sur une journée organisée par quelqu'un d'autre, je paie deux fois ?</div>
+    <div class="fq-a">Oui, et les deux montants ne vont pas au même endroit. L'organisateur vous
+    vend le droit de rouler, JB vous vend son coaching. Les deux prix sont annoncés séparément sur
+    la date concernée.</div></div>
+
+  <div class="fq"><div class="fq-q">Que se passe-t-il s'il pleut ?</div>
+    <div class="fq-a"><strong>À écrire avec ton père.</strong> Je ne connais pas sa règle, et
+    inventer une politique d'annulation sur un site qui prend de l'argent serait la pire chose à
+    faire.</div></div>
+</div></section>
+
+<!-- ═══ CONTACT ════════════════════════════════════════════ -->
+<section class="contact" style="background:var(--nuit2);border-top:1px solid var(--bord)"><div class="dedans">
+  <div class="rubrik" style="justify-content:center">Une question</div>
+  <h2>APPELEZ-LE, <em>C'EST PLUS SIMPLE</em></h2>
+  <p class="chapeau" style="margin-left:auto;margin-right:auto">
+    Il connaît son calendrier par cœur et il répond lui-même.
+  </p>
+  <div class="boutons">
+    <a class="btn btn-plein" href="tel:+33660188787">06 60 18 87 87</a>
+    <a class="btn btn-creux" href="mailto:jbemeric@jbemeric.com">jbemeric@jbemeric.com</a>
+  </div>
+
+  <div class="note-proto" style="text-align:left">
+    <strong>Choix numéro 6.</strong> Un bloc pour joindre JB, dans la page. Aujourd'hui aucune page
+    de l'Académie n'en a un, et le seul appel à l'action visible du site mène à la création d'un
+    compte. C'est le trou que la cartographie a montré hier.
+  </div>
+</div></section>
+
+<script>
+  document.querySelectorAll('.fq-q').forEach(function (q) {
+    q.addEventListener('click', function () { q.parentNode.classList.toggle('open') })
+  })
+</script>
+</body>
+</html>

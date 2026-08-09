@@ -1,0 +1,119 @@
+/* avis.css : le bloc d'avis du site, écrit une seule fois.
+   ══════════════════════════════════════════════════════════════════════════
+
+   ── Le principe ──────────────────────────────────────────────────────────
+   Mot de Yoan, 9 août 2026 : « header, menu, body, trip advisor, faq, footer.
+   Hormis le texte du header rien n'a besoin d'être codé. Le fonctionnement
+   est le même partout donc un seul code suffit, mais le contenu varie et
+   s'adapte en fonction de la page. Parfois la couleur de fond varie pour bien
+   se marier avec la page. »
+
+   Même régime que faq.css, à côté : ce fichier tient la forme, la base tient
+   le contenu, l'attribut tient la couleur.
+
+   ── Ce qui varie, et rien d'autre ────────────────────────────────────────
+   Sept variables. Le fond sombre est le cas courant, hérité du site : une
+   page qui le veut ne déclare rien. Une page claire pose un attribut :
+
+     <div class="jbe-avis" data-avis="coaching" data-avis-fond="clair">
+
+   Une page qui aurait besoin d'une exception change une variable, pas une
+   règle.                                                                   */
+
+.jbe-avis {
+  --avis-fond:    var(--BN);
+  --avis-titre:   #ffffff;
+  --avis-carte:   rgba(255,255,255,.05);
+  --avis-filet:   rgba(255,255,255,.10);
+  --avis-texte:   rgba(255,255,255,.8);
+  --avis-source:  rgba(255,255,255,.35);
+  --avis-accent:  #FFCF00;
+  --avis-lien:    rgba(255,207,0,.6);
+
+  background: var(--avis-fond);
+  padding: clamp(40px,6vw,72px) clamp(20px,5vw,72px);
+}
+
+/* Le seul jeu de couleurs alternatif. Une page claire pose l'attribut et
+   n'écrit pas une ligne de CSS. */
+.jbe-avis[data-avis-fond="clair"] {
+  --avis-fond:    #fff;
+  --avis-titre:   #040a1e;
+  --avis-carte:   rgba(0,0,0,.03);
+  --avis-filet:   rgba(0,0,0,.09);
+  --avis-texte:   rgba(0,0,0,.66);
+  --avis-source:  rgba(0,0,0,.34);
+  /* Le jaune du site est illisible sur blanc. Le lien prend l'encre du
+     titre, c'est le seul endroit où le clair ne peut pas garder l'accent. */
+  --avis-lien:    rgba(4,10,30,.7);
+}
+
+.jbe-avis-in {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ── L'en-tête ─────────────────────────────────────────────────────────── */
+.jbe-avis .rubrik { color: rgba(255,207,0,.5) }
+.jbe-avis .sh     { color: var(--avis-titre) }
+
+/* Le fond ne suit pas l'accent de page : sur l'Académie il vaut #0A3D91 et
+   le em deviendrait illisible sur le sombre. */
+.jbe-avis .sh em  { color: var(--avis-accent) }
+
+/* ── La liste ──────────────────────────────────────────────────────────── */
+.avis-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 32px;
+}
+
+.av {
+  background: var(--avis-carte);
+  border: 1px solid var(--avis-filet);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.av-note {
+  color: var(--avis-accent);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.av-texte {
+  color: var(--avis-texte);
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0 0 16px;
+  font-style: italic;
+}
+
+.av-source {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--avis-source);
+}
+
+/* ── Le lien TripAdvisor ───────────────────────────────────────────────── */
+.avis-lien {
+  text-align: center;
+  margin-top: 28px;
+}
+
+.avis-lien a {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--avis-lien);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  opacity: .85;
+}
+
+.avis-lien a:hover { opacity: 1 }

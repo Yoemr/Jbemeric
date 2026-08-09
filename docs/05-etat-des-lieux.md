@@ -713,3 +713,41 @@ Les quatre pages de l'Académie affichent la même liste de 21 questions. Une qu
 Trois parcours : une page ne reçoit que les questions de son tag, une sous-page de l'Académie reçoit celles du parent, et la base coupée laisse les questions écrites dans la page. Les trois ont leur contrôle négatif.
 
 Aucun ne touche la base : `fetch` est remplacé le temps du parcours.
+
+---
+
+## 11. Mise à jour du 9 août 2026, l'état des avis
+
+### 11.1 Une table, un composant, trois pages
+
+Les avis vivent dans la table `avis` : `auteur`, `contexte`, `texte`, `note`, `tags text[]`, `ordre`, `visible`. Le HTML des pages garde les siens en filet, servis si Supabase ne répond pas, et lus par les moteurs de recherche dans tous les cas. Voir D-118 à D-122.
+
+Trois avis en base, aucun tagué, donc affichés partout.
+
+| Page | Tag | Fond |
+|---|---|---|
+| `academie.html` | `academie` | sombre |
+| `coaching.html` | `coaching` | sombre |
+| `evenements.html` | `evenements` | sombre |
+
+Le bloc était en dur sur les deux premières, avec les mêmes trois avis dans un ordre différent. La page Événements le reçoit pour la première fois, sur description de Yoan.
+
+`evenement.html`, la page d'une date, n'a ni avis ni FAQ. Sa structure n'a pas été décidée.
+
+### 11.2 Où vit quoi
+
+| Fichier | Rôle |
+|---|---|
+| `assets/css/avis.css` | la forme, sept variables pour ce qui varie |
+| `assets/js/avis.js` | le tri par page et le rendu |
+| `assets/js/gestion-avis.js` | l'onglet de la fenêtre de gestion |
+
+`theme.css` ne porte plus une ligne du bloc d'avis. Il a maigri de 96 lignes.
+
+### 11.3 Ce que l'audit signale depuis
+
+`theme.css` passe de « 0 faute » à « 1 faute » : 7 sélecteurs morts sur 16, soit 44 %, au-dessus du seuil de la règle. Ces sélecteurs sont antérieurs et ne sont pas nouveaux, c'est le pourcentage qui a bougé quand le fichier a maigri.
+
+Il s'agit du bloc « page suivante » au complet : 7 règles `.next-link` et `.nl-*`, plus 25 variables `--next-*` qui n'existent que pour les alimenter. Aucune page du site ne porte ce balisage. `live-editor.js` en déclare encore trois comme modifiables.
+
+Rien n'est supprimé : c'est une décision, elle est notée dans `docs/08` section C.

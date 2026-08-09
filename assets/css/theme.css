@@ -177,100 +177,10 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   FAQ UNIVERSELLE : JB EMERIC
-   Fond blanc, accordion uniforme, toutes les pages
+   AVIS : voir assets/css/avis.css
+   Sorti d'ici le 9 août 2026, même régime que la FAQ.
+   Le bloc se paramètre par variables, il ne se recopie plus.
    ════════════════════════════════════════════════════ */
-
-/* ═══════════════════════════════════════════════════════
-   AVIS UNIVERSELS : JB EMERIC
-   Fond sombre, cartes en grille, toutes les pages.
-   Même régime que la FAQ juste au-dessus : le CSS est ici
-   et une seule fois, le texte des avis reste en HTML dans
-   chaque page. Un avis rendu en JavaScript disparaîtrait
-   de ce que lit un moteur de recherche, et c'est justement
-   la preuve sociale qu'on veut faire lire.
-   ════════════════════════════════════════════════════ */
-
-.jbe-avis {
-  background: var(--BN);
-  padding: clamp(40px,6vw,72px) clamp(20px,5vw,72px);
-}
-
-.jbe-avis-in {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.jbe-avis .rubrik {
-  color: rgba(255,207,0,.5);
-}
-
-.jbe-avis .sh {
-  color: #fff;
-}
-
-/* Le fond est sombre quelle que soit la page, donc le em ne peut pas suivre
-   l'accent de page : sur l'Académie il vaut #0A3D91 et deviendrait illisible.
-   Même correctif que .jbe-faq .sh em juste au-dessus. */
-.jbe-avis .sh em {
-  color: var(--Y);
-}
-
-.avis-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  margin-top: 32px;
-}
-
-.av {
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 10px;
-  padding: 24px;
-}
-
-.av-note {
-  color: var(--Y);
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.av-texte {
-  color: rgba(255,255,255,.8);
-  font-size: 13px;
-  line-height: 1.7;
-  margin: 0 0 16px;
-  font-style: italic;
-}
-
-.av-source {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.35);
-}
-
-.avis-lien {
-  text-align: center;
-  margin-top: 28px;
-}
-
-.avis-lien a {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: rgba(255,207,0,.6);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255,207,0,.2);
-  padding-bottom: 2px;
-}
-
-.avis-lien a:hover {
-  color: var(--Y);
-}
 
 
 /* ─── CASSE PARAGRAPHES ──────────────────────────────────────────── */

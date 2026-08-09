@@ -99,6 +99,12 @@ Le banc remplaçait la réponse de Supabase **en filtrant déjà** selon la requ
 
 **Règle** : un banc d'essai rend des données brutes. Dès qu'il applique la logique qu'il est censé éprouver, il valide n'importe quel code, y compris du code absent.
 
+### 2.8ter `git checkout` n'annule pas un contrôle négatif, il annule la journée
+
+Le 9 août, pour éprouver un parcours, j'ai vidé le bloc d'avis de `academie.html`, puis remis le fichier d'aplomb avec `git checkout academie.html`. Le contrôle négatif a bien échoué, comme voulu. Mais le fichier portait aussi le travail non commité de la matinée, et `checkout` l'a emporté avec le défaut. Le parcours suivant est passé au rouge sans que la cause soit visible dans le diff.
+
+**Règle** : avant d'abîmer volontairement un fichier, en faire une copie dans le scratchpad et restaurer depuis cette copie. `git checkout` ne connaît que le dernier commit, il ne sait pas distinguer le défaut qu'on vient d'introduire du travail qu'on vient d'écrire. La même précaution appliquée à `avis.js` le même jour a fonctionné sans incident.
+
 ### 2.9 Un outil doit distinguer « c'est cassé » de « je n'ai pas pu voir »
 
 Deux parcours ont annoncé « aucune date affichée » sur la page Événements. Le site n'y était pour rien : le poste ne joignait plus Supabase ni jsdelivr. Un outil qui confond les deux ment dans les deux sens, et c'est le sens favorable qu'on croit.

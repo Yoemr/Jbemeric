@@ -6,6 +6,57 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, TripAdvisor devient un composant
+
+### D-118, Le bloc d'avis suit exactement le régime de la FAQ
+
+Mot de Yoan : « header, menu, body, trip advisor, faq, footer. Hormis le texte du header rien n'a besoin d'être codé. Le fonctionnement est le même partout donc un seul code suffit, mais le contenu varie et s'adapte en fonction de la page. Parfois la couleur de fond varie pour bien se marier avec la page. »
+
+Les avis vivaient en dur dans deux pages, `academie.html` et `coaching.html`. Les mêmes trois avis, déjà divergents : l'ordre n'était pas le même d'une page à l'autre. C'est la duplication au premier stade, avant qu'elle ne devienne du contenu différent.
+
+Quatre pièces, une par nature de problème :
+
+| Pièce | Ce qu'elle tient |
+|---|---|
+| `assets/css/avis.css` | la forme, sortie de `theme.css` |
+| `assets/js/avis.js` | le tri par page et le rendu |
+| table `avis` | le contenu |
+| `assets/js/gestion-avis.js` | l'onglet où JB le modifie |
+
+Sept variables portent tout ce qui varie. Le fond sombre est le cas courant, une page claire pose `data-avis-fond="clair"`. Une seule exception à la règle des couleurs : le jaune du site est illisible sur blanc, le lien TripAdvisor prend donc l'encre du titre en variante claire.
+
+### D-119, Un avis sans tag s'affiche partout, une question sans tag nulle part
+
+C'est la seule divergence entre les deux composants, et elle est voulue.
+
+Une question de FAQ porte toujours sur quelque chose : sans page, elle n'a pas de raison d'être. Un avis parle de JB neuf fois sur dix : le ranger sous une page le cacherait des huit autres. Les trois avis existants n'ont donc aucun tag, et JB n'a rien à cocher pour qu'ils s'affichent.
+
+Cocher une page réserve l'avis à celle-là. C'est la seule chose que l'onglet demande de comprendre.
+
+### D-120, Le HTML garde ses avis, pour une raison de plus que la FAQ
+
+`theme.css` portait déjà l'argument, et il reste vrai : « un avis rendu en JavaScript disparaîtrait de ce que lit un moteur de recherche, et c'est justement la preuve sociale qu'on veut faire lire. »
+
+Le filet est donc double. Si Supabase ne répond pas, le visiteur lit les avis d'avant. Et un robot qui n'exécute pas de JavaScript lit toujours les trois avis dans le HTML. La base ne fait que rafraîchir ce qui est déjà là.
+
+### D-121, Ce que les parcours protègent
+
+Deux, plus un contrôle glissé dans le second.
+
+Le premier tient la règle inverse de la FAQ : deux avis sans tag doivent sortir, un avis tagué `evenements` ne doit pas apparaître sur Coaching, une note de 4 doit rendre quatre étoiles, et un avis sans contexte ne doit pas laisser un séparateur orphelin derrière le nom.
+
+Le second coupe la base et vérifie que le filet HTML tient. Il mesure en plus la variable `--avis-fond` : elle n'existe que dans `avis.css`, donc une page qui aurait oublié la balise `<link>` se ferait nommer au lieu de s'afficher nue.
+
+**Contrôles négatifs**, quatre, tous concluants : filtrer comme la FAQ fait disparaître les avis généraux, retirer la garde sur le contexte laisse le séparateur, vider le bloc HTML fait tomber le filet, retirer le `<link>` est nommé tel quel.
+
+### D-122, Le bloc arrive sur la page Événements
+
+Yoan a décrit la structure de cette page : « header, menu, body, trip advisor, faq, footer ». Le bloc y est donc ajouté, entre le corps et la FAQ, avec le tag `evenements`.
+
+La page d'une date, `evenement.html`, ne le reçoit pas. Yoan n'a pas décrit sa structure, et une section ne se crée pas sans son accord.
+
+---
+
 ## 9 août 2026, le vocabulaire des tags de FAQ
 
 ### D-117, Un tag par page qui porte une FAQ, et rien de plus

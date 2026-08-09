@@ -33,12 +33,12 @@ Yoan, 9 août : « on s'en fout des événements passés, des voitures qui n'exi
 | `track.html`, descriptions pour Google : Spa, Barcelone, « votre voiture ou location », Brignoles cité comme circuit automobile | 3 balises |
 | `paddock.html`, lignes d'événements écrites en dur, dont quatre placent une Caterham à Brignoles | 6 lignes |
 | FAQ de `track.html` promettant Caterham, 206 S16 et Lotus Elise à la location | 1 question |
+| L'avis de Montaner parle du Circuit du Luc et son contexte annonce Paul Ricard | 1 ligne d'`avis` |
 
 ---
 
 ## B bis. Chantier suivant, déjà cadré
 
-- **TripAdvisor devient un composant**, sur le modèle de la FAQ. Demande de Yoan du 9 août.
 - **Un onglet par fonction restante** dans `admin/gestion.html` : inscriptions, circuits, documents, forum, utilisateurs. Un fichier chacun, sur le modèle de `gestion-faq.js`.
 - **La fiche d'inscription doit sortir de `track.html`.** La page d'événement en a besoin, et son bouton « Réserver JB » renvoie pour l'instant vers `track.html`. Même famille que la FAQ.
 - **Le référencement des pages d'événement.** `build-cache.js` doit pré-générer un fichier par date, avec titre, description, texte dans le HTML, `schema.org/Event` et sitemap. Aujourd'hui un robot lit « Chargement » sur toutes les dates. Chantier suivant, D-108.
@@ -66,6 +66,11 @@ Aucune ne se prend sans lui.
 
 - Table `messages` écrite et non appliquée, `outil-dev/migrations/2026-08-08-table-messages.sql`. Elle attend une section Messages dans le dashboard, sans laquelle les messages arriveraient là où personne ne regarde.
 - Colonne `nb_votes`, tables `votes` et `track_days` : mortes, plus rien ne les écrit. Les supprimer est irréversible.
+
+**Sur le code**
+
+- **Le bloc « page suivante » de `theme.css` est mort en entier** : 7 règles `.next-link` et `.nl-*`, 25 variables `--next-*` qui n'alimentent qu'elles, et trois entrées dans la liste des sélecteurs modifiables de `live-editor.js`. Aucune page ne porte ce balisage. C'est ce qui fait passer l'audit à 1 faute depuis que `theme.css` a maigri de 96 lignes. La suppression est bornée et prouvable, elle attend un oui.
+- La page d'une date, `evenement.html`, n'a ni bloc d'avis ni FAQ. Les deux composants sont prêts, il suffit de poser `data-avis` et `data-faq` dessus. Sa structure n'a pas été décidée.
 
 **Sur le contenu**
 

@@ -106,6 +106,27 @@ const PRELUDE_FAQ = `(function () {
   }
 })()`
 
+// Quatre avis servis a la place de la table avis. Deux sans tag, qui doivent
+// sortir partout, et deux tagues, qui ne doivent sortir que sur leur page.
+// C'est la regle inverse de la FAQ, et c'est elle qu'il faut garder.
+const PRELUDE_AVIS = `(function () {
+  var tout = [
+    { auteur:'General un',  contexte:'Le Luc',  texte:'Avis sans tag, valable partout.', note:5, tags:[],             ordre:10 },
+    { auteur:'Pour coaching', contexte:null,    texte:'Avis reserve au coaching.',       note:4, tags:['coaching'],   ordre:20 },
+    { auteur:'General deux', contexte:null,     texte:'Second avis sans tag.',           note:5, tags:[],             ordre:30 },
+    { auteur:'Pour evenements', contexte:null,  texte:'Avis reserve aux evenements.',    note:5, tags:['evenements'], ordre:40 }
+  ]
+  // On rend TOUT, sans filtrer, pour la meme raison que le prelude FAQ : un
+  // banc qui filtre a la place du code ne mesure que lui-meme.
+  var vrai = window.fetch
+  window.fetch = function (u) {
+    if (String(u).indexOf('/avis?') !== -1) {
+      return Promise.resolve({ ok:true, status:200, json:function () { return Promise.resolve(tout) } })
+    }
+    return vrai.apply(this, arguments)
+  }
+})()`
+
 // La fenetre de gestion, servie sans toucher a Supabase. Les lectures rendent
 // un jeu fixe, les ecritures sont capturees dans window.__envois au lieu de
 // partir. C'est ce qui rend ce parcours jouable partout, y compris chez Yoan,
@@ -512,6 +533,63 @@ const PARCOURS = [
         return 'les questions de l Academie n arrivent pas ici : ' + qs.join(' | ')
       if (qs.indexOf('Question tag coaching') !== -1)
         return 'une question d une autre page s affiche : ' + qs.join(' | ')
+      return true
+    })()`,
+  },
+  {
+    nom: 'Avis, un avis sans tag sort partout, un avis tague reste chez lui',
+    page: 'coaching.html',
+    largeur: 1300,
+    // La regle est l'inverse de celle de la FAQ, et c'est ce parcours qui
+    // l'empeche de deriver vers celle de la FAQ le jour ou quelqu'un
+    // recopiera faq.js pour aller plus vite.
+    prelude: PRELUDE_AVIS,
+    action: `null`,
+    attente: 2000,
+    attendu: `(function () {
+      var bloc = document.querySelector('[data-avis]')
+      if (!bloc) return 'la page ne declare aucun bloc d avis'
+      var qui = [].map.call(bloc.querySelectorAll('.av-source'), function (e) { return e.textContent.trim() })
+      var a = qui.join(' | ')
+      if (a.indexOf('General un') === -1)  return 'un avis sans tag ne sort pas : ' + a
+      if (a.indexOf('General deux') === -1) return 'un avis sans tag ne sort pas : ' + a
+      if (a.indexOf('Pour coaching') === -1) return 'l avis de la page ne sort pas : ' + a
+      if (a.indexOf('Pour evenements') !== -1) return 'un avis d une autre page s affiche : ' + a
+      // Le contexte est facultatif en base. Une ligne sans contexte ne doit
+      // pas laisser un separateur orphelin derriere le nom.
+      if (a.indexOf('Pour coaching ·') !== -1) return 'un separateur reste sans contexte : ' + a
+      // La note se rend en etoiles, JB saisit un chiffre.
+      var notes = [].map.call(bloc.querySelectorAll('.av-note'), function (e) { return e.textContent.trim() })
+      if (notes.indexOf('★★★★') === -1) return 'la note de 4 ne rend pas quatre etoiles : ' + notes.join(' | ')
+      return true
+    })()`,
+  },
+  {
+    nom: 'Avis, la base coupee laisse les avis ecrits dans la page',
+    page: 'academie.html',
+    largeur: 1300,
+    // Le HTML garde ses avis, et pour une raison de plus que la FAQ : c'est
+    // la preuve sociale, et un moteur de recherche ne lit que le HTML.
+    prelude: `(function () {
+      var vrai = window.fetch
+      window.fetch = function (u) {
+        if (String(u).indexOf('/avis?') !== -1) return Promise.reject(new Error('coupee'))
+        return vrai.apply(this, arguments)
+      }
+    })()`,
+    action: `null`,
+    attente: 1500,
+    attendu: `(function () {
+      var bloc = document.querySelector('[data-avis]')
+      if (!bloc) return 'la page ne declare aucun bloc d avis'
+      var n = bloc.querySelectorAll('.av').length
+      if (!n) return 'le bloc d avis est vide alors que la page en portait'
+      if (!bloc.querySelector('.avis-lien a')) return 'le lien TripAdvisor a disparu'
+      // La feuille est-elle vraiment branchee ? Sans le <link>, le bloc
+      // resterait la, sans fond ni cartes, et le reste du parcours passerait.
+      // C'est la variable qui le dit : elle n'existe que dans avis.css.
+      var v = getComputedStyle(bloc).getPropertyValue('--avis-fond').trim()
+      if (!v) return 'avis.css n est pas chargee sur cette page'
       return true
     })()`,
   },

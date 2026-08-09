@@ -75,12 +75,30 @@
     }],
 
     colonnes: [
+      {
+        titre: '',
+        // La vignette sert à reconnaître une date d'un coup d'œil. C'est
+        // l'image du circuit, servie depuis chez lui : si elle manque, la
+        // case reste vide plutôt que d'afficher une image cassée.
+        rendu: function (l) {
+          return l.photo
+            ? '<img class="g-vignette" src="' + JBE.ech(l.photo) + '" alt="" loading="lazy">'
+            : '<span class="g-vignette g-vignette-vide"></span>'
+        },
+      },
       { cle: 'date_event', titre: 'Date' },
       { cle: 'titre', titre: 'Ce que le circuit annonce' },
       {
         titre: 'Où',
+        // Demande de Yoan : « mettre le lien des sites qu'on scanne quelque
+        // part discrètement, pour qu'on puisse double check ». Le lien de la
+        // ligne mène à la page de CETTE date, pas à l'agenda entier : c'est
+        // ce qui permet de vérifier sans chercher.
         rendu: function (l) {
-          return JBE.ech(l.veille_sources ? l.veille_sources.nom : '')
+          var nom = JBE.ech(l.veille_sources ? l.veille_sources.nom : '')
+          if (!l.lien) return nom
+          return '<a class="g-lien-source" href="' + JBE.ech(l.lien) + '"'
+               + ' target="_blank" rel="noopener">' + nom + ' ↗</a>'
         },
       },
       { titre: 'État', rendu: function (l) { return ETIQUETTES[l.statut] || JBE.ech(l.statut) } },
@@ -123,6 +141,51 @@
         },
       },
     ],
+
+    vide: 'Aucune date pour l\'instant. Le bouton « Chercher maintenant » va lire les calendriers.',
+
+    // ── Les adresses lues, en bas de page ────────────────────────────────────
+    // Demande de Yoan : « peut-être intéressant de mettre le lien des sites
+    // qu'on scanne quelque part discrètement sur la page, pour qu'on puisse
+    // double check ».
+    //
+    // Discret veut dire en pied de tableau, en petit, mais complet : l'adresse
+    // exacte, la dernière lecture, ce qu'elle a répondu, et ce qui reste à
+    // lire. Un compte rendu qui cacherait une source muette serait pire que
+    // pas de compte rendu du tout.
+    pied: function (zone) {
+      if (!zone) return
+      zone.innerHTML = '<div class="g-pied-titre">Ce qui est lu</div><p class="g-pied-vide">…</p>'
+      JBE.requete('veille_sources?select=*&order=nom.asc')
+        .then(function (sources) {
+          if (!sources.length) {
+            zone.innerHTML = '<div class="g-pied-titre">Ce qui est lu</div>'
+                           + '<p class="g-pied-vide">Aucune source déclarée.</p>'
+            return
+          }
+          zone.innerHTML = '<div class="g-pied-titre">Ce qui est lu, ' + sources.length + ' source'
+            + (sources.length > 1 ? 's' : '') + '</div>'
+            + '<ul class="g-sources">' + sources.map(function (s) {
+                var quand = s.vue_le ? new Date(s.vue_le).toLocaleString('fr-FR') : 'jamais'
+                var etat = s.dernier_message
+                  ? '<span class="g-non">' + JBE.ech(s.dernier_message) + '</span>'
+                  : '<span class="g-oui">' + (s.dernier_statut || '?') + '</span>'
+                return '<li>'
+                  + '<a href="' + JBE.ech(s.url) + '" target="_blank" rel="noopener">'
+                  + JBE.ech(s.url) + ' ↗</a>'
+                  + (s.sitemap_url
+                      ? ' · <a href="' + JBE.ech(s.sitemap_url) + '" target="_blank" rel="noopener">sitemap ↗</a>'
+                      : '')
+                  + ' · lu le ' + JBE.ech(quand) + ' · ' + etat
+                  + (s.actif ? '' : ' · <span class="g-fade">en pause</span>')
+                  + '</li>'
+              }).join('') + '</ul>'
+        })
+        .catch(function (e) {
+          zone.innerHTML = '<div class="g-pied-titre">Ce qui est lu</div>'
+                         + '<p class="g-pied-vide">Liste indisponible : ' + JBE.ech(e.message) + '</p>'
+        })
+    },
 
     champs: [],
   })

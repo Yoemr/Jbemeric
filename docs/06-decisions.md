@@ -6,6 +6,58 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, la veille voit toute la saison, avec les photos
+
+### D-137, L'agenda ne montrait que trois semaines
+
+Demande de Yoan : « je veux qu'absolument tous les events soient disponibles sur le dashboard ».
+
+La page d'agenda du Circuit du Var affiche 18 dates, la plus lointaine au 30 août. Ce n'est pas un choix de notre côté, c'est ce que le site publie. Vérifié : `?page=2` rend la même page, et les points d'entrée d'API de Wix répondent 404.
+
+**Le sitemap des pages d'événement les porte toutes** : 1960 entrées, chacune avec son adresse, son titre, sa photo et sa date de dernière modification. Il manque la seule chose qui compte, la date de l'événement, qui vit dans la page elle-même.
+
+D'où une file. Le sitemap remplit `veille_pages`, et chaque passage lit un nombre borné de pages jamais lues, les plus récemment modifiées d'abord.
+
+### D-138, Quinze mois de recul, pour ne pas tirer 1,7 Go sur un petit circuit
+
+Une page d'événement pèse près d'un mégaoctet. Lire les 1960 représenterait 1,7 Go tirés du site d'un petit circuit, pour retrouver en majorité des dates de 2020 à 2024.
+
+Une page d'événement à venir a forcément été modifiée récemment. La file ne lit donc que celles dont le `lastmod` a moins de quinze mois : **351 pages au lieu de 1940**. Les anciennes restent en base, non lues, si la règle se révèle trop serrée.
+
+**Résultat mesuré** : l'horizon est passé du 30 août au 17 décembre, et de 18 dates à plus de cent.
+
+### D-139, Le rattrapage est une tâche qui se retire toute seule
+
+Le premier remplissage demande de lire 351 pages, ce qu'aucune requête ne peut faire dans le temps qui lui est accordé. Une tâche `pg_cron` s'en charge à la minute, par paquets de 40, et **s'efface de la liste des tâches** dès que la file utile est vide.
+
+Le passage quotidien, lui, lit 60 pages : de quoi absorber ce qu'un circuit publie en une journée.
+
+### D-140, La photo suit le candidat jusqu'à l'événement
+
+Demande de Yoan : « j'aimerais aussi que la photo de l'événement soit importée. »
+
+Elle est dans le JSON de la page, sous `mainImage`, et dans le sitemap sous `image:loc`. Elle est reprise à l'extraction, affichée en vignette dans l'onglet, et recopiée dans l'événement quand JB retient une date, avec le lien vers la page du circuit.
+
+**L'adresse pointe chez le circuit, l'image n'est pas recopiée chez nous.** Si le circuit change son image, la nôtre change ; s'il efface l'événement, elle disparaît. Cette photo sert à reconnaître une date dans une liste, pas à habiller le site : le jour où une date est publiée, JB pose sa propre photo.
+
+### D-141, Les adresses lues sont affichées, et complètes
+
+Demande de Yoan : « peut-être intéressant de mettre le lien des sites qu'on scanne quelque part discrètement sur la page, pour qu'on puisse double check. »
+
+Deux endroits, deux usages.
+
+Sur chaque ligne, le nom de la source est un lien vers la page de **cette date précise**, pas vers l'agenda entier. C'est ce qui permet de vérifier une date sans la chercher.
+
+En pied de tableau, en petit, la liste des adresses lues : l'agenda, le sitemap, la date de dernière lecture, et ce que la source a répondu. Discret ne veut pas dire incomplet : un compte rendu qui cacherait une source muette serait pire que pas de compte rendu.
+
+### D-142, Un pied de tableau facultatif dans la coquille
+
+Comme pour les actions la veille au soir, plutôt que de coder un cas particulier : `def.pied` reçoit sa zone et la remplit. Un onglet qui ne déclare rien n'a pas de pied.
+
+**Contrôles négatifs**, trois, tous concluants : une vignette fixe au lieu de la photo de la date est nommée, un lien vers l'agenda au lieu de la date est nommé, un pied qui cache le sitemap est nommé.
+
+---
+
 ## 9 août 2026, la veille des dates de circuit
 
 ### D-131, C'est la base qui va lire les sites, pas le poste ni le navigateur

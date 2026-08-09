@@ -809,6 +809,20 @@ Le proxy de sortie refuse tout sauf Anthropic. `curl` sur `trackdays.fr`, `circu
 
 La base, elle, a le réseau. L'extension `http` lui permet d'aller lire les pages. C'est donc elle qui fait la veille, et ce n'est pas un contournement : c'est de toute façon là que ça devait tourner, puisqu'un navigateur ne peut pas lire un site tiers à cause du CORS.
 
+### 13.2 bis Toute la saison, et non trois semaines
+
+L'agenda du circuit ne publie que 18 dates, la plus lointaine au 30 août. Le sitemap des pages d'événement les porte toutes, avec titre, photo et date de dernière modification, mais sans la date de l'événement.
+
+Une file lit donc les pages une à une, bornée à quinze mois de recul pour ne pas tirer 1,7 Go sur le site d'un petit circuit. Voir D-137 à D-139.
+
+| Mesure | Avant | Après |
+|---|---|---|
+| Dates connues | 18 | plus de 100 |
+| Date la plus lointaine | 30 août 2026 | 17 décembre 2026 |
+| Pages à lire | 1940 | 351 |
+
+Chaque candidat porte sa photo et le lien vers sa page chez le circuit.
+
 ### 13.3 Une seule source pour l'instant
 
 `veille_sources` contient une ligne : l'agenda du Circuit du Var, parseur `wix-events`, rattaché au Circuit du Luc.

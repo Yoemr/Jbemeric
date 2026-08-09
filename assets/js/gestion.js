@@ -197,8 +197,12 @@ window.JBE = (function () {
                     '</td></tr>'
                 }).join('') +
               '</tbody></table></div>'
-            : '<div class="g-vide">Rien pour l\'instant. Le bouton « Nouveau » crée la première ligne.</div>')
+            : '<div class="g-vide">' + (def.vide || 'Rien pour l\'instant. Le bouton « Nouveau » crée la première ligne.') + '</div>') +
+          // Un pied de tableau facultatif. La Veille y met les adresses
+          // qu'elle lit, pour que Yoan puisse vérifier une date à la source.
+          (def.pied ? '<div class="g-pied" id="g-pied"></div>' : '')
 
+        if (def.pied) def.pied(document.getElementById('g-pied'), lignes)
         zone.__lignes = lignes
       })
       .catch(function (e) {

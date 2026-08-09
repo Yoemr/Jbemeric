@@ -148,11 +148,19 @@ const PRELUDE_GESTION = `(function () {
   // melange qui decide quels boutons chaque ligne doit porter.
   var VEILLE = [
     { id:'v1', date_event:'2099-08-18', titre:'Roulage autos',  statut:'nouveau', event_id:null,
+      photo:'https://exemple.test/photo-1.jpg', lien:'https://exemple.test/event-details/roulage-auto-1',
       veille_sources:{ nom:'Circuit du Var, agenda' } },
     { id:'v2', date_event:'2099-08-19', titre:'Roulage motos',  statut:'ecarte',  event_id:null,
+      photo:null, lien:null,
       veille_sources:{ nom:'Circuit du Var, agenda' } },
     { id:'v3', date_event:'2099-08-20', titre:'Stage monoplace', statut:'retenu', event_id:'e9',
+      photo:'https://exemple.test/photo-3.jpg', lien:'https://exemple.test/event-details/stage-3',
       veille_sources:{ nom:'Circuit du Var, agenda' } }
+  ]
+  var SOURCES = [
+    { id:1, nom:'Circuit du Var, agenda', url:'https://exemple.test/agenda',
+      sitemap_url:'https://exemple.test/event-pages-sitemap.xml',
+      actif:true, vue_le:'2026-08-09T23:00:00Z', dernier_statut:200, dernier_message:null }
   ]
   window.__envois = []
   var vrai = window.fetch
@@ -170,6 +178,7 @@ const PRELUDE_GESTION = `(function () {
     var jeu = u.indexOf('/faq?') !== -1 ? FAQ
             : u.indexOf('/events?') !== -1 ? EV
             : u.indexOf('/veille_candidats?') !== -1 ? VEILLE
+            : u.indexOf('/veille_sources?') !== -1 ? SOURCES
             : CIRCUITS
     return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve(jeu) } })
   }
@@ -631,6 +640,50 @@ const PARCOURS = [
       // Rien ne se cree a la main ici.
       if (document.getElementById('g-nouveau')) return 'un bouton Nouveau traine sur la veille'
       if (!document.querySelector('[data-tete="chercher"]')) return 'pas de bouton pour chercher maintenant'
+
+      // La photo de l evenement, demandee par Yoan. Une ligne sans photo garde
+      // une case vide plutot qu une image cassee.
+      var img = lignes[0].querySelector('img.g-vignette')
+      if (!img) return 'la premiere ligne n affiche pas la photo du circuit'
+      if (img.getAttribute('src').indexOf('photo-1.jpg') === -1)
+        return 'la vignette ne montre pas la photo de CETTE date : ' + img.getAttribute('src')
+      if (lignes[1].querySelector('img.g-vignette'))
+        return 'une ligne sans photo affiche quand meme une image'
+
+      // Le lien de verification mene a la page de CETTE date.
+      var lien = lignes[0].querySelector('a.g-lien-source')
+      if (!lien) return 'aucun lien pour verifier la date a la source'
+      if (lien.getAttribute('href').indexOf('/event-details/roulage-auto-1') === -1)
+        return 'le lien ne mene pas a la date : ' + lien.getAttribute('href')
+      if (lien.target !== '_blank') return 'le lien de verification quitte la fenetre de gestion'
+      return true
+    })()`,
+  },
+  {
+    nom: 'veille, le pied de page dit ce qui est lu',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    // Demande de Yoan : « peut-etre interessant de mettre le lien des sites
+    // qu'on scanne quelque part discretement sur la page, pour qu'on puisse
+    // double check ». Discret ne veut pas dire incomplet : l'adresse exacte,
+    // la derniere lecture et ce qu'elle a repondu.
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+    })()`,
+    attente: 2200,
+    attendu: `(function () {
+      var pied = document.getElementById('g-pied')
+      if (!pied) return 'aucun pied de page sur la veille'
+      var liens = [].map.call(pied.querySelectorAll('a'), function (a) { return a.getAttribute('href') })
+      if (liens.indexOf('https://exemple.test/agenda') === -1)
+        return 'l adresse lue n est pas affichee : ' + liens.join(' | ')
+      if (liens.indexOf('https://exemple.test/event-pages-sitemap.xml') === -1)
+        return 'le sitemap lu n est pas affiche : ' + liens.join(' | ')
+      var t = pied.textContent
+      if (t.indexOf('200') === -1) return 'le pied ne dit pas ce que la source a repondu'
+      if (t.indexOf('lu le') === -1) return 'le pied ne dit pas quand la source a ete lue'
       return true
     })()`,
   },

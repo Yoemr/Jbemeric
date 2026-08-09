@@ -6,6 +6,50 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, la FAQ devient une table à tags
+
+### D-109, Une question s'écrit une fois et porte les tags des pages où elle sert
+
+Demande de Yoan : « un système de tableau avec des tags attachés à chaque question. Le tableau entier est affiché dans le dashboard, c'est là qu'on met à jour, qu'on modifie ou qu'on crée une question. Et ensuite les pages affichent la FAQ avec le tag de la page. »
+
+C'est le principe commun/spécifique appliqué au texte, et il paye tout de suite : **« Puis-je venir avec ma propre voiture ? » était déjà recopiée sur Coaching et sur Événements.** Les deux copies pouvaient diverger sans que rien ne le signale. Elle est maintenant une seule ligne portant deux tags.
+
+Table `faq` : `question`, `reponse`, `tags` (tableau), `ordre`, `visible`. Index GIN sur les tags, sans quoi chaque page relirait la table entière.
+
+**Contrainte papa proof** : un tag hors de la liste connue est refusé. Un tag mal tapé ferait disparaître la question de toutes les pages sans que rien ne le dise.
+
+**Les 29 questions des six pages sont en base**, extraites de leur HTML sans perte.
+
+### D-110, Le contrat est l'attribut, pas la classe
+
+Le site portait deux noms de conteneur de FAQ, `jbe-faq` et `faq-section`, et un troisième serait arrivé le jour où quelqu'un aurait recopié une page. Le composant se branche donc sur `[data-faq]`.
+
+```html
+<div class="jbe-faq" data-faq="coaching">
+```
+
+Le fond, les titres et la couleur restent à la page : c'est ce qui varie, et le script n'a rien à en dire. C'est exactement la frontière que Yoan demandait de tracer.
+
+**L'accordéon est posé sur le conteneur**, pas sur chaque question. Les questions arrivent après la base, et un écouteur par question ne verrait jamais celles-là.
+
+### D-111, Le HTML des pages reste, et sert de filet
+
+Les questions écrites en dur ne sont pas supprimées. Si Supabase ne répond pas, le visiteur lit la FAQ d'avant plutôt qu'un trou. Le script ne remplace la liste que lorsqu'il a vraiment reçu quelque chose.
+
+Le jour où JB modifiera une question, le HTML deviendra périmé sans rien casser : la base gagne quand elle répond.
+
+### D-112, Un banc d'essai qui filtrait à la place du code ne prouvait rien
+
+Le premier contrôle négatif n'a rien vu. J'ai retiré le filtre par tag de `faq.js`, et le parcours est resté vert.
+
+La cause : mon banc filtrait déjà les questions selon la requête, donc il testait son propre filtre. Il rend désormais **tout**, sans filtrer, et c'est bien la page qui doit trier. Le contrôle négatif échoue alors correctement, en nommant la question intruse.
+
+C'est une variante de la règle du contrôle négatif de `docs/07` : un instrument qui fait le travail à la place du code ne mesure que lui-même.
+
+**Reste à faire** : la section FAQ du dashboard, où JB créera les questions et cochera les pages. Elle attend, comme le reste du dashboard.
+
+---
+
 ## 9 août 2026, track.html devient la page Événements
 
 ### D-104, Le nom ne voulait plus rien dire

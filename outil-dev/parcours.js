@@ -80,6 +80,31 @@ const PRELUDE_EVENEMENTS = `(function () {
   }
 })()`
 
+// Trois questions servies a la place de la table faq. Une par tag, plus une
+// portant les deux : c'est elle qui prouve qu'une question s'ecrit une fois et
+// s'affiche partout ou elle sert.
+const PRELUDE_FAQ = `(function () {
+  var tout = [
+    { question:'Question tag coaching',   reponse:'Reponse A.', tags:['coaching'], ordre:10 },
+    { question:'Question deux tags',      reponse:'Reponse B.', tags:['coaching','evenements'], ordre:20 },
+    { question:'Question tag evenements', reponse:'Reponse C.', tags:['evenements'], ordre:30 }
+  ]
+  // On rend TOUT, sans filtrer. Un banc qui filtre a la place du code ne
+  // teste que lui-meme : le 9 aout, retirer le filtre de faq.js n'a fait
+  // echouer aucun parcours tant que le banc faisait le travail.
+  //
+  // PostgREST filtre bien cote serveur en production. Ce parcours eprouve la
+  // seconde barriere, celle de la page, qui est la seule a proteger contre une
+  // requete mal formee.
+  var vrai = window.fetch
+  window.fetch = function (u) {
+    if (String(u).indexOf('/faq?') !== -1) {
+      return Promise.resolve({ ok:true, status:200, json:function () { return Promise.resolve(tout) } })
+    }
+    return vrai.apply(this, arguments)
+  }
+})()`
+
 // Un parcours : une page, une largeur, une action, et ce qu'on attend apres.
 // « action » et « attendu » sont evalues dans la page. « attendu » rend un
 // booleen, ou une chaine expliquant l'echec.
@@ -405,6 +430,50 @@ const PARCOURS = [
       if (!bloc) return 'aucun message, la page reste sur son chargement'
       if (/Chargement/.test(bloc.textContent)) return 'la page est restee sur « Chargement »'
       if (!bloc.querySelector('a[href="evenements.html"]')) return 'aucun retour vers le calendrier'
+      return true
+    })()`,
+  },
+  {
+    nom: 'FAQ, chaque page ne recoit que les questions de son tag',
+    page: 'coaching.html',
+    largeur: 1300,
+    // Une question s'ecrit une fois et porte les tags des pages ou elle sert.
+    // Ce parcours verifie qu'une page ne recoit pas les questions des autres,
+    // et qu'une question partagee sort bien sur celles qui la reclament.
+    prelude: PRELUDE_FAQ,
+    action: `null`,
+    attente: 2000,
+    attendu: `(function () {
+      var bloc = document.querySelector('[data-faq="coaching"]')
+      if (!bloc) return 'la page ne declare aucun tag de FAQ'
+      var qs = [].map.call(bloc.querySelectorAll('.fq-q'), function (e) { return e.textContent.trim() })
+      if (qs.indexOf('Question tag coaching') === -1) return 'la question de la page manque'
+      if (qs.indexOf('Question deux tags') === -1)   return 'la question partagee ne sort pas ici'
+      if (qs.indexOf('Question tag evenements') !== -1)
+        return 'une question d une autre page s affiche : ' + qs.join(' | ')
+      return true
+    })()`,
+  },
+  {
+    nom: 'FAQ, la base coupee laisse les questions ecrites dans la page',
+    page: 'coaching.html',
+    largeur: 1300,
+    // Le HTML garde ses questions et sert de filet. Sans lui, une panne de
+    // Supabase laisserait un trou a la place de la FAQ.
+    prelude: `(function () {
+      var vrai = window.fetch
+      window.fetch = function (u) {
+        if (String(u).indexOf('/faq?') !== -1) return Promise.reject(new Error('coupee'))
+        return vrai.apply(this, arguments)
+      }
+    })()`,
+    action: `document.querySelector('[data-faq] .fq .fq-q').click()`,
+    attente: 1200,
+    attendu: `(function () {
+      var bloc = document.querySelector('[data-faq="coaching"]')
+      var qs = bloc.querySelectorAll('.fq')
+      if (!qs.length) return 'la FAQ est vide alors que la page en portait'
+      if (!bloc.querySelector('.fq.open')) return 'l accordeon ne repond plus sans la base'
       return true
     })()`,
   },

@@ -91,6 +91,14 @@ C'était le `--user-data-dir` fixe d'un banc d'essai bricolé, qui servait la pa
 
 **Règle** : tout banc d'essai jetable crée son profil avec `mkdtemp`, comme le font `parcours.js` et `fumee.js`, et coupe le cache par `Network.setCacheDisabled`. C'est le même piège que la section 2.2 sur les captures d'écran, sous un autre déguisement.
 
+### 2.8bis Un banc qui fait le travail a la place du code ne mesure que lui-meme
+
+Le 9 août, le contrôle négatif de la FAQ n'a rien vu. J'ai retiré le filtre par tag de `faq.js`, et le parcours est resté vert.
+
+Le banc remplaçait la réponse de Supabase **en filtrant déjà** selon la requête. Il testait donc son propre filtre, pas celui de la page. En rendant tout, sans trier, le contrôle négatif échoue correctement et nomme la question intruse.
+
+**Règle** : un banc d'essai rend des données brutes. Dès qu'il applique la logique qu'il est censé éprouver, il valide n'importe quel code, y compris du code absent.
+
 ### 2.9 Un outil doit distinguer « c'est cassé » de « je n'ai pas pu voir »
 
 Deux parcours ont annoncé « aucune date affichée » sur la page Événements. Le site n'y était pour rien : le poste ne joignait plus Supabase ni jsdelivr. Un outil qui confond les deux ment dans les deux sens, et c'est le sens favorable qu'on croit.

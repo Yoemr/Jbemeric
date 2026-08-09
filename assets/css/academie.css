@@ -538,11 +538,10 @@ body { background: var(--bg-base) }
 /* ═══════════════════════════════════════════════════════
    FAQ
    ═══════════════════════════════════════════════════════ */
-.jbe-faq {
-  background: var(--bg-base);
-  padding: clamp(64px,8vw,100px) clamp(20px,5vw,72px);
-}
-.faq-list { max-width: 780px }
+/* La FAQ vit dans faq.css. L'Académie posait ici son propre fond et sa
+   propre largeur, ce qui rendait la page differente des cinq autres sans
+   raison. Si elle doit redevenir sombre, un attribut suffit :
+   data-faq-fond="sombre" sur le bloc, et pas une ligne de CSS ici. */
 
 /* ═══════════════════════════════════════════════════════
    BOUTIQUE CTA

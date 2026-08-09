@@ -476,57 +476,6 @@ img{display:block;max-width:100%}
 }
 
 /* ══ FAQ ═══════════════════════════════════════════ */
-.faq-section{
-  padding:clamp(80px,10vw,140px) clamp(20px,5vw,80px);
-  background:var(--bg-elev);
-  border-top:1px solid var(--rule);
-}
-.faq-head{max-width:680px;margin-bottom:clamp(40px,5vw,64px)}
-.faq-kicker{
-  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;
-  text-transform:uppercase;color:var(--accent);
-  margin-bottom:18px;
-  display:flex;align-items:center;gap:12px;
-}
-.faq-kicker::before{content:'';width:28px;height:1px;background:var(--accent)}
-.faq-title{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(30px,4vw,52px);
-  line-height:.95;font-weight:400;
-}
-.faq-title em{font-style:normal;color:var(--accent)}
-.faq-list{max-width:860px}
-/* Les trois bordures sont declarees explicitement. theme.css pose un
-   border-bottom noir sur tout .fq et un border-top noir sur .fq:first-child,
-   ce dernier avec une specificite superieure a un .fq simple : sans ces
-   regles, le premier item porte un filet noir invisible sur fond sombre
-   alors que tous les autres ont le filet clair. */
-.fq{
-  border-top:1px solid var(--rule);
-  border-bottom:0;
-  padding:22px 0;
-  cursor:pointer;
-}
-.fq:first-child{border-top:1px solid var(--rule)}
-.fq:last-child{border-bottom:1px solid var(--rule)}
-.fq-q{
-  font-family:'Outfit',sans-serif;font-size:16px;font-weight:500;
-  color:var(--ink);margin-bottom:12px;
-  display:flex;justify-content:space-between;align-items:center;
-}
-.fq-q::after{
-  content:'+';
-  font-family:'DM Mono',monospace;font-size:18px;
-  color:var(--accent);transition:transform .2s;
-}
-.fq.open .fq-q::after{transform:rotate(45deg)}
-.fq-a{
-  font-size:14px;line-height:1.75;color:var(--ink-soft);
-  max-height:0;overflow:hidden;
-  transition:max-height .3s ease;
-}
-.fq.open .fq-a{max-height:400px;margin-top:4px}
-
 /* ══ CTA FINAL ═════════════════════════════════════ */
 .cta-final{
   padding:clamp(80px,10vw,140px) clamp(20px,5vw,80px);

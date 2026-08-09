@@ -1,0 +1,117 @@
+/* faq.css : la FAQ du site, écrite une seule fois.
+   ══════════════════════════════════════════════════════════════════════════
+
+   ── Ce qui a été remplacé ────────────────────────────────────────────────
+   Trois implémentations quasi identiques cohabitaient : `.jbe-faq` dans
+   theme.css, `.faq-section` dans competition.css, et la même dans
+   karting.css. Elles divergeaient en silence, et competition.css portait ce
+   commentaire, symptôme de la duplication :
+
+     « theme.css pose un border-bottom noir sur tout .fq [...] sans ces
+       règles, le premier item porte un filet noir invisible sur fond sombre »
+
+   Mot de Yoan, 9 août 2026 : « globalement c'est toujours le même. Y a un
+   seul truc qui peut changer, c'est les couleurs de fond et de texte. »
+
+   ── Ce qui varie, et rien d'autre ────────────────────────────────────────
+   Cinq variables. Une page claire ne déclare rien, une page sombre pose un
+   attribut :
+
+     <section class="jbe-faq" data-faq="competition" data-faq-fond="sombre">
+
+   Une page qui aurait besoin d'une exception change une variable, pas une
+   règle. C'est là toute la différence entre du CSS qui se copie et du CSS
+   qui se paramètre.                                                        */
+
+.jbe-faq {
+  --faq-fond:    #fff;
+  --faq-titre:   #040a1e;
+  --faq-question:#0d0d0d;
+  --faq-reponse: rgba(0,0,0,.62);
+  --faq-filet:   rgba(0,0,0,.09);
+  --faq-accent:  #FFCF00;
+  --faq-kicker:  rgba(0,0,0,.32);
+
+  background: var(--faq-fond);
+  padding: clamp(48px,7vw,96px) clamp(20px,5vw,72px);
+  border-top: 1px solid var(--faq-filet);
+}
+
+/* Le seul jeu de couleurs alternatif. Une page sombre pose l'attribut et
+   n'écrit pas une ligne de CSS. */
+.jbe-faq[data-faq-fond="sombre"] {
+  --faq-fond:    #0b1120;
+  --faq-titre:   #ffffff;
+  --faq-question:rgba(255,255,255,.92);
+  --faq-reponse: rgba(255,255,255,.62);
+  --faq-filet:   rgba(255,255,255,.10);
+  --faq-kicker:  rgba(255,207,0,.55);
+}
+
+/* ── L'en-tête ─────────────────────────────────────────────────────────── */
+.faq-tete { max-width: 760px; margin-bottom: clamp(28px,4vw,48px) }
+
+.faq-kicker {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--faq-kicker);
+  margin-bottom: 14px;
+}
+
+.faq-titre {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(30px,4.4vw,52px); line-height: .95; font-weight: 400;
+  color: var(--faq-titre);
+  margin: 0;
+}
+.faq-titre em { font-style: normal; color: var(--faq-accent) }
+
+/* ── La liste ──────────────────────────────────────────────────────────── */
+.faq-list { max-width: 860px }
+
+.fq {
+  border-top: 1px solid var(--faq-filet);
+  cursor: pointer;
+}
+/* Le dernier ferme la liste, sinon elle reste ouverte en bas. */
+.fq:last-child { border-bottom: 1px solid var(--faq-filet) }
+
+.fq-q {
+  display: flex; align-items: center; gap: 14px;
+  padding: 20px 2px;
+  font-size: 15px; font-weight: 500; line-height: 1.45;
+  color: var(--faq-question);
+}
+
+/* Le point d'interrogation et le plus encadrent la question. Ils sont
+   décoratifs, donc en pseudo-éléments : le texte de la question reste seul
+   dans le DOM, et c'est lui que le composant remplit depuis la base. */
+.fq-q::before {
+  content: '?';
+  font-family: 'Bebas Neue', sans-serif; font-size: 20px; line-height: 1;
+  color: var(--faq-accent); flex-shrink: 0;
+}
+.fq-q::after {
+  content: '+';
+  margin-left: auto;
+  font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 300;
+  color: var(--faq-accent); flex-shrink: 0;
+  transition: transform .2s;
+}
+.fq.open .fq-q::after { transform: rotate(45deg) }
+
+.fq-a {
+  overflow: hidden; max-height: 0; opacity: 0;
+  transition: max-height .35s ease, opacity .25s, padding .25s;
+  font-size: 14px; line-height: 1.8;
+  color: var(--faq-reponse);
+  padding-left: 34px;
+}
+/* 900px couvre la plus longue réponse du site avec de la marge. Une valeur
+   trop juste couperait le texte au lieu de le dérouler. */
+.fq.open .fq-a { max-height: 900px; opacity: 1; padding-bottom: 22px }
+
+@media (max-width: 600px) {
+  .fq-q { font-size: 14px; gap: 10px }
+  .fq-a { padding-left: 0 }
+}

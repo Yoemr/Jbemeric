@@ -1,14 +1,28 @@
 # Redirections JB EMERIC
 
-# ── LA page d'evenement ─────────────────────────────────────────
-# Reecriture, pas redirection : le code 200 sert evenement.html sans
-# changer l'adresse affichee. Chaque evenement a donc sa propre URL,
-# /evenement/track-day-ledenon-19-septembre, sans qu'aucun fichier
-# n'existe pour lui. evenement.js lit le slug dans le chemin.
-/evenement/*     /evenement.html                      200
+# ── Les evenements ──────────────────────────────────────────────
+# Une seule famille d'adresses, la liste est le parent de chaque date.
+#
+#   /evenements                            la page Evenements
+#   /evenements/track-day-ledenon-19-sept  une date
+#
+# Reecriture et non redirection : le code 200 sert le fichier sans
+# changer l'adresse affichee. Chaque date a donc sa propre URL sans
+# qu'aucun fichier n'existe pour elle, evenement.js lit le slug dans
+# le chemin.
+#
+# L'ordre compte : la regle exacte passe avant le joker, sinon
+# /evenements tomberait sur le patron d'une date qui n'existe pas.
+/evenements      /evenements.html                     200
+/evenements/     /evenements.html                     200
+/evenements/*    /evenement.html                      200
+
+# track.html a ete renomme le 9 aout 2026. Le nom ne voulait plus rien
+# dire : les track-days ne sont qu'une section parmi celles a venir.
+/track.html      /evenements.html                     301
 
 # ── Raccourcis SEO-friendly ─────────────────────────────────────
-/stages          /track.html                          301
+/stages          /evenements.html                     301
 /karting         /academie/karting-adulte.html        301
 /coaching        /coaching.html                       301
 /palmares        /paddock/palmares.html               301

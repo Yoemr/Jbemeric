@@ -6,6 +6,67 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, track.html devient la page Événements
+
+### D-104, Le nom ne voulait plus rien dire
+
+Question de Yoan : « c'est quoi au final track.html ? Ça devrait ne plus exister non ? »
+
+Il avait raison. La page était un hybride de six blocs, dont un seul relevait de la nouvelle architecture.
+
+| Bloc | Sort |
+|---|---|
+| Hero « Track-Days & Stages » | texte réécrit |
+| Section « Track-days voiture personnelle » | retiré |
+| Section « Nos voitures » | retiré, sujet séparé |
+| Les cartes d'événements | **conservé, c'est la section track-days** |
+| La fiche d'inscription | conservée en attendant d'en faire un composant |
+| FAQ | conservée, contenu à filtrer plus tard |
+
+227 lignes retirées. `track.html` devient `evenements.html`.
+
+### D-105, Une seule famille d'adresses
+
+**Décision de Yoan** entre trois propositions : `/evenements` pour la liste, `/evenements/<slug>` pour une date.
+
+La liste est le parent de chaque date, ce qu'un moteur de recherche comprend. Et `/evenements/colonies` reste possible le jour venu.
+
+`_redirects` sert les trois cas, dans cet ordre parce qu'il compte : `/evenements` exact, puis le joker. `track.html` redirige en 301, le référencement acquis n'est pas perdu.
+
+**Un seul contenu du live-editor était en jeu**, la vidéo du hero sous la clé `track__img-1`. `PAGE_ALIASES` la reprend, dans `live-editor.js` **et** dans `build-cache.js`.
+
+**La règle `renommages` a fait son travail** : elle a signalé que j'avais mis à jour une table et pas sa jumelle. C'est exactement le défaut qu'elle a été écrite pour attraper.
+
+### D-106, Le serveur local ne reflétait pas la production
+
+`/evenements/<slug>` répondait 404 en local alors que la règle était juste. Deux défauts dans `dev-server.js`, et j'ai bien failli accuser la règle.
+
+1. Le joker n'était lu que pour les règles forcées par un point d'exclamation. Une règle en `/*` ordinaire ne s'appliquait jamais.
+2. Un code 200 est une **réécriture** : Netlify sert le fichier cible sans changer l'adresse. Le serveur renvoyait un `Location`, ce qui transforme la réécriture en redirection et ferait disparaître l'URL de l'événement de la barre.
+
+Les deux sont corrigés. Un outil qui ne reflète pas la production fait tester autre chose que le site.
+
+### D-107, Le menu perd trois entrées mortes
+
+`Stages voiture`, `Track-Days` et `Nos voitures` visaient des sections retirées. L'entrée devient un simple lien vers **Événements**, et portera une entrée par section d'événements à mesure qu'elles arrivent.
+
+### D-108, Le référencement des pages d'événement, constat et remède
+
+**Prouvé** : un robot reçoit aujourd'hui le même titre pour toutes les dates, et `<h1>Chargement</h1>`. Tout le contenu arrive par JavaScript, après.
+
+```
+<title>Journée circuit · JB EMERIC</title>
+<h1>Chargement</h1>
+```
+
+Demande de Yoan : « des gens vont faire des recherches pour la date en question, ce serait bien qu'ils tombent sur la page de mon père ».
+
+**Remède, à faire au chantier suivant** : `build-cache.js` tourne déjà à chaque publication et parle déjà à Supabase. Il écrira un vrai fichier par événement, avec le bon titre, la bonne description, le texte dans le HTML, un bloc `schema.org/Event`, et régénérera `sitemap.xml`. Le JavaScript continuera de rafraîchir derrière.
+
+`sitemap.xml` est nettoyé en attendant : il pointe sur `/evenements` et ne réclame plus la page voitures archivée.
+
+---
+
 ## 9 août 2026, LA page d'événement
 
 Architecture posée par Yoan. Trois idées, dans son ordre.

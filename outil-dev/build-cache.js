@@ -110,7 +110,7 @@ fetchSupabase(function (err, rows) {
   // ATTENTION : cette table doit rester identique a PAGE_ALIASES de
   // live-editor.js. La regle d'audit « renommages » verifie cette egalite a
   // chaque execution, donc une divergence sera signalee.
-  var PAGE_ALIASES = { 'karting-adulte': 'karting' }
+  var PAGE_ALIASES = { 'karting-adulte': 'karting', 'evenements': 'track' }
 
   var byPage = {}
   for (var i = 0; i < rows.length; i++) {

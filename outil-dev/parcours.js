@@ -151,7 +151,7 @@ const PARCOURS = [
   },
   {
     nom: 'calendrier Evenements, les dates arrivent de Supabase',
-    page: 'track.html',
+    page: 'evenements.html',
     largeur: 1300,
     // La grille est vide dans le HTML : elle ne contient qu'un « Chargement… »
     // que track-render.js remplace. Si la requete echoue, le visiteur reste
@@ -164,7 +164,7 @@ const PARCOURS = [
   },
   {
     nom: 'onglets Evenements, chaque filtre laisse quelque chose a voir',
-    page: 'track.html',
+    page: 'evenements.html',
     largeur: 1300,
     // L'onglet « Vote en cours » vidait la grille sans un mot d'explication :
     // aucune carte ne portait ce statut, le filtre ne pouvait qu'echouer. Il a
@@ -185,7 +185,7 @@ const PARCOURS = [
   },
   {
     nom: 'inscription, le corps envoye est celui que la base accepte',
-    page: 'track.html',
+    page: 'evenements.html',
     largeur: 1300,
     // ── Comment ce parcours evite d'ecrire en production ────────────────────
     // Il remplace fetch le temps du clic. La requete est capturee au lieu de
@@ -244,7 +244,7 @@ const PARCOURS = [
   },
   {
     nom: 'inscription, un echec ne se deguise jamais en confirmation',
-    page: 'track.html',
+    page: 'evenements.html',
     largeur: 1300,
     // Le defaut le plus grave possible sur un formulaire, corrige le 8 aout :
     // l ecran de confirmation s affichait quoi qu il arrive. Le visiteur
@@ -330,7 +330,7 @@ const PARCOURS = [
   },
   {
     nom: 'carte d evenement, une photo, une date, un seul bouton',
-    page: 'track.html',
+    page: 'evenements.html',
     largeur: 1300,
     // Une carte ne decide plus rien. Elle montre, et elle mene a la page de
     // l'evenement. Empiler le prix, le mode et deux boutons dessus donnait une
@@ -356,7 +356,7 @@ const PARCOURS = [
         // Pas d'expression reguliere ici : dans un gabarit de chaine, le \/
         // d'une regex est avale a l'ecriture et le navigateur recoit une
         // division. indexOf ne pose pas ce probleme.
-        if (String(lien.getAttribute('href')).indexOf('evenement/') !== 0)
+        if (String(lien.getAttribute('href')).indexOf('evenements/') !== 0)
           return 'carte ' + (i+1) + ' ne mene pas a la page de l evenement, mais a ' + lien.getAttribute('href')
       }
       return true
@@ -404,7 +404,7 @@ const PARCOURS = [
       var bloc = document.querySelector('.ev-absent')
       if (!bloc) return 'aucun message, la page reste sur son chargement'
       if (/Chargement/.test(bloc.textContent)) return 'la page est restee sur « Chargement »'
-      if (!bloc.querySelector('a[href="track.html"]')) return 'aucun retour vers le calendrier'
+      if (!bloc.querySelector('a[href="evenements.html"]')) return 'aucun retour vers le calendrier'
       return true
     })()`,
   },

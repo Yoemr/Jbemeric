@@ -44,7 +44,7 @@
   }
 
   function slugDemande() {
-    var m = location.pathname.match(/\/evenement\/([a-z0-9-]+)\/?$/)
+    var m = location.pathname.match(/\/evenements\/([a-z0-9-]+)\/?$/)
     if (m) return m[1]
     var p = new URLSearchParams(location.search).get('e')
     return p && /^[a-z0-9-]+$/.test(p) ? p : null
@@ -70,7 +70,7 @@
       '<div class="ev-absent">' +
         '<h1>' + ech(titre) + '</h1>' +
         '<p>' + ech(texte) + '</p>' +
-        '<a class="ev-btn ev-btn-or" href="track.html">Voir toutes les dates</a>' +
+        '<a class="ev-btn ev-btn-or" href="evenements.html">Voir toutes les dates</a>' +
       '</div>'
     document.title = titre + ' · JB EMERIC'
   }
@@ -119,7 +119,7 @@
         '<img src="' + ech(photo) + '" alt="' + ech(ev.type || 'Journée circuit') + ', ' + ech(circuit) + '">' +
         '<div class="ev-hero-voile"></div>' +
         '<div class="ev-hero-dedans">' +
-          '<div class="ev-fil"><a href="track.html">Événements</a> · ' + ech(ev.type || 'Journée circuit') + '</div>' +
+          '<div class="ev-fil"><a href="evenements.html">Événements</a> · ' + ech(ev.type || 'Journée circuit') + '</div>' +
           '<div class="ev-quand">' + enClair(ev.date_event) + '</div>' +
           '<h1 class="ev-titre">' + ech(circuit) + '</h1>' +
           (ev.resume ? '<p class="ev-ou">' + ech(ev.resume) + '</p>' : '') +
@@ -156,9 +156,9 @@
     var desc = document.querySelector('meta[name="description"]')
     if (desc && ev.resume) desc.setAttribute('content', ev.resume)
     var canon = document.querySelector('link[rel="canonical"]')
-    if (canon && ev.slug) canon.setAttribute('href', location.origin + '/evenement/' + ev.slug)
+    if (canon && ev.slug) canon.setAttribute('href', location.origin + '/evenements/' + ev.slug)
 
-    // La fiche d'inscription est celle de track.html, chargée par le même
+    // La fiche d'inscription est celle de evenements.html, chargée par le même
     // script. Elle n'est pas réécrite ici.
     var bouton = document.querySelector('[data-inscr]')
     if (bouton && typeof window.openModal === 'function') {
@@ -168,7 +168,7 @@
     } else if (bouton) {
       // Sans la fiche, le bouton renverrait dans le vide. On l'envoie sur la
       // page qui la porte plutôt que de ne rien faire.
-      bouton.addEventListener('click', function () { location.href = 'track.html#sessions' })
+      bouton.addEventListener('click', function () { location.href = 'evenements.html#sessions' })
     }
   }
 

@@ -172,12 +172,40 @@ http.createServer(function (req, res) {
   }
 
   // Aucun fichier : on tente les règles de _redirects, comme le ferait Netlify
+  // Aucun fichier a ce chemin : on applique _redirects comme Netlify.
+  //
+  // Deux comportements manquaient ici, et les deux ont fait croire a un defaut
+  // du site le 9 aout 2026, quand /evenements/<slug> repondait 404 en local
+  // alors que la regle etait juste.
+  //
+  //   1. Le joker n'etait lu que pour les regles forcees. Une regle en /* sans
+  //      point d'exclamation ne s'appliquait jamais.
+  //   2. Un code 200 est une REECRITURE : Netlify sert le fichier cible sans
+  //      changer l'adresse. Renvoyer un Location transforme la reecriture en
+  //      redirection, et l'URL de l'evenement disparaitrait de la barre.
   if (!resolved) {
     var rule = REDIRECTS[pathname]
+    if (!rule) {
+      // Les regles a joker, dans l'ordre du fichier : la premiere qui couvre
+      // le chemin gagne, comme chez Netlify.
+      for (var cle2 in REDIRECTS) {
+        var r2 = REDIRECTS[cle2]
+        if (r2.motif && pathname.indexOf(r2.motif) === 0) { rule = r2; break }
+      }
+    }
     if (rule) {
-      res.writeHead(rule.code, { 'Location': rule.to })
-      res.end()
-      return
+      if (rule.code === 200) {
+        var cible = path.join(ROOT, rule.to)
+        if (fs.existsSync(cible) && fs.statSync(cible).isFile()) {
+          res.writeHead(200, { 'Content-Type': MIME[path.extname(cible)] || 'text/html' })
+          fs.createReadStream(cible).pipe(res)
+          return
+        }
+      } else {
+        res.writeHead(rule.code, { 'Location': rule.to })
+        res.end()
+        return
+      }
     }
     res.writeHead(404, { 'Content-Type': 'text/plain' })
     res.end('404 : ' + pathname)

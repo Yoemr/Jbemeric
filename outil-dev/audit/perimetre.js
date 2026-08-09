@@ -19,7 +19,7 @@ const PAGES = [
   'academie/karting-adulte.html',
   'academie/competition.html',
   'coaching.html',
-  'track.html',
+  'evenements.html',
   'paddock.html',
   'paddock/palmares.html',      // ajoute par Yoan le 4 aout : « palmares aussi on garde »
 ]

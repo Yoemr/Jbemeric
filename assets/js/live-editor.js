@@ -21,9 +21,13 @@ var PAGE = (location.pathname.split('/').pop().replace('.html','')) || 'index'
 // 6 aout 2026 : karting.html devient karting-adulte.html, pour etre symetrique
 // de karting-enfant.html. 21 contenus etaient en jeu.
 //
+// 9 aout 2026 : track.html devient evenements.html. Le nom ne voulait plus rien
+// dire : les track-days ne sont qu'une section parmi celles a venir. 1 contenu
+// en jeu, la video du hero.
+//
 // Une entree ne se retire d'ici que le jour ou la base a ete migree pour de
 // bon, et seulement ce jour-la.
-var PAGE_ALIASES = { 'karting-adulte': 'karting' }
+var PAGE_ALIASES = { 'karting-adulte': 'karting', 'evenements': 'track' }
 
 function _reprendreAncienneCle() {
   var ancien = PAGE_ALIASES[PAGE]

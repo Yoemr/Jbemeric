@@ -1,7 +1,7 @@
 // sync-mirror.js : JB EMERIC
 // Aspire les sections des pages piliers et les injecte dans index.html
 // ZERO template literal · ZERO class ES6 · Compatible tous navigateurs modernes
-// Sources : academie.html#portes · coaching.html#formules · track.html#sr-grid
+// Sources : academie.html#portes · coaching.html#formules · evenements.html#sr-grid
 
 (function () {
 'use strict'
@@ -275,7 +275,7 @@ function buildCoachingCards(section) {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  TRACK : extrait les sessions de track.html#sr-grid
+//  TRACK : extrait les sessions de evenements.html#sr-grid
 // ─────────────────────────────────────────────────────────────
 function mirrorTrack() {
   var target = getTarget('mirror-track')
@@ -295,7 +295,7 @@ function mirrorTrack() {
     })
     .catch(function(err) {
       console.warn('[mirror] track:', err.message)
-      setError(target, 'track.html')
+      setError(target, 'evenements.html')
     })
 }
 
@@ -311,7 +311,7 @@ function buildTrackCardsFromEvents(events) {
     var isOpen = ev.status === 'Open' || ev.status === 'open'
     var badgeCls = isOpen ? 'ov-card-badge ov-card-badge-y' : 'ov-card-badge'
     var badgeText = isOpen ? 'Places disponibles' : 'Complet'
-    cards += '<a href="track.html" class="ov-card">'
+    cards += '<a href="evenements.html" class="ov-card">'
     cards += '<div class="ov-card-img">'
     if (ev.image_url) cards += '<img src="' + ev.image_url + '" alt="' + (ev.circuit || '') + '" loading="lazy">'
     cards += '<span class="' + badgeCls + '">' + badgeText + '</span>'
@@ -323,7 +323,7 @@ function buildTrackCardsFromEvents(events) {
     if (ev.prix)    cards += '<div class="ov-card-price">' + ev.prix + ' €</div>'
     cards += '</div></a>'
   }
-  cards += '<a href="track.html" class="ov-card" style="justify-content:center;align-items:center;min-height:200px;opacity:.6">'
+  cards += '<a href="evenements.html" class="ov-card" style="justify-content:center;align-items:center;min-height:200px;opacity:.6">'
   cards += '<div class="ov-card-body" style="text-align:center">'
   cards += '<div class="ov-card-name">Voir toutes les dates 2026</div>'
   cards += '<div class="ov-card-price">Track-Days &amp; Stages &rarr;</div>'
@@ -357,7 +357,7 @@ function buildTrackCards(section) {
     var prixText   = prix    ? prix.textContent.trim()   : ''
     var isOpen     = status === 'open'
 
-    cards += '<a href="track.html" class="ov-card">'
+    cards += '<a href="evenements.html" class="ov-card">'
     cards += '<div class="ov-card-img">'
     if (imgSrc) cards += '<img src="' + imgSrc + '" alt="' + imgAlt + '" loading="lazy">'
     if (badgeText) {
@@ -374,7 +374,7 @@ function buildTrackCards(section) {
   }
 
   // Bouton "voir toutes les dates"
-  cards += '<a href="track.html" class="ov-card" style="justify-content:center;align-items:center;min-height:200px;opacity:.6">'
+  cards += '<a href="evenements.html" class="ov-card" style="justify-content:center;align-items:center;min-height:200px;opacity:.6">'
   cards += '<div class="ov-card-body" style="text-align:center">'
   cards += '<div class="ov-card-name">Voir toutes les dates 2026</div>'
   cards += '<div class="ov-card-price">Track-Days & Stages →</div>'
@@ -419,7 +419,7 @@ function buildPaddockCards(threads, events, MONTHS) {
     var ev = events[0]
     var d  = new Date(ev.date_event)
     var dateStr = d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear()
-    cards += '<a href="track.html" class="ov-card">'
+    cards += '<a href="evenements.html" class="ov-card">'
     cards += '<div class="ov-card-img" style="background:linear-gradient(135deg,#040a1e,#0A3D91);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px">'
     cards += '<div style="font-family:\'Bebas Neue\';font-size:42px;color:#FFCF00;line-height:1">' + d.getDate() + '</div>'
     cards += '<div style="font-family:\'DM Mono\';font-size:9px;color:rgba(255,255,255,.6);letter-spacing:2px;text-transform:uppercase">' + MONTHS[d.getMonth()] + ' ' + d.getFullYear() + '</div>'

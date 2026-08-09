@@ -25,7 +25,7 @@
     index:      '/index.html',
     academie:   '/academie.html',
     coaching:   '/coaching.html',
-    track:      '/track.html',
+    evenements: '/evenements.html',
     paddock:    '/paddock.html',
 
     // ── Académie ───────────────────────────────────────────────────

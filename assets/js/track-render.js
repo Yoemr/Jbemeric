@@ -299,7 +299,7 @@
       var status  = ev.status || 'Open'
       var img     = ev.photo || imgForType(ev.type)
       var dataStatus = status === 'Open' ? 'open' : status === 'Full' ? 'full' : 'potential'
-      var lien    = ev.slug ? 'evenement/' + escAttr(ev.slug) : 'track.html#sessions'
+      var lien    = ev.slug ? 'evenements/' + escAttr(ev.slug) : 'evenements.html#sessions'
 
       var d = new Date(ev.date_event + 'T12:00:00')
       var jour = DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()]

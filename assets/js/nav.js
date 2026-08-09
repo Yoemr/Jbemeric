@@ -27,14 +27,11 @@
       ]
     },
     { type:'link', href:R.coaching, key:'coaching', label:'Coaching' },
-    { type:'sub',  href:R.track,    key:'track',    label:'Stages &amp; Track-Days',
-      subs:[
-        { href:R.track + '#stages',        label:'Stages voiture' },
-        { href:R.track + '#trackdays',     label:'Track-Days' },
-        { href:R.track + '#voitures',      label:'Nos voitures' },
-        { href:R.boutique, label:'Boutique 4x sans frais' },
-      ]
-    },
+    // Les trois anciennes entrees, « Stages voiture », « Track-Days » et
+    // « Nos voitures », visaient des sections retirees le 9 aout 2026 avec le
+    // reste du modele d'avant. Le menu ne renvoie plus que vers la page, qui
+    // portera une entree par section d'evenements a mesure qu'elles arrivent.
+    { type:'link', href:R.evenements, key:'evenements', label:'&Eacute;v&eacute;nements' },
     { type:'sub',  href:R.paddock,  key:'paddock',  label:'Paddock',
       subs:[
         { href:R.paddock + '#blog',   label:'Biblioth&egrave;que tech.' },

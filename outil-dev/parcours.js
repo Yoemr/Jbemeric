@@ -144,6 +144,16 @@ const PRELUDE_GESTION = `(function () {
       visible_site:false, status:'Potential', prix:195, nb_places:8, circuit_id:7 }
   ]
   var CIRCUITS = [{ id:7, nom:'Circuit du Grand Sambuc' }, { id:8, nom:'Circuit de Lédenon' }]
+  // La veille : une date jamais jugee, une retenue, une ecartee. C'est ce
+  // melange qui decide quels boutons chaque ligne doit porter.
+  var VEILLE = [
+    { id:'v1', date_event:'2099-08-18', titre:'Roulage autos',  statut:'nouveau', event_id:null,
+      veille_sources:{ nom:'Circuit du Var, agenda' } },
+    { id:'v2', date_event:'2099-08-19', titre:'Roulage motos',  statut:'ecarte',  event_id:null,
+      veille_sources:{ nom:'Circuit du Var, agenda' } },
+    { id:'v3', date_event:'2099-08-20', titre:'Stage monoplace', statut:'retenu', event_id:'e9',
+      veille_sources:{ nom:'Circuit du Var, agenda' } }
+  ]
   window.__envois = []
   var vrai = window.fetch
   window.fetch = function (url, opt) {
@@ -151,9 +161,16 @@ const PRELUDE_GESTION = `(function () {
     if (u.indexOf('/rest/v1/') === -1) return vrai.apply(this, arguments)
     if (opt.method && opt.method !== 'GET') {
       window.__envois.push({ methode: opt.method, url: u.split('/rest/v1/')[1], corps: opt.body })
-      return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve([{}]) } })
+      // Le passage de veille rend une ligne par source, comme la vraie.
+      var rep = u.indexOf('rpc/veille_passer') !== -1
+        ? [{ source:'Circuit du Var, agenda', statut:200, trouves:18, nouveaux:2, message:null }]
+        : [{}]
+      return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve(rep) } })
     }
-    var jeu = u.indexOf('/faq?') !== -1 ? FAQ : u.indexOf('/events?') !== -1 ? EV : CIRCUITS
+    var jeu = u.indexOf('/faq?') !== -1 ? FAQ
+            : u.indexOf('/events?') !== -1 ? EV
+            : u.indexOf('/veille_candidats?') !== -1 ? VEILLE
+            : CIRCUITS
     return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve(jeu) } })
   }
 })()`
@@ -578,6 +595,74 @@ const PARCOURS = [
     })()`,
   },
   {
+    nom: 'veille, chaque ligne porte les verbes de son etat',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    // La veille depose des candidats, JB tranche. Une ligne jamais jugee doit
+    // pouvoir etre retenue ou ecartee ; une ligne deja retenue ne doit plus
+    // proposer de l'etre une seconde fois ; une ligne ecartee doit pouvoir
+    // revenir. Les verbes sont declares par l'onglet, la coquille les pose.
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+    })()`,
+    attente: 2000,
+    attendu: `(function () {
+      var lignes = document.querySelectorAll('.g-table tbody tr')
+      if (lignes.length !== 3) return 'attendu 3 candidats, trouve ' + lignes.length
+
+      function verbes(i) {
+        return [].map.call(lignes[i].querySelectorAll('[data-agir]'), function (b) {
+          return b.dataset.agir
+        }).sort().join(',')
+      }
+      // Aucun identifiant dans un onclick : la regle du 8 aout.
+      if (document.querySelector('.g-table [onclick]')) return 'un onclick porte un identifiant'
+
+      if (verbes(0) !== 'ecarter,retenir') return 'ligne a trier : ' + verbes(0)
+      if (verbes(1) !== 'rendre,retenir')  return 'ligne ecartee : ' + verbes(1)
+      if (verbes(2) !== '')                return 'ligne deja retenue : ' + verbes(2)
+
+      // Le compte doit dire le travail restant, pas le nombre de lignes.
+      var compte = document.querySelector('.g-compte').textContent
+      if (compte.indexOf('1 date') === -1) return 'le compte ne dit pas le travail restant : ' + compte
+
+      // Rien ne se cree a la main ici.
+      if (document.getElementById('g-nouveau')) return 'un bouton Nouveau traine sur la veille'
+      if (!document.querySelector('[data-tete="chercher"]')) return 'pas de bouton pour chercher maintenant'
+      return true
+    })()`,
+  },
+  {
+    nom: 'veille, retenir envoie le bon appel et ne publie rien',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    // Retenir cree un evenement en brouillon. Le corps envoye est tout ce que
+    // ce parcours peut voir, et c'est ce qui compte : la base decide du reste.
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () { document.querySelector('[data-agir="retenir"]').click() }, 1600)
+    })()`,
+    attente: 3000,
+    attendu: `(function () {
+      var e = (window.__envois || []).filter(function (x) {
+        return x.url.indexOf('rpc/veille_retenir') === 0
+      })[0]
+      if (!e) return 'aucun appel a veille_retenir : ' + JSON.stringify(window.__envois || [])
+      if (e.methode !== 'POST') return 'methode ' + e.methode
+      var corps = JSON.parse(e.corps)
+      if (corps.p_candidat !== 'v1') return 'mauvais candidat envoye : ' + JSON.stringify(corps)
+
+      // Rien ne doit partir vers events : c'est la base qui cree, pas la page.
+      var direct = (window.__envois || []).filter(function (x) { return x.url.indexOf('events') === 0 })
+      if (direct.length) return 'la page ecrit dans events au lieu de passer par la base'
+      return true
+    })()`,
+  },
+  {
     nom: 'inscription, Echap ferme vraiment la fiche',
     page: 'evenements.html',
     largeur: 1300,
@@ -715,7 +800,7 @@ const PARCOURS = [
         setTimeout(function () {
           document.querySelector('[data-onglet="faq"]').click()
           setTimeout(function () {
-            document.querySelector('[data-modifier]').click()
+            document.querySelector('[data-agir="modifier"]').click()
             setTimeout(function () {
               document.getElementById('ch-question').value = 'Question modifiee'
               var c = [].filter.call(document.querySelectorAll('.g-case input'), function (x) {

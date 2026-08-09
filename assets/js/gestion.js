@@ -124,6 +124,18 @@ window.JBE = (function () {
   // ── Un onglet ─────────────────────────────────────────────────────────────
   function onglet(def) { onglets.push(def) }
 
+  // Les actions d'une ligne se déclarent. Elles étaient écrites en dur, ce qui
+  // allait tant que tous les onglets géraient une table de la même façon. Un
+  // onglet qui trie plutôt qu'il ne modifie, comme la Veille, a besoin de ses
+  // propres verbes. Un onglet qui ne déclare rien garde ceux d'avant.
+  var ACTIONS_PAR_DEFAUT = [
+    { cle: 'modifier', titre: 'Modifier', faire: function (def, id, l) { editer(def, l) } },
+    { cle: 'supprimer', titre: 'Supprimer', classe: 'g-btn-rouge',
+      faire: function (def, id, l) { supprimer(def, id, def.nommer ? def.nommer(l) : id) } },
+  ]
+
+  function actionsDe(def) { return def.actions || ACTIONS_PAR_DEFAUT }
+
   function dessinerBarre(actif) {
     document.getElementById('g-onglets').innerHTML = onglets.map(function (o) {
       return '<button class="g-onglet' + (o.cle === actif ? ' actif' : '') + '" data-onglet="' + ech(o.cle) + '">'
@@ -147,13 +159,22 @@ window.JBE = (function () {
     var zone = document.getElementById('g-contenu')
     zone.innerHTML = '<div class="g-attente">Chargement…</div>'
 
-    requete(def.table + '?select=*&order=' + (def.tri || 'created_at.desc'))
+    requete((def.vue || def.table) + '?select=' + (def.select || '*') + '&order=' + (def.tri || 'created_at.desc'))
       .then(function (lignes) {
+        var actions = actionsDe(def)
         zone.innerHTML =
           '<div class="g-tete">' +
             '<div><h2>' + ech(def.titre) + '</h2>' +
-              '<p class="g-compte">' + lignes.length + ' ligne' + (lignes.length > 1 ? 's' : '') + '</p></div>' +
-            '<button class="g-btn g-btn-or" id="g-nouveau">+ Nouveau</button>' +
+              '<p class="g-compte">' + (def.compter ? def.compter(lignes)
+                : lignes.length + ' ligne' + (lignes.length > 1 ? 's' : '')) + '</p></div>' +
+            '<div class="g-tete-boutons">' +
+              (def.boutonsTete || []).map(function (b) {
+                return '<button class="g-btn ' + ech(b.classe || '') + '" data-tete="' + ech(b.cle) + '">'
+                     + ech(b.titre) + '</button>'
+              }).join('') +
+              (def.boutonNouveau === false ? ''
+                : '<button class="g-btn g-btn-or" id="g-nouveau">+ Nouveau</button>') +
+            '</div>' +
           '</div>' +
           (lignes.length
             ? '<div class="g-table-cadre"><table class="g-table"><thead><tr>' +
@@ -165,8 +186,14 @@ window.JBE = (function () {
                       return '<td>' + (c.rendu ? c.rendu(l) : ech(l[c.cle])) + '</td>'
                     }).join('') +
                     '<td class="g-actions">' +
-                      '<button class="g-btn g-btn-mini" data-modifier="' + ech(l.id) + '">Modifier</button>' +
-                      '<button class="g-btn g-btn-mini g-btn-rouge" data-supprimer="' + ech(l.id) + '">Supprimer</button>' +
+                      actions.filter(function (a) { return !a.quand || a.quand(l) })
+                        .map(function (a) {
+                          // Aucun identifiant dans un onclick : c'est ce qui
+                          // avait tué les boutons du dashboard le 8 août.
+                          return '<button class="g-btn g-btn-mini ' + ech(a.classe || '') + '"'
+                               + ' data-agir="' + ech(a.cle) + '" data-ligne="' + ech(l.id) + '">'
+                               + ech(a.titre) + '</button>'
+                        }).join('') +
                     '</td></tr>'
                 }).join('') +
               '</tbody></table></div>'
@@ -254,17 +281,20 @@ window.JBE = (function () {
     if (t.closest && t.closest('[data-enregistrer]')) return enregistrer(courant)
     if (t.id === 'g-nouveau') return editer(courant, null)
 
-    var mod = t.closest && t.closest('[data-modifier]')
-    if (mod) {
-      var lignes = document.getElementById('g-contenu').__lignes || []
-      var l = lignes.filter(function (x) { return String(x.id) === mod.dataset.modifier })[0]
-      return editer(courant, l)
+    var tete = t.closest && t.closest('[data-tete]')
+    if (tete) {
+      var bt = (courant.boutonsTete || []).filter(function (b) { return b.cle === tete.dataset.tete })[0]
+      if (bt) return bt.faire(courant)
+      return
     }
-    var sup = t.closest && t.closest('[data-supprimer]')
-    if (sup) {
-      var lg = document.getElementById('g-contenu').__lignes || []
-      var cible = lg.filter(function (x) { return String(x.id) === sup.dataset.supprimer })[0] || {}
-      return supprimer(courant, sup.dataset.supprimer, courant.nommer ? courant.nommer(cible) : sup.dataset.supprimer)
+
+    var agir = t.closest && t.closest('[data-agir]')
+    if (agir) {
+      var acte = actionsDe(courant).filter(function (a) { return a.cle === agir.dataset.agir })[0]
+      if (!acte) return
+      var lignes = document.getElementById('g-contenu').__lignes || []
+      var l = lignes.filter(function (x) { return String(x.id) === agir.dataset.ligne })[0] || {}
+      return acte.faire(courant, agir.dataset.ligne, l)
     }
 
     var caseCoche = t.closest && t.closest('.g-case')
@@ -285,5 +315,10 @@ window.JBE = (function () {
     ouvrir(voulu || (onglets[0] && onglets[0].cle))
   }
 
-  return { onglet: onglet, demarrer: demarrer, requete: requete, ech: ech, dire: dire }
+  // rafraichir : après une action, la liste doit refléter la base et non ce
+  // que le navigateur croit. Un onglet qui redessinerait sa ligne lui-même
+  // afficherait le résultat qu'il espère, pas celui qui a eu lieu.
+  function rafraichir() { if (courant) lister(courant) }
+
+  return { onglet: onglet, demarrer: demarrer, requete: requete, ech: ech, dire: dire, rafraichir: rafraichir }
 })()

@@ -785,3 +785,38 @@ Deux fautes, toutes deux du même genre, et toutes deux des seuils franchis par 
 Les 48 de `track.css` sont les règles de l'ancienne mise en page, `.sec`, `.kick` et leurs voisines, restées quand le balisage a été refait. Ils étaient déjà relevés comme tâche, à 50 sur 176. Le pourcentage a bougé quand la fiche est sortie du fichier.
 
 Rien n'est supprimé. Les deux attendent une réponse, notées dans `docs/08` section C.
+
+---
+
+## 13. Mise à jour du 9 août 2026, la veille des dates de circuit
+
+### 13.1 Ce qui fonctionne, mesuré
+
+La base va lire les calendriers des circuits et dépose ce qu'elle trouve. JB trie dans l'onglet Veille. Voir D-131 à D-136.
+
+| Étape | État |
+|---|---|
+| Lecture d'un calendrier réel | 200, 18 dates extraites du Circuit du Var |
+| Dédoublonnage d'un second passage | 18 revues, 0 nouvelle |
+| Décisions de JB conservées entre deux passages | oui, vérifié |
+| Source injoignable signalée, sans bloquer les autres | oui, 404 nommé |
+| Retenir crée un événement en brouillon | oui, `roulage-autos-circuit-du-luc-18-aout` |
+| Passage quotidien | `pg_cron`, tous les jours à 5 h UTC |
+
+### 13.2 Pourquoi le poste de travail ne peut pas le faire
+
+Le proxy de sortie refuse tout sauf Anthropic. `curl` sur `trackdays.fr`, `circuitduvar.com`, `circuitpaulricard.com` et même `supabase.co` répond 403 au CONNECT. `WebFetch` est refusé sur les mêmes domaines.
+
+La base, elle, a le réseau. L'extension `http` lui permet d'aller lire les pages. C'est donc elle qui fait la veille, et ce n'est pas un contournement : c'est de toute façon là que ça devait tourner, puisqu'un navigateur ne peut pas lire un site tiers à cause du CORS.
+
+### 13.3 Une seule source pour l'instant
+
+`veille_sources` contient une ligne : l'agenda du Circuit du Var, parseur `wix-events`, rattaché au Circuit du Luc.
+
+Les six autres sources repérées en 8.4 ne sont pas branchées. Chacune demande de regarder la forme de sa page et d'écrire son parseur. Ajouter une source qui a la même forme est une ligne dans `veille_sources`, sans une ligne de code.
+
+### 13.4 Ce que la veille ne fait pas, volontairement
+
+Elle ne publie rien. Retenir crée un événement invisible, au statut `Potential`, sans prix ni mode ni résumé. JB le complète dans l'onglet Track-days puis le rend visible.
+
+Elle ne filtre pas non plus. Sur les 18 dates du Circuit du Var, 2 sont des roulages autos, 2 des roulages motos, 13 des stages de l'école du circuit et 1 un événement privé. Aucune règle écrite d'avance ne dira lesquelles intéressent JB : ça dépend de ses accords et de son agenda.

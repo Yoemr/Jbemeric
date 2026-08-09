@@ -6,6 +6,66 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, la veille des dates de circuit
+
+### D-131, C'est la base qui va lire les sites, pas le poste ni le navigateur
+
+Demande de Yoan : « j'aimerais que dans le dashboard on arrive à récupérer automatiquement tous les events. Je veux que cette partie fonctionne. On attaque le dur. »
+
+Deux impossibilités, vérifiées avant de construire.
+
+Le poste de travail ne joint rien : le proxy de sortie répond 403 au CONNECT pour `trackdays.fr`, `circuitduvar.com`, `circuitpaulricard.com` et même `supabase.co`. Et le navigateur de JB ne pourrait pas davantage : un site tiers n'envoie pas d'en-tête CORS, la lecture serait bloquée quoi qu'on écrive.
+
+La base, elle, a le réseau. L'extension `http` lui permet d'aller lire les pages. Ce n'est pas un contournement du blocage local, c'est le seul endroit où ça pouvait tourner.
+
+### D-132, Deux tables, et la veille ne crée jamais un événement du site
+
+`veille_sources` dit quoi lire et comment. `veille_candidats` reçoit ce qui a été trouvé, avec trois états : à trier, retenu, écarté.
+
+**La veille dépose, JB tranche.** Sur les 18 dates du Circuit du Var, 2 sont des roulages autos, 2 des roulages motos, 13 des stages de l'école du circuit et 1 un événement privé. Aucune règle écrite d'avance ne dira lesquelles intéressent JB : ça dépend de ses accords, de ses clients et de son agenda.
+
+Retenir crée un événement **invisible, au statut Potential**, sans prix ni mode ni résumé. JB le complète dans l'onglet Track-days, puis le rend visible. Une date fausse ne peut pas atteindre le site toute seule.
+
+### D-133, Le dédoublonnage est ce qui rend la veille utilisable
+
+Un index unique sur source, date et titre. Un second passage met à jour `revu_le` et rien d'autre.
+
+Sans lui, la table doublerait chaque jour et JB retrancherait tous les matins ce qu'il a écarté la veille, ce qui aurait suffi à lui faire abandonner l'outil en une semaine.
+
+**Vérifié** : premier passage 18 trouvées, 18 nouvelles. Second passage 18 trouvées, 0 nouvelle, et les décisions déjà prises intactes.
+
+### D-134, La garde ajoutée pour la sécurité aurait cassé le passage quotidien
+
+`veille_passer` est `security definer`, donc exposée en RPC elle laisserait n'importe quel compte connecté déclencher une lecture des sites. J'ai ajouté un contrôle `est_admin()`.
+
+**Ce contrôle rendait le cron inopérant** : le passage quotidien tourne sous le rôle `postgres`, pour qui `est_admin()` est faux. La veille aurait échoué toutes les nuits, en silence, et personne ne l'aurait vu avant des semaines.
+
+Trouvé en interrogeant la base plutôt qu'en supposant. D'où deux fonctions : `veille_passer_interne` fait le travail et n'est exposée à personne, c'est elle que le cron appelle ; `veille_passer` vérifie qui appelle puis délègue.
+
+### D-135, Les actions d'une ligne se déclarent, elles ne s'écrivent plus en dur
+
+La coquille de gestion posait « Modifier » et « Supprimer » sur chaque ligne de chaque onglet. Ça tenait tant que tous les onglets géraient une table de la même façon. La Veille trie plutôt qu'elle ne modifie : ses verbes sont « Retenir », « Écarter », « Remettre à trier », et ils dépendent de l'état de la ligne.
+
+Plutôt que de coder un cas particulier, la déclaration s'étend : `actions`, avec un `quand` qui décide si le bouton apparaît, plus `boutonsTete` et `boutonNouveau: false`. Un onglet qui ne déclare rien garde les verbes d'avant.
+
+Le mécanisme reste le même qu'avant : un attribut `data-` et un seul écouteur délégué. Aucun identifiant n'est écrit dans un `onclick`, ce qui avait tué les boutons du dashboard le 8 août.
+
+**Ce changement a cassé un parcours existant**, celui qui modifie une question de FAQ, parce qu'il cherchait `[data-modifier]`. Le parcours l'a dit, et c'est exactement son travail : un contrat qui change doit se voir.
+
+### D-136, Ce que les parcours protègent
+
+Deux, et leurs contrôles négatifs.
+
+Le premier vérifie que chaque ligne porte les verbes de son état : une ligne à trier peut être retenue ou écartée, une ligne retenue ne peut plus l'être une seconde fois, une ligne écartée peut revenir. Il vérifie aussi qu'aucun `onclick` ne porte d'identifiant, que le bouton « Nouveau » ne traîne pas sur un onglet où rien ne se crée à la main, et que le compteur annonce le travail restant plutôt que le nombre de lignes.
+
+Le second vérifie que « Retenir » appelle bien la base et n'écrit pas dans `events` depuis la page.
+
+**Contrôles négatifs**, deux, concluants : retirer le `quand` fait apparaître tous les verbes sur toutes les lignes et le parcours le nomme ; faire écrire la page directement dans `events` est également nommé.
+
+**Ce qui n'est pas couvert.** Les parcours servent une base simulée. La chaîne réelle a été éprouvée directement dans Supabase, mesure par mesure, et c'est là que sont les preuves listées en `docs/05` section 13.1.
+
+---
+
 ## 9 août 2026, publier coûte, trois fois par 24 heures
 
 ### D-127, La règle, et ce qu'elle remplace

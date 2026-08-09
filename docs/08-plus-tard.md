@@ -39,6 +39,7 @@ Yoan, 9 août : « on s'en fout des événements passés, des voitures qui n'exi
 
 ## B bis. Chantier suivant, déjà cadré
 
+- **Les six autres sources de veille.** Seul l'agenda du Circuit du Var est branché. Chacune des autres demande de regarder la forme de sa page et d'écrire son parseur dans `veille_extraire`. Une source de même forme est une simple ligne dans `veille_sources`, sans code.
 - **Un onglet par fonction restante** dans `admin/gestion.html` : inscriptions, circuits, documents, forum, utilisateurs. Un fichier chacun, sur le modèle de `gestion-faq.js`.
 - **Le référencement des pages d'événement.** `build-cache.js` doit pré-générer un fichier par date, avec titre, description, texte dans le HTML, `schema.org/Event` et sitemap. Aujourd'hui un robot lit « Chargement » sur toutes les dates. Chantier suivant, D-108.
 - **`track-render.js` porte encore son ancien nom.** La fiche en est sortie le 9 août, il ne reste que la grille et ses filtres. Le renommer en `evenements-grille.js` est maintenant sans risque, mais sans urgence non plus.

@@ -29,22 +29,32 @@ Le reste de l'écriture est libre.
 ## 3. Gouvernance
 
 - Travail **en local**. Modifications de fichiers et commits sur branche de travail : autorisés.
-- **Jamais de push. Jamais de déploiement.** Yoan pousse lui-même, environ une fois par jour.
+- **Publier coûte.** Trois pushes au maximum par tranche de 24 heures, règle du 9 août 2026 qui remplace l'interdiction pure. Détail et porte en section 3 bis.
 - **Aucune page, aucune entrée de menu, aucune section n'est créée sans accord explicite de Yoan.** Des pages ont été créées sans autorisation par le passé, c'est une cause directe du désordre actuel.
 - **Aucune suppression de fichier sans validation individuelle.**
 - `docs/00` à `04` : modification sur validation. `docs/05` et `06` : écriture libre, avec résumé en fin de chantier.
 
 ---
 
-## 3 bis. Notifications vers le téléphone de Yoan
+## 3 bis. Publications, trois par 24 heures
 
-Elles coûtent cher. Règle du 9 août 2026 : **trois au maximum par tranche de 24 heures**, pour ne pas dépasser les 300.
+Chaque push déclenche une construction Netlify. Le plafond se compte en minutes de construction par mois, et Yoan a donné le nombre : **300**.
 
-Deux sortes, et une seule se compte.
+Règle du 9 août 2026 : **trois publications au maximum par tranche de 24 heures.** Trois par jour tiennent dans le budget.
 
-**Les envois volontaires.** S'enregistrer avant de partir, avec `node outil-dev/notify.js --envoi "la raison"`. La commande refuse au-delà de trois et dit à quelle heure la suivante sera possible. Le compteur s'affiche à chaque ouverture de session, sous l'audit.
+Ce n'est pas une consigne, c'est une porte. Le crochet `outil-dev/hooks/pre-push` refuse la quatrième et dit à quelle heure la suivante sera possible. Le compteur s'affiche à chaque ouverture de session, sous l'audit.
 
-**Les avis automatiques**, déclenchés par l'outillage quand une commande longue bascule en arrière-plan ou qu'un agent se termine. Ils ne se comptent pas, ils s'évitent : **une commande longue reçoit un délai explicite pour finir au premier plan.** `parcours.js` et `fumee.js` dépassent les deux minutes par défaut, il leur faut 300 000 ms.
+Le crochet demande une ligne, une seule fois par machine :
+
+```
+git config core.hooksPath outil-dev/hooks
+```
+
+Pour passer outre, quand Yoan le demande : `git push --no-verify`.
+
+**Commiter n'est pas publier.** Un commit local ne coûte rien et ne déclenche rien. Travailler par petits commits et publier une fois est la bonne façon de tenir la règle, pas travailler moins.
+
+Le 9 août, seize pushes sont partis en vingt-deux heures alors que ce fichier disait « jamais de push ». Une règle qu'on peut oublier n'est pas une règle.
 
 ---
 

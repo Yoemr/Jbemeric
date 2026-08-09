@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node outil-dev/audit/audit.js --court 2>&1; node outil-dev/notify.js --court 2>&1; true",
+            "command": "node outil-dev/audit/audit.js --court 2>&1; node outil-dev/deploiements.js --court 2>&1; true",
             "timeout": 30
           }
         ]

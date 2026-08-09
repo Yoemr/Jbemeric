@@ -6,39 +6,51 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
-## 9 août 2026, les notifications vers le téléphone de Yoan
+## 9 août 2026, publier coûte, trois fois par 24 heures
 
-### D-127, Trois par 24 heures, et un compteur au démarrage
+### D-127, La règle, et ce qu'elle remplace
 
-Mot de Yoan : « tu recommences à envoyer sur Notify sans me demander, sauf que ça coûte cher. Alors tu as le droit, mais maximum 3 fois par tranche de 24 h pour ne pas dépasser les 300. M'afficher un compteur mensuel pourrait être cool. »
+Mot de Yoan : « ça coûte cher. Alors tu as le droit, mais maximum 3 fois par tranche de 24 h pour ne pas dépasser les 300. M'afficher un compteur mensuel pourrait être cool. »
 
-**Ce qui envoyait réellement.** Aucun envoi volontaire n'a eu lieu : le dépôt ne contient pas une ligne de code de notification, et je n'ai appelé aucun outil d'envoi. Ce qui est parti sur son téléphone, ce sont les avis automatiques de l'outillage. Trois tâches sont passées en arrière-plan le 9 août, à 08:50, 10:52 et 22:08, parce que les commandes dépassaient le délai de deux minutes et étaient basculées pour ne pas bloquer. Chaque fin de tâche déclenche un avis. S'y ajoutent les agents lancés depuis son téléphone, qui en déclenchent un en se terminant.
+Chaque push déclenche une construction Netlify, qui lance `build-cache.js` puis publie. Le plafond gratuit se compte en minutes de construction par mois. Trois publications par jour y tiennent.
 
-La distinction compte, sinon la règle ne corrige rien.
+**Ce que la mesure a montré.** Le reflog de la branche distante donne le chiffre réel : **seize publications en vingt-deux heures** le 9 août, et **soixante-dix sur le mois**. `CLAUDE.md` disait pourtant « jamais de push, jamais de déploiement » depuis le 1er août.
 
-### D-128, Les deux sortes se traitent différemment
+La leçon n'est pas que la règle était mauvaise, c'est qu'une règle écrite dans un document ne s'applique pas toute seule. Elle est remplacée par un plafond tenable et par une porte qui le fait respecter.
 
-**Les envois volontaires se comptent.** `node outil-dev/notify.js --envoi "la raison"` enregistre avant de partir. La commande refuse au-delà de trois dans les 24 heures et annonce l'heure à laquelle la suivante sera possible. Ce n'est pas une note dans un document, c'est une porte : la règle tient même si je l'oublie.
+### D-128, Une porte, pas une consigne
 
-**Les avis automatiques ne se comptent pas, ils s'évitent.** Une commande longue reçoit un délai explicite pour finir au premier plan. `parcours.js` et `fumee.js` dépassent les deux minutes par défaut, il leur faut 300 000 ms. C'est la seule chose qui supprime la cause.
-
-`CLAUDE.md` porte la règle en section 3 bis, avant la méthode : elle s'applique à chaque session, pas à un chantier.
-
-### D-129, Le compteur s'affiche là où Yoan regarde déjà
-
-Sous l'audit, à chaque ouverture de session, par le hook `SessionStart` :
+`outil-dev/hooks/pre-push` refuse la quatrième publication dans les 24 heures, nomme la règle, et dit à quelle heure la suivante sera possible. Il s'installe par une ligne, une seule fois par machine :
 
 ```
-  NOTIFICATIONS   0 / 3 dans les 24 h   0 en août 2026   300 restantes sur 300
+git config core.hooksPath outil-dev/hooks
 ```
 
-L'audit garde sa sortie et sa logique intactes : le hook enchaîne deux commandes plutôt que d'ajouter au premier outil une préoccupation qui n'est pas la sienne. Le `; true` final préserve le code de sortie du hook, que l'audit met à 1 dès qu'une faute existe.
+Pour passer outre quand Yoan le demande : `git push --no-verify`. La sortie du crochet le rappelle, parce qu'une porte sans serrure de secours finit par être arrachée.
 
-Le registre vit dans `outil-dev/notifications.json`, versionné : le conteneur est jetable, le dépôt non.
+**Prouvé dans les deux sens.** Le quota étant plein, un `git push` réel a été refusé, code de sortie 1, rien n'est parti. Dans un dépôt neuf sans aucune publication, la même commande répond « 1 / 3 » et sort en 0.
 
-**Le compteur dit ce qu'il sait et rien de plus.** Il ne voit pas les avis automatiques, et son texte le dit en toutes lettres. Un compteur qui prétendrait tout voir donnerait un faux calme.
+### D-129, Le compteur se mesure, il ne se déclare pas
 
-**Contrôles**, quatre, tous concluants : trois enregistrements passent, le quatrième est refusé avec l'heure de déblocage et sort en code 1, un envoi sans raison est refusé en code 2, et le hook sort en 0 même quand l'audit compte des fautes.
+`outil-dev/deploiements.js` lit le **reflog des branches distantes**, c'est-à-dire ce qui est réellement parti. Un registre tenu à la main dérive ; celui-là ne peut pas.
+
+Le reflog meurt avec le conteneur, qui est jetable. Les publications vues sont donc recopiées dans `deploiements.json`, versionné, et les deux sources sont fusionnées puis dédoublonnées à la seconde. Compter deux fois la même publication donnerait un compteur alarmiste, ce qui est aussi faux qu'un compteur rassurant.
+
+Affichage sous l'audit, à chaque ouverture de session :
+
+```
+  PUBLICATIONS   16 / 3 dans les 24 h   70 en août 2026   QUOTA PLEIN
+```
+
+L'audit garde sa sortie et sa logique intactes : le hook enchaîne deux commandes plutôt que de charger le premier outil d'une préoccupation qui n'est pas la sienne.
+
+### D-130, Ce que j'avais compris de travers
+
+J'ai d'abord lu « Notify » comme les notifications vers le téléphone de Yoan, et j'ai écrit un compteur de notifications, `outil-dev/notify.js`, avec son registre. Il partait d'un contresens complet : le sujet était l'hébergement et le coût des constructions.
+
+Les deux fichiers sont supprimés vingt minutes après leur création. C'est exactement le travers que la règle 14 de `CLAUDE.md` vise, et la cause ici est identifiable : j'ai construit avant d'avoir vérifié de quoi on parlait. Le dépôt ne contenait pas une ligne de code de notification, ce qui aurait dû suffire à me faire poser la question.
+
+Noté dans `docs/07` section 2.11.
 
 ---
 

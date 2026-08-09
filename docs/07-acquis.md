@@ -123,6 +123,18 @@ Dans un module ES, une déclaration `function f()` et une affectation `window.f 
 grep -c "^function f\|^window\.f =\|^const f =" fichier.js
 ```
 
+### 2.11 Construire avant d'avoir vérifié de quoi on parle
+
+Le 9 août, Yoan a écrit « tu recommences à envoyer sur Notify sans me demander, sauf que ça coûte cher ». J'ai lu « notifications vers son téléphone », et j'ai écrit un compteur de notifications complet, testé, documenté et poussé. Il parlait de l'hébergement Netlify et du coût des constructions déclenchées par chaque push.
+
+Vingt minutes de travail, deux fichiers créés puis supprimés, un commit et une publication pour rien. La publication est le comble : elle a consommé précisément la ressource dont il parlait.
+
+Le signe était pourtant là. Le dépôt ne contenait **pas une ligne de code de notification**. J'avais fait la recherche, j'avais vu le résultat vide, et au lieu d'en conclure que je m'étais trompé de sujet, j'ai conclu que la cause devait être ailleurs et j'ai continué.
+
+**Règle** : quand une demande porte sur quelque chose dont le dépôt ne montre aucune trace, l'absence de trace est la réponse, pas un obstacle à contourner. Une question d'une ligne coûte moins qu'un chantier entier.
+
+**Second signe, plus fiable encore** : le nombre. Yoan a dit « 300 ». Le plafond gratuit de Netlify se compte en minutes de construction par mois, et il vaut 300. Un chiffre qui colle exactement à un plafond connu du projet désigne le sujet mieux qu'un mot mal orthographié.
+
 ---
 
 ## 3. Ce qui est vérifié, ne pas revérifier

@@ -1,0 +1,14 @@
+#!/bin/sh
+# Crochet pre-push : refuse la quatrieme publication dans les 24 heures.
+#
+# Regle de Yoan, 9 aout 2026 : « maximum 3 fois par tranche de 24 h pour ne
+# pas depasser les 300 ». Chaque push declenche une construction Netlify.
+#
+# Pourquoi un crochet et pas une consigne. Le 9 aout, seize pushes sont partis
+# en vingt-deux heures alors que CLAUDE.md disait « jamais de push ». Une regle
+# qu'on peut oublier n'est pas une regle, c'est un souhait.
+#
+# Pour passer outre, quand Yoan le demande : git push --no-verify
+
+node "$(dirname "$0")/../deploiements.js" --peut-on || exit 1
+exit 0

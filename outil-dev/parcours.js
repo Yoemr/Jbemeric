@@ -287,6 +287,80 @@ const PARCOURS = [
       return true
     })()`,
   },
+  {
+    nom: 'Evenements, le mode decide de ce que le site propose',
+    page: 'track.html',
+    largeur: 1300,
+    // ── Ce que ce parcours protege ──────────────────────────────────────────
+    // JB ne loue plus le circuit a la journee. La plupart du temps il se greffe
+    // sur l'evenement d'un autre, et le pilote doit alors faire deux choses :
+    // s'inscrire chez l'organisateur pour rouler, et payer JB pour le coaching.
+    // Le site ne peut encaisser que lorsque JB est le vendeur.
+    //
+    // Afficher partout le meme « S'inscrire » promettrait une reservation que
+    // la page ne sait pas tenir. Ce parcours verifie que chaque mode produit
+    // bien l'action qui lui correspond, et qu'une date sans mode se comporte
+    // comme avant.
+    //
+    // Aucune ecriture : la reponse de Supabase est remplacee avant que la page
+    // ne charge ses scripts. Jouable partout, y compris chez Yoan.
+    prelude: `(function () {
+      var faux = [
+        { id:'a1', date_event:'2099-12-01', type:'Essai', status:'Open', prix:'195', nb_places:10, nb_inscrits:0,
+          mode:null, organisateur:null, lien_organisateur:null, circuits:{nom:'Sans mode',region:'x'} },
+        { id:'a2', date_event:'2099-12-02', type:'Essai', status:'Open', prix:'195', nb_places:10, nb_inscrits:0,
+          mode:'entier', organisateur:null, lien_organisateur:null, circuits:{nom:'JB organise',region:'x'} },
+        { id:'a3', date_event:'2099-12-03', type:'Essai', status:'Open', prix:'245', nb_places:10, nb_inscrits:0,
+          mode:'box', organisateur:'Hote Test', lien_organisateur:'https://exemple.test/i',
+          circuits:{nom:'Box partage',region:'x'} },
+        { id:'a4', date_event:'2099-12-04', type:'Essai', status:'Open', prix:'150', nb_places:10, nb_inscrits:0,
+          mode:'coaching', organisateur:'Hote Test', lien_organisateur:null,
+          circuits:{nom:'Sans adresse',region:'x'} },
+        { id:'a5', date_event:'2099-12-05', type:'Essai', status:'Open', prix:'0', nb_places:10, nb_inscrits:0,
+          mode:'moniteur', organisateur:'Ecole', lien_organisateur:null,
+          circuits:{nom:'Moniteur loue',region:'x'} }
+      ]
+      var vrai = window.fetch
+      window.fetch = function (url) {
+        if (String(url).indexOf('/events?') !== -1) {
+          return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve(faux) } })
+        }
+        return vrai.apply(this, arguments)
+      }
+    })()`,
+    action: `null`,
+    attente: 2500,
+    attendu: `(function () {
+      var cartes = document.querySelectorAll('#sr-grid .sr-card')
+      if (cartes.length !== 5) return 'attendu 5 cartes, trouve ' + cartes.length
+
+      function pied(i) { return cartes[i].querySelector('.sr-card-foot') }
+      function texte(i) { return pied(i).textContent.replace(/\\s+/g, ' ').trim() }
+
+      // Sans mode et mode « entier » : JB vend, le site encaisse.
+      for (var i = 0; i < 2; i++) {
+        if (pied(i).children.length !== 1 || !/S'inscrire/.test(texte(i)))
+          return 'carte ' + (i + 1) + ' devrait proposer la seule inscription du site, elle propose : ' + texte(i)
+      }
+
+      // Box partage avec adresse : un lien sortant, puis la reservation de JB.
+      var lien = pied(2).querySelector('a[href="https://exemple.test/i"]')
+      if (!lien) return 'le lien vers l organisateur manque sur le box partage'
+      if (lien.target !== '_blank') return 'le lien vers l organisateur ne s ouvre pas dans un nouvel onglet'
+      if (!/Hote Test/.test(lien.textContent)) return 'le lien ne nomme pas l organisateur'
+      if (!pied(2).querySelector('[data-inscr]')) return 'la reservation de JB manque sur le box partage'
+
+      // Sans adresse d organisateur : surtout pas de lien mort.
+      if (pied(3).querySelector('a')) return 'un lien a ete fabrique alors qu aucune adresse n est connue'
+      if (!pied(3).querySelector('[data-inscr]')) return 'la reservation de JB manque quand l adresse est inconnue'
+
+      // Moniteur loue : le pilote n a rien a reserver ici.
+      if (pied(4).querySelector('[data-inscr]') || pied(4).querySelector('a'))
+        return 'le mode moniteur ne doit rien proposer a reserver, il propose : ' + texte(4)
+
+      return true
+    })()`,
+  },
 ]
 
 // ── Pourquoi ce preambule existe ────────────────────────────────────────────
@@ -364,6 +438,10 @@ async function jouer(p) {
     // trois essais.
     await envoyer('Network.enable')
     await envoyer('Network.setCacheDisabled', { cacheDisabled: true })
+    // Un « prelude » s'execute avant les scripts de la page. C'est le seul
+    // moment ou l'on peut remplacer fetch pour servir des donnees choisies :
+    // apres la navigation, le calendrier a deja lance sa requete.
+    if (p.prelude) await envoyer('Page.addScriptToEvaluateOnNewDocument', { source: p.prelude })
     await envoyer('Page.navigate', { url: `${BASE}/${p.page}` })
     await dormir(2500)
 

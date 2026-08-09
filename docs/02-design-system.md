@@ -96,7 +96,7 @@ Comptage des occurrences dans `assets/css/` :
 
 > `pages.css` était décrit dans l'ancien MEMOIRE comme le pilier de l'architecture CSS, « les règles communes à plusieurs pages ». La convention documentée n'a jamais été appliquée. C'est le meilleur exemple de l'écart entre la documentation d'avril et le code réel.
 
-**Aucune suppression de fichier sans validation individuelle de Yoan.** Retirer une règle morte à l'intérieur d'un fichier ne relève pas de cette règle : `node outil-dev/nettoyer-css.js <feuille>` le fait, et ne touche qu'aux règles dont tous les sélecteurs sont morts.
+**Aucune suppression de fichier sans validation individuelle de Yoan.** Retirer une règle morte à l'intérieur d'un fichier ne relève pas de cette règle. L'audit signale les sélecteurs morts, le retrait se fait à la main.
 
 ---
 

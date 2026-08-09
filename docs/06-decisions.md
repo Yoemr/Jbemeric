@@ -6,6 +6,48 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, le moteur des événements
+
+### D-095, Le dashboard attend que les pages soient faites
+
+Décision de Yoan : « le dashboard est tellement complexe qu'il faut attendre d'avoir fini toutes les pages du site. C'est notre plus gros chantier, mais le commencer maintenant alors que tant de pages ne sont même pas faites, c'est une perte de temps. »
+
+Acté. Rien ne se fait sur `admin/` tant que les pages publiques ne sont pas terminées.
+
+### D-096, Nettoyage, quatre fichiers supprimés
+
+Sur demande. `outil-dev/nettoyer-css.js`, dont le travail était fait une fois pour toutes, `outil-dev/prototype/evenements.html`, qui avait servi à décider, et les deux migrations déjà appliquées, dont l'effet est dans la base et l'histoire dans ce journal.
+
+**Règle qui en découle** : `outil-dev/migrations/` ne garde que ce qui n'est pas encore appliqué.
+
+### D-097, Les quatre colonnes de `events` sont ajoutées
+
+`mode`, `organisateur`, `lien_organisateur`, `cout`. Toutes nullables : rien de ce qui existe ne casse, et JB remplit au fur et à mesure.
+
+`mode` porte une contrainte : `box`, `coaching`, `greffe`, `entier`, `moniteur`. Sans elle, la colonne finirait par contenir « boxe », « Box partagé » et « BOX » pour la même chose. **Vérifié** : un mode connu est accepté, un mode inventé est refusé.
+
+Chaque colonne porte un commentaire en base, pour que le sens ne dépende pas de ce journal.
+
+### D-098, Le mode décide de ce que le site propose
+
+C'est le cœur du basculement, et c'est désormais du code.
+
+JB ne loue plus le circuit à la journée. La plupart du temps il se greffe sur l'événement d'un autre, et le pilote doit alors faire deux choses : s'inscrire chez l'organisateur pour rouler, et payer JB pour le coaching. **Le site ne peut encaisser que lorsque JB est le vendeur.**
+
+| Mode | Ce que la carte propose |
+|---|---|
+| vide, ou `entier` | « S'inscrire », le site encaisse |
+| `box`, `coaching`, `greffe` | un lien vers l'organisateur, puis « Réserver JB » |
+| `moniteur` | rien à réserver, une phrase d'information |
+
+**Deux garde-fous dans le code.** Sans adresse d'organisateur, aucun lien n'est fabriqué : une phrase dit quoi faire, plutôt qu'un lien mort. Et une date sans mode se comporte exactement comme avant, donc aucune des onze dates existantes ne change tant que JB n'a rien rempli.
+
+**Un parcours protège l'ensemble**, en remplaçant la réponse de Supabase avant que la page ne charge ses scripts. Aucune écriture, jouable partout. Deux contrôles négatifs : remettre le même bouton partout, et fabriquer un lien mort sans adresse. Les deux font échouer le parcours en nommant le défaut.
+
+`parcours.js` gagne un champ `prelude` pour ça, seul moment où l'on peut remplacer `fetch` avant que le calendrier ne lance sa requête.
+
+---
+
 ## 9 août 2026, recadrage
 
 ### D-093, La règle sur les circuits est retirée

@@ -222,7 +222,8 @@
   try {
     // Charger events visibles
     var r = await fetch(SB_URL + 'events?visible_site=eq.true&date_event=gte.' + aujourdhui
-      + '&order=date_event.asc&select=id,date_event,type,status,prix,nb_places,nb_inscrits,circuits(nom,region)',
+      + '&order=date_event.asc&select=id,date_event,type,status,prix,nb_places,nb_inscrits,'
+      + 'mode,organisateur,lien_organisateur,circuits(nom,region)',
       { headers: SB_H })
     if (!r.ok) throw new Error('HTTP ' + r.status)
     var events = await r.json()
@@ -283,6 +284,57 @@
         .replace(/>/g, '&gt;')
     }
 
+    // ── Ce que le site peut faire sur une date depend de qui vend ───────────
+    //
+    // JB ne loue plus le circuit a la journee, sauf exception. La plupart du
+    // temps il se greffe sur l'evenement d'un autre : le pilote s'inscrit chez
+    // l'organisateur pour rouler, et paie JB pour le coaching. Deux
+    // inscriptions, deux interlocuteurs.
+    //
+    // Le site ne peut donc encaisser que lorsque JB est le vendeur. Sur les
+    // autres modes il oriente. Afficher partout le meme « S'inscrire »
+    // reviendrait a promettre une reservation que la page ne sait pas tenir.
+    //
+    // Une date sans mode se comporte comme avant, JB vendeur. C'est le cas de
+    // toutes les dates existantes : rien ne change tant que JB n'a pas rempli
+    // ce champ, et chaque date qu'il renseigne se met a jour toute seule.
+    //
+    // Voir docs/chantiers/2026-08-07-page-evenements.md section 2.
+    var MODES_TIERS = { box: 1, coaching: 1, greffe: 1 }
+
+    function boutonInscrire(ev, circuit, prix, libelle) {
+      return '<button class="sr-btn-inscr" data-inscr' +
+        ' data-type="'    + escAttr(ev.type || 'Stage') + '"' +
+        ' data-prix="'    + escAttr(prix)               + '"' +
+        ' data-circuit="' + escAttr(circuit)            + '"' +
+        ' data-ev="'      + escAttr(ev.id)              + '">' + libelle + '</button>'
+    }
+
+    function actionsPour(ev, status, circuit, prix) {
+      if (status !== 'Open') {
+        return '<button class="sr-btn-inscr" style="opacity:.4;cursor:default" disabled>Bientôt disponible</button>'
+      }
+
+      // Une autre ecole paie JB a la journee. Le pilote n'a rien a reserver ici.
+      if (ev.mode === 'moniteur') {
+        return '<div class="sr-card-info">JB encadre pour une autre école ce jour-là.</div>'
+      }
+
+      // Evenement d'un tiers : deux gestes, dans l'ordre ou le pilote les fait.
+      if (MODES_TIERS[ev.mode]) {
+        var chez = ev.organisateur ? 'chez ' + escAttr(ev.organisateur) : 'chez l\'organisateur'
+        var lien = ev.lien_organisateur
+          ? '<a class="sr-btn-tiers" href="' + escAttr(ev.lien_organisateur) + '"'
+            + ' target="_blank" rel="noopener">S\'inscrire ' + chez + ' →</a>'
+          // Sans adresse, on ne fabrique pas un lien mort : on dit quoi faire.
+          : '<div class="sr-card-info">Inscription à la journée ' + chez + '.</div>'
+        return lien + boutonInscrire(ev, circuit, prix, 'Réserver JB →')
+      }
+
+      // JB organise, le site encaisse.
+      return boutonInscrire(ev, circuit, prix, 'S\'inscrire →')
+    }
+
     var cards = events.map(function(ev) {
       var d = new Date(ev.date_event)
       var dayStr  = DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear()
@@ -312,16 +364,7 @@
             '<span id="left-' + ev.id + '">' + left + ' place' + (left !== 1 ? 's' : '') + ' restante' + (left !== 1 ? 's' : '') + '</span>' +
           '</div>' +
         '</div>' +
-        '<div class="sr-card-foot">' +
-          (status === 'Open'
-            ? '<button class="sr-btn-inscr" data-inscr' +
-                ' data-type="'    + escAttr(ev.type || 'Stage') + '"' +
-                ' data-prix="'    + escAttr(prix)               + '"' +
-                ' data-circuit="' + escAttr(circuit)            + '"' +
-                ' data-ev="'      + escAttr(ev.id)              + '">S\'inscrire →</button>'
-            : '<button class="sr-btn-inscr" style="opacity:.4;cursor:default" disabled>Bientôt disponible</button>'
-          ) +
-        '</div>' +
+        '<div class="sr-card-foot">' + actionsPour(ev, status, circuit, prix) + '</div>' +
       '</div>'
     })
 

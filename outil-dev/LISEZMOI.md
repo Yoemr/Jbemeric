@@ -27,8 +27,7 @@ Les deux derniers ont besoin du serveur local : `node outil-dev/dev-server.js`.
 |---|---|
 | `dev-server.js` | serveur local, lit `_redirects`, port 3000 |
 | `build-cache.js` | recuit le contenu Supabase dans les pages, lancé à la publication |
-| `nettoyer-css.js` | retire les règles CSS entièrement mortes, sans `--ecrire` il ne touche à rien |
-| `audit/vocabulaire.js` | le critère « ce sélecteur est-il vivant », partagé par l'audit et le nettoyeur |
+| `audit/vocabulaire.js` | le critère « ce sélecteur est-il vivant », employé par la règle des feuilles de style |
 
 ---
 
@@ -42,18 +41,14 @@ Les deux derniers ont besoin du serveur local : `node outil-dev/dev-server.js`.
 
 ## Le prototype
 
-`outil-dev/prototype/evenements.html` s'ouvre dans un navigateur, sans serveur ni compilation.
-
-Il montre les dates réelles de la table `events`, et surtout ce qui manque pour les suivre : mode d'engagement, organisateur hôte, lien vers la source, coût pour JB. Ces quatre informations s'affichent en rouge parce que la base ne sait pas encore les stocker.
-
-Il n'écrit rien. Aucun bouton, aucun formulaire. C'est une maquette pour décider, pas un outil.
-
-Les données sont figées au 8 août 2026 et se rafraîchissent toutes seules depuis Supabase quand le poste y a accès. La page dit laquelle des deux situations s'applique.
-
-## Le second prototype
-
 `outil-dev/prototype/evenements-page.html` est la page Événements refaite de zéro, décision du 9 août 2026.
 
-Elle s'ouvre dans un navigateur, elle n'est branchée sur rien, et elle ne vit pas dans le site. Six encarts jaunes signalent les choix que j'ai faits, pour que Yoan les défasse un par un plutôt que d'avoir à tout reprendre.
+Elle s'ouvre dans un navigateur, elle n'est branchée sur rien, et elle ne vit pas dans le site. Des encarts jaunes signalent les choix faits, pour que Yoan les défasse un par un plutôt que de tout reprendre.
 
-Les trois dates affichées sont réelles. Ce qui les entoure, l'organisateur et le mode d'engagement, est écrit à la main : la base ne stocke pas encore ces colonnes.
+**Elle se supprime dès qu'il a tranché.** Un prototype qui survit devient une deuxième vérité, et le projet en a déjà payé le prix.
+
+---
+
+## Migrations
+
+`outil-dev/migrations/` ne garde que ce qui n'est pas encore appliqué. Une migration appliquée n'a plus rien à faire ici : son effet est dans la base, et son histoire dans `docs/06-decisions.md`.

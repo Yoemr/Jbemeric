@@ -651,3 +651,35 @@ Le formulaire de contact perdait tous les messages, D-082. Corrigé sans créer 
 **Ce qui reste ouvert, et qui revient à Yoan** : aucune page de l'Académie ne propose de joindre JB dans son corps, D-083. Le seul appel à l'action visible en haut de toutes les pages est le bouton or du menu, qui mène à la création d'un compte.
 
 Une table `messages` est écrite et non appliquée, D-084. Elle attend une section Messages dans le dashboard, sans laquelle les messages arriveraient là où personne ne regarde.
+
+---
+
+## 9. Mise à jour du 9 août 2026, karting et automobile
+
+### 9.1 La confusion, et son étendue exacte
+
+Voir D-090. **Rien n'est corrigé, la vérité manque.**
+
+Dans la base, cinq événements placent une voiture au Circuit de Brignoles :
+
+| Date | Type | Visible |
+|---|---|---|
+| 17 avril 2026 | Caterham · Voiture perso | oui |
+| 13 mai 2026 | Caterham · Voiture perso | oui |
+| 19 juin 2026 | Caterham · Voiture perso | oui |
+| **16 octobre 2026** | Caterham · Voiture perso | **oui, à venir** |
+| **12 décembre 2026** | Caterham · Fin de saison | **oui, à venir** |
+
+Les deux dernières sont deux des trois seules dates que le public voit.
+
+Dans les fichiers, sept occurrences : quatre lignes écrites en dur dans `paddock.html`, trois descriptions pour Google dans `track.html`.
+
+`Circuit du Luc` existe dans la table `circuits` et **ne porte aucun événement**.
+
+### 9.2 La question qui débloque tout
+
+Où ont réellement lieu les journées Caterham ? Une réponse corrige cinq lignes de base et sept occurrences de fichier.
+
+### 9.3 Ce qui a été mis en place
+
+`outil-dev/audit/regles/circuits.js` signale désormais tout véhicule nommé attaché à une piste de karting. Sept fautes au 9 août, toutes vraies, contrôle négatif fait.

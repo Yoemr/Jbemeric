@@ -139,7 +139,7 @@
 
 <div class="bandeau"><div class="dedans">
   <strong>Prototype, feuille blanche.</strong>
-  Rien n'est en ligne, rien n'est branché sur la base. Les trois dates sont réelles.
+  Rien n'est en ligne, rien n'est branché sur la base. Les deux dates montrées sont réelles.
   Les encarts jaunes signalent mes choix, pour que tu puisses les défaire.
 </div></div>
 
@@ -153,9 +153,9 @@
   </p>
 
   <div class="compteur">
-    <span><strong>3</strong> dates ouvertes</span>
-    <span><strong>1</strong> en préparation</span>
-    <span><strong>3</strong> circuits</span>
+    <span><strong>2</strong> dates montrées</span>
+    <span><strong>5</strong> dates en doute</span>
+    <span><strong>2</strong> circuits</span>
   </div>
 
   <div class="note-proto">
@@ -178,21 +178,20 @@
   <div class="dates">
 
     <!-- Cas 1 : JB organise, le site encaisse -->
-    <article class="date" id="date-16-octobre">
+    <article class="date" id="date-15-novembre">
       <div class="date-tete">
-        <div class="date-quand">vendredi 16 octobre 2026</div>
-        <div class="date-ou">Circuit de Brignoles</div>
+        <div class="date-quand">dimanche 15 novembre 2026</div>
+        <div class="date-ou">Circuit du Grand Sambuc</div>
         <div class="date-etat etat-ouvert">Inscriptions ouvertes</div>
       </div>
       <div class="date-corps">
         <div class="date-quoi">
           <h3>Ce qui se passe ce jour-là</h3>
           <p>
-            Journée organisée par JB. Vous roulez avec votre propre voiture, il monte à côté de vous
-            et vous suivez ensemble sur la journée entière. Groupes de dix pilotes au maximum, pour
-            qu'il ait le temps de passer sur chacun.
+            Journée organisée par JB. Il vient avec la 206 S16 préparée. Vous roulez dedans,
+            ou avec votre propre voiture, et il monte à côté de vous sur la journée entière.
           </p>
-          <p class="avec-qui">Dans quelle voiture : <strong>la vôtre.</strong></p>
+          <p class="avec-qui">Dans quelle voiture : <strong>la 206 S16, ou la vôtre.</strong></p>
         </div>
         <div class="date-agir">
           <div class="prix">195 €<br><small>par pilote, la journée</small></div>
@@ -202,25 +201,25 @@
       </div>
     </article>
 
-    <!-- Cas 2 : evenement d'un tiers, JB y est -->
-    <article class="date" id="date-15-novembre">
+    <!-- Cas 2 : evenement d'un tiers, JB loue un box -->
+    <article class="date" id="date-29-aout">
       <div class="date-tete">
-        <div class="date-quand">dimanche 15 novembre 2026</div>
-        <div class="date-ou">Circuit du Grand Sambuc</div>
+        <div class="date-quand">samedi 29 août 2026</div>
+        <div class="date-ou">Circuit de Lédenon</div>
         <div class="date-etat etat-chez">JB y sera</div>
       </div>
       <div class="date-corps">
         <div class="date-quoi">
           <h3>Ce qui se passe ce jour-là</h3>
           <p>
-            La journée est organisée par le circuit. JB y vient avec la 206 S16 préparée et prend
-            les pilotes en coaching à la séance. Vous pouvez rouler dans la 206 ou dans votre voiture,
-            c'est la même méthode.
+            La journée est organisée par le circuit. JB y loue un box et prend plusieurs pilotes
+            dans la même journée. Vous vous inscrivez auprès de l'organisateur pour rouler, et
+            vous réservez JB pour qu'il vous suive.
           </p>
-          <p class="avec-qui">Dans quelle voiture : <strong>la 206 S16, ou la vôtre.</strong></p>
+          <p class="avec-qui">Dans quelle voiture : <strong>la vôtre.</strong></p>
         </div>
         <div class="date-agir">
-          <div class="prix">195 €<br><small>le coaching, la journée</small></div>
+          <div class="prix">245 €<br><small>le coaching, la journée</small></div>
           <a class="btn btn-creux" href="#">S'inscrire chez l'organisateur</a>
           <a class="btn btn-plein" href="#">Réserver JB pour cette date</a>
           <a class="btn btn-mou" href="#">Voir le détail de la journée</a>
@@ -228,26 +227,31 @@
       </div>
     </article>
 
-    <!-- Cas 3 : date en preparation -->
-    <article class="date" id="date-12-decembre">
+    <!-- Cas 3 : ce qu'on ne peut pas afficher tant que la donnee est douteuse -->
+    <article class="date" id="date-en-attente" style="border-style:dashed">
       <div class="date-tete">
-        <div class="date-quand">samedi 12 décembre 2026</div>
-        <div class="date-ou">Circuit de Brignoles</div>
-        <div class="date-etat etat-ouvert">Inscriptions ouvertes</div>
+        <div class="date-quand">16 octobre et 12 décembre</div>
+        <div class="date-ou">Circuit à confirmer</div>
+        <div class="date-etat etat-prepa">Retirées de ce dessin</div>
       </div>
       <div class="date-corps">
         <div class="date-quoi">
-          <h3>Ce qui se passe ce jour-là</h3>
+          <h3>Pourquoi ces deux dates ne sont pas montrées</h3>
           <p>
-            La journée de fin de saison. Même format que les autres, avec un debrief collectif à la
-            fin de la journée sur ce que chacun a gagné dans l'année.
+            La base les place au Circuit de Brignoles, avec une Caterham et une voiture personnelle.
+            Or Brignoles est un circuit de karting, et le site le range lui-même parmi les cinq
+            partenaires karting, aux côtés de Trets, Hyères, La Penne et Cuges.
           </p>
-          <p class="avec-qui">Dans quelle voiture : <strong>la vôtre.</strong></p>
+          <p>
+            Je ne sais pas où ces journées ont réellement lieu, et je préfère ne rien afficher
+            plutôt que d'envoyer un pilote au mauvais endroit.
+          </p>
         </div>
         <div class="date-agir">
-          <div class="prix">195 €<br><small>par pilote, la journée</small></div>
-          <a class="btn btn-plein" href="#">S'inscrire</a>
-          <a class="btn btn-mou" href="#">Voir le détail de la journée</a>
+          <div class="prix" style="color:var(--gris2)">?</div>
+          <p style="font-size:13px;color:var(--gris);margin:0">
+            Cinq dates de la base sont dans ce cas. Une réponse de ton père les débloque toutes.
+          </p>
         </div>
       </div>
     </article>
@@ -255,14 +259,15 @@
   </div>
 
   <div class="note-proto">
+    <strong>Choix numéro 2.</strong>  <div class="note-proto">
     <strong>Choix numéro 2.</strong> Une date porte son adresse à elle, par exemple
-    <code>evenements.html#date-16-octobre</code>. Chaque date peut donc être partagée, et plus tard
+    <code>evenements.html#date-15-novembre</code>. Chaque date peut donc être partagée, et plus tard
     devenir une vraie page si ça vaut le coup pour le référencement. C'est la contrainte de la
     fiche, section 4.1, respectée sans décider tout de suite entre onglets et pages filles.
   </div>
 
   <div class="note-proto">
-    <strong>Choix numéro 3.</strong> Le bouton change selon qui vend. Sur le 15 novembre il y en a
+    <strong>Choix numéro 3.</strong> Le bouton change selon qui vend. Sur le 29 août il y en a
     deux, parce que le pilote doit faire deux choses : s'inscrire à la journée chez l'organisateur,
     et réserver JB. C'est la difficulté que tu appelais la marge, et c'est en réalité une question
     de qui vend. La page ne la cache pas, elle l'explique.

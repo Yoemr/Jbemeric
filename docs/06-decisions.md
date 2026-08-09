@@ -6,6 +6,49 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 août 2026, karting et automobile
+
+### D-090, Cinq événements placent une voiture sur une piste de karting
+
+Correction de Yoan : « Fais attention de pas confondre circuit de karting (Brignoles) avec circuit de voiture, le Luc par exemple. Pas la même chose. »
+
+Il a raison, et le défaut ne venait pas seulement de mon prototype.
+
+**Dans la base** : cinq événements de la table `events` placent une Caterham ou une voiture personnelle au Circuit de Brignoles. Quatre « Caterham · Voiture perso » et un « Caterham · Fin de saison ». **Deux d'entre eux sont parmi les trois seules dates que le public voit aujourd'hui**, le 16 octobre et le 12 décembre.
+
+**Dans les fichiers**, sept occurrences relevées par la nouvelle règle :
+
+| Fichier | Ce qu'on y lit |
+|---|---|
+| `paddock.html`, 4 fois | « Roulage circuit · Caterham & voiture perso, Circuit de Brignoles » écrit en dur |
+| `track.html`, 3 fois | Brignoles cité parmi les circuits automobiles dans les trois descriptions pour Google |
+
+**Ce que le site dit par ailleurs** : Brignoles figure parmi les cinq partenaires karting sur `index.html`, `academie/karting-adulte.html`, `academie/karting-enfant.html` et `coaching.html`, aux côtés de Trets, Hyères, La Penne et Cuges.
+
+**Ce que les sources techniques disent** : `site-data.js` et la table `circuits` déclarent toutes les deux `kart + auto` pour Brignoles. Elles sont d'accord entre elles et en désaccord avec Yoan.
+
+**Rien n'est corrigé.** Je ne sais pas où ces cinq journées ont réellement lieu. Le Luc est l'exemple donné par Yoan, pas nécessairement la réponse. Une phrase de JB débloque les cinq lignes de base et les sept occurrences de fichier d'un coup.
+
+### D-091, Le prototype de la page Événements est corrigé
+
+Mes deux premières cartes décrivaient une voiture personnelle au Circuit de Brignoles. Remplacées par les deux seules dates dont l'accord entre le véhicule et la piste ne fait aucun doute : le 15 novembre au Grand Sambuc avec la 206, et le 29 août à Lédenon en box partagé.
+
+Une troisième carte, en pointillés, dit pourquoi les dates de Brignoles ne sont pas montrées. **Montrer le trou plutôt que le combler avec une supposition.**
+
+### D-092, Une règle d'audit, resserrée après un premier essai raté
+
+`outil-dev/audit/regles/circuits.js`.
+
+**Premier essai** : tout mot de voiture près d'une piste de karting, et l'inverse. Vingt-cinq fautes, presque toutes fausses. Une page qui présente l'offre entière cite forcément les deux mondes : l'accueil nomme le Grand Sambuc à trois lignes du mot karting sans rien confondre.
+
+**Ce qui a été compris** : le défaut n'est pas que les deux mots se croisent, il est qu'un **véhicule nommé** soit attaché à une piste de karting. C'est le seul cas qui envoie quelqu'un au mauvais endroit avec sa voiture.
+
+La règle ne cherche donc plus que ça, dans une fenêtre de soixante-dix caractères. Le sens inverse est abandonné : une piste automobile citée sur une page de karting est presque toujours le palmarès ou le chemin vers la compétition.
+
+Sept fautes, toutes vraies. **Contrôle négatif** : une confusion introduite volontairement sur `academie.html` fait monter le compte à huit, et le retrait la fait redescendre à sept.
+
+---
+
 ## 9 août 2026, la page Événements repart de zéro
 
 ### D-086, Feuille blanche plutôt que correction

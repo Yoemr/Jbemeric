@@ -6,13 +6,23 @@
 // maximum 3 fois par tranche de 24 h pour ne pas depasser les 300. M'afficher
 // un compteur mensuel pourrait etre cool. »
 //
-// Chaque push declenche une construction Netlify, qui lance build-cache.js
-// puis publie. Le plafond gratuit se compte en minutes de construction par
-// mois. Trois publications par jour tiennent dans le budget ; seize, non.
+// Yoan paie le PUSH, pas le commit. Un commit reste sur la machine et ne
+// declenche rien. Un push envoie tout ce qui s'est accumule et declenche une
+// construction Netlify, quel que soit le nombre de commits qu'il porte.
 //
 // Le 9 aout 2026, seize pushes sont partis en vingt-deux heures. Une regle
 // ecrite dans un document ne m'a pas arrete. Ce fichier est donc une porte,
-// pas une note : le crochet pre-push refuse la quatrieme.
+// pas une note : le crochet pre-push refuse au-dela.
+//
+// ── Une hypothese prudente, non verifiee ─────────────────────────────────────
+// Ce compteur compte TOUT push comme une construction, y compris sur une
+// branche de travail. C'est certain pour la branche de production. Pour une
+// branche, ca depend des reglages Netlify « branch deploys » et « deploy
+// previews » : s'ils sont desactives, ces pushes ne coutent rien.
+//
+// Personne n'a pu le verifier depuis ce poste, qui n'a pas acces au tableau de
+// bord Netlify. Le compteur se trompe donc du bon cote : il fait economiser
+// plus que necessaire plutot que de laisser filer le budget.
 //
 // ── Ce qu'il compte, et d'ou il le tient ─────────────────────────────────────
 // Du reflog de la branche distante, c'est-a-dire de ce qui est reellement
@@ -196,8 +206,9 @@ function main() {
     let ligne = `  PUBLICATIONS   ${c.duJour} / ${PAR_JOUR} aujourd'hui`
               + `   ${c.duMois} / ${PAR_MOIS} en ${nomMois}`
     if (enAttente > 0) {
-      ligne += `\n  EN ATTENTE     ${enAttente} commit${enAttente > 1 ? 's' : ''} en local`
-             + `, qui partiront ensemble en une seule publication`
+      ligne += `\n  EN ATTENTE     ${enAttente} commit${enAttente > 1 ? 's' : ''} en local, `
+             + (enAttente > 1 ? `qui partiront ensemble en une seule publication`
+                              : `qui partira a la prochaine publication`)
     }
     if (c.duJour >= PAR_JOUR) ligne += `\n  PORTE FERMEE   jusqu'a demain matin`
     console.log(ligne)

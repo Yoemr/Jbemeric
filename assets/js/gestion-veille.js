@@ -99,6 +99,25 @@
         },
       },
       { cle: 'date_event', titre: 'Date' },
+      {
+        titre: 'Horaires',
+        // Ce que le titre ne dit pas : une journée de 8 h 30 à 18 h n'est pas
+        // un baptême de 14 h à 18 h, et JB n'y va pas pour les mêmes raisons.
+        // La source donne l'instant, l'heure affichée est celle de Gemenos.
+        rendu: function (l) {
+          if (!l.debut) return '<span class="g-fade">?</span>'
+          var h = function (t) {
+            return new Date(t).toLocaleTimeString('fr-FR',
+              { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' })
+          }
+          var texte = l.fin ? h(l.debut) + ' à ' + h(l.fin) : h(l.debut)
+          // Une journée entière se repère d'un coup d'œil.
+          var heures = l.fin ? (new Date(l.fin) - new Date(l.debut)) / 3600000 : 0
+          return heures >= 7
+            ? '<strong>' + JBE.ech(texte) + '</strong>'
+            : JBE.ech(texte)
+        },
+      },
       { cle: 'titre', titre: 'Ce que le circuit annonce' },
       {
         titre: 'Où',

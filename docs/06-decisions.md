@@ -25,6 +25,22 @@ Le dernier point est le plus important. Le circuit prend ses réservations en de
 
 Ce que le circuit ne peut de toute façon pas dire : ce que JB loue. « Roulage auto » est l'offre du circuit ; box, circuit entier ou greffe est ce que JB négocie. La colonne `mode` existe déjà et se remplit à la main.
 
+### D-143 bis, Le prix n'existe nulle part sur le site du circuit
+
+Après le constat sur les pages d'événement, j'ai ouvert le reste du site : `trackday-circuit`, `les-activites-autos`, `les-coffrets-sprint-racing`. **Aucun montant nulle part.**
+
+**Contrôle de l'instrument** avant de conclure, règle 5 de `CLAUDE.md` : la même expression, passée sur « Tarif roulage 245 € la journée, coaching 80€, pass 45 euros », rend bien les trois montants. Le zéro est donc un vrai zéro.
+
+Conséquence à dire clairement : aucun script ne trouvera ce prix, puisqu'il n'est pas publié. Et une IA ne le trouverait pas davantage, elle l'inventerait. C'est exactement la faute du 8 août avec le numéro de téléphone, en pire, parce qu'un prix inventé se retrouverait dans un devis. Le prix vient de JB, qui le négocie de toute façon.
+
+### D-143 ter, Les horaires, eux, sont là et ne coûtent rien
+
+Ils étaient dans le JSON déjà lu, je ne les prenais pas. Ils disent ce que le titre ne dit pas : le 10 août est une journée de 8 h 30 à 18 h, le 11 août une demi-journée de 14 h à 18 h. JB ne se déplace pas pour les mêmes raisons.
+
+Stockés en `timestamptz` et rendus en heure de Gemenos. Une journée de sept heures ou plus ressort en gras dans la liste.
+
+**Contrôles négatifs**, deux, concluants : rendre l'heure en UTC donne « 06:30 à 16:00 » et le parcours le nomme ; faire ressortir toutes les lignes fait échouer sur la demi-journée.
+
 ### D-144, L'horizon est un réglage de JB, et l'élargir ne coûte rien
 
 Mot de Yoan : « mon père n'a pas vraiment besoin d'une vue sur l'année entière. En général 3 mois c'est suffisant mais je veux qu'il ait la liberté de choisir. »

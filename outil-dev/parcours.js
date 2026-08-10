@@ -148,9 +148,11 @@ const PRELUDE_GESTION = `(function () {
   // melange qui decide quels boutons chaque ligne doit porter.
   var VEILLE = [
     { id:'v1', date_event:'2099-08-18', titre:'Roulage autos',  statut:'nouveau', event_id:null,
+      debut:'2099-08-18T06:30:00.000Z', fin:'2099-08-18T16:00:00.000Z',
       photo:'https://static.wixstatic.com/media/photo-1~mv2.jpg', lien:'https://exemple.test/event-details/roulage-auto-1',
       veille_sources:{ nom:'Circuit du Var, agenda' } },
     { id:'v2', date_event:'2099-08-19', titre:'Roulage motos',  statut:'ecarte',  event_id:null,
+      debut:'2099-08-19T12:00:00.000Z', fin:'2099-08-19T16:00:00.000Z',
       photo:null, lien:null,
       veille_sources:{ nom:'Circuit du Var, agenda' } },
     { id:'v3', date_event:'2099-08-20', titre:'Stage monoplace', statut:'retenu', event_id:'e9',
@@ -662,6 +664,17 @@ const PARCOURS = [
       if (lien.getAttribute('href').indexOf('/event-details/roulage-auto-1') === -1)
         return 'le lien ne mene pas a la date : ' + lien.getAttribute('href')
       if (lien.target !== '_blank') return 'le lien de verification quitte la fenetre de gestion'
+
+      // Les horaires, en heure de Gemenos. Une journee entiere ressort en gras,
+      // une demi-journee non : c'est ce qui distingue un roulage d'un bapteme.
+      var cellules = lignes[0].querySelectorAll('td')
+      var horaire = cellules[2].textContent.trim()
+      if (horaire.indexOf('08:30') === -1 || horaire.indexOf('18:00') === -1)
+        return 'les horaires ne sont pas rendus en heure locale : ' + horaire
+      if (!cellules[2].querySelector('strong'))
+        return 'une journee entiere ne ressort pas'
+      if (lignes[1].querySelectorAll('td')[2].querySelector('strong'))
+        return 'une demi-journee ressort comme une journee entiere'
       return true
     })()`,
   },

@@ -145,6 +145,20 @@ Conséquence si le classement se trompe : la date disparaît dès que JB coche �
 
 Corollaire : le libellé d'un filtre doit dire ce qui change pour l'utilisateur, pas reprendre le vocabulaire de la source. « Roulage libre » était le mot du circuit, exact et inutile. « Trackday, voiture perso » et « Stage, voiture du circuit » disent qui fournit la voiture, qui est la seule chose que JB a besoin de savoir.
 
+### 2.13 Chercher la norme avant d'écrire un parseur
+
+Le 10 août, j'ai écrit un parseur propre à Wix puis un autre propre à Lédenon. Les pages d'événement du premier publiaient du `schema.org/Event`, la norme que Google impose à tout site qui veut apparaître dans ses résultats d'événements. Tout ce que j'extrayais à coups d'expressions régulières était déjà là, en JSON structuré.
+
+**Règle** : avant d'écrire une lecture propre à un site, chercher ce qu'il publie de normalisé. Trois marqueurs à tester, une requête suffit : `application/ld+json`, `text/calendar` ou un `.ics`, un flux `rss+xml`. La lecture normalisée sert ensuite pour tous les sites, et un site de plus ne coûte rien.
+
+**Et l'inverse est vrai** : la même mesure a montré que l'agenda du Var et tout le site de Lédenon ne publient rien de standard. Un cas particulier reste donc nécessaire, en secours. Ce qu'il faut refuser, ce n'est pas le cas particulier, c'est qu'il soit le chemin principal.
+
+### 2.14 Dans une expression régulière Postgres, le premier quantificateur commande
+
+`<script[^>]*application/ld\+json[^>]*>(.*?)</script>` capturait jusqu'à la fin du document. En ARE, **si le premier quantificateur est gourmand, tout le motif le devient**, et le `.*?` qui suit cesse d'être paresseux.
+
+**Règle** : pour extraire un bloc délimité, découper avec `string_to_array` et `position` plutôt que de confier les deux bornes à une seule expression. C'est plus long à écrire et impossible à se faire piéger.
+
 ---
 
 ## 3. Ce qui est vérifié, ne pas revérifier

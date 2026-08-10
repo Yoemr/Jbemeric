@@ -6,6 +6,59 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 août 2026, la norme d'abord, le cas particulier ensuite
+
+### D-174, Le reproche était fondé
+
+Mot de Yoan : « là on est typiquement dans l'exemple où on commence à gérer du cas par cas, ça ne me plaît pas comme approche, car il y a toujours des exceptions qui échappent aux règles. On réfléchit scalable et lois universelles. »
+
+J'avais écrit un parseur propre à Wix, puis un second propre à Lédenon. Deux sites, deux codes, et la promesse implicite qu'il en faudrait un par circuit.
+
+**La mesure a montré que je passais à côté d'une norme.** Les pages d'événement du Circuit du Var publient du `schema.org/Event`, celui que Google impose à tout site qui veut apparaître dans ses résultats d'événements :
+
+```json
+{"@type":"Event","name":"Roulage Auto",
+ "startDate":"2026-09-13T08:30:00+02:00","endDate":"...",
+ "location":{"name":"Le Luc","address":"Rte des Mayons, 83340 Le Luc"},
+ "image":{"url":"..."}}
+```
+
+Tout ce que j'extrayais à coups d'expressions régulières était là, dans un format standard, lisible sans une seule ligne propre au site.
+
+### D-175, La règle est devenue : la norme d'abord, le spécifique en secours
+
+`veille_lire` essaie `schema.org` sur toute source et toute page. Le parseur déclaré n'est consulté que si la norme n'a rien rendu, et il est devenu facultatif.
+
+**Conséquence, et c'est elle qui compte** : un circuit qui publie du `schema.org` rejoint la veille avec **une ligne dans `veille_sources` et zéro ligne de code**.
+
+**Vérifié** : la page d'événement du Circuit du Var se lit correctement avec `parseur = null`, et avec un parseur inexistant. La norme suffit dans les deux cas.
+
+### D-176, Ce qui reste irréductible, et il faut le dire
+
+La mesure dit aussi l'inverse. Les pages d'événement du Var portent la norme, **son agenda non**, et **Lédenon n'en publie aucune**.
+
+Un site qui ne publie rien de standard ne peut pas être lu par une loi universelle : il n'y a rien à lire. Le cas particulier ne disparaît donc pas, il est relégué au rang de secours, ce qui est la bonne place. Prétendre le contraire serait une promesse que le premier vieux site en ASP viendrait démentir.
+
+### D-177, Les exceptions deviennent des lignes, pas du code
+
+Second volet du reproche : « il y a toujours des exceptions qui échappent aux règles ». C'est vrai, et c'est une raison de rendre les règles modifiables sans migration, pas de renoncer à en avoir.
+
+Les mots-clés de classement vivaient dans deux fonctions. Chaque circuit employant un mot nouveau demandait une migration. Ils vivent maintenant dans la table `veille_regles` : un axe, un motif, une valeur, une priorité, et de quoi dire si la règle lit le titre ou le résumé.
+
+L'ordre est conservé, et il est explicite dans les priorités : le titre décide, le résumé n'éclaire qu'un titre muet.
+
+**Contrôle négatif** concluant, à la deuxième tentative : « Journée club GT » et « Open pista » rendent « à juger », une ligne ajoutée les fait basculer en « roulage », son retrait les ramène à « à juger ». Aucune migration.
+
+Le premier essai avait choisi « Session libre GT », qui contenait déjà le mot « libre » et matchait donc une règle existante. Un contrôle qui ne change rien ne prouve rien, troisième fois que je m'y reprends.
+
+### D-178, Un piège de Postgres payé comptant
+
+`<script[^>]*application/ld\+json[^>]*>(.*?)</script>` ne marchait pas : le bloc capturé allait jusqu'à la fin du document.
+
+Dans les expressions régulières de Postgres, **si le premier quantificateur est gourmand, tout le motif le devient**. Mon `[^>]*` initial annulait le `.*?` qui suit. Remplacé par un découpage, qui ne dépend d'aucune subtilité.
+
+---
+
 ## 10 août 2026, un deuxième circuit, et il publie ses prix
 
 ### D-170, Lédenon entre dans la veille

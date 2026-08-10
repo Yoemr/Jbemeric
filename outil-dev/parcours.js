@@ -737,28 +737,76 @@ const PARCOURS = [
     })()`,
   },
   {
-    nom: 'veille, retenir envoie le bon appel et ne publie rien',
+    nom: 'veille, retenir ouvre le formulaire prerempli',
     page: 'admin/gestion.html',
     largeur: 1400,
-    // Retenir cree un evenement en brouillon. Le corps envoye est tout ce que
-    // ce parcours peut voir, et c'est ce qui compte : la base decide du reste.
+    // Retenir ne fabrique plus un brouillon nu : il ouvre la creation de
+    // l'evenement, avec ce que la veille sait deja rappele en tete.
     prelude: PRELUDE_GESTION,
     action: `(function () {
       JBE.demarrer('jeton-d-essai')
       setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
       setTimeout(function () { document.querySelector('[data-agir="retenir"]').click() }, 1600)
     })()`,
-    attente: 3000,
+    attente: 2400,
+    attendu: `(function () {
+      var m = document.getElementById('g-modale')
+      if (!m.classList.contains('ouverte')) return 'le formulaire ne s est pas ouvert'
+
+      // Le titre du circuit sert de point de depart, il n est pas impose.
+      var type = document.getElementById('ch-p_type')
+      if (!type) return 'pas de champ pour ce que JB propose'
+      if (type.value !== 'Roulage autos') return 'le titre du circuit n est pas repris : ' + type.value
+
+      // Ce que la veille sait est rappele et non ressaisi.
+      var sous = m.querySelector('.g-modale-sous')
+      if (!sous) return 'la fiche ne rappelle pas ce qui est deja connu'
+      if (sous.textContent.indexOf('08:30') === -1)
+        return 'l heure n est pas rappelee : ' + sous.textContent
+      if (!sous.querySelector('a[href*="/event-details/"]'))
+        return 'pas de lien pour verifier chez le circuit'
+
+      // Le prix est demande, parce qu aucun circuit ne le publie.
+      if (!document.getElementById('ch-p_prix')) return 'pas de champ prix'
+      if (!document.getElementById('ch-p_mode')) return 'pas de champ pour ce qu on loue'
+
+      // Et rien n est publie par defaut.
+      var publier = document.getElementById('ch-p_publier')
+      if (!publier) return 'pas de choix de mise en ligne'
+      if (publier.checked) return 'la mise en ligne est cochee par defaut'
+      return true
+    })()`,
+  },
+  {
+    nom: 'veille, creer envoie le bon corps et ne publie rien de lui-meme',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () { document.querySelector('[data-agir="retenir"]').click() }, 1600)
+      setTimeout(function () {
+        document.getElementById('ch-p_type').value = 'Track-Day voiture personnelle'
+        document.getElementById('ch-p_prix').value = '175'
+        document.getElementById('ch-p_mode').value = 'greffe'
+        document.querySelector('[data-enregistrer]').click()
+      }, 2300)
+    })()`,
+    attente: 3200,
     attendu: `(function () {
       var e = (window.__envois || []).filter(function (x) {
-        return x.url.indexOf('rpc/veille_retenir') === 0
+        return x.url.indexOf('rpc/veille_creer_evenement') === 0
       })[0]
-      if (!e) return 'aucun appel a veille_retenir : ' + JSON.stringify(window.__envois || [])
-      if (e.methode !== 'POST') return 'methode ' + e.methode
-      var corps = JSON.parse(e.corps)
-      if (corps.p_candidat !== 'v1') return 'mauvais candidat envoye : ' + JSON.stringify(corps)
+      if (!e) return 'aucun appel a veille_creer_evenement : ' + JSON.stringify(window.__envois || [])
+      var c = JSON.parse(e.corps)
+      if (c.p_candidat !== 'v1')   return 'mauvais candidat : ' + e.corps
+      if (c.p_type !== 'Track-Day voiture personnelle') return 'le titre saisi n est pas envoye : ' + c.p_type
+      if (c.p_prix !== 175)        return 'le prix saisi n est pas envoye : ' + c.p_prix
+      if (c.p_mode !== 'greffe')   return 'ce qu on loue n est pas envoye : ' + c.p_mode
+      if (c.p_publier !== false)   return 'la mise en ligne part a vrai sans qu on l ait demandee'
 
-      // Rien ne doit partir vers events : c'est la base qui cree, pas la page.
+      // C'est la base qui cree. La page ne doit pas ecrire dans events.
       var direct = (window.__envois || []).filter(function (x) { return x.url.indexOf('events') === 0 })
       if (direct.length) return 'la page ecrit dans events au lieu de passer par la base'
       return true

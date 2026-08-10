@@ -256,3 +256,17 @@ textarea.g-champ { resize: vertical; min-height: 90px }
   padding: 7px 10px;
 }
 .g-select:focus { border-color: rgba(255,207,0,.45); outline: none }
+
+/* Le rappel de ce que la veille sait deja, en tete du formulaire de creation. */
+.g-modale-sous {
+  margin: 0 22px 4px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,.04);
+  border-left: 2px solid rgba(255,207,0,.4);
+  border-radius: 0 6px 6px 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255,255,255,.55);
+}
+.g-modale-sous strong { color: #fff; font-weight: 600 }
+.g-modale-sous a { color: rgba(255,207,0,.75) }

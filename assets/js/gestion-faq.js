@@ -20,11 +20,7 @@
   // base : un tag absent de la contrainte serait refusé à l'enregistrement,
   // sans que JB comprenne pourquoi. Le jour où une page reçoit une FAQ, les
   // deux se complètent ensemble.
-  var PAGES = [
-    { valeur: 'academie',   titre: 'Académie' },
-    { valeur: 'coaching',   titre: 'Coaching' },
-    { valeur: 'evenements', titre: 'Événements' },
-  ]
+  var PAGES = JBE_VOCABULAIRE.PAGES
   var NOMS = {}
   PAGES.forEach(function (p) { NOMS[p.valeur] = p.titre })
 

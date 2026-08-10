@@ -6,6 +6,50 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 août 2026, retenir une date devient créer l'événement
+
+### D-153, Un seul geste au lieu de deux, dont un à l'aveugle
+
+Jusqu'ici « Retenir » fabriquait un brouillon nu : la date, le circuit, le titre du circuit, la photo, le lien. JB devait ensuite ouvrir l'onglet Track-days, retrouver la ligne parmi les autres, et y mettre le prix, le mode, les places et le résumé. Deux gestes, dont le second sans rien sous les yeux de ce qu'il venait de retenir.
+
+Le bouton ouvre maintenant la création. En haut, ce que la veille sait déjà, rappelé et non ressaisi : le jour en toutes lettres, l'heure, le circuit, et un lien pour aller voir chez lui. En dessous, ce que JB seul sait.
+
+### D-154, Le titre du circuit est un point de départ, pas une obligation
+
+« Roulage autos » est ce que le circuit vend. Ce que JB vend, c'est un « Track-Day voiture personnelle ». Le champ est donc prérempli avec le titre du circuit et modifiable : c'est ce titre que lira un visiteur.
+
+Le prix, lui, est demandé sans valeur de départ. Aucun circuit lu ne publie de tarif, vérifié page par page. Proposer un chiffre reviendrait à l'inventer, et un prix inventé finit dans un devis.
+
+### D-155, Rien ne se publie par inattention
+
+La mise en ligne est un interrupteur, à l'arrêt par défaut. Sans lui, l'événement reste en brouillon, invisible, au statut `Potential`.
+
+**Contrôles négatifs**, trois, tous concluants après une reprise : mettre la valeur de départ à vrai fait échouer sur « la mise en ligne est cochée par défaut » et sur le corps envoyé ; ignorer le titre saisi est nommé ; retirer le rappel de ce qui est connu est nommé.
+
+Le premier contrôle a d'abord été un coup dans l'eau : j'avais changé `defaut` dans la déclaration du champ, alors que cette valeur n'est jamais consultée quand le formulaire fournit la sienne. Le parcours est resté vert parce que rien n'avait changé. Refait sur le vrai levier. Un contrôle négatif qui ne modifie pas le comportement ne prouve rien, et c'est le genre de faux calme que `docs/07` section 2.1 décrit.
+
+### D-156, La fonction complète au lieu de dupliquer
+
+`veille_creer_evenement` est idempotente. Rappelée sur un candidat déjà retenu, elle met à jour l'événement existant au lieu d'en créer un second : c'est ce qui arrive si JB clique deux fois, ou revient sur une date pour la publier après coup.
+
+**Vérifié dans la base**, avec le jeton d'un administrateur : premier appel, l'événement est créé complet, invisible ; second appel avec la mise en ligne, l'événement passe à `Open` et visible, le résumé est conservé, et il n'y a toujours qu'une seule ligne pour cette date.
+
+Les deux événements d'essai ont été effacés : leur prix et leur résumé étaient de moi, pas de JB.
+
+### D-157, Un formulaire qui n'appartient à aucune table
+
+La coquille savait modifier une ligne de la table de l'onglet courant. La Veille a besoin d'autre chose : ses lignes sont des candidats, et le formulaire qu'elle ouvre crée un événement.
+
+`JBE.formulaire({ titre, sous, champs, valeurs, surValider })` ouvre la même boîte avec les mêmes champs déclarés, et rend les valeurs à qui l'a demandée. Quatrième extension de la coquille de la même famille, après les actions, le pied et l'en-tête : elle ne connaît toujours aucun onglet.
+
+### D-158, Les listes du métier sortent des onglets
+
+`PAGES` était recopié dans `gestion-faq.js` et `gestion-avis.js`. `MODES` allait l'être dans `gestion-veille.js` en plus de `gestion-evenements.js`.
+
+Deux copies d'un même vocabulaire finissent par diverger, et ce projet l'a payé trois fois avec la FAQ. Elles vivent maintenant dans `assets/js/gestion-vocabulaire.js`, chargé avant les onglets. Ce ne sont pas des détails de présentation, ce sont des mots du métier, et ils doivent rester identiques aux contraintes de la base.
+
+---
+
 ## 10 août 2026, la règle de publication prend sa vraie forme
 
 ### D-151, Le budget est mensuel, le plafond du jour n'est qu'un garde-fou

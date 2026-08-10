@@ -235,10 +235,58 @@ window.JBE = (function () {
     document.getElementById('g-modale').dataset.id = ligne ? ligne.id : ''
   }
 
+  // Un formulaire qui n'appartient à aucune table.
+  //
+  // `editer` sait modifier une ligne de la table de l'onglet courant. La Veille
+  // a besoin d'autre chose : ses lignes sont des candidats, et le formulaire
+  // qu'elle ouvre crée un événement. Deux objets différents, un seul mécanisme
+  // de saisie, donc la boîte se déclare comme le reste.
+  var formulaireCourant = null
+
+  function formulaire(def) {
+    formulaireCourant = def
+    document.getElementById('g-modale').innerHTML =
+      '<div class="g-modale-boite">' +
+        '<div class="g-modale-tete">' +
+          '<h3>' + ech(def.titre) + '</h3>' +
+          '<button class="g-fermer" data-fermer>×</button>' +
+        '</div>' +
+        (def.sous ? '<p class="g-modale-sous">' + def.sous + '</p>' : '') +
+        '<div class="g-modale-corps">' +
+          def.champs.map(function (c) {
+            return champHtml(c, def.valeurs ? def.valeurs[c.cle] : null)
+          }).join('') +
+        '</div>' +
+        '<div class="g-modale-pied">' +
+          '<button class="g-btn" data-fermer>Annuler</button>' +
+          '<button class="g-btn g-btn-or" data-enregistrer>' + ech(def.valider || 'Enregistrer') + '</button>' +
+        '</div>' +
+      '</div>'
+    document.getElementById('g-modale').classList.add('ouverte')
+    document.getElementById('g-modale').dataset.id = ''
+  }
+
+  function validerFormulaire() {
+    var def = formulaireCourant
+    var m = document.getElementById('g-modale')
+    var valeurs = {}
+    var manquants = []
+    def.champs.forEach(function (c) {
+      var groupe = m.querySelector('[data-champ="' + c.cle + '"]')
+      if (!groupe) return
+      var v = lireChamp(groupe, c)
+      if (c.obligatoire && (v == null || v === '' || (Array.isArray(v) && !v.length))) manquants.push(c.titre)
+      valeurs[c.cle] = v
+    })
+    if (manquants.length) { dire('Il manque : ' + manquants.join(', '), 'err'); return }
+    def.surValider(valeurs)
+  }
+
   function fermerModale() {
     var m = document.getElementById('g-modale')
     m.classList.remove('ouverte')
     m.innerHTML = ''
+    formulaireCourant = null
   }
 
   function enregistrer(def) {
@@ -286,7 +334,10 @@ window.JBE = (function () {
 
     if (t.closest && t.closest('[data-fermer]')) return fermerModale()
     if (t.id === 'g-modale') return fermerModale()
-    if (t.closest && t.closest('[data-enregistrer]')) return enregistrer(courant)
+    if (t.closest && t.closest('[data-enregistrer]')) {
+      // Un formulaire libre l'emporte : c'est lui qui est ouvert.
+      return formulaireCourant ? validerFormulaire() : enregistrer(courant)
+    }
     if (t.id === 'g-nouveau') return editer(courant, null)
 
     var tete = t.closest && t.closest('[data-tete]')
@@ -328,5 +379,8 @@ window.JBE = (function () {
   // afficherait le résultat qu'il espère, pas celui qui a eu lieu.
   function rafraichir() { if (courant) lister(courant) }
 
-  return { onglet: onglet, demarrer: demarrer, requete: requete, ech: ech, dire: dire, rafraichir: rafraichir }
+  return {
+    onglet: onglet, demarrer: demarrer, requete: requete, ech: ech, dire: dire,
+    rafraichir: rafraichir, formulaire: formulaire, fermer: fermerModale,
+  }
 })()

@@ -15,10 +15,19 @@
 // Aucune règle écrite d'avance ne dira lesquelles intéressent JB : ça dépend de
 // ses accords, de ses clients et de son agenda.
 //
-// ── Retenir ne publie rien ──────────────────────────────────────────────────
-// Retenir crée un événement en brouillon, invisible et au statut Potential. JB
-// le complète ensuite dans l'onglet Track-days, prix, mode et résumé, puis le
-// rend visible. Une date fausse ne peut donc pas atteindre le site toute seule.
+// ── Retenir, c'est créer l'événement ────────────────────────────────────────
+// Le bouton ouvre un formulaire. Ce que la veille sait est rappelé en haut et
+// n'est pas ressaisi : la date, l'heure, le circuit, la photo, le lien. Ce que
+// JB seul sait est demandé : ce qu'il propose ce jour-là, ce qu'il loue, le
+// prix, les places, le résumé.
+//
+// Le prix ne peut pas venir d'ailleurs : aucun circuit lu ne publie de tarif,
+// vérifié page par page le 10 août. C'est JB qui négocie, donc c'est JB qui
+// le donne.
+//
+// Il choisit à la fin de mettre en ligne ou de laisser en brouillon. Par
+// défaut, brouillon : une date ne doit pas pouvoir atteindre le site par
+// simple inattention.
 
 ;(function () {
   var ETIQUETTES = {
@@ -37,6 +46,7 @@
     return m ? m[1] + m[2] + '/v1/fill/w_160,h_100,al_c,q_80/' + m[2] : url
   }
 
+  var MODES = JBE_VOCABULAIRE.MODES
   var HORIZONS = [1, 2, 3, 6, 12, 24]
 
   // Le tri met le travail en premier : ce qui n'a pas encore été jugé, puis
@@ -139,13 +149,57 @@
       {
         cle: 'retenir', titre: 'Retenir', classe: 'g-btn-or',
         quand: function (l) { return l.statut !== 'retenu' },
-        faire: function (def, id) {
-          JBE.requete('rpc/veille_retenir', { methode: 'POST', corps: { p_candidat: id } })
-            .then(function () {
-              JBE.dire('Retenu. L\'événement attend dans l\'onglet Track-days, en brouillon.')
-              JBE.rafraichir()
-            })
-            .catch(function (e) { JBE.dire('Impossible de retenir : ' + e.message, 'erreur') })
+        // Retenir ouvre le formulaire de création. Ce que la veille sait est
+        // rappelé en haut et n'est pas ressaisi ; ce que JB seul sait est
+        // demandé. Avant, ce bouton fabriquait un brouillon nu et il fallait
+        // aller le retrouver dans un autre onglet.
+        faire: function (def, id, l) {
+          var quand = l.debut
+            ? new Date(l.debut).toLocaleString('fr-FR',
+                { dateStyle: 'full', timeStyle: 'short', timeZone: 'Europe/Paris' })
+            : l.date_event
+          JBE.formulaire({
+            titre: 'Créer l\'événement',
+            valider: 'Créer',
+            sous: '<strong>' + JBE.ech(quand) + '</strong>'
+                + ' · ' + JBE.ech(l.veille_sources ? l.veille_sources.nom : '')
+                + (l.lien ? ' · <a href="' + JBE.ech(l.lien) + '" target="_blank" rel="noopener">'
+                          + 'voir chez le circuit ↗</a>' : '')
+                + '<br>La date, le circuit, la photo et le lien sont déjà repris.',
+            valeurs: {
+              // Le titre du circuit est un point de départ, pas une obligation :
+              // « Roulage autos » est ce que le circuit vend, pas ce que JB vend.
+              p_type: l.titre,
+              p_places: 10,
+              p_publier: false,
+            },
+            champs: [
+              { cle: 'p_type', titre: 'Ce que JB propose ce jour-là', obligatoire: true,
+                aide: 'C\'est le titre que lira un visiteur. Repris du circuit, à réécrire si besoin.' },
+              { cle: 'p_mode', titre: 'Ce qu\'on loue', type: 'choix', options: MODES,
+                aide: 'Décide de ce que la page d\'événement propose au visiteur.' },
+              { cle: 'p_prix', titre: 'Prix par pilote, en euros', type: 'number',
+                aide: 'Le circuit ne publie aucun tarif. Ce chiffre vient de JB.' },
+              { cle: 'p_places', titre: 'Nombre de places', type: 'number' },
+              { cle: 'p_resume', titre: 'Résumé', type: 'texte-long', lignes: 3,
+                aide: 'Deux phrases, celles qui s\'affichent sur la carte de la date.' },
+              { cle: 'p_publier', titre: 'Mettre en ligne tout de suite', type: 'bascule',
+                oui: 'visible sur le site',
+                aide: 'Sinon l\'événement reste en brouillon, invisible, et attend.' },
+            ],
+            surValider: function (v) {
+              v.p_candidat = id
+              JBE.requete('rpc/veille_creer_evenement', { methode: 'POST', corps: v })
+                .then(function () {
+                  JBE.fermer()
+                  JBE.dire(v.p_publier
+                    ? 'Créé et mis en ligne.'
+                    : 'Créé en brouillon. Il attend dans l\'onglet Track-days.')
+                  JBE.rafraichir()
+                })
+                .catch(function (e) { JBE.dire('Refusé par la base : ' + e.message, 'erreur') })
+            },
+          })
         },
       },
       {

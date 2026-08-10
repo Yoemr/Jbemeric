@@ -8,11 +8,7 @@
   // Le même vocabulaire que la FAQ, et il doit rester identique à la
   // contrainte `avis_tags_connus` de la base. Un tag absent de la contrainte
   // serait refusé à l'enregistrement, sans que JB comprenne pourquoi.
-  var PAGES = [
-    { valeur: 'academie',   titre: 'Académie' },
-    { valeur: 'coaching',   titre: 'Coaching' },
-    { valeur: 'evenements', titre: 'Événements' },
-  ]
+  var PAGES = JBE_VOCABULAIRE.PAGES
   var NOMS = {}
   PAGES.forEach(function (p) { NOMS[p.valeur] = p.titre })
 

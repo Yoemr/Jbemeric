@@ -10,14 +10,7 @@
 ;(function () {
   var MOIS = ['janv','févr','mars','avr','mai','juin','juil','août','sept','oct','nov','déc']
 
-  var MODES = [
-    { valeur: '',         titre: 'Non renseigné' },
-    { valeur: 'entier',   titre: 'JB loue le circuit, il vend tout' },
-    { valeur: 'box',      titre: 'Box partagé sur la journée d\'un autre' },
-    { valeur: 'coaching', titre: 'Coaching seul, JB se déplace' },
-    { valeur: 'greffe',   titre: 'Greffé, frais partagés' },
-    { valeur: 'moniteur', titre: 'Moniteur loué par une autre école' },
-  ]
+  var MODES = JBE_VOCABULAIRE.MODES
   var NOM_MODE = {}
   MODES.forEach(function (m) { NOM_MODE[m.valeur] = m.titre })
 

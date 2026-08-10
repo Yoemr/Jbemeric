@@ -6,6 +6,34 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 août 2026, le compteur de publications disait le contraire de ce qu'on lisait
+
+### D-149, « 13 » n'était pas un nombre de commits
+
+Yoan a lu « 14 / 3 dans les 24 h » et a demandé pourquoi on ne regroupait pas les commits en un seul. La question était juste, la réponse est que le nombre ne parlait pas de ça : il compte les publications **déjà parties**, pas le travail en attente.
+
+Et sur le fond il avait raison : les commits en attente partent tous ensemble au prochain push, et ne coûtent qu'une seule construction. Les regrouper n'y changerait rien.
+
+La ligne dit maintenant les deux, sans ambiguïté possible :
+
+```
+  PUBLICATIONS   13 deja parties sur 3 permises par 24 h   70 en aout 2026
+  EN ATTENTE     5 commits en local, qui partiront ensemble et ne couteront qu'une construction
+  PORTE FERMEE   prochaine publication possible a 2026-08-10 10:58 UTC
+```
+
+### D-150, L'heure de déblocage annoncée était fausse
+
+En corrigeant l'affichage, l'outil s'est mis à annoncer 03:53. Faux : à 03:53 il resterait douze publications dans la fenêtre.
+
+Il rendait « la plus vieille plus 24 heures », c'est-à-dire le moment où **une** publication sort. Ce qu'il faut, c'est le moment où le compte tombe sous le plafond : avec n publications et p permises, il faut que n − p + 1 sortent.
+
+Corrigé, et éprouvé sur le cas réel : treize publications, trois permises, la réponse est 10:58 UTC, ce qui correspond au calcul fait à la main. Deux publications dans la fenêtre rendent bien « porte ouverte ».
+
+Un outil qui annonce une heure de déblocage fausse est pire qu'un outil qui n'en annonce aucune : on l'attend pour rien.
+
+---
+
 ## 10 août 2026, la veille se règle et fait le ménage
 
 ### D-143, Trois des données voulues ne sont pas publiées

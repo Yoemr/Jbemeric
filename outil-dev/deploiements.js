@@ -99,6 +99,36 @@ function enregistrer(pubs) {
   fs.writeFileSync(REGISTRE, JSON.stringify({ publications: pubs }, null, 2) + '\n')
 }
 
+// Ce qui est commite mais pas encore parti. Sans ce chiffre, la ligne de
+// publications se lit comme un nombre de commits, ce qui est arrive.
+function commitsEnAttente() {
+  try {
+    const branche = execFileSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'],
+      { cwd: RACINE, encoding: 'utf8' }).trim()
+    const n = execFileSync('git', ['rev-list', '--count', `origin/${branche}..HEAD`],
+      { cwd: RACINE, encoding: 'utf8' }).trim()
+    return parseInt(n, 10) || 0
+  } catch {
+    return 0                       // pas de branche distante, rien a dire
+  }
+}
+
+// Quand la porte s'ouvre vraiment.
+//
+// Premiere version fausse : elle rendait « la plus vieille + 24 h », c'est-a-
+// dire le moment ou UNE publication sort de la fenetre. Avec treize dedans et
+// trois permises, ca annoncait 03:53 alors qu'il en restait douze a 03:53.
+//
+// Il faut que le compte tombe sous le plafond. Avec n publications et p
+// permises, il faut que n - p + 1 sortent, donc c'est la (n - p + 1)-ieme
+// plus vieille qui commande, d'indice n - p en partant de zero.
+function heureDeDeblocage(c) {
+  const instants = c.recentes.map(p => Date.parse(p.le)).sort((a, b) => a - b)
+  const i = instants.length - PAR_24H
+  if (i < 0) return null                       // la porte est deja ouverte
+  return new Date(instants[i] + 24 * 3600 * 1000).toISOString().slice(0, 16).replace('T', ' ')
+}
+
 function comptes(pubs, maintenant) {
   const il24h = maintenant.getTime() - 24 * 3600 * 1000
   const mois  = maintenant.getUTCFullYear() + '-' + String(maintenant.getUTCMonth() + 1).padStart(2, '0')
@@ -124,14 +154,19 @@ function main() {
   // ── La porte, appelee par le crochet pre-push ─────────────────────────────
   if (args.includes('--peut-on')) {
     if (c.recentes.length >= PAR_24H) {
-      const plusVieille = Math.min(...c.recentes.map(p => Date.parse(p.le)))
-      const libre = new Date(plusVieille + 24 * 3600 * 1000)
+      const libre = heureDeDeblocage(c)
       console.error('')
-      console.error(`  PUSH REFUSE   ${c.recentes.length} publications dans les 24 h, le maximum est ${PAR_24H}.`)
+      console.error(`  PUSH REFUSE   ${c.recentes.length} publications DEJA PARTIES dans les 24 h,`)
+      console.error(`                le maximum est ${PAR_24H}.`)
       console.error(`                Chaque push declenche une construction Netlify, et le`)
       console.error(`                plafond est de ${PLAFOND}. Regle de Yoan du 9 aout 2026.`)
       console.error('')
-      console.error(`  La prochaine sera possible a ${libre.toISOString().slice(0, 16).replace('T', ' ')} UTC.`)
+      console.error(`  Les commits en attente partiront TOUS ENSEMBLE au prochain push,`)
+      console.error(`  et ne couteront qu'une seule construction. Les regrouper en un`)
+      console.error(`  seul commit n'y changerait rien : ce sont les publications deja`)
+      console.error(`  parties qui remplissent le quota, pas le travail en attente.`)
+      console.error('')
+      console.error(`  La prochaine sera possible a ${libre} UTC.`)
       console.error(`  Si elle ne peut pas attendre, c'est a Yoan de le dire :`)
       console.error(`  git push --no-verify`)
       console.error('')
@@ -142,16 +177,32 @@ function main() {
   }
 
   // ── L'affichage ───────────────────────────────────────────────────────────
+  //
+  // Le 10 aout, Yoan a lu « 14 / 3 dans les 24 h » comme un nombre de commits
+  // et a demande pourquoi on ne les regroupait pas. Le nombre compte les
+  // publications DEJA PARTIES, pas le travail en attente : les regrouper n'y
+  // change rien. La ligne dit donc les deux, et l'heure de deblocage.
+  const enAttente = commitsEnAttente()
+
   if (args.includes('--court')) {
-    const alerte = c.recentes.length >= PAR_24H ? '   QUOTA PLEIN' : ''
-    console.log(`  PUBLICATIONS   ${c.recentes.length} / ${PAR_24H} dans les 24 h   ${c.duMois} en ${nomMois}${alerte}`)
+    let ligne = `  PUBLICATIONS   ${c.recentes.length} deja parties sur ${PAR_24H} permises par 24 h`
+                + `   ${c.duMois} en ${nomMois}`
+    if (enAttente > 0) {
+      ligne += `\n  EN ATTENTE     ${enAttente} commit${enAttente > 1 ? 's' : ''} en local`
+             + `, qui partiront ensemble et ne couteront qu'une construction`
+    }
+    if (c.recentes.length >= PAR_24H) {
+      ligne += `\n  PORTE FERMEE   prochaine publication possible a ${heureDeDeblocage(c)} UTC`
+    }
+    console.log(ligne)
     return
   }
 
   console.log('')
   console.log('  PUBLICATIONS NETLIFY')
   console.log('  ' + '-'.repeat(66))
-  console.log(`  Dans les 24 h   ${c.recentes.length} sur ${PAR_24H} autorisees`)
+  console.log(`  Deja parties dans les 24 h   ${c.recentes.length} sur ${PAR_24H} autorisees`)
+  console.log(`  En attente en local   ${enAttente} commit(s), qui partiront ensemble`)
   console.log(`  En ${nomMois}   ${c.duMois}`)
   console.log(`  Vues depuis le debut   ${c.total}`)
   console.log('')

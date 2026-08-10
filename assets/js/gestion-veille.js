@@ -55,7 +55,7 @@
     cle:   'veille',
     titre: 'Veille',
     table: 'veille_candidats',
-    select: '*,veille_sources(nom,circuits(nom,pays,region))',
+    select: '*,veille_sources(nom)',
     tri:   'statut.asc,date_event.asc',
 
     nommer: function (l) { return l.titre + ' du ' + l.date_event },
@@ -128,12 +128,14 @@
             'a juger': 'À vérifier',
           }[v] || v
         } },
-      { cle: 'circuit', titre: 'Circuit',
-        valeur: function (l) { var c = l.veille_sources && l.veille_sources.circuits; return c ? c.nom : null } },
-      { cle: 'pays', titre: 'Pays',
-        valeur: function (l) { var c = l.veille_sources && l.veille_sources.circuits; return c ? c.pays : null } },
-      { cle: 'region', titre: 'Région',
-        valeur: function (l) { var c = l.veille_sources && l.veille_sources.circuits; return c ? c.region : null } },
+      // Le circuit, le pays et la région viennent de la date elle-même depuis
+      // qu'une source peut couvrir plusieurs circuits. Une source qui n'en
+      // couvre qu'un les remplit pareil.
+      { cle: 'circuit', titre: 'Circuit',  valeur: function (l) { return l.circuit_nom } },
+      { cle: 'pays',    titre: 'Pays',     parDefaut: ['France'],
+        valeur: function (l) { return l.pays } },
+      { cle: 'region',  titre: 'Région',   valeur: function (l) { return l.region } },
+      { cle: 'organisateur', titre: 'Qui organise', valeur: function (l) { return l.organisateur } },
       { cle: 'mois', titre: 'Mois',
         // La date brute ferait autant de cases que de jours. Le mois est la
         // maille à laquelle JB raisonne quand il cale sa saison.
@@ -219,13 +221,25 @@
       },
       { cle: 'titre', titre: 'Ce que le circuit annonce' },
       {
+        titre: 'Prix',
+        // Le tarif du circuit, quand il le publie. Ce n'est pas celui que JB
+        // facture, c'est ce que la journée lui coûte ou ce qu'elle coûte au
+        // pilote selon le mode.
+        rendu: function (l) {
+          return l.prix == null
+            ? '<span class="g-fade">?</span>'
+            : '<strong>' + JBE.ech(l.prix) + ' €</strong>'
+        },
+      },
+      {
         titre: 'Où',
         // Demande de Yoan : « mettre le lien des sites qu'on scanne quelque
         // part discrètement, pour qu'on puisse double check ». Le lien de la
         // ligne mène à la page de CETTE date, pas à l'agenda entier : c'est
         // ce qui permet de vérifier sans chercher.
         rendu: function (l) {
-          var nom = JBE.ech(l.veille_sources ? l.veille_sources.nom : '')
+          var nom = JBE.ech(l.circuit_nom || (l.veille_sources ? l.veille_sources.nom : ''))
+          if (l.pays && l.pays !== 'France') nom += ' <span class="g-fade">' + JBE.ech(l.pays) + '</span>'
           if (!l.lien) return nom
           return '<a class="g-lien-source" href="' + JBE.ech(l.lien) + '"'
                + ' target="_blank" rel="noopener">' + nom + ' ↗</a>'

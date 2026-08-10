@@ -6,6 +6,48 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 août 2026, tous les circuits, par une source qui les couvre déjà
+
+### D-179, Un parseur par circuit était le mauvais chemin
+
+Demande de Yoan : « il faut que j'aie vraiment tous les circuits ». Aller les chercher un par un demandait un parseur par site, exactement ce qu'il avait reproché la veille.
+
+**Mesure d'abord.** Sur six sites de circuits testés, aucun ne publie de `schema.org/Event` sur sa page d'agenda. Trois domaines devinés ne répondent même pas. Paul Ricard a bien un agenda, `/fr/evenements`, mais sans donnée normalisée. Un par un, c'était quinze chantiers.
+
+### D-180, Le calendrier existe déjà, et il est en JSON
+
+`grandauto.fr` tient un calendrier de trackdays sous WordPress, et WordPress expose ses contenus en JSON sans authentification. Leur type `trackday` porte tout, déjà structuré :
+
+```
+td_date_debut, td_prix_min, td_prix_max, td_prix_texte, td_format,
+td_statut, td_heure_debut, td_lien_source, td_places_restantes
++ les taxonomies circuit, pays, région, organisateur, type de roulage
+```
+
+**1701 dates dans leur base.** Mesure sur les 100 plus récentes : 19 circuits français, 33 dates sur 36 avec leur tarif, plus le Royaume-Uni, les Pays-Bas, la Belgique, l'Espagne, l'Allemagne et l'Autriche.
+
+Après branchement : **147 dates, 31 circuits nommés**, contre 87 dates et 2 circuits auparavant.
+
+Leur `robots.txt` n'interdit pas `/wp-json/`. Vérifié avant de lire.
+
+### D-181, Ce que ça change dans le modèle
+
+Jusqu'ici une source était le calendrier d'**un** circuit, et le circuit venait de la source. Un agrégateur en couvre trente. Le candidat porte donc désormais son circuit, son organisateur, son pays et sa région, et la source n'impose plus rien.
+
+Les filtres lisent ces colonnes. Une source qui ne couvre qu'un circuit les remplit de la même façon, donc rien n'est cassé.
+
+Le prix devient une colonne du tableau : c'est lui qui décide si une date vaut le déplacement.
+
+### D-182, Deux réserves à dire clairement
+
+**Une dépendance.** Si ce site ferme son interface, JB perd d'un coup trente circuits. Les deux sources directes, le Circuit du Var et Lédenon, restent branchées pour cette raison : elles ne dépendent de personne. Il faut les garder même si l'agrégateur fait doublon.
+
+**Une donnée de seconde main.** Ce sont eux qui compilent, et ils compilent eux-mêmes depuis `europatrackdays`. Une date fausse chez eux devient une date fausse chez nous. Le lien vers leur page est conservé sur chaque ligne pour pouvoir vérifier, et le lien vers la source d'origine existe dans leurs données.
+
+C'est le prix de « tous les circuits ». La décision appartient à Yoan, et elle se défait en supprimant une ligne de `veille_sources`.
+
+---
+
 ## 10 août 2026, la norme d'abord, le cas particulier ensuite
 
 ### D-174, Le reproche était fondé

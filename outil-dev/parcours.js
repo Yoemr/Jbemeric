@@ -151,23 +151,27 @@ const PRELUDE_GESTION = `(function () {
       discipline:'auto', genre:'roulage',
       debut:'2099-08-18T06:30:00.000Z', fin:'2099-08-18T16:00:00.000Z',
       photo:'https://static.wixstatic.com/media/photo-1~mv2.jpg', lien:'https://exemple.test/event-details/roulage-auto-1',
-      veille_sources:{ nom:'Circuit du Var, agenda', circuits:{ nom:'Circuit du Luc', pays:'France', region:'Var (83)' } } },
+      circuit_nom:'Circuit du Luc', pays:'France', region:'Var (83)',
+      veille_sources:{ nom:'Circuit du Var, agenda' } },
     { id:'v2', date_event:'2099-08-19', titre:'Roulage motos',  statut:'ecarte',  event_id:null,
       discipline:'moto', genre:'roulage',
       debut:'2099-08-19T12:00:00.000Z', fin:'2099-08-19T16:00:00.000Z',
       photo:null, lien:null,
-      veille_sources:{ nom:'Circuit du Var, agenda', circuits:{ nom:'Circuit du Luc', pays:'France', region:'Var (83)' } } },
+      circuit_nom:'Circuit du Luc', pays:'France', region:'Var (83)',
+      veille_sources:{ nom:'Circuit du Var, agenda' } },
     { id:'v3', date_event:'2099-09-20', titre:'Stage de pilotage GT', statut:'retenu', event_id:'e9',
       discipline:'auto', genre:'stage',
       photo:'https://static.wixstatic.com/media/photo-3~mv2.jpg', lien:'https://exemple.test/event-details/stage-3',
-      veille_sources:{ nom:'Circuit de Lédenon, agenda', circuits:{ nom:'Circuit de Lédenon', pays:'France', region:'Gard (30)' } } },
+      circuit_nom:'Circuit de Lédenon', pays:'France', region:'Gard (30)',
+      veille_sources:{ nom:'Circuit de Lédenon, agenda' } },
     // Une source qui publie son tarif et son texte, comme Ledenon. Le
     // formulaire de creation doit arriver prerempli avec.
     { id:'v4', date_event:'2099-09-11', titre:'Journée auto exclusive', statut:'nouveau', event_id:null,
       discipline:'auto', genre:'roulage', prix:300,
       resume:'7 sessions de 30 minutes. 20 vehicules maximum en piste.',
       debut:null, fin:null, photo:null, lien:'https://exemple.test/journees-autos',
-      veille_sources:{ nom:'Circuit de Lédenon, agenda', circuits:{ nom:'Circuit de Lédenon', pays:'France', region:'Gard (30)' } } }
+      circuit_nom:'Circuit de Lédenon', pays:'France', region:'Gard (30)',
+      veille_sources:{ nom:'Circuit de Lédenon, agenda' } }
   ]
   var REGLAGES = [{ horizon_mois: 3 }]
   var SOURCES = [

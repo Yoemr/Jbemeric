@@ -86,6 +86,8 @@
     // rien.
     filtres: [
       { cle: 'discipline', titre: 'Discipline',
+        // JB ne fait pas de moto. Vingt dates sur quatre-vingt-trois en sont.
+        parDefaut: ['auto', 'a juger'],
         valeur: function (l) { return l.discipline },
         nommer: function (v) {
           return { auto: 'Auto', moto: 'Moto', karting: 'Karting', 'a juger': 'À juger' }[v] || v
@@ -106,6 +108,16 @@
       // Les étiquettes disent maintenant qui fournit la voiture, parce que
       // c'est ça qui sépare une date vendable d'une date inutile.
       { cle: 'genre', titre: 'Peut-on venir avec sa voiture ?',
+        // Mot de Yoan, 10 août : « même en dehors des filtres, baptême et stage
+        // n'ont rien à faire ici ». Ce sont les journées du circuit, avec les
+        // voitures du circuit : JB n'a rien à y vendre. L'onglet s'ouvre donc
+        // sur les trackdays et sur ce qui reste à vérifier.
+        //
+        // Ils ne sont pas effacés pour autant, et le bouton « tout afficher »
+        // les ramène. La raison est dans `docs/07` section 2.12 : si mon
+        // classement se trompe sur un titre, une date vendable serait perdue
+        // sans que personne ne le sache.
+        parDefaut: ['roulage', 'a juger'],
         valeur: function (l) { return l.genre },
         nommer: function (v) {
           return {

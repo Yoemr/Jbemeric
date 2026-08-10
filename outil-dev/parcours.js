@@ -619,11 +619,14 @@ const PARCOURS = [
     // proposer de l'etre une seconde fois ; une ligne ecartee doit pouvoir
     // revenir. Les verbes sont declares par l'onglet, la coquille les pose.
     prelude: PRELUDE_GESTION,
+    // L'onglet s'ouvre filtre sur les trackdays. Ce parcours a besoin des trois
+    // etats, il enleve donc les filtres avant de regarder.
     action: `(function () {
       JBE.demarrer('jeton-d-essai')
       setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () { document.querySelector('[data-filtre-vider]').click() }, 1400)
     })()`,
-    attente: 2000,
+    attente: 2200,
     attendu: `(function () {
       var lignes = document.querySelectorAll('.g-table tbody tr')
       if (lignes.length !== 3) return 'attendu 3 candidats, trouve ' + lignes.length
@@ -750,13 +753,14 @@ const PARCOURS = [
     action: `(function () {
       JBE.demarrer('jeton-d-essai')
       setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () { document.querySelector('[data-filtre-vider]').click() }, 1400)
       setTimeout(function () {
         var c = document.querySelector('[data-filtre="discipline"][value="moto"]')
         c.checked = true
         c.dispatchEvent(new Event('change', { bubbles: true }))
-      }, 1600)
+      }, 2000)
     })()`,
-    attente: 2400,
+    attente: 2900,
     attendu: `(function () {
       var lignes = document.querySelectorAll('.g-table tbody tr')
       if (lignes.length !== 1) return 'cocher « moto » devait laisser 1 ligne, il en reste ' + lignes.length
@@ -775,6 +779,42 @@ const PARCOURS = [
 
       // Et de quoi tout revoir.
       if (!document.querySelector('[data-filtre-vider]')) return 'aucun moyen de tout reafficher'
+      return true
+    })()`,
+  },
+  {
+    nom: 'veille, l onglet s ouvre sur les trackdays et rien d autre',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    // Mot de Yoan, 10 aout : « meme en dehors des filtres, bapteme et stage
+    // n'ont rien a faire ici ». Ce sont les journees du circuit, avec ses
+    // voitures : JB n'a rien a y vendre.
+    //
+    // Ils ne sont pas effaces pour autant. Si le classement se trompe sur un
+    // titre, une date vendable serait perdue sans que personne ne le sache.
+    // Le bouton « tout afficher » les ramene, et ce parcours le verifie aussi.
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+    })()`,
+    attente: 2000,
+    attendu: `(function () {
+      var txt = [].map.call(document.querySelectorAll('.g-table tbody tr'), function (t) {
+        return t.textContent
+      }).join(' | ')
+      if (txt.indexOf('Roulage autos') === -1) return 'le trackday n est pas la a l ouverture : ' + txt
+      if (txt.indexOf('Stage de pilotage') !== -1) return 'un stage s affiche a l ouverture : ' + txt
+      if (txt.indexOf('Roulage motos') !== -1)   return 'une date moto s affiche a l ouverture : ' + txt
+
+      // Et on doit voir que quelque chose est masque, sinon on croit que la
+      // veille n'a rien trouve.
+      var compte = document.querySelector('.g-compte').textContent
+      if (compte.indexOf('masqué') === -1) return 'rien ne dit que des dates sont masquees : ' + compte
+
+      // Les cases posees d'avance sont visibles et decochables.
+      var roulage = document.querySelector('[data-filtre="genre"][value="roulage"]')
+      if (!roulage || !roulage.checked) return 'la case trackday n est pas cochee a l ouverture'
       return true
     })()`,
   },

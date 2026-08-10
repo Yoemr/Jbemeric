@@ -6,6 +6,32 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 août 2026, l'onglet s'ouvre sur ce qui se vend
+
+### D-167, Baptêmes et stages ne s'affichent plus
+
+Mot de Yoan : « même en dehors des filtres, baptême et stage n'ont rien à faire ici ». Ce sont les journées du circuit, avec les voitures du circuit. JB n'a rien à y vendre.
+
+L'onglet s'ouvre donc sur les trackdays en voiture perso et sur ce qui reste à vérifier. Sur les 83 dates du Circuit du Var, **13 s'affichent au lieu de 83**.
+
+### D-168, Masqués et non effacés, et voilà pourquoi
+
+Ne pas les collecter du tout aurait été plus simple. C'est le choix que je n'ai pas fait, pour une raison qui tient en une phrase : **si mon classement se trompe sur un titre, une date vendable disparaîtrait sans que personne ne le sache jamais.**
+
+Le classement lit des mots dans un titre. Il a déjà failli se tromper sur « Mitjet Academy ». Un circuit qui écrirait « Journée pilotes » ou « Session libre GT » tomberait en « à vérifier », ce qui est prévu, mais un titre malheureux pourrait tomber en « stage ». Collecté et masqué, il se retrouve en un clic. Jamais collecté, il n'existe pas.
+
+Le compte annonce ce qui est masqué, et le bouton « tout afficher » ramène tout. Rien n'est perdu, rien n'encombre.
+
+### D-169, Un filtre peut arriver déjà coché
+
+Quatrième chose que la coquille sait faire sans connaître aucun onglet : `parDefaut` sur un filtre pose ses cases à l'ouverture. Le bouton « tout afficher » les enlève, et elles ne reviennent pas tant qu'on ne change pas d'onglet.
+
+Ça tient à une seule chose : `poserDefauts` n'est appelé qu'à l'ouverture d'un onglet, jamais au redessin. **Contrôle négatif** concluant : l'appeler au redessin fait échouer « décocher tout remet la liste entière ».
+
+Au passage, une ligne de garde a été retirée. Elle protégeait contre ce cas précis, mais elle était morte dans le chemin réel, et mon contrôle négatif ne pouvait donc pas la mettre en défaut. Du code qu'on ne peut pas éprouver ne se garde pas.
+
+---
+
 ## 10 août 2026, ce que le filtre doit vraiment dire
 
 ### D-164, La seule question qui compte est celle de la voiture

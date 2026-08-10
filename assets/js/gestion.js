@@ -148,7 +148,26 @@ window.JBE = (function () {
   //
   // Rien de coché veut dire tout afficher. C'est le contraire d'une liste
   // vide : personne ne veut ouvrir un onglet et n'y rien voir.
+  //
+  // Un filtre peut arriver déjà coché, par `parDefaut`. C'est ce qui permet à
+  // un onglet de s'ouvrir sur ce qui intéresse vraiment, sans que le reste
+  // soit perdu : le bouton « tout afficher » le ramène.
   var choix = {}                       // { cle du filtre : { valeur : true } }
+  var defautsPoses = null              // la clé de l'onglet dont on a posé les défauts
+
+  // Appelée uniquement à l'ouverture d'un onglet, jamais au redessin. C'est ce
+  // qui fait que « tout afficher » tient : décocher puis redessiner ne repose
+  // pas les cases qu'on vient d'enlever.
+  function poserDefauts(def) {
+    if (defautsPoses === def.cle) return
+    defautsPoses = def.cle
+    choix = {}
+    ;(def.filtres || []).forEach(function (f) {
+      if (!f.parDefaut || !f.parDefaut.length) return
+      choix[f.cle] = {}
+      f.parDefaut.forEach(function (v) { choix[f.cle][v] = true })
+    })
+  }
 
   function valeursDe(f, lignes) {
     var compte = {}
@@ -214,7 +233,8 @@ window.JBE = (function () {
     if (!def) return
     // Les filtres appartiennent a l'onglet qu'on quitte. Les garder ferait
     // ouvrir le suivant avec des cases qui ne veulent plus rien dire.
-    if (courant && courant.cle !== def.cle) choix = {}
+    if (courant && courant.cle !== def.cle) defautsPoses = null
+    poserDefauts(def)
     dessinerBarre(def.cle)
     try { localStorage.setItem('jbe-onglet', def.cle) } catch (e) { /* navigation privee */ }
     location.hash = def.cle

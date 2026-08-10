@@ -135,6 +135,16 @@ Le signe était pourtant là. Le dépôt ne contenait **pas une ligne de code de
 
 **Second signe, plus fiable encore** : le nombre. Yoan a dit « 300 ». Le plafond gratuit de Netlify se compte en minutes de construction par mois, et il vaut 300. Un chiffre qui colle exactement à un plafond connu du projet désigne le sujet mieux qu'un mot mal orthographié.
 
+### 2.12 Une étiquette sûre mais fausse cache une ligne, un « à vérifier » ne coûte qu'un coup d'œil
+
+Le 10 août, la veille classait les dates par mots-clés du titre. « Mitjet Academy » tombait dans « stage » parce qu'il contient « academy ». Mitjet est autant un nom de série qu'un nom d'école, et les pages d'événement du circuit n'ont aucune description qui permettrait de trancher.
+
+Conséquence si le classement se trompe : la date disparaît dès que JB coche « trackday, voiture perso ». Elle ne revient jamais, et personne ne saura qu'elle a existé.
+
+**Règle** : un classement automatique qui alimente un filtre doit préférer « à juger » au doute résolu par une supposition. Le coût des deux erreurs n'est pas le même. Un « à juger » se lit en une seconde puisque la donnée d'origine reste affichée à côté ; une étiquette confiante et fausse masque, et le masquage ne se voit pas.
+
+Corollaire : le libellé d'un filtre doit dire ce qui change pour l'utilisateur, pas reprendre le vocabulaire de la source. « Roulage libre » était le mot du circuit, exact et inutile. « Trackday, voiture perso » et « Stage, voiture du circuit » disent qui fournit la voiture, qui est la seule chose que JB a besoin de savoir.
+
 ---
 
 ## 3. Ce qui est vérifié, ne pas revérifier

@@ -6,6 +6,46 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 août 2026, ce que le filtre doit vraiment dire
+
+### D-164, La seule question qui compte est celle de la voiture
+
+Reproche de Yoan : « tu me parles de baptême et de stage, mais moi ce que je veux savoir c'est les journées où on peut venir avec une voiture personnelle. On appelle ça un trackday dans le jargon. C'est pas du tout la même chose. »
+
+Il a raison, et mes étiquettes noyaient cette distinction en la mettant sur le même plan que les autres.
+
+**Le circuit emploie exactement les mêmes mots**, vérifié sur sa page : le titre dit « Trackday | Roulage libre | Circuit du Var | Automobiles », et la description « chaque mois, une journée de roulage libre autos est organisée par le circuit du Var, pour vous inscrire il suffit de nous renvoyer le bulletin d'inscription ». Trackday, roulage libre et voiture perso sont donc la même chose chez eux.
+
+Les étiquettes disent maintenant qui fournit la voiture :
+
+| Avant | Maintenant | Dates |
+|---|---|---|
+| Roulage libre | **Trackday, voiture perso** | 10 |
+| Stage de l'école du circuit | Stage, voiture du circuit | 20 |
+| Baptême | Baptême, voiture du circuit | 13 |
+| Événement privé | Privé, fermé au public | 17 |
+| À juger | À vérifier | 3 |
+
+Et le filtre s'intitule « Peut-on venir avec sa voiture ? » plutôt que « Type d'événement ».
+
+### D-165, En cas de doute, « à vérifier », jamais une étiquette confiante
+
+« Mitjet Academy » tombait dans « stage » à cause du mot « academy ». Mitjet est autant un nom de série qu'un nom d'école, et les pages d'événement n'ont aucune description qui permettrait de trancher.
+
+Le coût des deux erreurs n'est pas le même. Une étiquette fausse fait disparaître la date dès que JB coche « trackday », et le masquage ne se voit pas. Un « à vérifier » ne coûte qu'un coup d'œil, puisque le titre reste affiché à côté.
+
+« academy » est donc retiré des mots qui font un stage. Trois dates passent en « à vérifier », ce qui est la réponse honnête.
+
+Noté dans `docs/07` section 2.12.
+
+### D-166, Le parcours garde le sens, pas seulement le mécanisme
+
+Un parcours vérifiait que les cases filtrent. Un second vérifie maintenant **ce qu'elles veulent dire** : qu'une étiquette dit « voiture perso », qu'une autre dit « voiture du circuit », et que cocher le trackday garde les roulages et écarte les stages.
+
+**Contrôle négatif** concluant : revenir aux étiquettes de jargon fait échouer sur « aucune étiquette ne dit qu'on vient avec sa voiture ».
+
+---
+
 ## 10 août 2026, des cases pour filtrer la veille
 
 ### D-159, Un défaut trouvé en préparant les filtres

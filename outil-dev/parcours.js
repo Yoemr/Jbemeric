@@ -157,7 +157,7 @@ const PRELUDE_GESTION = `(function () {
       debut:'2099-08-19T12:00:00.000Z', fin:'2099-08-19T16:00:00.000Z',
       photo:null, lien:null,
       veille_sources:{ nom:'Circuit du Var, agenda', circuits:{ nom:'Circuit du Luc', pays:'France', region:'Var (83)' } } },
-    { id:'v3', date_event:'2099-09-20', titre:'Stage monoplace', statut:'retenu', event_id:'e9',
+    { id:'v3', date_event:'2099-09-20', titre:'Stage de pilotage GT', statut:'retenu', event_id:'e9',
       discipline:'auto', genre:'stage',
       photo:'https://static.wixstatic.com/media/photo-3~mv2.jpg', lien:'https://exemple.test/event-details/stage-3',
       veille_sources:{ nom:'Circuit de Lédenon, agenda', circuits:{ nom:'Circuit de Lédenon', pays:'France', region:'Gard (30)' } } }
@@ -775,6 +775,50 @@ const PARCOURS = [
 
       // Et de quoi tout revoir.
       if (!document.querySelector('[data-filtre-vider]')) return 'aucun moyen de tout reafficher'
+      return true
+    })()`,
+  },
+  {
+    nom: 'veille, le filtre isole les journees en voiture perso',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    // Reproche de Yoan, 10 aout : « ce que je veux savoir c'est les journees ou
+    // on peut venir avec une voiture personnelle. On appelle ca un trackday
+    // dans le jargon. C'est pas du tout la meme chose » qu'un bapteme ou un
+    // stage, ou c'est le circuit qui fournit la voiture.
+    //
+    // Le circuit dit la meme chose : « Trackday | Roulage libre | Automobiles,
+    // chaque mois une journee de roulage libre autos est organisee ».
+    //
+    // Ce parcours garde le sens des etiquettes, pas seulement le mecanisme.
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () {
+        var c = document.querySelector('[data-filtre="genre"][value="roulage"]')
+        c.checked = true
+        c.dispatchEvent(new Event('change', { bubbles: true }))
+      }, 1600)
+    })()`,
+    attente: 2400,
+    attendu: `(function () {
+      // L etiquette doit nommer qui fournit la voiture. « Roulage libre » seul
+      // ne dit rien a qui ne connait pas le jargon.
+      var cases = [].map.call(document.querySelectorAll('[data-filtre="genre"]'), function (c) {
+        return c.parentNode.textContent.trim()
+      }).join(' | ')
+      if (cases.indexOf('voiture perso') === -1)
+        return 'aucune etiquette ne dit qu on vient avec sa voiture : ' + cases
+      if (cases.indexOf('voiture du circuit') === -1)
+        return 'rien ne distingue les dates ou le circuit fournit la voiture : ' + cases
+
+      // Le filtre garde les roulages et ecarte les stages.
+      var titres = [].map.call(document.querySelectorAll('.g-table tbody tr'), function (t) {
+        return t.textContent
+      }).join(' | ')
+      if (titres.indexOf('Roulage autos') === -1) return 'le trackday auto a disparu : ' + titres
+      if (titres.indexOf('Stage de pilotage') !== -1) return 'un stage passe le filtre : ' + titres
       return true
     })()`,
   },

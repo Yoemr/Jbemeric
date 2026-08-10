@@ -90,12 +90,30 @@
         nommer: function (v) {
           return { auto: 'Auto', moto: 'Moto', karting: 'Karting', 'a juger': 'À juger' }[v] || v
         } },
-      { cle: 'genre', titre: 'Type d\'événement',
+      // La seule question qui compte pour JB : est-ce qu'un client peut venir
+      // avec SA voiture ? Reproche de Yoan, 10 août : « tu me parles de baptême
+      // et de stage, mais moi ce que je veux savoir c'est les journées où on
+      // peut venir avec une voiture personnelle. On appelle ça un trackday dans
+      // le jargon. C'est pas du tout la même chose. »
+      //
+      // Le circuit emploie exactement les mêmes mots. Le titre de sa page dit
+      // « Trackday | Roulage libre | Circuit du Var | Automobiles », et sa
+      // description « chaque mois, une journée de roulage libre autos est
+      // organisée par le circuit du Var, pour vous inscrire il suffit de nous
+      // renvoyer le bulletin d'inscription ». Trackday, roulage libre et
+      // voiture perso sont donc la même chose chez eux.
+      //
+      // Les étiquettes disent maintenant qui fournit la voiture, parce que
+      // c'est ça qui sépare une date vendable d'une date inutile.
+      { cle: 'genre', titre: 'Peut-on venir avec sa voiture ?',
         valeur: function (l) { return l.genre },
         nommer: function (v) {
           return {
-            roulage: 'Roulage libre', stage: 'Stage de l\'école du circuit',
-            bapteme: 'Baptême', prive: 'Événement privé', 'a juger': 'À juger',
+            roulage: 'Trackday, voiture perso',
+            stage:   'Stage, voiture du circuit',
+            bapteme: 'Baptême, voiture du circuit',
+            prive:   'Privé, fermé au public',
+            'a juger': 'À vérifier',
           }[v] || v
         } },
       { cle: 'circuit', titre: 'Circuit',

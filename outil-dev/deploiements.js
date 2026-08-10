@@ -37,8 +37,21 @@ const { execFileSync } = require('child_process')
 
 const RACINE   = path.resolve(__dirname, '..')
 const REGISTRE = path.join(__dirname, 'deploiements.json')
-const PAR_24H  = 3      // la regle de Yoan
-const PLAFOND  = 300    // le nombre a ne pas depasser, mot de Yoan
+// Regle precisee par Yoan le 10 aout 2026 : « ce que je paie c'est les 300
+// pushes par mois. Tu te demerdes pour en regrouper plein et en faire le moins
+// possible par jour, pour qu'on puisse travailler tout le mois sans
+// restriction. »
+//
+// Le budget est donc mensuel. Le plafond du jour n'est qu'un garde-fou contre
+// la journee du 9 aout, seize pushes en vingt-deux heures.
+//
+// Premiere version fausse : une fenetre glissante de 24 heures. Elle punissait
+// aujourd'hui pour les pushes d'hier soir et bloquait le travail alors que le
+// budget du mois etait large. Un jour calendaire repart a zero le matin, comme
+// Yoan se le represente.
+const PAR_JOUR = 3      // garde-fou, jour calendaire de Gemenos
+const PAR_MOIS = 300    // le vrai budget, mot de Yoan
+const FUSEAU   = 'Europe/Paris'
 
 const MOIS = ['janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin',
               'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre']
@@ -113,29 +126,21 @@ function commitsEnAttente() {
   }
 }
 
-// Quand la porte s'ouvre vraiment.
-//
-// Premiere version fausse : elle rendait « la plus vieille + 24 h », c'est-a-
-// dire le moment ou UNE publication sort de la fenetre. Avec treize dedans et
-// trois permises, ca annoncait 03:53 alors qu'il en restait douze a 03:53.
-//
-// Il faut que le compte tombe sous le plafond. Avec n publications et p
-// permises, il faut que n - p + 1 sortent, donc c'est la (n - p + 1)-ieme
-// plus vieille qui commande, d'indice n - p en partant de zero.
-function heureDeDeblocage(c) {
-  const instants = c.recentes.map(p => Date.parse(p.le)).sort((a, b) => a - b)
-  const i = instants.length - PAR_24H
-  if (i < 0) return null                       // la porte est deja ouverte
-  return new Date(instants[i] + 24 * 3600 * 1000).toISOString().slice(0, 16).replace('T', ' ')
+// Le jour de Gemenos, pas celui d'UTC : Yoan raisonne en journees de travail.
+function jourLocal(t) {
+  return new Date(t).toLocaleDateString('fr-CA', { timeZone: FUSEAU })   // AAAA-MM-JJ
+}
+function moisLocal(t) {
+  return jourLocal(t).slice(0, 7)
 }
 
 function comptes(pubs, maintenant) {
-  const il24h = maintenant.getTime() - 24 * 3600 * 1000
-  const mois  = maintenant.getUTCFullYear() + '-' + String(maintenant.getUTCMonth() + 1).padStart(2, '0')
+  const jour = jourLocal(maintenant)
+  const mois = moisLocal(maintenant)
   return {
-    recentes: pubs.filter(p => Date.parse(p.le) >= il24h),
-    duMois:   pubs.filter(p => p.le.slice(0, 7) === mois).length,
-    total:    pubs.length,
+    duJour: pubs.filter(p => jourLocal(p.le) === jour).length,
+    duMois: pubs.filter(p => moisLocal(p.le) === mois).length,
+    total:  pubs.length,
   }
 }
 
@@ -153,47 +158,48 @@ function main() {
 
   // ── La porte, appelee par le crochet pre-push ─────────────────────────────
   if (args.includes('--peut-on')) {
-    if (c.recentes.length >= PAR_24H) {
-      const libre = heureDeDeblocage(c)
+    if (c.duMois >= PAR_MOIS) {
       console.error('')
-      console.error(`  PUSH REFUSE   ${c.recentes.length} publications DEJA PARTIES dans les 24 h,`)
-      console.error(`                le maximum est ${PAR_24H}.`)
-      console.error(`                Chaque push declenche une construction Netlify, et le`)
-      console.error(`                plafond est de ${PLAFOND}. Regle de Yoan du 9 aout 2026.`)
+      console.error(`  PUSH REFUSE   ${c.duMois} publications en ${nomMois}, le budget du mois`)
+      console.error(`                est de ${PAR_MOIS}. C'est celui-la que Yoan paie.`)
+      console.error('')
+      process.exit(1)
+    }
+    if (c.duJour >= PAR_JOUR) {
+      console.error('')
+      console.error(`  PUSH REFUSE   ${c.duJour} publications deja parties aujourd'hui,`)
+      console.error(`                le garde-fou est de ${PAR_JOUR} par jour.`)
+      console.error(`                Budget du mois : ${c.duMois} sur ${PAR_MOIS}, il en reste ${PAR_MOIS - c.duMois}.`)
       console.error('')
       console.error(`  Les commits en attente partiront TOUS ENSEMBLE au prochain push,`)
-      console.error(`  et ne couteront qu'une seule construction. Les regrouper en un`)
-      console.error(`  seul commit n'y changerait rien : ce sont les publications deja`)
-      console.error(`  parties qui remplissent le quota, pas le travail en attente.`)
+      console.error(`  et ne couteront qu'une seule publication. En regrouper plein est`)
+      console.error(`  exactement ce qu'il faut faire.`)
       console.error('')
-      console.error(`  La prochaine sera possible a ${libre} UTC.`)
-      console.error(`  Si elle ne peut pas attendre, c'est a Yoan de le dire :`)
+      console.error(`  La porte rouvre demain matin, heure de Gemenos.`)
+      console.error(`  Si ca ne peut pas attendre, c'est a Yoan de le dire :`)
       console.error(`  git push --no-verify`)
       console.error('')
       process.exit(1)
     }
-    console.error(`  ${c.recentes.length + 1} / ${PAR_24H} publications dans les 24 h.`)
+    console.error(`  Publication ${c.duJour + 1} / ${PAR_JOUR} aujourd'hui, ${c.duMois + 1} / ${PAR_MOIS} en ${nomMois}.`)
     return
   }
 
   // ── L'affichage ───────────────────────────────────────────────────────────
   //
-  // Le 10 aout, Yoan a lu « 14 / 3 dans les 24 h » comme un nombre de commits
-  // et a demande pourquoi on ne les regroupait pas. Le nombre compte les
-  // publications DEJA PARTIES, pas le travail en attente : les regrouper n'y
-  // change rien. La ligne dit donc les deux, et l'heure de deblocage.
+  // Le 10 aout, Yoan a lu « 14 / 3 dans les 24 h » comme un nombre de commits.
+  // Le nombre compte les publications DEJA PARTIES, pas le travail en attente :
+  // les regrouper n'y change rien, et c'est justement ce qu'il faut faire.
   const enAttente = commitsEnAttente()
 
   if (args.includes('--court')) {
-    let ligne = `  PUBLICATIONS   ${c.recentes.length} deja parties sur ${PAR_24H} permises par 24 h`
-                + `   ${c.duMois} en ${nomMois}`
+    let ligne = `  PUBLICATIONS   ${c.duJour} / ${PAR_JOUR} aujourd'hui`
+              + `   ${c.duMois} / ${PAR_MOIS} en ${nomMois}`
     if (enAttente > 0) {
       ligne += `\n  EN ATTENTE     ${enAttente} commit${enAttente > 1 ? 's' : ''} en local`
-             + `, qui partiront ensemble et ne couteront qu'une construction`
+             + `, qui partiront ensemble en une seule publication`
     }
-    if (c.recentes.length >= PAR_24H) {
-      ligne += `\n  PORTE FERMEE   prochaine publication possible a ${heureDeDeblocage(c)} UTC`
-    }
+    if (c.duJour >= PAR_JOUR) ligne += `\n  PORTE FERMEE   jusqu'a demain matin`
     console.log(ligne)
     return
   }
@@ -201,13 +207,13 @@ function main() {
   console.log('')
   console.log('  PUBLICATIONS NETLIFY')
   console.log('  ' + '-'.repeat(66))
-  console.log(`  Deja parties dans les 24 h   ${c.recentes.length} sur ${PAR_24H} autorisees`)
+  console.log(`  Aujourd'hui   ${c.duJour} sur ${PAR_JOUR}`)
+  console.log(`  En ${nomMois}   ${c.duMois} sur ${PAR_MOIS}, il en reste ${PAR_MOIS - c.duMois}`)
   console.log(`  En attente en local   ${enAttente} commit(s), qui partiront ensemble`)
-  console.log(`  En ${nomMois}   ${c.duMois}`)
-  console.log(`  Vues depuis le debut   ${c.total}`)
   console.log('')
-  console.log(`  Chaque publication declenche une construction Netlify. Le plafond`)
-  console.log(`  que Yoan a donne est ${PLAFOND}. Trois par jour y tiennent.`)
+  console.log(`  Le budget que Yoan paie est mensuel : ${PAR_MOIS} publications.`)
+  console.log(`  Le plafond du jour n'est qu'un garde-fou. Regrouper beaucoup de`)
+  console.log(`  commits en une publication est la bonne facon de travailler.`)
   console.log('')
 
   const dernieres = pubs.slice(-6).reverse()

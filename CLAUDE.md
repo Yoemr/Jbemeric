@@ -29,20 +29,24 @@ Le reste de l'écriture est libre.
 ## 3. Gouvernance
 
 - Travail **en local**. Modifications de fichiers et commits sur branche de travail : autorisés.
-- **Publier coûte.** Trois pushes au maximum par tranche de 24 heures, règle du 9 août 2026 qui remplace l'interdiction pure. Détail et porte en section 3 bis.
+- **Publier coûte.** 300 publications par mois, c'est le budget que Yoan paie. Regrouper beaucoup de commits en une seule publication. Détail et porte en section 3 bis.
 - **Aucune page, aucune entrée de menu, aucune section n'est créée sans accord explicite de Yoan.** Des pages ont été créées sans autorisation par le passé, c'est une cause directe du désordre actuel.
 - **Aucune suppression de fichier sans validation individuelle.**
 - `docs/00` à `04` : modification sur validation. `docs/05` et `06` : écriture libre, avec résumé en fin de chantier.
 
 ---
 
-## 3 bis. Publications, trois par 24 heures
+## 3 bis. Publications, 300 par mois
 
-Chaque push déclenche une construction Netlify. Le plafond se compte en minutes de construction par mois, et Yoan a donné le nombre : **300**.
+Chaque push déclenche une construction Netlify. **Ce que Yoan paie, c'est 300 publications par mois.** C'est le seul vrai plafond.
 
-Règle du 9 août 2026 : **trois publications au maximum par tranche de 24 heures.** Trois par jour tiennent dans le budget.
+Mot de Yoan, 10 août 2026 : « tu te démerdes pour en regrouper plein et en faire le moins possible par jour, pour qu'on puisse travailler tout le mois sans restriction. »
 
-Ce n'est pas une consigne, c'est une porte. Le crochet `outil-dev/hooks/pre-push` refuse la quatrième et dit à quelle heure la suivante sera possible. Le compteur s'affiche à chaque ouverture de session, sous l'audit.
+**Commiter n'est pas publier.** Un commit local ne coûte rien et ne déclenche rien. Vingt commits qui partent ensemble coûtent une publication, pas vingt. Travailler par petits commits et publier une fois est la bonne façon de faire.
+
+Un garde-fou de **trois par jour calendaire**, heure de Gemenos, contre la journée du 9 août où seize pushes sont partis en vingt-deux heures. Il repart à zéro chaque matin.
+
+Ce n'est pas une consigne, c'est une porte. Le crochet `outil-dev/hooks/pre-push` refuse au-delà. Le compteur s'affiche à chaque ouverture de session, sous l'audit, avec le nombre de commits en attente.
 
 Le crochet demande une ligne, une seule fois par machine :
 
@@ -52,9 +56,7 @@ git config core.hooksPath outil-dev/hooks
 
 Pour passer outre, quand Yoan le demande : `git push --no-verify`.
 
-**Commiter n'est pas publier.** Un commit local ne coûte rien et ne déclenche rien. Travailler par petits commits et publier une fois est la bonne façon de tenir la règle, pas travailler moins.
-
-Le 9 août, seize pushes sont partis en vingt-deux heures alors que ce fichier disait « jamais de push ». Une règle qu'on peut oublier n'est pas une règle.
+**Une fenêtre glissante de 24 heures a été essayée et retirée** : elle punissait la journée en cours pour les pushes de la veille au soir, et bloquait le travail alors que le budget du mois était largement disponible.
 
 ---
 

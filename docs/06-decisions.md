@@ -6,6 +6,33 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 août 2026, la règle de publication prend sa vraie forme
+
+### D-151, Le budget est mensuel, le plafond du jour n'est qu'un garde-fou
+
+Yoan a précisé : « ce que je paie c'est les 300 pushes par mois. Tu te démerdes pour en regrouper plein et en faire le moins possible par jour, pour qu'on puisse travailler tout le mois sans restriction. »
+
+Ma fenêtre glissante de 24 heures était la mauvaise forme. Elle punissait la journée en cours pour les pushes de la veille au soir : à 2 h du matin le 10 août, treize publications du 9 occupaient encore la fenêtre, et le travail était bloqué jusqu'à 10 h 58 alors que le budget du mois était à 70 sur 300.
+
+**Un jour calendaire, heure de Gemenos**, repart à zéro chaque matin, ce qui est la façon dont Yoan se le représente. Le vrai plafond est mensuel, et c'est lui qui refuse en premier.
+
+Vérifié : le push de 22:50 UTC le 9 août tombe à 00:50 le 10 à Gemenos, donc la journée en compte bien une, et la porte s'ouvre.
+
+**Contrôles**, sept cas, tous conformes : 3 dans la journée refuse, 300 dans le mois refuse, 299 dans le mois et 2 dans la journée passe.
+
+### D-152, La bonne façon de travailler est de regrouper
+
+Ce que le compteur dit maintenant, à chaque ouverture de session :
+
+```
+  PUBLICATIONS   1 / 3 aujourd'hui   70 / 300 en aout 2026
+  EN ATTENTE     6 commits en local, qui partiront ensemble en une seule publication
+```
+
+Vingt commits qui partent ensemble coûtent une publication, pas vingt. C'est écrit dans `CLAUDE.md` et dans le refus du crochet, parce que c'est la phrase qui évite de refaire la journée du 9 août.
+
+---
+
 ## 10 août 2026, le compteur de publications disait le contraire de ce qu'on lisait
 
 ### D-149, « 13 » n'était pas un nombre de commits

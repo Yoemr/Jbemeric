@@ -1,8 +1,8 @@
 #!/bin/sh
-# Crochet pre-push : refuse la quatrieme publication dans les 24 heures.
+# Crochet pre-push : le garde-fou du jour et le budget du mois.
 #
-# Regle de Yoan, 9 aout 2026 : « maximum 3 fois par tranche de 24 h pour ne
-# pas depasser les 300 ». Chaque push declenche une construction Netlify.
+# Regle de Yoan : 300 publications par mois, c'est ce qu'il paie. Un garde-fou de
+# trois par jour calendaire contre les journees a seize pushes.
 #
 # Pourquoi un crochet et pas une consigne. Le 9 aout, seize pushes sont partis
 # en vingt-deux heures alors que CLAUDE.md disait « jamais de push ». Une regle

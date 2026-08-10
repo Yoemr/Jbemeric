@@ -114,13 +114,17 @@
     // Regle desormais : on ne cite que des fichiers qui existent. Une
     // discipline sans photo tombe dans le repli plutot que de promettre une
     // image absente. Il n'y a aujourd'hui ni Caterham ni Porsche en photo.
+    //
+    // Le repli montre une voiture sur circuit. Il montrait un kart, si bien
+    // qu'un track-day en voiture personnelle, dont le type ne contient aucun
+    // des mots ci-dessous, etait illustre par une photo de karting.
     function imgForType(type) {
       var t = (type||'').toLowerCase()
-      if (t.includes('karting')) return 'assets/images/karting-enfant-circuit.jpg'
-      if (t.includes('gt') || t.includes('tourisme')) return 'assets/images/bmw-325i-htcc.jpg'
+      if (t.includes('kart')) return 'assets/images/karting-enfant-circuit.jpg'
       if (t.includes('206') || t.includes('peugeot')) return 'assets/images/peugeot-206-s16-ricard.jpg'
       if (t.includes('ferrari')) return 'assets/images/ferrari-f8-tributo.jpg'
-      return 'assets/images/karting-adulte-circuit.jpg'
+      if (t.includes('lotus')) return 'assets/images/lotus-circuit-du-luc.jpg'
+      return 'assets/images/bmw-325i-htcc.jpg'
     }
 
     /* Échappement pour insertion dans un attribut HTML. Les valeurs viennent

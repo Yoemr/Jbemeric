@@ -159,6 +159,18 @@ Le 10 août, j'ai écrit un parseur propre à Wix puis un autre propre à Léden
 
 **Règle** : pour extraire un bloc délimité, découper avec `string_to_array` et `position` plutôt que de confier les deux bornes à une seule expression. C'est plus long à écrire et impossible à se faire piéger.
 
+### 2.15 Un `element.click()` réussit sur un élément caché, donc il ne prouve plus rien
+
+Les parcours qui cochaient les cases de filtre ont continué à passer, sans une ligne modifiée, le jour où ces cases sont passées dans un panneau replié en `display:none`. Le protocole DevTools déclenche le gestionnaire sans se soucier de ce qui est à l'écran.
+
+**Conséquence** : un parcours vert ne dit plus qu'un humain peut faire le geste, il dit seulement que le gestionnaire existe. Dès qu'un élément peut être caché, le vérifier explicitement. `offsetParent` vaut `null` quand l'élément ou l'un de ses parents est en `display:none` ; c'est le test le plus court qui distingue les deux.
+
+### 2.16 Un contrôle négatif sur du code redondant ne prouve rien, il le révèle
+
+Pour prouver que le panneau déplié survit au redessin, j'ai retiré la ligne qui le rouvrait. Les parcours sont restés verts. La conclusion n'était pas « le test est mauvais » mais « cette ligne ne servait à rien » : la classe était déjà posée par la fonction qui construit le HTML. Ligne supprimée, contrôle refait au bon endroit, et là il a mordu.
+
+**Règle** : quand un contrôle négatif ne casse rien, chercher d'abord si le code retiré était mort. C'est la troisième fois. Voir aussi 2.3 sur les no-ops.
+
 ---
 
 ## 3. Ce qui est vérifié, ne pas revérifier

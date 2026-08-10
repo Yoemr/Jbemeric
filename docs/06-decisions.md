@@ -6,6 +6,46 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 11 août 2026, la barre de filtres, et de vraies dates sur le site
+
+### D-183, Les cases en vrac deviennent des listes déroulantes
+
+Mot de Yoan : « les tags mis en vrac comme sur le dashboard c'est dégueulasse. Tu vas me faire des catégories et des listes déroulantes. Et tu me mets tout sur une seule ligne. Tu vas même m'ajouter un champ de recherche. Un peu comme une mini base de données au final. »
+
+Le nuage de pastilles prenait sept rangées avant même que le tableau commence. Avec 31 circuits, la liste des circuits à elle seule faisait trois lignes.
+
+**Ce qui change, et ce qui ne change pas.** La déclaration d'un filtre est identique : `cle`, `titre`, `valeur(l)`, `nommer(v)`, `parDefaut`. Les valeurs sont toujours calculées à partir des lignes reçues, un filtre qui n'offre qu'une valeur ne se dessine toujours pas, et rien de coché veut toujours dire tout afficher. Seul l'affichage change. Un onglet qui déclare des filtres gagne la nouvelle barre sans une ligne à écrire.
+
+**Le champ de recherche ne se déclare pas non plus.** Il cherche dans toutes les valeurs de la ligne, y compris celles des objets joints comme `veille_sources.nom` ou `circuits.nom`. Les identifiants sont écartés, ils ne veulent rien dire pour un humain. Une colonne ajoutée demain est cherchable le jour où elle arrive. Accents et casse ignorés, plusieurs mots dans n'importe quel ordre.
+
+**Deux pièges du redessin, tous deux prouvés par un parcours.** Le tableau est reconstruit à chaque frappe et à chaque case cochée. Sans rappel du curseur, on ne pouvait taper qu'une lettre. Sans mémoire de la liste dépliée, on ne pouvait cocher qu'une valeur à la fois.
+
+### D-184, Une source rattachée à un circuit donne son circuit à ses lignes
+
+87 candidats sur 145 n'avaient ni pays ni nom de circuit, et c'étaient exactement ceux du Circuit du Var et de Lédenon. Le filtre pays s'ouvrant sur « France », les deux circuits de proximité de JB étaient masqués par défaut. 18 lignes visibles au lieu de 76.
+
+`veille_sources.circuit_id` existait déjà et disait où se passe ce que la source publie. Rien ne s'en servait. Le déclencheur `veille_classer_ligne` le lit maintenant, et `veille_reclasser` fait la même chose sur l'existant, pour que rejouer la règle donne le même résultat qu'à l'insertion.
+
+**Ce que porte la ligne l'emporte.** Un agrégateur qui nomme lui-même son circuit sait mieux que la source. La règle est un défaut, pas un écrasement.
+
+### D-185, Les six dates affichées étaient toutes fausses, elles sont supprimées
+
+Question de Yoan : « les photos dans la page event ne sont pas chargées ? C'est systématiquement les mêmes, c'est normal ? Ou alors c'est les events fictifs ? En ce cas supprime-les et tu me mets les prochains events réels et avec les photos. »
+
+**Diagnostic.** Les photos se chargeaient. Les répétitions venaient du repli `imgForType` : trois des six dates n'avaient pas de photo, et le repli choisissait une image d'après un mot du type. « Caterham · Voiture perso » ne contenait aucun mot connu et tombait sur une photo de karting.
+
+Et oui, elles étaient fausses : trois étaient les événements de travail marqués `source_veille = 'PROTOTYPE'`, trois étaient des lignes d'avant la remise à plat, dont deux plaçaient une Caterham au Circuit de Brignoles, qui est une piste de karting.
+
+**Supprimées, aucune inscription ni aucun vote n'y était rattaché.** Les sept dates passées, déjà archivées, ne sont pas touchées.
+
+**Remplacées par six vraies dates**, prises dans la veille, celles des deux circuits qu'elle lit directement chez eux : quatre au Circuit du Luc, deux à Lédenon. Date, circuit, région, photo et lien vers la page du circuit viennent tous de la source.
+
+**Deux choses ne sont pas remplies, et ne le seront pas par moi.** Le prix, parce que le Circuit du Var n'en publie aucun et que celui de Lédenon est le tarif du circuit, pas celui de JB. Et la présence de JB à ces dates, qui est une information que seul lui détient.
+
+**Le repli d'image montre désormais une voiture** et non un kart. Un track-day en voiture personnelle illustré par une photo de karting était le défaut le plus visible de la grille.
+
+---
+
 ## 10 août 2026, tous les circuits, par une source qui les couvre déjà
 
 ### D-179, Un parseur par circuit était le mauvais chemin

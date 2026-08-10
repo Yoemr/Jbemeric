@@ -834,3 +834,62 @@ Les six autres sources repérées en 8.4 ne sont pas branchées. Chacune demande
 Elle ne publie rien. Retenir crée un événement invisible, au statut `Potential`, sans prix ni mode ni résumé. JB le complète dans l'onglet Track-days puis le rend visible.
 
 Elle ne filtre pas non plus. Sur les 18 dates du Circuit du Var, 2 sont des roulages autos, 2 des roulages motos, 13 des stages de l'école du circuit et 1 un événement privé. Aucune règle écrite d'avance ne dira lesquelles intéressent JB : ça dépend de ses accords et de son agenda.
+
+---
+
+## 14. Mise à jour du 11 août 2026, la barre de filtres et les dates du site
+
+### 14.1 Le dashboard, ce qu'on voit à l'ouverture d'un onglet
+
+Une seule ligne au-dessus du tableau : un champ de recherche, puis une liste dépliante par catégorie, puis « Tout afficher ».
+
+Sur la Veille, avec les 147 candidats en base, les catégories sont : discipline, « peut-on venir avec sa voiture ? », circuit, pays, région, qui organise, mois, durée, état. Une catégorie qui n'offre qu'une seule valeur ne se dessine pas.
+
+Le bouton d'une catégorie porte une pastille avec le nombre de choix pris. Au delà de sept valeurs, le panneau gagne son propre champ pour filtrer la liste : c'est le cas des circuits, il y en a 31.
+
+**Ce qui est prouvé par un parcours**, cinq nouveaux, tous joués à 1400 px :
+
+| Ce qui est vérifié | Pourquoi ça compte |
+|---|---|
+| La recherche et toutes les catégories tiennent sur une ligne | C'est la demande, mot pour mot |
+| Déplier une liste l'affiche vraiment, un clic ailleurs la referme | `element.click()` réussit sur du caché, voir `docs/07` § 2.15 |
+| Cocher une case ne referme pas la liste | Sinon on ne peut cocher qu'une valeur à la fois |
+| La recherche filtre le tableau et garde le curseur | Le tableau est reconstruit à chaque frappe |
+| « Tout afficher » efface la recherche et les cases | |
+
+Les deux mécanismes ont été prouvés par contrôle négatif : recherche débranchée et curseur non rendu, les parcours voient les deux.
+
+### 14.2 La recherche, ce qu'elle couvre
+
+Toutes les valeurs de la ligne et de ses objets joints. Les identifiants sont écartés. Accents et casse ignorés. Plusieurs mots doivent tous être présents, dans n'importe quel ordre.
+
+Rien à déclarer dans un onglet : une colonne ajoutée demain est cherchable le jour où elle arrive.
+
+### 14.3 Les candidats portent tous un circuit et un pays
+
+Avant : 87 candidats sur 145 sans pays ni circuit, tous ceux du Circuit du Var et de Lédenon, donc masqués par le filtre « France » posé par défaut. Après : zéro. 35 dates visibles à l'ouverture au lieu de 18.
+
+La règle est dans le déclencheur : une source rattachée à un circuit donne son circuit, son pays et sa région à ses lignes. Ce que la ligne porte déjà l'emporte.
+
+### 14.4 Les dates affichées sur `evenements.html`
+
+Six, toutes réelles, toutes issues de la veille :
+
+| Date | Circuit | Source |
+|---|---|---|
+| 18 août 2026 | Circuit du Luc | Circuit du Var, agenda |
+| 19 août 2026 | Circuit du Luc | Circuit du Var, agenda |
+| 11 septembre 2026 | Circuit de Lédenon | Lédenon, journées autos |
+| 13 septembre 2026 | Circuit du Luc | Circuit du Var, agenda |
+| 16 septembre 2026 | Circuit du Luc | Circuit du Var, agenda |
+| 9 octobre 2026 | Circuit de Lédenon | Lédenon, journées autos |
+
+Les six anciennes ont été supprimées : trois `PROTOTYPE`, trois lignes d'avant la remise à plat. Les sept dates passées, archivées le 10 août, ne sont pas touchées.
+
+**Ce qui manque encore sur ces six lignes** : le prix, et la confirmation que JB y sera. Ni l'un ni l'autre ne se déduit d'une source.
+
+### 14.5 Les photos
+
+Les quatre dates du Circuit du Luc portent la photo publiée par le circuit, importée par la veille. Les deux de Lédenon n'en ont pas à la source et portent une photo du dépôt.
+
+Le repli, quand une date n'a pas de photo du tout, montre désormais une voiture sur circuit. Il montrait un kart, ce qui illustrait un track-day en voiture personnelle par une photo de karting.

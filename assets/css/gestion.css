@@ -271,52 +271,150 @@ textarea.g-champ { resize: vertical; min-height: 90px }
 .g-modale-sous strong { color: #fff; font-weight: 600 }
 .g-modale-sous a { color: rgba(255,207,0,.75) }
 
-/* ── Les filtres ───────────────────────────────────────────────────────────
-   Demande de Yoan du 10 aout : « des cases qu'on coche ou decoche pour
-   afficher ce qu'on veut ». Rien de coche affiche tout. */
+/* ── La barre : recherche et listes deroulantes ────────────────────────────
+   Demande de Yoan du 11 aout : « des categories et des listes deroulantes,
+   tout sur une seule ligne, et un champ de recherche. Un peu comme une mini
+   base de donnees. » Rien de coche affiche toujours tout.
 
-.g-filtres {
+   Une seule ligne au large, et un retour a la ligne en dessous : mieux vaut
+   deux rangees qu'une barre coupee. */
+
+.g-barre {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 18px 26px;
-  padding: 14px 0 18px;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0 14px;
   margin-bottom: 6px;
   border-bottom: 1px solid rgba(255,255,255,.07);
 }
 
-.g-filtre { display: flex; flex-wrap: wrap; align-items: center; gap: 6px }
-
-.g-filtre-titre {
+/* Le champ de recherche */
+.g-cherche { position: relative; flex: 0 1 260px; min-width: 170px }
+.g-cherche-loupe {
+  position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+  font-size: 15px; color: rgba(255,255,255,.3); pointer-events: none;
+}
+.g-cherche input {
   width: 100%;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
-  color: rgba(255,255,255,.3);
-  margin-bottom: 2px;
+  padding: 8px 12px 8px 30px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 7px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 12.5px;
+}
+.g-cherche input::placeholder { color: rgba(255,255,255,.3) }
+.g-cherche input:focus {
+  outline: none;
+  border-color: var(--g-or, #FFCF00);
+  background: rgba(255,255,255,.06);
 }
 
-.g-coche {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 11px;
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 999px;
-  font-size: 12px;
-  color: rgba(255,255,255,.62);
+/* Une categorie */
+.g-liste { position: relative }
+
+.g-liste-bouton {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 11px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 7px;
+  color: rgba(255,255,255,.72);
+  font-family: inherit;
+  font-size: 12.5px;
   cursor: pointer;
+  white-space: nowrap;
   transition: border-color .15s, background .15s, color .15s;
-  user-select: none;
 }
-.g-coche:hover { border-color: rgba(255,207,0,.35); color: #fff }
-.g-coche.pris {
+.g-liste-bouton:hover { border-color: rgba(255,207,0,.4); color: #fff }
+.g-liste.pris .g-liste-bouton {
   border-color: var(--g-or, #FFCF00);
-  background: rgba(255,207,0,.12);
+  background: rgba(255,207,0,.1);
   color: #fff;
 }
-.g-coche input { accent-color: var(--g-or, #FFCF00); margin: 0 }
+.g-liste.ouverte .g-liste-bouton { border-color: var(--g-or, #FFCF00); color: #fff }
 
-.g-filtre-n {
+.g-liste-n {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 17px; height: 17px; padding: 0 4px;
+  background: var(--g-or, #FFCF00);
+  border-radius: 999px;
+  color: #0d1117;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; font-weight: 600;
+}
+.g-liste-fleche { font-size: 10px; color: rgba(255,255,255,.4) }
+.g-liste.ouverte .g-liste-fleche { transform: rotate(180deg) }
+
+/* Le panneau deplie */
+.g-liste-panneau {
+  display: none;
+  position: absolute; z-index: 40; top: calc(100% + 5px); left: 0;
+  min-width: 230px; max-width: 340px;
+  padding: 7px;
+  background: #141a22;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 9px;
+  box-shadow: 0 14px 38px rgba(0,0,0,.55);
+}
+.g-liste.ouverte .g-liste-panneau { display: block }
+
+.g-liste-cherche {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 7px 9px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 6px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+}
+.g-liste-cherche::placeholder { color: rgba(255,255,255,.28) }
+.g-liste-cherche:focus { outline: none; border-color: var(--g-or, #FFCF00) }
+
+.g-liste-choix { max-height: 300px; overflow-y: auto }
+
+.g-opt {
+  display: flex; align-items: center; gap: 9px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: rgba(255,255,255,.68);
+  cursor: pointer;
+  user-select: none;
+}
+.g-opt:hover { background: rgba(255,255,255,.06); color: #fff }
+.g-opt.pris { color: #fff }
+.g-opt input { accent-color: var(--g-or, #FFCF00); margin: 0; flex: none }
+.g-opt-nom { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.g-opt-n {
   font-family: 'DM Mono', monospace;
   font-size: 10px;
   color: rgba(255,255,255,.3);
 }
-.g-coche.pris .g-filtre-n { color: rgba(255,207,0,.7) }
+.g-opt.pris .g-opt-n { color: rgba(255,207,0,.75) }
+
+.g-liste-rien {
+  padding: 12px 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,.35);
+}
+
+.g-liste-effacer {
+  width: 100%;
+  margin-top: 6px;
+  padding: 7px;
+  background: none;
+  border: none;
+  border-top: 1px solid rgba(255,255,255,.09);
+  color: rgba(255,207,0,.8);
+  font-family: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+}
+.g-liste-effacer:hover { color: #fff }
+
+.g-barre-vider { margin-left: auto }

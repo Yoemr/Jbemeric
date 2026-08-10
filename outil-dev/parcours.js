@@ -1035,6 +1035,153 @@ const PARCOURS = [
       return true
     })()`,
   },
+  // ── La barre de filtres ────────────────────────────────────────────────────
+  // Demande de Yoan du 11 aout : des categories en listes deroulantes, sur une
+  // seule ligne, avec un champ de recherche.
+  //
+  // Les parcours d'avant cliquaient les cases directement. Ils continuent de
+  // passer maintenant que les cases sont dans un panneau replie, parce que
+  // element.click() marche sur un element cache. Ils ne prouvent donc plus
+  // qu'un humain peut s'en servir. Ceux-ci le prouvent.
+  {
+    nom: 'barre, une recherche et une liste par categorie',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+    })()`,
+    attente: 1600,
+    attendu: `(function () {
+      if (!document.getElementById('g-recherche')) return 'pas de champ de recherche'
+      var listes = [].map.call(document.querySelectorAll('.g-liste'), function (l) { return l.dataset.liste })
+      // Les categories que le jeu d'essai peut remplir. Un filtre qui n'offre
+      // qu'une seule valeur ne se dessine pas, c'est voulu.
+      var attendues = ['discipline', 'genre', 'circuit', 'statut']
+      var manquantes = attendues.filter(function (c) { return listes.indexOf(c) === -1 })
+      if (manquantes.length) return 'categories absentes : ' + manquantes.join(', ')
+      // Tout doit tenir sur une ligne : la barre et son premier enfant partagent
+      // le haut. Un retour a la ligne se verrait sur le dernier element.
+      var surUneLigne = [].slice.call(document.querySelectorAll('.g-cherche, .g-liste'))
+      var haut = surUneLigne[0].getBoundingClientRect().top
+      var casse = surUneLigne.filter(function (e) { return Math.abs(e.getBoundingClientRect().top - haut) > 4 })
+      if (casse.length) return casse.length + ' categorie(s) passent a la ligne'
+      // Rien ne doit etre deplie a l'ouverture.
+      if (document.querySelector('.g-liste.ouverte')) return 'une liste est deja depliee a l ouverture'
+      return true
+    })()`,
+  },
+  {
+    nom: 'barre, deplier une liste puis cliquer ailleurs la referme',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () {
+        document.querySelector('.g-liste[data-liste="circuit"] [data-liste-ouvrir]').click()
+        window.__vuDeplie = !!document.querySelector('.g-liste[data-liste="circuit"] .g-liste-panneau').offsetParent
+      }, 1500)
+      setTimeout(function () { document.querySelector('.g-tete h2').click() }, 1900)
+    })()`,
+    attente: 2600,
+    attendu: `(function () {
+      // offsetParent vaut null quand l'element ou un parent est en display:none.
+      // C'est la seule facon de savoir qu'il est vraiment visible a l'ecran.
+      if (!window.__vuDeplie) return 'le panneau ne s est pas affiche au clic'
+      if (document.querySelector('.g-liste.ouverte')) return 'un clic ailleurs ne referme pas la liste'
+      return true
+    })()`,
+  },
+  {
+    nom: 'barre, cocher dans une liste ne la referme pas',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    // Le piege du redessin : cocher une case reconstruit tout le tableau, donc
+    // le panneau ouvert disparait avec. Sans rappel de l'etat, on ne peut
+    // cocher qu'une valeur a la fois, ce qui rend le filtre inutilisable.
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () {
+        document.querySelector('.g-liste[data-liste="circuit"] [data-liste-ouvrir]').click()
+      }, 1500)
+      setTimeout(function () {
+        var c = document.querySelector('.g-liste[data-liste="circuit"] input[type=checkbox]')
+        c.checked = true
+        c.dispatchEvent(new Event('change', { bubbles: true }))
+      }, 1900)
+    })()`,
+    attente: 2600,
+    attendu: `(function () {
+      var boite = document.querySelector('.g-liste[data-liste="circuit"]')
+      if (!boite) return 'la liste des circuits a disparu'
+      if (!boite.classList.contains('ouverte')) return 'la liste s est refermee en cochant'
+      if (!boite.querySelector('.g-liste-panneau').offsetParent) return 'le panneau n est plus visible'
+      if (!boite.classList.contains('pris')) return 'le bouton ne montre pas qu un choix est pris'
+      return true
+    })()`,
+  },
+  {
+    nom: 'barre, la recherche filtre le tableau et garde le curseur',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () {
+        window.__avant = document.querySelectorAll('.g-table tbody tr').length
+        var ch = document.getElementById('g-recherche')
+        ch.focus()
+        // Sans accent et en minuscules : la recherche doit trouver « Lédenon ».
+        ch.value = 'ledenon'
+        ch.dispatchEvent(new Event('input', { bubbles: true }))
+      }, 1500)
+    })()`,
+    attente: 2300,
+    attendu: `(function () {
+      var lignes = document.querySelectorAll('.g-table tbody tr')
+      if (window.__avant < 2) return 'le jeu d essai n a pas assez de lignes pour prouver quoi que ce soit'
+      if (lignes.length !== 1) return 'attendu 1 ligne pour « ledenon », trouve ' + lignes.length
+      if (lignes[0].textContent.indexOf('Journée auto exclusive') === -1)
+        return 'ce n est pas la bonne ligne : ' + lignes[0].textContent.slice(0, 60)
+      // Le tableau est reconstruit a chaque frappe. Si le curseur ne revient
+      // pas, on ne peut taper qu une lettre.
+      var actif = document.activeElement
+      if (!actif || actif.id !== 'g-recherche') return 'le curseur a quitte le champ : ' + (actif && actif.tagName)
+      if (document.getElementById('g-recherche').value !== 'ledenon') return 'le champ a perdu ce qui etait tape'
+      return true
+    })()`,
+  },
+  {
+    nom: 'barre, tout afficher efface la recherche et les cases',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () {
+        var ch = document.getElementById('g-recherche')
+        ch.value = 'ledenon'
+        ch.dispatchEvent(new Event('input', { bubbles: true }))
+      }, 1400)
+      setTimeout(function () { document.querySelector('[data-filtre-vider]').click() }, 1900)
+    })()`,
+    attente: 2600,
+    attendu: `(function () {
+      if (document.getElementById('g-recherche').value !== '') return 'la recherche n a pas ete effacee'
+      // Les quatre candidats du jeu d essai, filtres par defaut compris.
+      var lignes = document.querySelectorAll('.g-table tbody tr')
+      if (lignes.length !== 4) return 'attendu les 4 candidats, trouve ' + lignes.length
+      if (document.querySelector('.g-liste.pris')) return 'une categorie reste marquee comme prise'
+      return true
+    })()`,
+  },
   {
     nom: 'inscription, Echap ferme vraiment la fiche',
     page: 'evenements.html',

@@ -259,6 +259,11 @@
               // Le titre du circuit est un point de départ, pas une obligation :
               // « Roulage autos » est ce que le circuit vend, pas ce que JB vend.
               p_type: l.titre,
+              // Certaines sources publient leur tarif et leur descriptif,
+              // d'autres non. Lédenon donne les deux, le Circuit du Var aucun
+              // des deux. Ce qui est connu arrive prérempli, le reste est vide.
+              p_prix: l.prix,
+              p_resume: l.resume,
               p_places: 10,
               p_publier: false,
             },
@@ -268,10 +273,10 @@
               { cle: 'p_mode', titre: 'Ce qu\'on loue', type: 'choix', options: MODES,
                 aide: 'Décide de ce que la page d\'événement propose au visiteur.' },
               { cle: 'p_prix', titre: 'Prix par pilote, en euros', type: 'number',
-                aide: 'Le circuit ne publie aucun tarif. Ce chiffre vient de JB.' },
+                aide: 'Prérempli quand le circuit publie son tarif. C\'est le prix du circuit, pas celui que JB facture.' },
               { cle: 'p_places', titre: 'Nombre de places', type: 'number' },
               { cle: 'p_resume', titre: 'Résumé', type: 'texte-long', lignes: 3,
-                aide: 'Deux phrases, celles qui s\'affichent sur la carte de la date.' },
+                aide: 'Ce qui s\'affiche sur la carte de la date. Prérempli avec le texte du circuit quand il en donne un, à réécrire dans les mots de JB.' },
               { cle: 'p_publier', titre: 'Mettre en ligne tout de suite', type: 'bascule',
                 oui: 'visible sur le site',
                 aide: 'Sinon l\'événement reste en brouillon, invisible, et attend.' },

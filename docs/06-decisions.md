@@ -6,6 +6,48 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 août 2026, un deuxième circuit, et il publie ses prix
+
+### D-170, Lédenon entre dans la veille
+
+Mot de Yoan : « si il manque des circuits il va falloir les trouver et les mettre ». Le premier ajouté est Lédenon, sa page « Journées autos exclusives ».
+
+Sa forme n'a rien à voir avec celle du Circuit du Var. Wix embarque du JSON, Lédenon sert du HTML échappé par son propre outil, avec un bloc par date : le jour, le mois en toutes lettres, un titre, un texte, un tarif. D'où un second parseur, `ledenon-awp`, déclaré par la source et non deviné.
+
+**L'année n'est écrite dans aucun bloc.** Elle est dans le titre de la page, « Calendrier Journées autos exclusives 2026 ». Sans elle on ne peut pas dater, donc le parseur ne rend rien plutôt que de supposer.
+
+**La page contient son calendrier deux fois**, vérifié en comptant les conteneurs : deux balises `main`, 26 blocs pour 13 dates. Le parseur dédoublonne et garde la version la plus renseignée.
+
+### D-171, Cette source publie ce que la première cachait
+
+Le Circuit du Var n'affiche aucun tarif, vérifié page par page le 10 août. Lédenon affiche le sien, et son texte avec :
+
+> « 7 sessions de 30 minutes, alternées entre les GT/Berline et les formules. 20 véhicules maximum en piste. 300 € TTC pour les particuliers ou 300 € HT pour les TEAM, Entreprises ou associations. »
+
+Le prix et le résumé rejoignent donc le candidat, et le formulaire de création arrive prérempli. Une source qui ne les donne pas laisse les cases vides : **un chiffre par défaut serait un chiffre inventé**, et c'est la faute du 8 août avec le numéro de téléphone.
+
+**Contrôles négatifs**, deux, concluants : ne pas reprendre le tarif publié est nommé, et poser un tarif par défaut sur une source qui n'en publie pas est nommé.
+
+### D-172, Le titre décide, le résumé lève un doute
+
+Lédenon appelle ses trackdays « Journée auto exclusive ». Aucun de mes mots-clés ne s'y trouve, les quatre dates tombaient donc en « à vérifier », ce qui était le bon comportement par défaut.
+
+Mais leur description dit : « pour réserver, rendez-vous sur l'onglet **roulage auto** ». La preuve était dans le texte, pas dans le titre.
+
+La règle reste prudente et son ordre compte : **le titre commande, et le résumé n'est consulté que lorsque le titre ne dit rien.** Un résumé ne peut jamais contredire un titre explicite, seulement éclairer un titre muet.
+
+Les quatre dates de Lédenon sont maintenant des trackdays en voiture perso, avec leur tarif.
+
+### D-173, Un parcours qui compte les lignes par leur rang se casse au premier ajout
+
+Le jeu d'essai est passé de trois à quatre dates. Trois parcours ont échoué, dont un qui lisait les lignes par indice.
+
+Corrigé en repérant les lignes par leur texte. Un parcours qui dépend de l'ordre d'un jeu de données se périme dès qu'on l'enrichit, et fait perdre du temps sur une fausse alerte.
+
+**Piège déjà payé, revu une troisième fois** : une expression régulière écrite dans un gabarit de chaîne perd ses antislashs à l'écriture. `\d+` devient `d+` dans le navigateur. `docs/07` section 2.7 le dit déjà, et je l'ai refait. `indexOf` reste la seule écriture sûre dans ces gabarits.
+
+---
+
 ## 10 août 2026, l'onglet s'ouvre sur ce qui se vend
 
 ### D-167, Baptêmes et stages ne s'affichent plus

@@ -160,6 +160,13 @@ const PRELUDE_GESTION = `(function () {
     { id:'v3', date_event:'2099-09-20', titre:'Stage de pilotage GT', statut:'retenu', event_id:'e9',
       discipline:'auto', genre:'stage',
       photo:'https://static.wixstatic.com/media/photo-3~mv2.jpg', lien:'https://exemple.test/event-details/stage-3',
+      veille_sources:{ nom:'Circuit de Lédenon, agenda', circuits:{ nom:'Circuit de Lédenon', pays:'France', region:'Gard (30)' } } },
+    // Une source qui publie son tarif et son texte, comme Ledenon. Le
+    // formulaire de creation doit arriver prerempli avec.
+    { id:'v4', date_event:'2099-09-11', titre:'Journée auto exclusive', statut:'nouveau', event_id:null,
+      discipline:'auto', genre:'roulage', prix:300,
+      resume:'7 sessions de 30 minutes. 20 vehicules maximum en piste.',
+      debut:null, fin:null, photo:null, lien:'https://exemple.test/journees-autos',
       veille_sources:{ nom:'Circuit de Lédenon, agenda', circuits:{ nom:'Circuit de Lédenon', pays:'France', region:'Gard (30)' } } }
   ]
   var REGLAGES = [{ horizon_mois: 3 }]
@@ -629,7 +636,7 @@ const PARCOURS = [
     attente: 2200,
     attendu: `(function () {
       var lignes = document.querySelectorAll('.g-table tbody tr')
-      if (lignes.length !== 3) return 'attendu 3 candidats, trouve ' + lignes.length
+      if (lignes.length !== 4) return 'attendu 4 candidats, trouve ' + lignes.length
 
       function verbes(i) {
         return [].map.call(lignes[i].querySelectorAll('[data-agir]'), function (b) {
@@ -639,13 +646,23 @@ const PARCOURS = [
       // Aucun identifiant dans un onclick : la regle du 8 aout.
       if (document.querySelector('.g-table [onclick]')) return 'un onclick porte un identifiant'
 
-      if (verbes(0) !== 'ecarter,retenir') return 'ligne a trier : ' + verbes(0)
-      if (verbes(1) !== 'rendre,retenir')  return 'ligne ecartee : ' + verbes(1)
-      if (verbes(2) !== '')                return 'ligne deja retenue : ' + verbes(2)
+      // On repere les lignes par leur texte, pas par leur rang : l'ordre change
+      // des qu'une date s'ajoute au jeu d'essai.
+      function verbesDe(mot) {
+        var l = [].filter.call(lignes, function (t) { return t.textContent.indexOf(mot) !== -1 })[0]
+        if (!l) return 'ligne introuvable'
+        return [].map.call(l.querySelectorAll('[data-agir]'), function (b) { return b.dataset.agir }).sort().join(',')
+      }
+      if (verbesDe('Roulage autos') !== 'ecarter,retenir')     return 'ligne a trier : ' + verbesDe('Roulage autos')
+      if (verbesDe('Roulage motos') !== 'rendre,retenir')      return 'ligne ecartee : ' + verbesDe('Roulage motos')
+      if (verbesDe('Stage de pilotage') !== '')                return 'ligne deja retenue : ' + verbesDe('Stage de pilotage')
 
       // Le compte doit dire le travail restant, pas le nombre de lignes.
       var compte = document.querySelector('.g-compte').textContent
-      if (compte.indexOf('1 date') === -1) return 'le compte ne dit pas le travail restant : ' + compte
+      // Pas d'expression reguliere : dans un gabarit de chaine, le \\d est
+      // avale a l'ecriture et le navigateur recoit un « d » litteral.
+      // Piege deja paye, docs/07 section 2.7.
+      if (compte.indexOf('à trier') === -1) return 'le compte ne dit pas le travail restant : ' + compte
 
       // Rien ne se cree a la main ici.
       if (document.getElementById('g-nouveau')) return 'un bouton Nouveau traine sur la veille'
@@ -769,7 +786,7 @@ const PARCOURS = [
 
       // Le compte doit dire ce qui est masque, sinon on croit avoir tout perdu.
       var compte = document.querySelector('.g-compte').textContent
-      if (compte.indexOf('sur 3') === -1) return 'le compte ne dit pas ce qui est masque : ' + compte
+      if (compte.indexOf('sur 4') === -1) return 'le compte ne dit pas ce qui est masque : ' + compte
 
       // Un filtre a un seul choix ne filtre rien, il ne doit pas s'afficher.
       if (document.querySelector('[data-filtre="pays"]'))
@@ -880,7 +897,7 @@ const PARCOURS = [
     attente: 3000,
     attendu: `(function () {
       var lignes = document.querySelectorAll('.g-table tbody tr')
-      if (lignes.length !== 3) return 'apres remise a zero il devait rester 3 lignes, il y en a ' + lignes.length
+      if (lignes.length !== 4) return 'apres remise a zero il devait rester 4 lignes, il y en a ' + lignes.length
       if (document.querySelector('[data-filtre]:checked')) return 'une case est restee cochee'
       return true
     })()`,
@@ -915,7 +932,6 @@ const PARCOURS = [
       if (!sous.querySelector('a[href*="/event-details/"]'))
         return 'pas de lien pour verifier chez le circuit'
 
-      // Le prix est demande, parce qu aucun circuit ne le publie.
       if (!document.getElementById('ch-p_prix')) return 'pas de champ prix'
       if (!document.getElementById('ch-p_mode')) return 'pas de champ pour ce qu on loue'
 
@@ -923,6 +939,60 @@ const PARCOURS = [
       var publier = document.getElementById('ch-p_publier')
       if (!publier) return 'pas de choix de mise en ligne'
       if (publier.checked) return 'la mise en ligne est cochee par defaut'
+      return true
+    })()`,
+  },
+  {
+    nom: 'veille, le tarif publie par le circuit arrive prerempli',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    // Le Circuit du Var ne publie aucun tarif, Ledenon publie le sien et son
+    // texte. Ce qui est connu ne doit pas etre resaisi, ce qui est inconnu
+    // doit rester vide plutot que de porter un chiffre invente.
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () {
+        // La ligne de Ledenon, celle qui porte un tarif.
+        var l = [].filter.call(document.querySelectorAll('.g-table tbody tr'), function (t) {
+          return t.textContent.indexOf('Journée auto exclusive') !== -1
+        })[0]
+        l.querySelector('[data-agir="retenir"]').click()
+      }, 1700)
+    })()`,
+    attente: 2600,
+    attendu: `(function () {
+      var prix = document.getElementById('ch-p_prix')
+      if (!prix) return 'le formulaire ne s est pas ouvert'
+      if (prix.value !== '300') return 'le tarif publie n est pas repris : ' + prix.value
+      var res = document.getElementById('ch-p_resume')
+      if (!res || res.value.indexOf('20 vehicules') === -1)
+        return 'le texte du circuit n est pas repris : ' + (res && res.value)
+      return true
+    })()`,
+  },
+  {
+    nom: 'veille, une date sans tarif publie laisse la case vide',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () {
+        var l = [].filter.call(document.querySelectorAll('.g-table tbody tr'), function (t) {
+          return t.textContent.indexOf('Roulage autos') !== -1
+        })[0]
+        l.querySelector('[data-agir="retenir"]').click()
+      }, 1700)
+    })()`,
+    attente: 2600,
+    attendu: `(function () {
+      var prix = document.getElementById('ch-p_prix')
+      if (!prix) return 'le formulaire ne s est pas ouvert'
+      // Le Circuit du Var ne publie rien : un chiffre ici serait invente.
+      if (prix.value !== '') return 'un tarif apparait alors que la source n en publie aucun : ' + prix.value
       return true
     })()`,
   },

@@ -148,16 +148,19 @@ const PRELUDE_GESTION = `(function () {
   // melange qui decide quels boutons chaque ligne doit porter.
   var VEILLE = [
     { id:'v1', date_event:'2099-08-18', titre:'Roulage autos',  statut:'nouveau', event_id:null,
+      discipline:'auto', genre:'roulage',
       debut:'2099-08-18T06:30:00.000Z', fin:'2099-08-18T16:00:00.000Z',
       photo:'https://static.wixstatic.com/media/photo-1~mv2.jpg', lien:'https://exemple.test/event-details/roulage-auto-1',
-      veille_sources:{ nom:'Circuit du Var, agenda' } },
+      veille_sources:{ nom:'Circuit du Var, agenda', circuits:{ nom:'Circuit du Luc', pays:'France', region:'Var (83)' } } },
     { id:'v2', date_event:'2099-08-19', titre:'Roulage motos',  statut:'ecarte',  event_id:null,
+      discipline:'moto', genre:'roulage',
       debut:'2099-08-19T12:00:00.000Z', fin:'2099-08-19T16:00:00.000Z',
       photo:null, lien:null,
-      veille_sources:{ nom:'Circuit du Var, agenda' } },
-    { id:'v3', date_event:'2099-08-20', titre:'Stage monoplace', statut:'retenu', event_id:'e9',
+      veille_sources:{ nom:'Circuit du Var, agenda', circuits:{ nom:'Circuit du Luc', pays:'France', region:'Var (83)' } } },
+    { id:'v3', date_event:'2099-09-20', titre:'Stage monoplace', statut:'retenu', event_id:'e9',
+      discipline:'auto', genre:'stage',
       photo:'https://static.wixstatic.com/media/photo-3~mv2.jpg', lien:'https://exemple.test/event-details/stage-3',
-      veille_sources:{ nom:'Circuit du Var, agenda' } }
+      veille_sources:{ nom:'Circuit de Lédenon, agenda', circuits:{ nom:'Circuit de Lédenon', pays:'France', region:'Gard (30)' } } }
   ]
   var REGLAGES = [{ horizon_mois: 3 }]
   var SOURCES = [
@@ -733,6 +736,68 @@ const PARCOURS = [
       var t = pied.textContent
       if (t.indexOf('200') === -1) return 'le pied ne dit pas ce que la source a repondu'
       if (t.indexOf('lu le') === -1) return 'le pied ne dit pas quand la source a ete lue'
+      return true
+    })()`,
+  },
+  {
+    nom: 'veille, les cases filtrent ce qu on voit',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    // Demande de Yoan du 10 aout : « des cases qu'on coche ou decoche pour
+    // afficher ce qu'on veut ». Rien de coche affiche tout, et un filtre qui
+    // n'offrirait qu'un seul choix ne s'affiche pas.
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () {
+        var c = document.querySelector('[data-filtre="discipline"][value="moto"]')
+        c.checked = true
+        c.dispatchEvent(new Event('change', { bubbles: true }))
+      }, 1600)
+    })()`,
+    attente: 2400,
+    attendu: `(function () {
+      var lignes = document.querySelectorAll('.g-table tbody tr')
+      if (lignes.length !== 1) return 'cocher « moto » devait laisser 1 ligne, il en reste ' + lignes.length
+      if (lignes[0].textContent.indexOf('Roulage motos') === -1)
+        return 'ce n est pas la bonne ligne : ' + lignes[0].textContent.slice(0, 60)
+
+      // Le compte doit dire ce qui est masque, sinon on croit avoir tout perdu.
+      var compte = document.querySelector('.g-compte').textContent
+      if (compte.indexOf('sur 3') === -1) return 'le compte ne dit pas ce qui est masque : ' + compte
+
+      // Un filtre a un seul choix ne filtre rien, il ne doit pas s'afficher.
+      if (document.querySelector('[data-filtre="pays"]'))
+        return 'le filtre pays s affiche alors qu il n offre qu un choix'
+      if (!document.querySelector('[data-filtre="region"]'))
+        return 'le filtre region manque alors qu il y a deux regions'
+
+      // Et de quoi tout revoir.
+      if (!document.querySelector('[data-filtre-vider]')) return 'aucun moyen de tout reafficher'
+      return true
+    })()`,
+  },
+  {
+    nom: 'veille, decocher tout remet la liste entiere',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () {
+        var c = document.querySelector('[data-filtre="genre"][value="stage"]')
+        c.checked = true
+        c.dispatchEvent(new Event('change', { bubbles: true }))
+      }, 1500)
+      setTimeout(function () { document.querySelector('[data-filtre-vider]').click() }, 2200)
+    })()`,
+    attente: 3000,
+    attendu: `(function () {
+      var lignes = document.querySelectorAll('.g-table tbody tr')
+      if (lignes.length !== 3) return 'apres remise a zero il devait rester 3 lignes, il y en a ' + lignes.length
+      if (document.querySelector('[data-filtre]:checked')) return 'une case est restee cochee'
       return true
     })()`,
   },

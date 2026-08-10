@@ -136,6 +136,72 @@ window.JBE = (function () {
 
   function actionsDe(def) { return def.actions || ACTIONS_PAR_DEFAUT }
 
+  // ── Les filtres ───────────────────────────────────────────────────────────
+  // Demande de Yoan, 10 août 2026 : « des cases qu'on coche ou décoche pour
+  // afficher ce qu'on veut ».
+  //
+  // Un filtre se déclare comme le reste : une clé, un titre, et de quoi lire
+  // la valeur d'une ligne. Les cases sont construites à partir des lignes
+  // reçues, pas d'une liste écrite d'avance : une valeur qui n'existe dans
+  // aucune ligne n'a pas de case, et une valeur nouvelle en a une sans qu'on
+  // touche au code.
+  //
+  // Rien de coché veut dire tout afficher. C'est le contraire d'une liste
+  // vide : personne ne veut ouvrir un onglet et n'y rien voir.
+  var choix = {}                       // { cle du filtre : { valeur : true } }
+
+  function valeursDe(f, lignes) {
+    var compte = {}
+    lignes.forEach(function (l) {
+      var v = f.valeur(l)
+      var liste = Array.isArray(v) ? v : [v]
+      liste.forEach(function (x) {
+        var cle = x == null || x === '' ? '' : String(x)
+        compte[cle] = (compte[cle] || 0) + 1
+      })
+    })
+    return Object.keys(compte).sort(function (a, b) {
+      if (!a) return 1                 // « non renseigné » en dernier
+      if (!b) return -1
+      return a.localeCompare(b, 'fr')
+    }).map(function (v) {
+      return { valeur: v, titre: (f.nommer ? f.nommer(v) : v) || 'non renseigné', combien: compte[v] }
+    })
+  }
+
+  function garde(def, ligne) {
+    return (def.filtres || []).every(function (f) {
+      var pris = choix[f.cle]
+      if (!pris || !Object.keys(pris).length) return true      // rien de coché
+      var v = f.valeur(ligne)
+      var liste = Array.isArray(v) ? v : [v]
+      return liste.some(function (x) {
+        return pris[x == null || x === '' ? '' : String(x)]
+      })
+    })
+  }
+
+  function filtresHtml(def, lignes) {
+    if (!def.filtres || !def.filtres.length) return ''
+    return '<div class="g-filtres">' + def.filtres.map(function (f) {
+      var valeurs = valeursDe(f, lignes)
+      if (valeurs.length < 2) return ''        // un seul choix ne filtre rien
+      var pris = choix[f.cle] || {}
+      return '<div class="g-filtre">' +
+        '<div class="g-filtre-titre">' + ech(f.titre) + '</div>' +
+        valeurs.map(function (v) {
+          return '<label class="g-coche' + (pris[v.valeur] ? ' pris' : '') + '">' +
+            '<input type="checkbox" data-filtre="' + ech(f.cle) + '"' +
+            ' value="' + ech(v.valeur) + '"' + (pris[v.valeur] ? ' checked' : '') + '>' +
+            ech(v.titre) + ' <span class="g-filtre-n">' + v.combien + '</span></label>'
+        }).join('') +
+      '</div>'
+    }).join('') +
+    (Object.keys(choix).some(function (k) { return Object.keys(choix[k] || {}).length })
+      ? '<button class="g-btn g-btn-mini" data-filtre-vider>Tout afficher</button>' : '') +
+    '</div>'
+  }
+
   function dessinerBarre(actif) {
     document.getElementById('g-onglets').innerHTML = onglets.map(function (o) {
       return '<button class="g-onglet' + (o.cle === actif ? ' actif' : '') + '" data-onglet="' + ech(o.cle) + '">'
@@ -146,6 +212,9 @@ window.JBE = (function () {
   function ouvrir(cle) {
     var def = onglets.filter(function (o) { return o.cle === cle })[0] || onglets[0]
     if (!def) return
+    // Les filtres appartiennent a l'onglet qu'on quitte. Les garder ferait
+    // ouvrir le suivant avec des cases qui ne veulent plus rien dire.
+    if (courant && courant.cle !== def.cle) choix = {}
     dessinerBarre(def.cle)
     try { localStorage.setItem('jbe-onglet', def.cle) } catch (e) { /* navigation privee */ }
     location.hash = def.cle
@@ -160,13 +229,30 @@ window.JBE = (function () {
     zone.innerHTML = '<div class="g-attente">Chargement…</div>'
 
     requete((def.vue || def.table) + '?select=' + (def.select || '*') + '&order=' + (def.tri || 'created_at.desc'))
-      .then(function (lignes) {
+      .then(function (toutes) {
+        zone.__toutes = toutes
+        dessiner(def, toutes)
+      })
+      .catch(function (e) {
+        zone.innerHTML = '<div class="g-erreur"><strong>La base n\'a pas répondu.</strong><br>' + ech(e.message) + '</div>'
+      })
+  }
+
+  // Dessiner : appelé au chargement, puis à chaque changement de filtre. Les
+  // lignes ne sont pas rechargées, elles sont déjà là.
+  function dessiner(def, toutes) {
+    var zone = document.getElementById('g-contenu')
+    var lignes = toutes.filter(function (l) { return garde(def, l) })
+    ;(function () {
         var actions = actionsDe(def)
         zone.innerHTML =
           '<div class="g-tete">' +
             '<div><h2>' + ech(def.titre) + '</h2>' +
-              '<p class="g-compte">' + (def.compter ? def.compter(lignes)
-                : lignes.length + ' ligne' + (lignes.length > 1 ? 's' : '')) + '</p></div>' +
+              '<p class="g-compte">' + (def.compter ? def.compter(lignes, toutes)
+                : lignes.length + ' ligne' + (lignes.length > 1 ? 's' : '')) +
+                (lignes.length !== toutes.length
+                  ? ' <span class="g-fade">sur ' + toutes.length + ', le reste est masqué</span>' : '') +
+              '</p></div>' +
             // Une zone de réglages facultative, au même titre que le pied.
             // La Veille y met jusqu'où elle regarde.
             (def.entete ? '<div class="g-tete-reglage" id="g-tete-reglage"></div>' : '') +
@@ -179,6 +265,7 @@ window.JBE = (function () {
                 : '<button class="g-btn g-btn-or" id="g-nouveau">+ Nouveau</button>') +
             '</div>' +
           '</div>' +
+          filtresHtml(def, toutes) +
           (lignes.length
             ? '<div class="g-table-cadre"><table class="g-table"><thead><tr>' +
                 def.colonnes.map(function (c) { return '<th>' + ech(c.titre) + '</th>' }).join('') +
@@ -200,7 +287,9 @@ window.JBE = (function () {
                     '</td></tr>'
                 }).join('') +
               '</tbody></table></div>'
-            : '<div class="g-vide">' + (def.vide || 'Rien pour l\'instant. Le bouton « Nouveau » crée la première ligne.') + '</div>') +
+            : '<div class="g-vide">' + (toutes.length
+                ? 'Aucune ligne ne passe les filtres. Décochez pour revoir les ' + toutes.length + '.'
+                : (def.vide || 'Rien pour l\'instant. Le bouton « Nouveau » crée la première ligne.')) + '</div>') +
           // Un pied de tableau facultatif. La Veille y met les adresses
           // qu'elle lit, pour que Yoan puisse vérifier une date à la source.
           (def.pied ? '<div class="g-pied" id="g-pied"></div>' : '')
@@ -208,10 +297,7 @@ window.JBE = (function () {
         if (def.entete) def.entete(document.getElementById('g-tete-reglage'), lignes)
         if (def.pied) def.pied(document.getElementById('g-pied'), lignes)
         zone.__lignes = lignes
-      })
-      .catch(function (e) {
-        zone.innerHTML = '<div class="g-erreur"><strong>La base n\'a pas répondu.</strong><br>' + ech(e.message) + '</div>'
-      })
+    })()
   }
 
   // ── Le formulaire ─────────────────────────────────────────────────────────
@@ -340,6 +426,11 @@ window.JBE = (function () {
     }
     if (t.id === 'g-nouveau') return editer(courant, null)
 
+    if (t.closest && t.closest('[data-filtre-vider]')) {
+      choix = {}
+      return dessiner(courant, document.getElementById('g-contenu').__toutes || [])
+    }
+
     var tete = t.closest && t.closest('[data-tete]')
     if (tete) {
       var bt = (courant.boutonsTete || []).filter(function (b) { return b.cle === tete.dataset.tete })[0]
@@ -360,6 +451,18 @@ window.JBE = (function () {
     if (caseCoche) setTimeout(function () {
       caseCoche.classList.toggle('coche', caseCoche.querySelector('input').checked)
     }, 0)
+  })
+
+  // Les cases de filtre. Un « change » et non un « click » : la case répond
+  // aussi au clavier, et c'est la seule facon de connaitre son etat final.
+  document.addEventListener('change', function (ev) {
+    var c = ev.target
+    if (!c.dataset || !c.dataset.filtre) return
+    var cle = c.dataset.filtre
+    choix[cle] = choix[cle] || {}
+    if (c.checked) choix[cle][c.value] = true
+    else delete choix[cle][c.value]
+    dessiner(courant, document.getElementById('g-contenu').__toutes || [])
   })
 
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') fermerModale() })

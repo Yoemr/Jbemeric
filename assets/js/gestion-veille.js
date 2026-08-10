@@ -55,7 +55,7 @@
     cle:   'veille',
     titre: 'Veille',
     table: 'veille_candidats',
-    select: '*,veille_sources(nom)',
+    select: '*,veille_sources(nom,circuits(nom,pays,region))',
     tri:   'statut.asc,date_event.asc',
 
     nommer: function (l) { return l.titre + ' du ' + l.date_event },
@@ -70,6 +70,65 @@
 
     // Rien ne se crée à la main ici : les lignes viennent des circuits.
     boutonNouveau: false,
+
+    // ── Les filtres ──────────────────────────────────────────────────────────
+    // Demande de Yoan : par circuit, par pays, par région, par type, par date,
+    // « et peut-être d'autres trucs que j'ai pas pensé ».
+    //
+    // Les deux que j'ajoute sont ceux qui coupent le plus. Sur les 83 dates du
+    // Circuit du Var : 20 sont des roulages moto, que JB ne fait pas, et 17 des
+    // événements privés. Cocher « auto » et « roulage libre » ramène la liste
+    // à 10 dates, celles qui l'intéressent vraiment.
+    //
+    // Une case n'apparaît que si la valeur existe dans les lignes reçues. Tant
+    // qu'une seule source est branchée, les cases pays et région ne s'affichent
+    // pas : il n'y aurait qu'un choix, et un filtre à un seul choix ne filtre
+    // rien.
+    filtres: [
+      { cle: 'discipline', titre: 'Discipline',
+        valeur: function (l) { return l.discipline },
+        nommer: function (v) {
+          return { auto: 'Auto', moto: 'Moto', karting: 'Karting', 'a juger': 'À juger' }[v] || v
+        } },
+      { cle: 'genre', titre: 'Type d\'événement',
+        valeur: function (l) { return l.genre },
+        nommer: function (v) {
+          return {
+            roulage: 'Roulage libre', stage: 'Stage de l\'école du circuit',
+            bapteme: 'Baptême', prive: 'Événement privé', 'a juger': 'À juger',
+          }[v] || v
+        } },
+      { cle: 'circuit', titre: 'Circuit',
+        valeur: function (l) { var c = l.veille_sources && l.veille_sources.circuits; return c ? c.nom : null } },
+      { cle: 'pays', titre: 'Pays',
+        valeur: function (l) { var c = l.veille_sources && l.veille_sources.circuits; return c ? c.pays : null } },
+      { cle: 'region', titre: 'Région',
+        valeur: function (l) { var c = l.veille_sources && l.veille_sources.circuits; return c ? c.region : null } },
+      { cle: 'mois', titre: 'Mois',
+        // La date brute ferait autant de cases que de jours. Le mois est la
+        // maille à laquelle JB raisonne quand il cale sa saison.
+        valeur: function (l) { return l.date_event ? l.date_event.slice(0, 7) : null },
+        nommer: function (v) {
+          if (!v) return ''
+          var m = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet',
+                   'août', 'septembre', 'octobre', 'novembre', 'décembre']
+          return m[Number(v.slice(5, 7)) - 1] + ' ' + v.slice(0, 4)
+        } },
+      { cle: 'duree', titre: 'Durée',
+        // Une journée entière ne se vend pas comme une demi-journée.
+        valeur: function (l) {
+          if (!l.debut || !l.fin) return null
+          return (new Date(l.fin) - new Date(l.debut)) / 3600000 >= 7 ? 'jour' : 'demi'
+        },
+        nommer: function (v) {
+          return { jour: 'Journée entière', demi: 'Demi-journée' }[v] || 'Horaires inconnus'
+        } },
+      { cle: 'statut', titre: 'État',
+        valeur: function (l) { return l.statut },
+        nommer: function (v) {
+          return { nouveau: 'À trier', retenu: 'Retenu', ecarte: 'Écarté' }[v] || v
+        } },
+    ],
 
     boutonsTete: [{
       cle: 'chercher',

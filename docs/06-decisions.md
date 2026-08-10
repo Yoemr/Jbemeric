@@ -6,6 +6,56 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 août 2026, des cases pour filtrer la veille
+
+### D-159, Un défaut trouvé en préparant les filtres
+
+En regardant la répartition des titres pour dessiner le filtre, `Pilotage &amp; Baptême GT` et `Pilotage & Baptême GT` apparaissaient comme deux lignes distinctes.
+
+Le sitemap est du XML et échappe l'esperluette, l'agenda est du JSON et ne l'échappe pas. Les deux parseurs produisaient donc deux titres différents pour la même date, et le dédoublonnage ne pouvait pas les rapprocher. **Trois dates étaient en double.**
+
+Corrigé par une fonction de décodage appliquée aux deux extractions, et l'existant rattrapé en fusionnant les doublons, le plus ancien gardant la décision de JB.
+
+### D-160, Le pays n'existait pas
+
+`circuits.region` mélangeait des départements français et des pays : « Var (83) » à côté de « Espagne », « Belgique », « Italie ». Filtrer par pays était donc impossible.
+
+Colonne `pays` ajoutée, remplie depuis `region`, et la région d'un circuit étranger remise à vide plutôt que de répéter le pays.
+
+### D-161, Deux filtres que Yoan n'avait pas demandés, et qui coupent le plus
+
+Le circuit ne dit ni la discipline ni le genre, mais son titre les dit en clair. Deux fonctions les lisent, et un cas douteux rend « à juger » plutôt qu'un classement inventé. Le titre reste affiché à côté, donc rien n'est masqué derrière une déduction.
+
+Ce que ça vaut sur les 83 dates du Circuit du Var :
+
+| Discipline et genre | Dates |
+|---|---|
+| auto, stage de l'école du circuit | 22 |
+| **moto, roulage** | **20** |
+| événement privé | 17 |
+| auto, baptême | 13 |
+| **auto, roulage libre** | **10** |
+
+JB ne fait pas de moto, et les stages du circuit sont ceux d'un concurrent. Cocher « auto » et « roulage libre » ramène la liste de 83 à 10, celles qui l'intéressent vraiment.
+
+### D-162, Les filtres se déclarent, et se construisent à partir des lignes
+
+Un filtre déclare une clé, un titre, et de quoi lire la valeur d'une ligne. Les cases sont fabriquées à partir des lignes reçues, pas d'une liste écrite d'avance : une valeur nouvelle a sa case sans qu'on touche au code, et une valeur qui n'existe nulle part n'en a pas.
+
+**Un filtre qui n'offrirait qu'un seul choix ne s'affiche pas.** Tant qu'une seule source est branchée, les cases pays et circuit resteront donc invisibles : elles ne filtreraient rien. Elles apparaîtront le jour où une deuxième source arrivera, sans intervention.
+
+**Rien de coché veut dire tout afficher.** Le contraire ouvrirait l'onglet sur une liste vide.
+
+Le filtre par date est à la maille du mois : la date brute ferait autant de cases que de jours.
+
+**Contrôles négatifs**, trois, tous concluants : un filtre qui laisse tout passer est nommé, un filtre à un seul choix qui s'affiche quand même est nommé, et un bouton « tout afficher » qui n'efface pas les cases est nommé.
+
+### D-163, Filtrer ne recharge rien
+
+Les lignes sont déjà là. Cocher une case redessine à partir de ce qui est en mémoire, sans requête. Le compte annonce ce qui est masqué, et une liste vidée par les filtres le dit au lieu de laisser croire que la base est vide.
+
+---
+
 ## 10 août 2026, retenir une date devient créer l'événement
 
 ### D-153, Un seul geste au lieu de deux, dont un à l'aveugle

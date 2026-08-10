@@ -6,6 +6,63 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 août 2026, la veille se règle et fait le ménage
+
+### D-143, Trois des données voulues ne sont pas publiées
+
+Yoan voulait le prix, la description et l'indication « complet ». Vérifié page par page sur le Circuit du Var :
+
+| Donnée | Ce que la source publie |
+|---|---|
+| Date, titre, photo, lien | présents et fiables |
+| Prix | **absent**, aucun montant, aucun euro dans la page |
+| Description | le champ `about` existe et il est **vide** sur tous les événements ouverts |
+| Complet | le drapeau `soldOut` vaut **`true` partout**, y compris sur des dates de septembre |
+
+Le dernier point est le plus important. Le circuit prend ses réservations en dehors de son site, donc son outil déclare tout complet. L'afficher aurait marqué chaque date comme complète, soit l'inverse exact du service demandé. C'est le genre de donnée qu'on croit avoir gratuitement et qui ment.
+
+**Décision de Yoan** : pour ce qui manque et dont on a besoin, aller le chercher autrement, par un script chargé seulement quand c'est nécessaire ou par une IA, en surveillant le coût et la véracité. Le mécanisme reste à faire, il est noté dans `docs/08`.
+
+Ce que le circuit ne peut de toute façon pas dire : ce que JB loue. « Roulage auto » est l'offre du circuit ; box, circuit entier ou greffe est ce que JB négocie. La colonne `mode` existe déjà et se remplit à la main.
+
+### D-144, L'horizon est un réglage de JB, et l'élargir ne coûte rien
+
+Mot de Yoan : « mon père n'a pas vraiment besoin d'une vue sur l'année entière. En général 3 mois c'est suffisant mais je veux qu'il ait la liberté de choisir. »
+
+Trois mois par défaut, réglable de 1 à 24 dans l'en-tête de l'onglet. Le réglage vit en base et non dans le navigateur : JB le pose une fois, et le passage quotidien le respecte.
+
+**La mémoire est séparée de l'affichage.** Une page lue garde sa date dans `veille_pages` pour toujours. Les candidats ne sont que la part qui tombe dans l'horizon. Élargir de 3 à 12 mois ne relit donc **aucune page**, et rétrécir ne perd rien.
+
+Vérifié : 3 mois donne 88 dates jusqu'au 10 novembre, 12 mois en donne 112 jusqu'au 17 décembre, et le retour à 3 mois retrouve exactement les 88, sans une seule requête vers le circuit.
+
+### D-145, Le passé s'efface, sauf ce que JB a fait
+
+Mot de Yoan : « tous les événements passés on s'en fout, on peut les supprimer. On peut mettre en archive ceux qui ont été effectués, pour les statistiques. »
+
+Une date repérée puis jamais retenue ne vaut rien une fois passée : effacée. Un événement que JB a réellement organisé garde sa ligne et ses inscriptions, avec un `archive_le` qui le sort de la vue courante.
+
+Premier ménage : 1 candidat passé effacé, 24 rangés hors horizon, 7 événements archivés.
+
+### D-146, La vignette est réduite, l'événement garde la qualité
+
+Mot de Yoan : « dans le dashboard version réduite light, et si on crée l'event là on fait de la qualité. »
+
+Wix sait renvoyer une image à la taille demandée. **Mesuré : 5 230 octets au lieu de 43 823**, soit huit fois moins. L'onglet demande 160 pixels de large, la base garde l'adresse d'origine, et c'est elle qui part dans l'événement quand JB retient une date.
+
+### D-147, Un défaut trouvé en éprouvant l'horizon
+
+Le circuit publie parfois deux pages du même nom le même jour, deux « Roulage auto ». La matérialisation les insérait toutes les deux dans un seul ordre, et Postgres refuse de traiter deux fois la même ligne dans un `on conflict`.
+
+Trouvé en jouant le changement d'horizon, pas en relisant le code. Corrigé en dédoublonnant avant d'insérer, la page la plus récemment modifiée l'emportant.
+
+### D-148, Une zone de réglages dans la coquille
+
+Comme les actions et le pied de tableau la veille : `def.entete` reçoit sa zone et la remplit. Un onglet qui ne déclare rien n'a pas de zone de réglages.
+
+**Contrôles négatifs**, deux, concluants : une vignette pleine taille est nommée, un réglage qui envoie toujours 3 mois est nommé.
+
+---
+
 ## 9 août 2026, la veille voit toute la saison, avec les photos
 
 ### D-137, L'agenda ne montrait que trois semaines

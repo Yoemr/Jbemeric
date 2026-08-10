@@ -39,6 +39,8 @@ Yoan, 9 août : « on s'en fout des événements passés, des voitures qui n'exi
 
 ## B bis. Chantier suivant, déjà cadré
 
+- **Aller chercher ce que la source ne publie pas.** Décision de Yoan du 10 août : « pour toutes les informations qu'on n'a pas mais dont on a besoin, il faut qu'on trouve l'information d'une manière ou d'une autre. Ça peut être un script chargé seulement quand nécessaire, ça peut aussi être par IA, mais attention aux coûts et à la véracité. » Concerne le prix, la description et l'état complet, tous les trois absents du Circuit du Var. À faire à la demande, ligne par ligne, jamais en masse.
+- **La création de l'événement à partir d'un candidat**, dit par Yoan : « on voit après pour la partie création de l'event ». Aujourd'hui « Retenir » crée un brouillon nu que JB complète à la main.
 - **Les six autres sources de veille.** Seul l'agenda du Circuit du Var est branché. Chacune des autres demande de regarder la forme de sa page et d'écrire son parseur dans `veille_extraire`. Une source de même forme est une simple ligne dans `veille_sources`, sans code.
 - **Un onglet par fonction restante** dans `admin/gestion.html` : inscriptions, circuits, documents, forum, utilisateurs. Un fichier chacun, sur le modèle de `gestion-faq.js`.
 - **Le référencement des pages d'événement.** `build-cache.js` doit pré-générer un fichier par date, avec titre, description, texte dans le HTML, `schema.org/Event` et sitemap. Aujourd'hui un robot lit « Chargement » sur toutes les dates. Chantier suivant, D-108.

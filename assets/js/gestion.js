@@ -167,6 +167,9 @@ window.JBE = (function () {
             '<div><h2>' + ech(def.titre) + '</h2>' +
               '<p class="g-compte">' + (def.compter ? def.compter(lignes)
                 : lignes.length + ' ligne' + (lignes.length > 1 ? 's' : '')) + '</p></div>' +
+            // Une zone de réglages facultative, au même titre que le pied.
+            // La Veille y met jusqu'où elle regarde.
+            (def.entete ? '<div class="g-tete-reglage" id="g-tete-reglage"></div>' : '') +
             '<div class="g-tete-boutons">' +
               (def.boutonsTete || []).map(function (b) {
                 return '<button class="g-btn ' + ech(b.classe || '') + '" data-tete="' + ech(b.cle) + '">'
@@ -202,6 +205,7 @@ window.JBE = (function () {
           // qu'elle lit, pour que Yoan puisse vérifier une date à la source.
           (def.pied ? '<div class="g-pied" id="g-pied"></div>' : '')
 
+        if (def.entete) def.entete(document.getElementById('g-tete-reglage'), lignes)
         if (def.pied) def.pied(document.getElementById('g-pied'), lignes)
         zone.__lignes = lignes
       })

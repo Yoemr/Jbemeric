@@ -235,3 +235,24 @@ textarea.g-champ { resize: vertical; min-height: 90px }
 .g-sources a:hover { color: #fff }
 
 .g-pied-vide { font-size: 11px; color: rgba(255,255,255,.3); margin: 0 }
+
+/* Le reglage d'horizon, dans l'en-tete de la Veille. */
+.g-tete-reglage { margin-left: auto; margin-right: 14px }
+
+.g-reglage {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(255,255,255,.42);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+
+.g-select {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 6px;
+  padding: 7px 10px;
+}
+.g-select:focus { border-color: rgba(255,207,0,.45); outline: none }

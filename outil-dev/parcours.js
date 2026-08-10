@@ -148,15 +148,16 @@ const PRELUDE_GESTION = `(function () {
   // melange qui decide quels boutons chaque ligne doit porter.
   var VEILLE = [
     { id:'v1', date_event:'2099-08-18', titre:'Roulage autos',  statut:'nouveau', event_id:null,
-      photo:'https://exemple.test/photo-1.jpg', lien:'https://exemple.test/event-details/roulage-auto-1',
+      photo:'https://static.wixstatic.com/media/photo-1~mv2.jpg', lien:'https://exemple.test/event-details/roulage-auto-1',
       veille_sources:{ nom:'Circuit du Var, agenda' } },
     { id:'v2', date_event:'2099-08-19', titre:'Roulage motos',  statut:'ecarte',  event_id:null,
       photo:null, lien:null,
       veille_sources:{ nom:'Circuit du Var, agenda' } },
     { id:'v3', date_event:'2099-08-20', titre:'Stage monoplace', statut:'retenu', event_id:'e9',
-      photo:'https://exemple.test/photo-3.jpg', lien:'https://exemple.test/event-details/stage-3',
+      photo:'https://static.wixstatic.com/media/photo-3~mv2.jpg', lien:'https://exemple.test/event-details/stage-3',
       veille_sources:{ nom:'Circuit du Var, agenda' } }
   ]
+  var REGLAGES = [{ horizon_mois: 3 }]
   var SOURCES = [
     { id:1, nom:'Circuit du Var, agenda', url:'https://exemple.test/agenda',
       sitemap_url:'https://exemple.test/event-pages-sitemap.xml',
@@ -179,6 +180,7 @@ const PRELUDE_GESTION = `(function () {
             : u.indexOf('/events?') !== -1 ? EV
             : u.indexOf('/veille_candidats?') !== -1 ? VEILLE
             : u.indexOf('/veille_sources?') !== -1 ? SOURCES
+            : u.indexOf('/veille_reglages?') !== -1 ? REGLAGES
             : CIRCUITS
     return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve(jeu) } })
   }
@@ -645,8 +647,12 @@ const PARCOURS = [
       // une case vide plutot qu une image cassee.
       var img = lignes[0].querySelector('img.g-vignette')
       if (!img) return 'la premiere ligne n affiche pas la photo du circuit'
-      if (img.getAttribute('src').indexOf('photo-1.jpg') === -1)
-        return 'la vignette ne montre pas la photo de CETTE date : ' + img.getAttribute('src')
+      var src = img.getAttribute('src')
+      if (src.indexOf('photo-1~mv2.jpg') === -1)
+        return 'la vignette ne montre pas la photo de CETTE date : ' + src
+      // Version reduite : 5 Ko au lieu de 43, mesure le 10 aout.
+      if (src.indexOf('/v1/fill/w_160') === -1)
+        return 'la vignette charge l image pleine taille : ' + src
       if (lignes[1].querySelector('img.g-vignette'))
         return 'une ligne sans photo affiche quand meme une image'
 
@@ -656,6 +662,36 @@ const PARCOURS = [
       if (lien.getAttribute('href').indexOf('/event-details/roulage-auto-1') === -1)
         return 'le lien ne mene pas a la date : ' + lien.getAttribute('href')
       if (lien.target !== '_blank') return 'le lien de verification quitte la fenetre de gestion'
+      return true
+    })()`,
+  },
+  {
+    nom: 'veille, l horizon se regle et part vers la base',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    // Mot de Yoan : « mon pere n'a pas vraiment besoin d'une vue sur l'annee
+    // entiere, en general 3 mois suffit, mais je veux qu'il ait la liberte de
+    // choisir ». Le reglage vit en base, pas dans le navigateur : JB le pose
+    // une fois et le passage quotidien le respecte.
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      setTimeout(function () { document.querySelector('[data-onglet="veille"]').click() }, 700)
+      setTimeout(function () {
+        var s = document.querySelector('[data-horizon]')
+        s.value = '6'
+        s.dispatchEvent(new Event('change', { bubbles: true }))
+      }, 1700)
+    })()`,
+    attente: 2800,
+    attendu: `(function () {
+      var s = document.querySelector('[data-horizon]')
+      if (!s) return 'aucun reglage d horizon dans l en-tete'
+      var e = (window.__envois || []).filter(function (x) {
+        return x.url.indexOf('rpc/veille_horizon') === 0
+      })[0]
+      if (!e) return 'le reglage n a rien envoye : ' + JSON.stringify(window.__envois || [])
+      if (JSON.parse(e.corps).p_mois !== 6) return 'mauvais horizon envoye : ' + e.corps
       return true
     })()`,
   },

@@ -27,6 +27,18 @@
     ecarte:  '<span class="g-fade">écarté</span>',
   }
 
+  // Wix sait renvoyer une image à la taille demandée. 5 Ko au lieu de 43,
+  // mesuré. La photo d'origine reste en base : c'est elle qui part dans
+  // l'événement quand JB retient une date. Mot de Yoan : « dans le dashboard
+  // version réduite light, et si on crée l'event là on fait de la qualité ».
+  function vignette(url) {
+    if (!url) return null
+    var m = url.match(/^(https:\/\/static\.wixstatic\.com\/media\/)([^/]+)$/)
+    return m ? m[1] + m[2] + '/v1/fill/w_160,h_100,al_c,q_80/' + m[2] : url
+  }
+
+  var HORIZONS = [1, 2, 3, 6, 12, 24]
+
   // Le tri met le travail en premier : ce qui n'a pas encore été jugé, puis
   // les dates les plus proches. Ce que JB a déjà tranché descend.
   JBE.onglet({
@@ -82,7 +94,7 @@
         // case reste vide plutôt que d'afficher une image cassée.
         rendu: function (l) {
           return l.photo
-            ? '<img class="g-vignette" src="' + JBE.ech(l.photo) + '" alt="" loading="lazy">'
+            ? '<img class="g-vignette" src="' + JBE.ech(vignette(l.photo)) + '" alt="" loading="lazy">'
             : '<span class="g-vignette g-vignette-vide"></span>'
         },
       },
@@ -143,6 +155,46 @@
     ],
 
     vide: 'Aucune date pour l\'instant. Le bouton « Chercher maintenant » va lire les calendriers.',
+
+    // ── Jusqu'où on regarde ──────────────────────────────────────────────────
+    // Mot de Yoan : « mon père n'a pas vraiment besoin d'une vue sur l'année
+    // entière. En général 3 mois c'est suffisant mais je veux qu'il ait la
+    // liberté de choisir. »
+    //
+    // Élargir ne coûte rien : les dates déjà lues restent en mémoire, elles
+    // réapparaissent sans qu'une seule page soit relue. Rétrécir range le
+    // surplus sans le perdre.
+    entete: function (zone) {
+      if (!zone) return
+      JBE.requete('veille_reglages?select=horizon_mois&limit=1')
+        .then(function (r) {
+          var mois = (r && r[0] && r[0].horizon_mois) || 3
+          zone.innerHTML = '<label class="g-reglage">Regarder jusqu\'à '
+            + '<select class="g-select" data-horizon>'
+            + HORIZONS.map(function (m) {
+                return '<option value="' + m + '"' + (m === mois ? ' selected' : '') + '>'
+                     + m + ' mois</option>'
+              }).join('')
+            + '</select></label>'
+
+          // L'écouteur est posé ici et non sur le document : cet élément est
+          // créé par cette fonction et disparaît avec elle, il ne peut donc
+          // pas s'accumuler d'un rendu à l'autre.
+          zone.querySelector('[data-horizon]').addEventListener('change', function (ev) {
+            var m = Number(ev.target.value)
+            JBE.dire('Réglage à ' + m + ' mois…')
+            JBE.requete('rpc/veille_horizon', { methode: 'POST', corps: { p_mois: m } })
+              .then(function () {
+                JBE.dire('On regarde maintenant ' + m + ' mois devant.')
+                JBE.rafraichir()
+              })
+              .catch(function (e) { JBE.dire('Réglage refusé : ' + e.message, 'erreur') })
+          })
+        })
+        .catch(function () {
+          zone.innerHTML = '<span class="g-fade">réglage indisponible</span>'
+        })
+    },
 
     // ── Les adresses lues, en bas de page ────────────────────────────────────
     // Demande de Yoan : « peut-être intéressant de mettre le lien des sites

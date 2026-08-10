@@ -58,6 +58,15 @@ Aucune ne se prend sans lui.
 - La forme de la page : pages filles, onglets, ou page unique avec filtres. Contrainte déjà actée : ce qui mérite une adresse doit en avoir une.
 - Où placer le compteur « X dates, Y inscriptions ouvertes », dont le code a été retiré faute d'endroit où l'afficher.
 
+**Sur le modèle économique**
+
+Mot de Yoan, 11 août 2026 : « reste à réfléchir à la partie business plan, comment on facture ça. Mais pour l'instant je sais pas. » Rien ne se construit là-dessus tant qu'il n'a pas tranché.
+
+- Le champ `mode` d'`events` porte déjà cinq façons de facturer une date : `entier` (JB loue le circuit et vend la journée, il porte le risque), `box` (le client paie le circuit pour rouler et JB pour être suivi), `greffe` (frais partagés), `coaching` (JB ne vend que ses heures), `moniteur` (une autre école le loue). La question n'est pas d'inventer un modèle, c'est de choisir lequel on pousse et à quel tarif.
+- Les six dates en ligne au 11 août sont toutes en `greffe`, le mode sans risque.
+- La colonne `cout` d'`events` existe et **rien ne l'écrit ni ne la lit**. Elle a été prévue pour poser le coût de la journée en face du prix de vente. Le jour où il faudra savoir ce que rapporte une date, la base est prête.
+- Question qui décide du reste : JB vend-il une journée ou vend-il ses heures. Avancer de l'argent oblige au remplissage, vendre ses heures ne risque rien mais plafonne au temps disponible.
+
 **Sur la conversion**
 
 - Le bouton or du menu, présent sur les neuf pages, mène à la création d'un compte. Devient-il un appel à joindre JB ?

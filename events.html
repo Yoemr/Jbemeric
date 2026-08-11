@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="track">
+<head>
+<base href="/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/track.css">
+  <title>Événements — JB EMERIC · Track-Days, Stages, Challenge HTCC, Prestige</title>
+  <meta name="description" content="Tous les événements JB EMERIC : journées piste, stages circuit, Challenge HTCC, événements prestige. PACA, 2026. Inscriptions ouvertes.">
+  <meta property="og:title" content="Événements — JB EMERIC · Track-Days, Stages, Challenge HTCC, Prestige">
+  <meta property="og:description" content="Tous les événements JB EMERIC : journées piste, stages circuit, Challenge HTCC, événements prestige. PACA, 2026. Inscriptions ouvertes.">
+  <meta property="og:image" content="https://jbemeric.netlify.app/assets/images/bmw-325i-htcc.jpg">
+  <meta property="og:url" content="https://jbemeric.netlify.app/events.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JB EMERIC École de Pilotage">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://jbemeric.netlify.app/events.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&family=Russo+One&display=swap" rel="stylesheet">
+
+<style>
+/* ── events.html specific ── */
+.ev-hub-hero {
+  position: relative;
+  min-height: 52vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: var(--bg);
+}
+.ev-hub-hero img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .45;
+}
+.ev-hub-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--bg) 0%, transparent 60%);
+}
+.ev-hub-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 6vw 64px;
+  max-width: 780px;
+}
+.ev-hub-hero .hero-kicker {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .2em;
+  color: var(--Y);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.ev-hub-hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 9vw, 100px);
+  line-height: .95;
+  color: #fff;
+  margin: 0 0 20px;
+}
+.ev-hub-hero h1 em {
+  color: var(--Y);
+  font-style: normal;
+}
+.ev-hub-hero p {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: rgba(255,255,255,.7);
+  max-width: 520px;
+}
+
+/* ── Category section ── */
+.ev-section {
+  border-top: 1px solid rgba(255,255,255,.07);
+  padding: 72px 6vw;
+}
+.ev-section:nth-child(odd) {
+  background: #0c0c0c;
+}
+.ev-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.ev-section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .25em;
+  color: var(--Y);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.ev-section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1;
+  color: #fff;
+  margin: 0;
+}
+.ev-section-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--Y);
+  text-decoration: none;
+  border: 1px solid var(--Y);
+  padding: 10px 20px;
+  transition: background .2s, color .2s;
+  white-space: nowrap;
+}
+.ev-section-cta:hover {
+  background: var(--Y);
+  color: #000;
+}
+.ev-section-desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(255,255,255,.55);
+  line-height: 1.7;
+  max-width: 560px;
+  margin-bottom: 36px;
+}
+
+/* ── Preview cards (mini calendar) ── */
+.ev-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.ev-preview-card {
+  border: 1px solid rgba(255,255,255,.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(255,255,255,.03);
+  transition: border-color .2s;
+}
+.ev-preview-card:hover {
+  border-color: rgba(255,207,0,.3);
+}
+.ev-preview-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--Y);
+  text-transform: uppercase;
+}
+.ev-preview-circuit {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: #fff;
+  line-height: 1;
+}
+.ev-preview-meta {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,.5);
+}
+.ev-preview-badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  background: rgba(255,207,0,.12);
+  color: var(--Y);
+  border: 1px solid rgba(255,207,0,.3);
+  align-self: flex-start;
+}
+.ev-preview-badge.full {
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.3);
+  border-color: rgba(255,255,255,.1);
+}
+.ev-preview-price {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: rgba(255,255,255,.7);
+  margin-top: auto;
+}
+.ev-preview-empty {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,.25);
+  letter-spacing: .1em;
+  padding: 32px 0;
+}
+
+/* ── Coming soon card ── */
+.ev-coming-card {
+  border: 1px dashed rgba(255,255,255,.12);
+  padding: 36px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.ev-coming-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .2em;
+  color: rgba(255,255,255,.3);
+  text-transform: uppercase;
+}
+.ev-coming-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: rgba(255,255,255,.4);
+}
+.ev-coming-desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,.25);
+  max-width: 280px;
+}
+
+/* ── Stats strip ── */
+.ev-stats {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  padding: 40px 6vw;
+  background: var(--Y);
+  align-items: center;
+}
+.ev-stat {
+  display: flex;
+  flex-direction: column;
+}
+.ev-stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  color: #000;
+  line-height: 1;
+}
+.ev-stat-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: .18em;
+  color: rgba(0,0,0,.6);
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+<div id="nav-root"></div>
+
+<!-- HERO -->
+<section class="ev-hub-hero">
+  <img src="assets/images/bmw-325i-htcc.jpg" alt="JB EMERIC Événements" loading="eager">
+  <div class="ev-hub-hero-overlay"></div>
+  <div class="ev-hub-hero-content">
+    <div class="hero-kicker">JB EMERIC · Agenda 2026</div>
+    <h1>TOUS LES <em>ÉVÉNEMENTS</em></h1>
+    <p>Track-days, stages voiture école, Challenge HTCC, et événements prestige. Un seul endroit pour retrouver toutes les dates.</p>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="ev-stats">
+  <div class="ev-stat"><span class="ev-stat-num">5</span><span class="ev-stat-lbl">circuits PACA</span></div>
+  <div class="ev-stat"><span class="ev-stat-num">+40</span><span class="ev-stat-lbl">dates 2026</span></div>
+  <div class="ev-stat"><span class="ev-stat-num">6</span><span class="ev-stat-lbl">voitures école</span></div>
+  <div class="ev-stat"><span class="ev-stat-num">195€</span><span class="ev-stat-lbl">dès</span></div>
+</div>
+
+<!-- SECTION 1 : TRACK DAYS -->
+<section class="ev-section" id="track-days">
+  <div class="ev-section-head">
+    <div>
+      <div class="ev-section-label">Journées piste</div>
+      <h2 class="ev-section-title">TRACK DAYS</h2>
+    </div>
+    <a href="track.html" class="ev-section-cta">Voir toutes les dates →</a>
+  </div>
+  <p class="ev-section-desc">Roulez sur de vrais circuits — avec votre voiture ou une machine du paddock JB EMERIC. Briefing, coaching, debriefing. Ouvert à tous les niveaux. Grand Sambuc, Paul Ricard, Le Luc.</p>
+  <div class="ev-preview-grid" id="ev-trackdays-grid">
+    <div class="ev-preview-empty">Chargement du calendrier…</div>
+  </div>
+  <a href="track.html#calendrier" class="sr-btn-inscr" style="display:inline-block;text-decoration:none">Voir le calendrier complet →</a>
+</section>
+
+<!-- SECTION 2 : STAGES VOITURES ÉCOLE -->
+<section class="ev-section" id="stages">
+  <div class="ev-section-head">
+    <div>
+      <div class="ev-section-label">Voitures école</div>
+      <h2 class="ev-section-title">STAGES</h2>
+    </div>
+    <a href="track.html#stages" class="ev-section-cta">Découvrir les stages →</a>
+  </div>
+  <p class="ev-section-desc">206 S16, Caterham, Lotus Elise Cup S, Ferrari F8, Porsche 911 GT3 RS — choisissez votre machine et montez en piste sans rien amener d'autre que votre casque. À partir de 195 €.</p>
+  <div class="ev-preview-grid">
+    <div class="ev-preview-card">
+      <div class="ev-preview-date">Peugeot 206 S16 · Caterham</div>
+      <div class="ev-preview-circuit">Stage Initiation</div>
+      <div class="ev-preview-meta">Grand Sambuc · Journée complète</div>
+      <div class="ev-preview-price">À partir de <strong>195 €</strong></div>
+      <a href="track.html#stages" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--Y);text-decoration:none;text-transform:uppercase;margin-top:4px">Voir les formules →</a>
+    </div>
+    <div class="ev-preview-card">
+      <div class="ev-preview-date">Lotus Elise Cup S</div>
+      <div class="ev-preview-circuit">Stage Progression</div>
+      <div class="ev-preview-meta">Grand Sambuc · 6 tours</div>
+      <div class="ev-preview-price">À partir de <strong>159 €</strong></div>
+      <a href="track.html#stages" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--Y);text-decoration:none;text-transform:uppercase;margin-top:4px">Voir les formules →</a>
+    </div>
+    <div class="ev-preview-card">
+      <div class="ev-preview-date">Ferrari · Porsche · Lamborghini</div>
+      <div class="ev-preview-circuit">Stage Prestige</div>
+      <div class="ev-preview-meta">Grand Sambuc · Sur demande</div>
+      <div class="ev-preview-price">À partir de <strong>459 €</strong></div>
+      <a href="track.html#stages" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--Y);text-decoration:none;text-transform:uppercase;margin-top:4px">Voir les formules →</a>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3 : CHALLENGE HTCC -->
+<section class="ev-section" id="challenge">
+  <div class="ev-section-head">
+    <div>
+      <div class="ev-section-label">Compétition</div>
+      <h2 class="ev-section-title">CHALLENGE HTCC</h2>
+    </div>
+    <a href="academie/competition.html" class="ev-section-cta">En savoir plus →</a>
+  </div>
+  <p class="ev-section-desc">Le Historic Touring Car Challenge — une série de compétition encadrée par JB EMERIC sur BMW 325i E30. Pilotez une vraie voiture de course lors de manches officielles.</p>
+  <div class="ev-preview-grid">
+    <div class="ev-coming-card" style="grid-column:1/-1;max-width:480px">
+      <div class="ev-coming-label">Saison 2026 · Calendrier en cours</div>
+      <div class="ev-coming-title">BMW 325i E30 · HTCC</div>
+      <div class="ev-coming-desc">Manches sur circuits homologués. Classement général, trophées, suivi données. Engagement par manche ou saison complète.</div>
+      <a href="academie/competition.html" class="ev-section-cta" style="margin-top:8px">Voir la page compétition →</a>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4 : ÉVÉNEMENTS PRESTIGE -->
+<section class="ev-section" id="prestige">
+  <div class="ev-section-head">
+    <div>
+      <div class="ev-section-label">Expériences</div>
+      <h2 class="ev-section-title">PRESTIGE</h2>
+    </div>
+  </div>
+  <p class="ev-section-desc">Ferrari F8 Tributo, Porsche 911 GT3 RS, Lamborghini Huracán LP 560. Des expériences sur-mesure pour ceux qui veulent pousser ces machines sur circuit, accompagnés par JB.</p>
+  <div class="ev-preview-grid">
+    <div class="ev-preview-card">
+      <div class="ev-preview-date">Ferrari</div>
+      <div class="ev-preview-circuit">F8 Tributo</div>
+      <div class="ev-preview-meta">720 ch · Grand Sambuc</div>
+      <div class="ev-preview-price">Sur devis</div>
+    </div>
+    <div class="ev-preview-card">
+      <div class="ev-preview-date">Porsche</div>
+      <div class="ev-preview-circuit">911 GT3 RS</div>
+      <div class="ev-preview-meta">525 ch · Circuit PACA</div>
+      <div class="ev-preview-price">Sur devis</div>
+    </div>
+    <div class="ev-preview-card">
+      <div class="ev-preview-date">Lamborghini</div>
+      <div class="ev-preview-circuit">Huracán LP 560</div>
+      <div class="ev-preview-meta">560 ch · Grand Sambuc</div>
+      <div class="ev-preview-price">Sur devis</div>
+    </div>
+  </div>
+  <a href="track.html#voitures" class="sr-btn-inscr" style="display:inline-block;text-decoration:none">Voir nos voitures →</a>
+</section>
+
+<div id="footer-root"></div>
+
+<script src="assets/js/routes.js"></script>
+<script src="assets/js/nav.js"></script>
+<script src="assets/js/footer.js"></script>
+<script type="module" src="assets/js/live-editor.js"></script>
+<script id="jbe-content-cache" type="application/json">{}</script>
+
+<script>
+(async function() {
+  var SB_URL = 'https://fyaybxamuabawerqzuud.supabase.co/rest/v1/';
+  var SB_KEY = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD';
+  var SB_H   = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+  var MONTHS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
+  var DAYS   = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+
+  var grid = document.getElementById('ev-trackdays-grid');
+  if (!grid) return;
+
+  try {
+    var r = await fetch(
+      SB_URL + 'events?visible_site=eq.true&order=date_event.asc&limit=3&select=id,date_event,type,status,prix,nb_places,nb_inscrits,circuits(nom)',
+      { headers: SB_H }
+    );
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    var events = await r.json();
+    if (!events || !events.length) {
+      grid.innerHTML = '<div class="ev-preview-empty">Aucune date à venir pour le moment.</div>';
+      return;
+    }
+
+    grid.innerHTML = events.map(function(ev) {
+      var d      = new Date(ev.date_event);
+      var dayStr = DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+      var circuit = ev.circuits ? ev.circuits.nom : '—';
+      var status  = ev.status || 'Open';
+      var prix    = ev.prix ? parseFloat(ev.prix) : 195;
+      var left    = Math.max(0, (ev.nb_places || 10) - (ev.nb_inscrits || 0));
+      var badgeCls = status === 'Full' ? 'ev-preview-badge full' : 'ev-preview-badge';
+      var badgeTxt = status === 'Open' ? 'Inscriptions ouvertes' : status === 'Full' ? 'Complet' : 'Bientôt';
+
+      return '<div class="ev-preview-card">' +
+        '<div class="ev-preview-date">' + dayStr + '</div>' +
+        '<div class="ev-preview-circuit">' + circuit + '</div>' +
+        '<div class="ev-preview-meta">' + (ev.type || 'Track Day') + ' · ' + left + ' place' + (left !== 1 ? 's' : '') + '</div>' +
+        '<span class="' + badgeCls + '">' + badgeTxt + '</span>' +
+        '<div class="ev-preview-price"><strong>' + prix + ' €</strong> / pilote</div>' +
+      '</div>';
+    }).join('');
+
+  } catch(e) {
+    grid.innerHTML = '<div class="ev-preview-empty">Impossible de charger le calendrier — <a href="track.html" style="color:rgba(255,207,0,.6)">voir toutes les dates</a></div>';
+  }
+})();
+</script>
+</body>
+</html>

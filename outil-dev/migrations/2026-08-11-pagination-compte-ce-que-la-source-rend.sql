@@ -1,0 +1,37 @@
+-- Appliquee le 11 aout 2026. Conservee pour trace.
+--
+-- La pagination de l'agregateur s'arretait a la premiere page. On lisait
+-- 100 dates sur les 1701 qu'il publie, et l'onglet Veille en montrait 60.
+--
+-- Cause : le test de fin de pagination comparait `par_page` au nombre de dates
+-- RETENUES, pas au nombre de lignes rendues par l'API. `veille_extraire_wp`
+-- ecarte les dates passees, celles sans date et celles sans titre. La source
+-- etant parcourue par identifiant decroissant, la premiere page melange du
+-- passe et de l'avenir : 100 lignes rendues, 60 retenues, 60 < 100, fin de
+-- boucle.
+--
+-- Regle : une page pleine se mesure a ce que la source rend, jamais a ce qu'on
+-- en garde. Vrai de n'importe quelle source paginee.
+--
+-- Effet mesure : 688 candidats au lieu de 147, 93 circuits au lieu de 33,
+-- 44 circuits francais.
+--
+-- Le corps complet de veille_passer_interne est dans la migration appliquee.
+-- Seul le passage qui change est repris ici, le reste est identique.
+--
+--   -- avant
+--   select count(*) into recus from veille_extraire_wp(reponse.content);
+--   exit when recus < coalesce(s.par_page, 100);
+--
+--   -- apres
+--   begin
+--     rendus := jsonb_array_length(reponse.content::jsonb);
+--   exception when others then
+--     rendus := 0;
+--   end;
+--   exit when rendus = 0;
+--   ...
+--   exit when rendus < coalesce(s.par_page, 100);
+--
+-- Pour relire la version en vigueur :
+--   select pg_get_functiondef('public.veille_passer_interne'::regproc);

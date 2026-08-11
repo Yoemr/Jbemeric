@@ -865,6 +865,23 @@ Toutes les valeurs de la ligne et de ses objets joints. Les identifiants sont é
 
 Rien à déclarer dans un onglet : une colonne ajoutée demain est cherchable le jour où elle arrive.
 
+### 14.2 bis La veille lisait une page sur dix-sept
+
+`grandauto.fr` publie **1701 dates**, l'en-tete `x-wp-total` le dit. La veille en lisait 100 et en gardait 60.
+
+La pagination existait, son test d'arret etait faux : il comparait `par_page` au nombre de dates **retenues**, pas au nombre de lignes rendues par l'API. La source etant parcourue par identifiant decroissant, la premiere page melange du passe et de l'avenir. 100 lignes rendues, 60 retenues, 60 < 100, fin de boucle.
+
+Mesure apres correction :
+
+| | Avant | Apres |
+|---|---|---|
+| Candidats en base | 147 | 688 |
+| Circuits nommes | 33 | 93 |
+| Circuits francais | 22 | 44 |
+| Dates visibles a l'ouverture de l'onglet | 35 | 270 |
+
+Horizon a 3 mois. Elargir l'horizon ne coute aucune requete supplementaire, la memoire est separee de l'affichage.
+
 ### 14.3 Les candidats portent tous un circuit et un pays
 
 Avant : 87 candidats sur 145 sans pays ni circuit, tous ceux du Circuit du Var et de Lédenon, donc masqués par le filtre « France » posé par défaut. Après : zéro. 35 dates visibles à l'ouverture au lieu de 18.

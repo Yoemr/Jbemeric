@@ -29,7 +29,7 @@
       '<a href="' + R.index + '">Accueil</a>' +
       '<a href="' + R.academie + '">Académie</a>' +
       '<a href="' + R.coaching + '">Coaching</a>' +
-      '<a href="' + R.evenements + '">Stages &amp; Track-Days</a>' +
+      '<a href="' + R.evenements + '">Événements</a>' +
       '<a href="' + R.paddock + '">Paddock</a>' +
     '</div>' +
 

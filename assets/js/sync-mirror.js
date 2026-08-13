@@ -181,7 +181,7 @@ function buildParcoursBar(parcours) {
     html += '<span class="acad-arrow">→</span>'
     html += '<div class="acad-step"><span class="acad-step-n">02</span><div class="acad-step-info"><div class="acad-step-name">Progression</div><div class="acad-step-sub">5 niveaux · Évaluation JB sur circuit</div></div></div>'
     html += '<span class="acad-arrow">→</span>'
-    html += '<div class="acad-step"><span class="acad-step-n">03</span><div class="acad-step-info"><div class="acad-step-name">Compétition</div><div class="acad-step-sub">BMW 325i HTCC · Licence FFSA · Sebring</div></div></div>'
+    html += '<div class="acad-step"><span class="acad-step-n">03</span><div class="acad-step-info"><div class="acad-step-name">Compétition</div><div class="acad-step-sub">Kart 125cc · Monoplace · Voiture de course</div></div></div>'
     html += '<span class="acad-arrow">→</span>'
     html += '<div class="acad-step acad-step-champion"><span class="acad-step-n acad-step-star">★</span><div class="acad-step-info"><div class="acad-step-name">Champion</div><div class="acad-step-sub">France 1988 · JB EMERIC</div></div></div>'
   }

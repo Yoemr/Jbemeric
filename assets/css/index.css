@@ -254,6 +254,18 @@ a{text-decoration:none;color:inherit}
   text-transform: uppercase;
   color: rgba(255,255,255,.4);
 }
+/* Position absolue : la snap-label ne prend pas de hauteur dans le flux,
+   snap-content obtient ainsi 100% de la section sans debordement */
+.snap-label {
+  position: absolute;
+  top: clamp(16px, 2vw, 24px);
+  left: clamp(16px, 3vw, 36px);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  pointer-events: none;
+}
 
 /* ── CTA bas droite ──────────────────────────────── */
 .snap-cta {
@@ -313,8 +325,6 @@ a{text-decoration:none;color:inherit}
 .snap-content .offer-card {
   height: 100%;
   min-height: 0;
-  box-sizing: border-box;
-  overflow: hidden;
 }
 @media(max-width:700px){
   .snap-content .idx-coaching-panels { grid-template-columns: 1fr }
@@ -433,6 +443,15 @@ a{text-decoration:none;color:inherit}
 .porte:hover .porte-cta{transform:translateY(0);opacity:1}
 .porte.enfant .porte-cta,.porte.adulte .porte-cta{background:#fff;color:#0a1a4a}
 .porte.competition .porte-cta{background:#FFCF00;color:#000}
+/* Carte offre : structure de base, completee par --light / --dark ci-dessous */
+.offer-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  border-top: 4px solid transparent;
+  padding: clamp(28px, 4vw, 52px) clamp(20px, 3vw, 40px);
+}
 .offer-card > * { position: relative; z-index: 1 }
 .offer-card::after {
   position: absolute;
@@ -590,6 +609,7 @@ a{text-decoration:none;color:inherit}
 .acad-side-item:hover .porte-bg img { transform:scale(1.06) }
 .acad-side-item .porte-overlay { position:absolute; inset:0; z-index:1; transition:opacity .3s }
 .acad-side-item.porte.competition .porte-overlay { background:linear-gradient(to top,rgba(100,74,0,.97) 0%,rgba(140,100,0,.5) 60%,rgba(160,120,0,.05) 100%) }
+.acad-side-item.porte.adulte .porte-overlay { background: linear-gradient(to top, rgba(7,31,92,.95) 0%, rgba(7,31,92,.5) 60%, rgba(7,31,92,.05) 100%) }
 .acad-side-item .porte-content { position:relative; z-index:2; padding:clamp(14px,2vw,24px) }
 .acad-side-item .porte-tag { font-family:'DM Mono'; font-size:7.5px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:6px }
 .acad-side-item .porte-title { font-family:'Bebas Neue'; font-size:clamp(22px,3.5vw,38px); color:#fff; line-height:.88; margin-bottom:10px }

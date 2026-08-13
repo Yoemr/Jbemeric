@@ -1,10 +1,23 @@
 /**
- * routes.js — JB EMERIC
- * Source unique de vérité pour toutes les URLs du site.
- * Modifier ce fichier = mise à jour automatique de nav, footer, sync-mirror, etc.
+ * routes.js : JB EMERIC
+ * Source unique de vérité pour les URLs construites en JavaScript.
+ * Modifier ce fichier = mise à jour automatique de nav, footer, sync-mirror.
  *
  * Convention : tous les chemins sont ABSOLUS (commencent par /).
  * Associé à <base href="/"> dans chaque HTML pour fonctionner à toute profondeur.
+ *
+ * PORTÉE RÉELLE, à ne pas surestimer. Ce fichier ne gouverne que ce qui est
+ * assemblé par du JS. Un lien écrit directement dans une page HTML ne peut pas
+ * le consulter, et c'est très bien ainsi : un lien statique reste lisible par
+ * un moteur de recherche même si le JS ne s'exécute pas. La règle est donc :
+ *
+ *   - lien construit en JS  -> il DOIT passer par ROUTES
+ *   - lien écrit dans le HTML -> chemin absolu final, jamais un ancien chemin
+ *     rattrapé par _redirects
+ *
+ * Le 4 août 2026, sept liens de réseaux sociaux étaient écrits en dur dans
+ * nav.js et footer.js alors que ROUTES les déclarait, et vingt-neuf liens de
+ * pages visaient d'anciennes URLs. Voir 6.8 de docs/05-etat-des-lieux.md.
  */
 (function() {
   var ROUTES = {
@@ -12,16 +25,16 @@
     index:      '/index.html',
     academie:   '/academie.html',
     coaching:   '/coaching.html',
-    track:      '/track.html',
+    evenements: '/evenements.html',
     paddock:    '/paddock.html',
 
     // ── Académie ───────────────────────────────────────────────────
-    karting:    '/academie/karting.html',
+    kartingEnfant: '/academie/karting-enfant.html',
+    karting:    '/academie/karting-adulte.html',
     competition:'/academie/competition.html',
 
     // ── Paddock ────────────────────────────────────────────────────
     palmares:   '/paddock/palmares.html',
-    voitures:   '/paddock/nos-voitures.html',
     articles:   '/paddock/articles.html',
     article:    '/paddock/article.html',
 
@@ -46,16 +59,31 @@
 
   // Helper : identifier la page courante par son chemin
   // Retourne la clé (ex: 'karting') ou null
+  //
+  // La comparaison porte d'abord sur le chemin complet. Le nom de fichier seul
+  // ne suffit pas : deux pages homonymes dans des dossiers différents auraient
+  // la même clé, et un chemin en /dossier/ renvoyait à tort la clé 'index'.
+  // Le repli sur le nom de fichier ne sert que si le chemin exact échoue.
   ROUTES.matchCurrent = function() {
-    var path = window.location.pathname
-    var file = path.split('/').pop() || 'index.html'
-    for (var k in ROUTES) {
-      if (typeof ROUTES[k] !== 'string') continue
-      var r = ROUTES[k]
-      if (r.indexOf('http') === 0) continue
-      if (r.split('/').pop() === file) return k
+    var path = window.location.pathname || '/'
+    if (path === '/') path = ROUTES.index
+
+    function internes(cb) {
+      for (var k in ROUTES) {
+        if (typeof ROUTES[k] !== 'string') continue
+        if (ROUTES[k].indexOf('http') === 0) continue
+        var r = cb(k)
+        if (r) return r
+      }
+      return null
     }
-    return null
+
+    var exact = internes(function(k) { return ROUTES[k] === path ? k : null })
+    if (exact) return exact
+
+    var file = path.split('/').pop()
+    if (!file) return null
+    return internes(function(k) { return ROUTES[k].split('/').pop() === file ? k : null })
   }
 
   window.ROUTES = ROUTES

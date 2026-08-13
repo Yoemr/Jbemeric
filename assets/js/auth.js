@@ -1,4 +1,4 @@
-// auth.js — JB EMERIC
+// auth.js : JB EMERIC
 // Module partagé pour login, signup, reset password, signOut.
 // Utilise le même client Supabase que live-editor.js (mêmes credentials).
 //

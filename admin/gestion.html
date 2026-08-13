@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<base href="/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="assets/css/gestion.css">
+  <title>Gestion · JB EMERIC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     La fenêtre de gestion. Une barre d'onglets, un onglet par
+     fonction gérée.
+
+     Cette page ne connaît aucun onglet. Chaque onglet vit dans son
+     propre fichier et s'enregistre lui-même. Ajouter une fonction
+     revient donc à ajouter un fichier et une balise script ; les
+     déplacer revient à changer l'ordre de ces balises.
+
+     Le dashboard reste un chantier à part, décision de Yoan du
+     9 août 2026 : il attend que les pages du site soient finies.
+     ══════════════════════════════════════════════════════════════ -->
+
+<div class="g-barre">
+  <div class="g-logo">JB <em>EMERIC</em></div>
+  <div class="g-qui">
+    <span id="g-utilisateur">…</span>
+    <a href="index.html">Voir le site</a>
+    <a href="#" id="g-sortir">Déconnexion</a>
+  </div>
+</div>
+
+<nav class="g-onglets" id="g-onglets"></nav>
+
+<main class="g-page">
+  <div id="g-contenu"><div class="g-attente">Vérification de la session…</div></div>
+</main>
+
+<div class="g-modale" id="g-modale"></div>
+<div class="g-message" id="g-message"></div>
+
+<script src="assets/js/gestion.js"></script>
+
+<!-- Les listes du metier, partagees par plusieurs onglets. Avant eux. -->
+<script src="assets/js/gestion-vocabulaire.js"></script>
+
+<!-- Un onglet par fonction. L'ordre ici est l'ordre à l'écran. -->
+<script src="assets/js/gestion-veille.js"></script>
+<script src="assets/js/gestion-evenements.js"></script>
+<script src="assets/js/gestion-faq.js"></script>
+<script src="assets/js/gestion-avis.js"></script>
+
+<script type="module">
+  // ── Le garde ────────────────────────────────────────────────────────────
+  // Les policies n'ouvrent l'écriture qu'à un rôle admin ou moderateur. Sans
+  // session, la page se contenterait de lire, et chaque enregistrement
+  // partirait pour être refusé. Autant le dire tout de suite.
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+  const sb = createClient(
+    'https://fyaybxamuabawerqzuud.supabase.co',
+    'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
+  )
+
+  const { data: { session } } = await sb.auth.getSession()
+  const utilisateur = session && session.user
+  const role = utilisateur && utilisateur.user_metadata && utilisateur.user_metadata.role
+
+  if (!utilisateur) {
+    try { sessionStorage.setItem('jbe_return_url', location.href) } catch (e) {}
+    location.href = 'admin/login.html'
+  } else if (role !== 'admin' && role !== 'moderateur') {
+    document.getElementById('g-contenu').innerHTML =
+      '<div class="g-erreur"><strong>Ce compte n\'a pas les droits de gestion.</strong><br>' +
+      'Demandez à Yoan de passer votre rôle en administrateur.</div>'
+  } else {
+    document.getElementById('g-utilisateur').textContent =
+      (utilisateur.user_metadata.prenom || utilisateur.email) + ' · ' + role
+    JBE.demarrer(session.access_token)
+  }
+
+  document.getElementById('g-sortir').addEventListener('click', async function (e) {
+    e.preventDefault()
+    await sb.auth.signOut()
+    location.href = 'index.html'
+  })
+</script>
+</body>
+</html>

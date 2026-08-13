@@ -1,6 +1,6 @@
 /*
- * snap.css — JB EMERIC
- * Système de scroll snap universel — défilement bloc par bloc
+ * snap.css : JB EMERIC
+ * Système de scroll snap universel : défilement bloc par bloc
  *
  * USAGE : inclure ce fichier sur toute page qui veut le snap.
  * Ajouter la classe `snap-section` sur chaque bloc plein écran.
@@ -25,20 +25,20 @@ html, body {
   overflow: hidden;
 }
 
-/* Hero — variante plein écran (min-height en plus) */
+/* Hero : variante plein écran (min-height en plus) */
 .hero.snap-section {
   min-height: calc(100svh - 56px);
   height: calc(100svh - 56px);
 }
 
-/* Dernière section avant footer — scrollable en interne */
+/* Dernière section avant footer : scrollable en interne */
 .snap-fin {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
 
-/* Footer — point d'ancrage terminal */
+/* Footer : point d'ancrage terminal */
 #footer-root {
   scroll-snap-align: start;
 }

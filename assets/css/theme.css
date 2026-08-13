@@ -1,5 +1,5 @@
 /*
- * theme.css — JB EMERIC · Source de vérité couleurs
+ * theme.css : JB EMERIC · Source de vérité couleurs
  * ═══════════════════════════════════════════════════
  * UNE SEULE SOURCE. Changer ici → cascade sur tout le site.
  *
@@ -12,7 +12,7 @@
 
 
 /* ══════════════════════════════════════════════════
-   1. PALETTE GLOBALE — les 8 couleurs officielles
+   1. PALETTE GLOBALE : les 8 couleurs officielles
    ══════════════════════════════════════════════════ */
 :root {
   /* Jaune */
@@ -21,11 +21,11 @@
   --Ya:  #a88f00;   /* hover profond */
 
   /* Bleus */
-  --B1:  #0a1a4a;   /* bleu nuit — Karting Enfant */
-  --B2:  #0A3D91;   /* bleu moyen — Karting Adulte / Académie */
+  --B1:  #0a1a4a;   /* bleu nuit : Karting Enfant */
+  --B2:  #0A3D91;   /* bleu moyen : Karting Adulte / Académie */
   --B3:  #0D2F6E;   /* bleu marine foncé */
   --B4:  #1252C0;   /* bleu vif */
-  --BN:  #040a1e;   /* bleu quasi-noir — fonds sombres */
+  --BN:  #040a1e;   /* bleu quasi-noir : fonds sombres */
 
   /* Or */
   --OR:  #C8A000;   /* doré Challenge */
@@ -118,7 +118,7 @@
   --page-bg-tint: #fff9d6;
   --page-sep:     var(--sep-gold);
   --page-hero-ol: linear-gradient(105deg, rgba(195,148,0,0) 0%, rgba(195,148,0,0) 35%, rgba(195,148,0,.62) 52%, rgba(195,148,0,.97) 100%);
-  /* Challenge est terminus — pas de next */
+  /* Challenge est terminus : pas de next */
 }
 
 /* ── COACHING ────────────────────────────────────── */
@@ -147,7 +147,7 @@
 
 
 /* ══════════════════════════════════════════════════
-   3. APPLICATION — uniquement le bloc "page suivante"
+   3. APPLICATION : uniquement le bloc "page suivante"
    Les couleurs viennent des --next-* du thème actif.
    Pas de règles globales body/hero : elles restent
    dans chaque page pour éviter les conflits.
@@ -177,99 +177,11 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   FAQ UNIVERSELLE — JB EMERIC
-   Fond blanc, accordion uniforme, toutes les pages
+   AVIS : voir assets/css/avis.css
+   Sorti d'ici le 9 août 2026, même régime que la FAQ.
+   Le bloc se paramètre par variables, il ne se recopie plus.
    ════════════════════════════════════════════════════ */
 
-.jbe-faq {
-  background: #fff;
-  padding: clamp(48px,6vw,80px) clamp(20px,5vw,72px);
-  border-top: 1px solid rgba(0,0,0,.06);
-}
-
-.jbe-faq .rubrik {
-  color: rgba(0,0,0,.3);
-}
-
-.jbe-faq .sh {
-  color: #040a1e;
-}
-
-.jbe-faq .sh em {
-  color: #FFCF00;
-}
-
-.faq-list {
-  margin-top: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  max-width: 720px;
-}
-
-.fq {
-  border-bottom: 1px solid rgba(0,0,0,.08);
-  cursor: pointer;
-  transition: background .15s;
-}
-
-.fq:first-child {
-  border-top: 1px solid rgba(0,0,0,.08);
-}
-
-.fq-q {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 18px 4px;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: #0A3D91;
-  user-select: none;
-}
-
-.fq-q::before {
-  content: '?';
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 20px;
-  color: #FFCF00;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.fq-q::after {
-  content: '+';
-  margin-left: auto;
-  font-size: 22px;
-  font-weight: 300;
-  color: #FFCF00;
-  flex-shrink: 0;
-  transition: transform .25s;
-}
-
-.fq.open .fq-q::after {
-  transform: rotate(45deg);
-}
-
-.fq-a {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height .35s ease, opacity .25s, padding .25s;
-  font-size: 14px;
-  line-height: 1.78;
-  color: rgba(4,10,30,.6);
-  padding-left: 32px;
-}
-
-.fq.open .fq-a {
-  max-height: 600px;
-  opacity: 1;
-  padding-top: 0;
-  padding-bottom: 18px;
-}
 
 /* ─── CASSE PARAGRAPHES ──────────────────────────────────────────── */
 /* Désactivé : CSS ne sait pas capitaliser après ". " (seul JS le fait). */

@@ -7,290 +7,502 @@
   <link rel="stylesheet" href="assets/css/competition.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vers la Compétition — Les voies d'accès · JB EMERIC</title>
-  <meta name="description" content="Plusieurs voies pour devenir pilote de course. Formation en voiture, Challenge JB EMERIC, disciplines accessibles, simulateur. Un accompagnement adapté à chaque profil.">
-  <meta property="og:title" content="Vers la Compétition — Les voies d'accès · JB EMERIC">
-  <meta property="og:description" content="Il n'y a pas qu'une voie pour courir. JB EMERIC accompagne chaque pilote selon son profil, son budget et ses ambitions.">
+  <title>Compétition · JB EMERIC · Coach pilote &amp; accompagnement course</title>
+  <meta name="description" content="Jean-Baptiste Emeric, ancien pilote professionnel, vous accompagne en compétition. Dans votre écurie, avec une voiture partenaire, ou sur votre propre machine. 37 ans d'expérience, 40 ans de compétition.">
+  <meta property="og:title" content="Compétition · JB EMERIC">
+  <meta property="og:description" content="Coach compétition. JB vient dans votre équipe. 40 ans de course, Champion de France 1988, F3.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="JB EMERIC École de Pilotage">
-  <link rel="canonical" href="https://jbemeric.netlify.app/academie-competition.html">
+  <link rel="canonical" href="https://jbemeric.netlify.app/academie/competition.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ── Palmarès (copie depuis academie.css) ── */
+.ac-pal{background:#040a1e;padding:clamp(64px,8vw,100px) clamp(20px,5vw,72px)}
+.ac-pal-head{margin-bottom:clamp(36px,5vw,56px)}
+.ac-pal-kicker{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:rgba(255,207,0,.85);
+  margin-bottom:14px;
+}
+.ac-pal-titre-h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,60px);
+  line-height:.9;color:#fff;
+}
+.ac-pal-titre-h2 em{font-style:normal;color:#FFCF00}
+.ac-pal-sub{
+  font-size:clamp(13px,1.2vw,15px);color:rgba(255,255,255,.4);
+  line-height:1.7;margin-top:14px;max-width:520px;
+}
+.ac-pal-list{display:flex;flex-direction:column;max-width:760px}
+.ac-pal-item{
+  display:flex;gap:clamp(20px,3vw,40px);
+  padding:clamp(20px,2.5vw,28px) 0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.ac-pal-item:first-child{border-top:1px solid rgba(255,255,255,.07)}
+.ac-pal-yr{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,44px);
+  background:linear-gradient(135deg,#FFCF00 0%,#C8860A 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;line-height:1;flex-shrink:0;min-width:80px;
+}
+.ac-pal-body{display:flex;flex-direction:column;gap:4px}
+.ac-pal-cat{
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;
+  text-transform:uppercase;color:rgba(255,207,0,.5);margin-bottom:2px;
+}
+.ac-pal-titre{font-family:'Bebas Neue',sans-serif;font-size:clamp(18px,2.5vw,26px);color:#fff;line-height:.92}
+.ac-pal-detail{font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;margin-top:4px}
+.ac-pal-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:clamp(32px,4vw,48px);
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:#FFCF00;
+  padding:13px 28px;border:1px solid rgba(255,207,0,.35);
+  transition:all .22s;background:rgba(255,207,0,.05);
+}
+.ac-pal-cta:hover{background:rgba(255,207,0,.12);border-color:rgba(255,207,0,.7)}
+
+/* ── Section pilotes formés ── */
+.comp-pilotes{
+  padding:clamp(64px,8vw,100px) clamp(20px,5vw,72px);
+  background:#0a1028;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.comp-pilotes-head{margin-bottom:clamp(32px,4vw,48px);max-width:720px}
+.comp-pilotes-kicker{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:rgba(255,207,0,.85);margin-bottom:14px;
+}
+.comp-pilotes-titre{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,60px);
+  line-height:.9;color:#fff;margin-bottom:16px;
+}
+.comp-pilotes-titre em{font-style:normal;color:#FFCF00}
+.comp-pilotes-placeholder{
+  border:1px dashed rgba(255,255,255,.1);
+  padding:clamp(40px,5vw,60px) clamp(24px,4vw,48px);
+  max-width:640px;
+  display:flex;flex-direction:column;gap:16px;
+}
+.comp-pilotes-placeholder-label{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:rgba(255,255,255,.25);
+}
+.comp-pilotes-placeholder-text{
+  font-family:'Outfit',sans-serif;font-size:15px;font-weight:300;
+  color:rgba(255,255,255,.35);line-height:1.7;
+}
+
+/* ── Dashboard partenaires (offre 2 placeholder) ── */
+.comp-partenaires{
+  padding:clamp(64px,8vw,100px) clamp(20px,5vw,72px);
+  background:#040a1e;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.comp-part-head{margin-bottom:clamp(36px,5vw,56px);max-width:720px}
+.comp-part-kicker{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:rgba(255,207,0,.85);margin-bottom:14px;
+}
+.comp-part-titre{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,60px);
+  line-height:.9;color:#fff;margin-bottom:16px;
+}
+.comp-part-titre em{font-style:normal;color:#FFCF00}
+.comp-part-desc{
+  font-size:clamp(13px,1.2vw,15px);color:rgba(255,255,255,.45);
+  line-height:1.7;
+}
+.comp-part-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:2px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.06);
+  margin-top:clamp(36px,5vw,56px);
+}
+.comp-part-card{
+  background:#040a1e;
+  padding:clamp(24px,3vw,36px);
+  display:flex;flex-direction:column;gap:14px;
+  position:relative;overflow:hidden;
+}
+.comp-part-coming{
+  position:absolute;top:16px;right:16px;
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;
+  text-transform:uppercase;color:rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.1);padding:4px 10px;
+}
+.comp-part-num{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);
+  color:rgba(255,207,0,.07);line-height:1;
+}
+.comp-part-name{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,2.5vw,28px);
+  color:rgba(255,255,255,.4);line-height:1;
+}
+.comp-part-sub{
+  font-size:13px;color:rgba(255,255,255,.2);line-height:1.6;
+}
+
+/* ── Formulaire de contact ── */
+.comp-contact{
+  padding:clamp(80px,10vw,140px) clamp(20px,5vw,80px);
+  background:linear-gradient(180deg,#040a1e 0%,#020612 100%);
+  border-top:1px solid rgba(255,207,0,.12);
+}
+.comp-contact-inner{max-width:680px}
+.comp-contact-kicker{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:rgba(255,207,0,.85);margin-bottom:16px;
+}
+.comp-contact-titre{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,6vw,80px);
+  line-height:.9;color:#fff;margin-bottom:14px;
+}
+.comp-contact-titre em{font-style:normal;color:#FFCF00}
+.comp-contact-sub{
+  font-size:clamp(13px,1.2vw,15px);color:rgba(255,255,255,.4);
+  line-height:1.7;margin-bottom:clamp(36px,5vw,56px);max-width:520px;
+}
+.comp-form{display:flex;flex-direction:column;gap:12px}
+.comp-form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.comp-form-row{grid-template-columns:1fr}}
+.comp-field{display:flex;flex-direction:column;gap:8px}
+.comp-field label{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:rgba(255,255,255,.4);
+}
+.comp-field input,.comp-field textarea,.comp-field select{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  color:#fff;
+  font-family:'Outfit',sans-serif;font-size:15px;font-weight:300;
+  padding:14px 16px;
+  outline:none;
+  transition:border-color .2s;
+  -webkit-appearance:none;
+  border-radius:0;
+}
+.comp-field input:focus,.comp-field textarea:focus,.comp-field select:focus{
+  border-color:rgba(255,207,0,.4);
+  background:rgba(255,207,0,.02);
+}
+.comp-field textarea{resize:vertical;min-height:120px}
+.comp-field select option{background:#040a1e}
+.comp-form-submit{
+  display:inline-flex;align-items:center;gap:12px;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;
+  background:#FFCF00;color:#000;
+  padding:16px 32px;border:none;cursor:pointer;
+  transition:filter .2s,transform .2s;
+  align-self:flex-start;margin-top:8px;
+}
+.comp-form-submit:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.comp-form-confirm{
+  display:none;
+  padding:24px;border:1px solid rgba(255,207,0,.25);
+  background:rgba(255,207,0,.05);
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;
+  color:rgba(255,207,0,.8);line-height:1.7;
+  margin-top:8px;
+}
+</style>
 </head>
 <body>
 <div id="nav-root"></div>
 
-<!-- ══ HERO ═════════════════════════════════════════════ -->
+<!-- ══ HERO ══════════════════════════════════════════════════ -->
 <section class="hero">
   <div class="hero-media">
-    <img src="assets/images/bmw-325i-htcc.jpg" alt="Voitures de compétition sur circuit JB EMERIC">
+    <img src="assets/images/peugeot-206-s16-ricard.jpg" alt="JB EMERIC compétition circuit" id="comp-hero-img">
     <div class="hero-overlay"></div>
   </div>
-
   <div class="hero-inner">
-    <a class="hero-back" href="academie.html">Académie</a>
-    <div class="hero-eyebrow">Vers la Compétition</div>
-    <h1 class="hero-title">Plusieurs voies<br>pour <em>courir.</em></h1>
-    <p class="hero-lead">Il n'existe pas un chemin unique pour devenir pilote. Certains passent par le karting pendant des années. D'autres arrivent directement à la voiture. D'autres encore cherchent une discipline à budget maîtrisé. Nous accompagnons chaque profil.</p>
-
+    <a class="hero-back" href="academie.html">← Académie</a>
+    <div class="hero-eyebrow">JB EMERIC · Coach compétition</div>
+    <h1 class="hero-title" id="comp-hero-title">En <em>course.</em></h1>
+    <p class="hero-lead" id="comp-hero-lead">JB accompagne des pilotes en compétition. Quelle que soit votre situation, il s'adapte : dans votre écurie, sur une voiture partenaire, ou avec la vôtre.</p>
     <div class="hero-actions">
-      <a href="#voies" class="btn-primary">Voir les voies <span>→</span></a>
-      <a href="contact.html" class="btn-ghost">Parler de mon projet</a>
+      <a href="#offres" class="btn-primary">Les offres <span>→</span></a>
+      <a href="#contact" class="btn-ghost">Parler de mon projet</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hs-item">
+      <span class="hs-val">40+</span>
+      <span class="hs-key">Ans de compétition</span>
+    </div>
+    <div class="hs-item">
+      <span class="hs-val">1988</span>
+      <span class="hs-key">Champion de France</span>
+    </div>
+    <div class="hs-item">
+      <span class="hs-val">F3</span>
+      <span class="hs-key">Formule 3 · niveau pro</span>
+    </div>
+    <div class="hs-item">
+      <span class="hs-val">10+</span>
+      <span class="hs-key">Disciplines de course</span>
     </div>
   </div>
 </section>
 
-<!-- ══ MANIFESTE ════════════════════════════════════════ -->
-<section class="manifest">
-  <div class="manifest-inner">
-    <div class="manifest-kicker">Notre approche</div>
-    <h2 class="manifest-title">On n'apprend pas à courir<br>en suivant <em>une recette.</em></h2>
-    <p class="manifest-lead">
-      Certaines écoles vendent un parcours type. Ici, on part de votre situation — votre niveau, votre budget, votre ambition.
-      Ensuite on construit ensemble le chemin qui a du sens.
-    </p>
-    <p class="manifest-body">
-      Un adulte de 40 ans qui découvre tardivement sa passion n'a pas besoin de passer par le karting. Il peut aller directement à la voiture,
-      si c'est ce qu'il veut et s'il en a les moyens. Un jeune avec un budget serré peut viser la compétition par des disciplines accessibles
-      comme la Mitjet ou la Clio Cup. Un pilote confirmé peut tenter le Challenge JB EMERIC pour décrocher un volant en HTCC.
-    </p>
-    <p class="manifest-body">
-      Chaque voie a ses exigences, ses coûts, ses débouchés. On vous les explique franchement. Et ensuite, c'est vous qui choisissez.
-    </p>
+<!-- ══ PALMARÈS ══════════════════════════════════════════════ -->
+<section class="ac-pal">
+  <div class="ac-pal-head">
+    <div class="ac-pal-kicker">Son palmarès</div>
+    <h2 class="ac-pal-titre-h2">40 ans de <em>résultats.</em></h2>
+    <p class="ac-pal-sub">Karting, monoplace, GT, Sport Prototype, courses de côte, rallye, endurance. Une carrière construite sur la performance, pas sur les discours.</p>
+  </div>
+  <div class="ac-pal-list">
+    <div class="ac-pal-item">
+      <div class="ac-pal-yr">1988</div>
+      <div class="ac-pal-body">
+        <div class="ac-pal-cat">Monoplace</div>
+        <div class="ac-pal-titre">Champion de France Formule Ford</div>
+        <div class="ac-pal-detail">Titre national · discipline de formation des grands pilotes</div>
+      </div>
+    </div>
+    <div class="ac-pal-item">
+      <div class="ac-pal-yr">1991</div>
+      <div class="ac-pal-body">
+        <div class="ac-pal-cat">Monoplace</div>
+        <div class="ac-pal-titre">Formule 3 française</div>
+        <div class="ac-pal-detail">Niveau professionnel · antichambre de la F2 et du haut niveau international</div>
+      </div>
+    </div>
+    <div class="ac-pal-item">
+      <div class="ac-pal-yr">1994</div>
+      <div class="ac-pal-body">
+        <div class="ac-pal-cat">Prototype</div>
+        <div class="ac-pal-titre">1er Championnat B · Alfa Romeo Sport Prototype</div>
+        <div class="ac-pal-detail">3ème place sur 3 courses · 5ème Grand Prix de Pau Peugeot 905</div>
+      </div>
+    </div>
+    <div class="ac-pal-item">
+      <div class="ac-pal-yr">1998</div>
+      <div class="ac-pal-body">
+        <div class="ac-pal-cat">GT</div>
+        <div class="ac-pal-titre">Vainqueur Coupe Hommell</div>
+        <div class="ac-pal-detail">1 victoire, 5 podiums · 2× 1er de classe Championnat de France Montagne</div>
+      </div>
+    </div>
+    <div class="ac-pal-item">
+      <div class="ac-pal-yr">2008</div>
+      <div class="ac-pal-body">
+        <div class="ac-pal-cat">Courses de côte</div>
+        <div class="ac-pal-titre">1er de classe · Norma M20 · 3 épreuves</div>
+        <div class="ac-pal-detail">Bouc-Bel-Air, Barcelonnette, Gémenos · FFSA</div>
+      </div>
+    </div>
+    <div class="ac-pal-item">
+      <div class="ac-pal-yr">2012</div>
+      <div class="ac-pal-body">
+        <div class="ac-pal-cat">Monoplace</div>
+        <div class="ac-pal-titre">Vainqueur général Formule Renault</div>
+        <div class="ac-pal-detail">Dijon, Paul Ricard, Charade, Nogaro, Lédenon · Meilleure équipe 2012</div>
+      </div>
+    </div>
+  </div>
+  <a href="paddock/palmares.html" class="ac-pal-cta">Palmarès complet · 1986 → 2026 <span>→</span></a>
+</section>
+
+<!-- ══ PILOTES FORMÉS ════════════════════════════════════════ -->
+<section class="comp-pilotes">
+  <div class="comp-pilotes-head">
+    <div class="comp-pilotes-kicker">Pilotes formés</div>
+    <h2 class="comp-pilotes-titre">Ceux qu'il a <em>emmenés.</em></h2>
+  </div>
+  <div class="comp-pilotes-placeholder">
+    <div class="comp-pilotes-placeholder-label">Section en construction</div>
+    <div class="comp-pilotes-placeholder-text">Des pilotes formés par JB ont décroché des titres en championnat. Les noms, les années et les résultats arrivent ici prochainement.</div>
   </div>
 </section>
 
-<!-- ══ LES 4 VOIES ══════════════════════════════════════ -->
-<section class="voies" id="voies">
-  <div class="voies-head">
-    <div class="vh-kicker">Les voies d'accès</div>
-    <h2 class="vh-title">Quatre chemins. <em>Une même destination.</em></h2>
-    <p class="vh-lead">
-      Chaque voie ci-dessous est une porte d'entrée réelle vers la compétition. JB vous accompagne sur celle que vous choisissez —
-      et vous aide à changer si le chemin ne correspond plus à vos objectifs.
-    </p>
+<!-- ══ LES OFFRES ════════════════════════════════════════════ -->
+<div id="offres">
+
+<!-- OFFRE 01 : Dans votre écurie -->
+<section class="offre" id="offre-ecurie">
+  <div class="offre-media">
+    <img src="assets/images/bmw-325i-htcc.jpg" alt="JB EMERIC coach compétition écurie">
+    <div class="offre-overlay offre-overlay--left"></div>
   </div>
-
-  <div class="voies-grid">
-
-    <!-- ─── VOIE 1 — VOITURE DE COMPÉTITION ─── -->
-    <article class="voie" id="voiture">
-      <div class="voie-head">
-        <div class="voie-num">01</div>
-        <div class="voie-titles">
-          <div class="voie-kicker">Voie principale</div>
-          <h3 class="voie-title">Former en voiture</h3>
-          <div class="voie-sub">Stages de formation circuit sur voiture d'école</div>
+  <div class="offre-inner">
+    <div class="offre-num">01</div>
+    <div class="offre-content">
+      <div class="offre-tag">Offre principale · Coach intégré</div>
+      <h2 class="offre-title">Dans <em>votre<br>écurie.</em></h2>
+      <p class="offre-lead">Vous avez votre équipe, votre voiture, vos mécaniciens. JB arrive en qualité de coach pour le week-end de course. Il observe, il debriefe, il lit la course avec vous. Votre organisation reste intacte. Son regard s'y ajoute.</p>
+      <div class="offre-details">
+        <div class="od-item">
+          <span class="od-label">Ce que JB apporte</span>
+          <span class="od-val">Lecture de course, réglages, stratégie, debrief session par session</span>
+        </div>
+        <div class="od-item">
+          <span class="od-label">Ce que vous gérez</span>
+          <span class="od-val">Votre écurie, votre voiture, vos inscriptions au championnat</span>
+        </div>
+        <div class="od-item">
+          <span class="od-label">Catégories</span>
+          <span class="od-val">Toutes · FFSA, régional, national, international sur demande</span>
         </div>
       </div>
-
-      <p class="voie-lead">
-        La voie classique pour apprendre à piloter une voiture de course. Vous roulez sur circuit, avec une voiture adaptée,
-        encadré par JB EMERIC. On ne vend pas une journée isolée — on construit votre progression sur plusieurs sessions,
-        avec des objectifs clairs et une montée en niveau mesurable.
-      </p>
-
-      <div class="voie-details">
-        <div class="detail">
-          <div class="detail-label">Profil type</div>
-          <div class="detail-value">Adulte motivé, débutant ou ayant quelques bases. Envie de passer sérieusement à la voiture, sans nécessairement être passé par le karting.</div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Budget indicatif</div>
-          <div class="detail-value"><span class="budget">€€€</span><span class="budget-note">Forfait par journée circuit</span></div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Débouchés</div>
-          <div class="detail-value">Accès aux disciplines compétition (voir voie 03), préparation à l'engagement en championnat amateur, passage éventuel au coaching sur voiture personnelle.</div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Encadrement</div>
-          <div class="detail-value">JB EMERIC directement. Nombre de pilotes limité par session pour garantir un suivi réel.</div>
-        </div>
-      </div>
-
-      <div class="voie-cta-row">
-        <a href="contact.html" class="voie-cta">Discuter de cette voie <span>→</span></a>
-      </div>
-    </article>
-
-    <!-- ─── VOIE 2 — CHALLENGE ─── -->
-    <article class="voie" id="challenge">
-      <div class="voie-head">
-        <div class="voie-num">02</div>
-        <div class="voie-titles">
-          <div class="voie-kicker">Voie sélective</div>
-          <h3 class="voie-title">Tenter le Challenge</h3>
-          <div class="voie-sub">Sessions qualificatives · BMW 325i HTCC à la clé</div>
-        </div>
-      </div>
-
-      <p class="voie-lead">
-        Le Challenge JB EMERIC est une sélection ouverte aux pilotes confirmés. Les candidats s'affrontent sur une épreuve
-        qualificative, et un pilote est désigné. Il reçoit alors la dotation complète : BMW 325i HTCC préparée, mécanique,
-        licence FFSA, inscriptions en championnat — zéro frais.
-      </p>
-
-      <div class="voie-details">
-        <div class="detail">
-          <div class="detail-label">Profil type</div>
-          <div class="detail-value">Pilote ayant déjà un niveau confirmé (karting compétition, voiture école, ou expérience équivalente). Ambition réelle de courir en championnat.</div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Budget indicatif</div>
-          <div class="detail-value"><span class="budget">€</span><span class="budget-note">Participation aux qualifs. Dotation intégrale pour le vainqueur.</span></div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Débouchés</div>
-          <div class="detail-value">Saison complète en championnat HTCC pour le pilote sélectionné. Expérience compétition réelle, médiatisation, réseau.</div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Fréquence</div>
-          <div class="detail-value">Édition prochaine à venir. Affiche officielle et dates annoncées en amont sur cette page.</div>
-        </div>
-      </div>
-
-      <div class="voie-placeholder">
-        <div class="placeholder-label">Affiche officielle à venir</div>
-        <div class="placeholder-note">L'affiche et les dates de la prochaine édition seront publiées ici prochainement.</div>
-      </div>
-
-      <div class="voie-cta-row">
-        <a href="contact.html" class="voie-cta">Être informé de la prochaine édition <span>→</span></a>
-      </div>
-    </article>
-
-    <!-- ─── VOIE 3 — DISCIPLINES ACCESSIBLES ─── -->
-    <article class="voie" id="disciplines">
-      <div class="voie-head">
-        <div class="voie-num">03</div>
-        <div class="voie-titles">
-          <div class="voie-kicker">Voie budget maîtrisé</div>
-          <h3 class="voie-title">Disciplines compétition</h3>
-          <div class="voie-sub">Karting compétition · Mitjet 1.6 · Clio Cup et autres formats accessibles</div>
-        </div>
-      </div>
-
-      <p class="voie-lead">
-        Il existe plusieurs disciplines compétition avec des budgets adaptés — du karting sportif à la Mitjet en passant par la Clio Cup.
-        Chacune a ses règles, ses coûts, ses circuits. JB vous aide à identifier celle qui correspond à votre profil et vous accompagne
-        dans la préparation et l'engagement.
-      </p>
-
-      <div class="voie-details voie-details-light">
-        <div class="detail">
-          <div class="detail-label">Profil type</div>
-          <div class="detail-value">Pilote avec ambition compétition mais budget contenu. Prêt à investir sur plusieurs saisons.</div>
-        </div>
-        <div class="detail">
-          <div class="detail-label">Budget indicatif</div>
-          <div class="detail-value"><span class="budget">€€</span><span class="budget-note">Variable selon la discipline choisie</span></div>
-        </div>
-      </div>
-
-      <div class="voie-construction">
-        <span class="construction-badge">Section en cours de détail</span>
-        <p>Les informations précises par discipline (formats, budgets, calendriers, partenaires) sont en cours de consolidation.
-        Pour discuter d'une discipline spécifique dès maintenant, contactez-nous.</p>
-      </div>
-
-      <div class="voie-cta-row">
-        <a href="contact.html" class="voie-cta">Échanger avec JB <span>→</span></a>
-      </div>
-    </article>
-
-    <!-- ─── VOIE 4 — SIMULATEUR ─── -->
-    <article class="voie voie-soon" id="simulateur">
-      <div class="voie-head">
-        <div class="voie-num">04</div>
-        <div class="voie-titles">
-          <div class="voie-kicker">Voie en développement</div>
-          <h3 class="voie-title">S'entraîner au simulateur</h3>
-          <div class="voie-sub">Préparation et entraînement sur simulateur professionnel</div>
-        </div>
-      </div>
-
-      <p class="voie-lead">
-        Le simulateur devient un outil central dans la formation des pilotes modernes. Il permet de travailler des circuits,
-        de répéter des enchaînements, d'analyser ses réflexes — à coût limité et sans usure mécanique. Nous développons
-        actuellement une offre dédiée.
-      </p>
-
-      <div class="voie-construction voie-construction-primary">
-        <span class="construction-badge">En construction</span>
-        <p>Offre simulateur en cours de mise en place. Si ce format vous intéresse, faites-vous connaître — votre retour nous aide
-        à construire la formule la plus pertinente.</p>
-      </div>
-
-      <div class="voie-cta-row">
-        <a href="contact.html" class="voie-cta voie-cta-soft">Exprimer mon intérêt <span>→</span></a>
-      </div>
-    </article>
-
-  </div>
-</section>
-
-<!-- ══ COMMENT JB ACCOMPAGNE (transversal) ═══════════════ -->
-<section class="accomp">
-  <div class="accomp-head">
-    <div class="ac-kicker">Peu importe la voie</div>
-    <h2 class="ac-title">L'accompagnement est <em>le même.</em></h2>
-    <p class="ac-lead">
-      JB EMERIC intervient sur chaque voie avec la même approche : évaluation honnête, progression mesurable,
-      exigence technique. Ce qui change, c'est le support — un kart, une voiture d'école, une voiture de course,
-      un simulateur. La méthode est identique.
-    </p>
-  </div>
-
-  <div class="accomp-grid">
-    <div class="pilier">
-      <div class="pilier-icon">·</div>
-      <h3 class="pilier-title">Évaluation franche</h3>
-      <p>Nous disons ce que nous voyons. Niveau réel, points bloquants, trajectoires mal gérées, gestuelle à corriger. Pas de flatterie.</p>
-    </div>
-    <div class="pilier">
-      <div class="pilier-icon">·</div>
-      <h3 class="pilier-title">Progression sur la durée</h3>
-      <p>Pas de journée magique. La compétition s'apprend sur plusieurs saisons. On construit un chemin cohérent, pas un empilement de stages.</p>
-    </div>
-    <div class="pilier">
-      <div class="pilier-icon">·</div>
-      <h3 class="pilier-title">Réseau et débouchés</h3>
-      <p>JB a 35+ ans de circuit. Il connaît les écoles partenaires, les écuries, les disciplines, les échéances. Vous ne serez pas seul face au choix d'un championnat.</p>
+      <a href="#contact" class="offre-cta">Parler de mon projet <span>→</span></a>
     </div>
   </div>
 </section>
 
-<!-- ══ FAQ ══════════════════════════════════════════════ -->
-<section class="faq-section">
-  <div class="faq-head">
-    <div class="faq-kicker">Par où commencer</div>
-    <h2 class="faq-title">Les vraies questions <em>avant de se lancer.</em></h2>
+<!-- OFFRE 02 : Opportunités partenaires (dashboard Supabase, à venir) -->
+<section class="comp-partenaires" id="offre-partenaires">
+  <div class="comp-part-head">
+    <div class="comp-part-kicker">Offre 02 · Écuries partenaires</div>
+    <h2 class="comp-part-titre">Des opportunités <em>clé en main.</em></h2>
+    <p class="comp-part-desc">JB travaille à nouer des partenariats avec des écuries qui ont des places disponibles dans leurs programmes. Ces opportunités seront publiées ici dès qu'elles sont confirmées. Vous choisissez, il coach.</p>
   </div>
-  <div class="faq-list">
-    <div class="fq"><div class="fq-q">Comment savoir quelle voie est faite pour moi ?</div>
-      <div class="fq-a">Contactez-nous en décrivant votre profil : votre âge, votre expérience éventuelle (karting, voiture école, track-days), votre budget annuel envisagé, et votre objectif (loisir, progression sérieuse, compétition réelle). JB vous oriente franchement — parfois vers nous, parfois vers une autre structure plus adaptée à votre situation.</div></div>
-    <div class="fq"><div class="fq-q">Faut-il obligatoirement passer par le karting ?</div>
-      <div class="fq-a">Non. Le karting reste la voie la plus pédagogique et la plus recommandée pour un jeune qui démarre. Mais un adulte motivé, avec les moyens et l'envie d'aller directement à la voiture, peut très bien entrer par la voie 01 sans avoir fait de karting. Chaque situation est différente.</div></div>
-    <div class="fq"><div class="fq-q">J'ai déjà une voiture personnelle, ça sert à quelque chose ?</div>
-      <div class="fq-a">Oui. Si vous venez avec votre propre voiture (sportive, GT, voiture préparée), vous êtes plus sur un cas de coaching que sur un cas d'école. Allez voir la page Coaching — c'est une offre distincte, pensée pour les pilotes qui pilotent leur propre machine et veulent progresser dessus.</div></div>
-    <div class="fq"><div class="fq-q">Quel budget prévoir pour aller jusqu'à la compétition ?</div>
-      <div class="fq-a">Impossible à chiffrer sans connaître la voie et l'ambition. Une saison en Mitjet ou Clio Cup amateur peut se construire sur quelques milliers d'euros bien investis. Un engagement sérieux en championnat monoplace dépasse largement ça. Le Challenge JB EMERIC, lui, couvre tout pour le vainqueur. Contactez-nous pour un chiffrage honnête selon votre projet.</div></div>
-    <div class="fq"><div class="fq-q">JB accompagne personnellement tous les pilotes ?</div>
-      <div class="fq-a">Oui pour les voies de formation (01 et 02). Pour les disciplines compétition (03), l'accompagnement se fait souvent en binôme avec des structures partenaires selon la discipline choisie — mais JB reste votre référent principal sur le volet pilotage.</div></div>
+  <div class="comp-part-grid">
+    <div class="comp-part-card">
+      <span class="comp-part-coming">Bientôt</span>
+      <div class="comp-part-num">01</div>
+      <div class="comp-part-name">Karting compétition</div>
+      <div class="comp-part-sub">Championnats régionaux et nationaux · Rotax Max, X30 Senior</div>
+    </div>
+    <div class="comp-part-card">
+      <span class="comp-part-coming">Bientôt</span>
+      <div class="comp-part-num">02</div>
+      <div class="comp-part-name">Supertourisme</div>
+      <div class="comp-part-sub">Contacts en supertourisme · Places selon disponibilités</div>
+    </div>
+    <div class="comp-part-card">
+      <span class="comp-part-coming">Bientôt</span>
+      <div class="comp-part-num">03</div>
+      <div class="comp-part-name">Voiture de tourisme</div>
+      <div class="comp-part-sub">Championnats tourisme · places selon partenariats en cours</div>
+    </div>
   </div>
 </section>
 
-<!-- ══ CTA FINAL ════════════════════════════════════════ -->
+<!-- OFFRE 03 : Location via partenaires -->
+<section class="offre" id="offre-location">
+  <div class="offre-media">
+    <img src="assets/images/karting-adulte-depart.jpg" alt="Karting compétition 125cc JB EMERIC">
+    <div class="offre-overlay offre-overlay--right"></div>
+  </div>
+  <div class="offre-inner offre-inner--right">
+    <div class="offre-content">
+      <div class="offre-tag">Offre 03 · Location via partenaires</div>
+      <h2 class="offre-title">La <em>voiture<br>est fournie.</em></h2>
+      <p class="offre-lead">Vous n'avez pas de voiture de course. JB a des contacts chez des partenaires qui louent des véhicules pour des week-ends ou des saisons. Il organise l'accès, vous payez la location directement au partenaire, et il vous coache sur la machine.</p>
+      <div class="offre-details">
+        <div class="od-item">
+          <span class="od-label">Disponible maintenant</span>
+          <span class="od-val">Kart 125cc à boîte · location confirmée</span>
+        </div>
+        <div class="od-item">
+          <span class="od-label">En cours de construction</span>
+          <span class="od-val">Voitures de course · partenariats à venir selon les catégories</span>
+        </div>
+        <div class="od-item">
+          <span class="od-label">Votre rôle</span>
+          <span class="od-val">Vous conduisez, JB coache · zéro logistique matérielle</span>
+        </div>
+      </div>
+      <a href="#contact" class="offre-cta">Me renseigner <span>→</span></a>
+    </div>
+    <div class="offre-num offre-num--right">03</div>
+  </div>
+</section>
+
+<!-- OFFRE 04 : Votre propre voiture -->
+<section class="offre offre--alt" id="offre-propre-voiture">
+  <div class="offre-media">
+    <img src="assets/images/porsche-gt3-circuit-albi.jpg" alt="Coaching compétition voiture personnelle JB EMERIC">
+    <div class="offre-overlay offre-overlay--left"></div>
+  </div>
+  <div class="offre-inner">
+    <div class="offre-num">04</div>
+    <div class="offre-content">
+      <div class="offre-tag">Offre 04 · Votre propre voiture</div>
+      <h2 class="offre-title">Votre <em>machine,<br>son regard.</em></h2>
+      <p class="offre-lead">Vous possédez une voiture de course mais pas d'écurie autour. JB intervient directement : coaching, lecture des données, réglages si besoin. Vous avancez plus vite que n'importe quel pilote qui travaille seul.</p>
+      <div class="offre-details">
+        <div class="od-item">
+          <span class="od-label">Format</span>
+          <span class="od-val">Week-end de course, saison complète ou intervention ponctuelle</span>
+        </div>
+        <div class="od-item">
+          <span class="od-label">Setup</span>
+          <span class="od-val">JB peut intervenir sur les réglages si la situation le justifie</span>
+        </div>
+        <div class="od-item">
+          <span class="od-label">Tarif</span>
+          <span class="od-val">Sur devis · dépend du format et de la catégorie</span>
+        </div>
+      </div>
+      <a href="#contact" class="offre-cta">Discuter de mon projet <span>→</span></a>
+    </div>
+  </div>
+</section>
+
+</div><!-- #offres -->
+
+<!-- ══ FORMULAIRE DE CONTACT ════════════════════════════════ -->
+<section class="comp-contact" id="contact">
+  <div class="comp-contact-inner">
+    <div class="comp-contact-kicker">Première prise de contact</div>
+    <h2 class="comp-contact-titre">Décrivez <em>votre projet.</em></h2>
+    <p class="comp-contact-sub">JB répond en direct dans les 48h. Aucune proposition générique : il analyse votre situation et vous dit exactement par où commencer.</p>
+    <form class="comp-form" id="comp-form">
+      <div class="comp-form-row">
+        <div class="comp-field">
+          <label for="cf-nom">Votre nom</label>
+          <input type="text" id="cf-nom" placeholder="Jean Dupont" autocomplete="name">
+        </div>
+        <div class="comp-field">
+          <label for="cf-email">Email</label>
+          <input type="email" id="cf-email" placeholder="votre@email.com" autocomplete="email">
+        </div>
+      </div>
+      <div class="comp-field">
+        <label for="cf-situation">Votre situation</label>
+        <select id="cf-situation">
+          <option value="">Choisir…</option>
+          <option value="ecurie">J'ai mon écurie et ma voiture</option>
+          <option value="voiture">J'ai ma voiture, pas d'écurie</option>
+          <option value="location">Je cherche une voiture à louer</option>
+          <option value="partenaire">Je cherche une écurie partenaire</option>
+          <option value="debutant">Je démarre en compétition</option>
+        </select>
+      </div>
+      <div class="comp-field">
+        <label for="cf-projet">Votre projet</label>
+        <textarea id="cf-projet" placeholder="Catégorie visée, niveau actuel, objectif de la saison… Le plus de détails possible, JB vous répondra de façon précise."></textarea>
+      </div>
+      <button type="button" class="comp-form-submit" onclick="envoyerContactComp()">
+        Envoyer mon projet <span>→</span>
+      </button>
+      <div class="comp-form-confirm" id="comp-form-confirm">
+        Reçu. JB vous répond dans les 48h.
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ══ CTA FINAL ══════════════════════════════════════════════ -->
 <section class="cta-final">
   <div class="cta-inner">
-    <h2 class="cta-title">Par où commencer ?</h2>
-    <p class="cta-lead">
-      La meilleure façon d'identifier votre voie, c'est d'en parler. Quinze minutes d'échange honnête avec JB,
-      et vous saurez où aller — chez nous, ou ailleurs s'il y a plus adapté.
-    </p>
+    <h2 class="cta-title">La prochaine étape<br>commence <em>ici.</em></h2>
+    <p class="cta-lead">Quinze minutes d'échange honnête avec JB. Votre niveau, votre budget, votre objectif. Et une réponse directe sur par où commencer.</p>
     <div class="cta-actions">
-      <a href="contact.html" class="btn-primary btn-big">Parler de mon projet <span>→</span></a>
+      <a href="#contact" class="btn-primary btn-big">Parler de mon projet <span>→</span></a>
       <a href="academie.html" class="btn-ghost btn-big">Retour à l'Académie</a>
     </div>
   </div>
@@ -298,10 +510,46 @@
 
 <div id="footer-root"></div>
 
-<script src="assets/js/faq.js"></script>
 <script type="module" src="assets/js/live-editor.js"></script>
 <script src="assets/js/routes.js"></script>
 <script src="assets/js/nav.js"></script>
 <script src="assets/js/footer.js"></script>
+<script id="jbe-content-cache" type="application/json">{}</script>
+
+<script>
+(function() {
+  var SB_URL = 'https://fyaybxamuabawerqzuud.supabase.co/rest/v1/';
+  var SB_KEY = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD';
+  var SB_H   = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' };
+
+  window.envoyerContactComp = function() {
+    var nom      = (document.getElementById('cf-nom')       || {}).value || '';
+    var email    = (document.getElementById('cf-email')     || {}).value || '';
+    var situation= (document.getElementById('cf-situation') || {}).value || '';
+    var projet   = (document.getElementById('cf-projet')    || {}).value || '';
+    if (!nom || !email) {
+      alert('Votre nom et votre email sont requis.');
+      return;
+    }
+    try {
+      fetch(SB_URL + 'inscriptions', {
+        method: 'POST',
+        headers: Object.assign({}, SB_H, { 'Prefer': 'return=minimal' }),
+        body: JSON.stringify({
+          user_name: nom,
+          email:     email,
+          car_model: situation,
+          telephone: projet.substring(0, 200),
+          statut:    'comp_inquiry'
+        })
+      }).catch(function() {});
+    } catch(e) {}
+    var confirm = document.getElementById('comp-form-confirm');
+    if (confirm) confirm.style.display = 'block';
+    var btn = document.querySelector('.comp-form-submit');
+    if (btn) { btn.disabled = true; btn.style.opacity = '.5'; }
+  };
+})();
+</script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 #nav-root { position: sticky; top: 0; z-index: 1000; background: rgba(4,10,30,.97) }
 /* ══════════════════════════════════════════════════════
-   nav.css — JB EMERIC — Navigation unifiée
+   nav.css : JB EMERIC, Navigation unifiée
    Inclus dans toutes les pages. Ne pas modifier inline.
    ══════════════════════════════════════════════════════ */
 
@@ -109,15 +109,6 @@
 .nav-btn-signup:hover { background: linear-gradient(135deg,#e8c040,#b06d00) }
 
 /* ── CTA desktop ── */
-.nav-cta-desk {
-  display: none !important; flex-shrink: 0;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 8px 16px; border-radius: 7px; font-weight: 500;
-  white-space: nowrap; transition: all .2s; text-decoration: none;
-  background: linear-gradient(135deg,#F5D061,#C8860A); color: #000;
-}
-.nav-cta-desk:hover { background: #C8A000 }
 @media(min-width:700px) { .nav-cta-desk { display: block } }
 
 /* ── Burger ── */
@@ -153,13 +144,6 @@
   font-size: 13px; padding: 12px 16px;
   border-radius: 8px; border: 1px solid rgba(255,255,255,.06);
 }
-.nav-mobile-cta {
-  margin-top: 8px; padding: 13px; border-radius: 8px;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
-  font-weight: 500; text-align: center; display: block; text-decoration: none;
-  background: #FFCF00; color: #000;
-}
 
 /* Socials mobile */
 .nav-mobile-socials {
@@ -194,8 +178,6 @@
 .nav-mobile-auth .mob-signup { background: linear-gradient(135deg,#F5D061,#C8860A); color: #000 }
 
 /* Supprimer CTA nav */
-.nav-cta-desk { display: none !important }
-.nav-mobile-cta { display: none !important }
 
 
 /* ══ FOOTER REFAIT ══ */
@@ -258,28 +240,13 @@
 .fb-badge { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.15); display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
 .fb-badge a { color: rgba(255,255,255,.25); text-decoration: none; transition: color .15s }
 .fb-badge a:hover { color: rgba(255,207,0,.6) }
-.fb-links { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.15); display: flex; align-items: center; gap: 8px }
-.fb-links a { color: rgba(255,255,255,.25); text-decoration: none; transition: color .15s }
-.fb-links a:hover { color: rgba(255,207,0,.6) }
 .fb-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg,#F5D061,#C8860A); flex-shrink: 0 }
 
 /* ════════════════════════════════════════
-   NAV — État connecté (injecté par live-editor.js)
+   NAV : État connecté (injecté par live-editor.js)
    ════════════════════════════════════════ */
 
-/* Bouton "Espace Admin" — blanc sur fond sombre du nav */
-.nav-btn-admin {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-  background: rgba(255,255,255,.95); color: #111;
-  padding: 6px 14px; border-radius: 4px;
-  text-decoration: none; font-weight: 700;
-  transition: all .18s; white-space: nowrap;
-  display: inline-flex; align-items: center; gap: 5px;
-  border: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,.25);
-}
-.nav-btn-admin:hover { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.3) }
+/* Bouton "Espace Admin" : blanc sur fond sombre du nav */
 
 /* Bouton déconnexion */
 .nav-btn-logout {
@@ -301,13 +268,3 @@
 }
 
 /* Mobile */
-.nav-mobile-logout {
-  background: rgba(255,255,255,.06) !important;
-  border: 1px solid rgba(255,255,255,.12) !important;
-  color: rgba(255,255,255,.5) !important;
-  margin-top: 4px;
-}
-.nav-mobile-logout:hover {
-  background: rgba(255,255,255,.12) !important;
-  color: #fff !important;
-}

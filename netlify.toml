@@ -1,5 +1,11 @@
 [build]
   publish = "."
+  # Recuit le contenu Supabase dans le filet de secours de chaque page.
+  # Sans ce script, jbe-content-cache reste vide et le site perd tout le
+  # contenu saisi par JB des que Supabase ne repond pas.
+  # Le script sort toujours en code 0 : une publication ne doit jamais etre
+  # bloquee par une indisponibilite de Supabase.
+  command = "node outil-dev/build-cache.js"
 
 [[headers]]
   for = "/*"

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<base href="/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maquette B — Écurie · Vers la Compétition · JB EMERIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Outfit',sans-serif;font-weight:300;
+  background:#040a1e;color:#fff;
+  -webkit-font-smoothing:antialiased;overflow-x:clip;
+}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+:root{
+  --bg:#040a1e;
+  --bg-dark:#020610;
+  --bg-mid:#071122;
+  --accent:#FFCF00;
+  --accent-dim:rgba(255,207,0,.15);
+  --rule:rgba(255,255,255,.08);
+  --ink-soft:rgba(255,255,255,.65);
+  --ink-mute:rgba(255,255,255,.4);
+}
+
+/* ── NAV ── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,4vw,64px);height:60px;
+  background:rgba(4,10,30,.95);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--rule);
+}
+.tb-back{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ink-mute);transition:color .15s;
+}
+.tb-back:hover{color:#fff}
+.tb-brand{
+  font-family:'Bebas Neue',sans-serif;font-size:22px;
+  letter-spacing:2px;color:var(--accent);
+}
+.tb-cta{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:#000;background:var(--accent);
+  padding:9px 20px;transition:filter .2s;
+}
+.tb-cta:hover{filter:brightness(1.1)}
+
+/* ── HERO DIAGONAL ── */
+.hero{
+  position:relative;min-height:100svh;
+  overflow:hidden;
+  display:flex;align-items:center;
+}
+.hero-media{position:absolute;inset:0;z-index:0}
+.hero-media img{
+  width:100%;height:100%;object-fit:cover;object-position:center 30%;
+  filter:brightness(.4) saturate(.7);
+}
+.hero-media::after{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(135deg,rgba(4,10,30,.98) 0%,rgba(4,10,30,.6) 55%,rgba(4,10,30,.1) 100%);
+}
+/* Ligne diagonale dorée */
+.hero-diagonal{
+  position:absolute;
+  top:0;right:0;
+  width:60%;height:100%;
+  z-index:1;pointer-events:none;
+  background:linear-gradient(135deg,transparent 48%,rgba(255,207,0,.08) 49%,rgba(255,207,0,.04) 51%,transparent 52%);
+}
+.hero-diagonal::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 49.3%,rgba(255,207,0,.5) 49.5%,rgba(255,207,0,.5) 50%,transparent 50.2%);
+}
+
+.hero-inner{
+  position:relative;z-index:2;
+  padding:100px clamp(20px,5vw,80px) clamp(60px,8vw,100px);
+  max-width:1100px;width:100%;
+  display:flex;flex-direction:column;
+  gap:clamp(20px,3vw,32px);
+}
+.hero-sup{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--accent);
+  display:flex;align-items:center;gap:14px;
+}
+.hero-sup::before{content:'';width:32px;height:1px;background:var(--accent)}
+
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(72px,12vw,160px);
+  line-height:.82;letter-spacing:-1px;
+}
+.hero-title em{font-style:normal;color:var(--accent)}
+.ht-sub{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(24px,4vw,52px);
+  color:rgba(255,255,255,.35);line-height:1;
+  display:block;margin-top:4px;
+}
+
+.hero-row{
+  display:flex;align-items:flex-start;
+  flex-wrap:wrap;gap:clamp(24px,4vw,60px);
+  margin-top:16px;
+}
+.hero-lead{
+  font-size:clamp(14px,1.4vw,17px);line-height:1.7;
+  color:var(--ink-soft);max-width:500px;
+  border-left:2px solid var(--accent);
+  padding-left:18px;
+}
+.hero-nums{
+  display:flex;gap:clamp(20px,3vw,40px);flex-wrap:wrap;
+}
+.hn-item{display:flex;flex-direction:column;gap:4px}
+.hn-val{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,60px);
+  color:var(--accent);line-height:1;
+}
+.hn-key{
+  font-family:'DM Mono',monospace;font-size:8px;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--ink-mute);
+}
+
+.hero-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.btn-a,.btn-b{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;padding:13px 26px;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:all .2s;
+}
+.btn-a{background:var(--accent);color:#000}
+.btn-a:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-b{border:1px solid rgba(255,207,0,.3);color:var(--accent)}
+.btn-b:hover{background:var(--accent-dim)}
+
+/* Barre bas hero */
+.hero-ticker{
+  position:absolute;bottom:0;left:0;right:0;z-index:2;
+  background:var(--accent);
+  padding:11px clamp(20px,5vw,80px);
+  display:flex;align-items:center;gap:40px;
+  overflow:hidden;
+}
+.ht-item{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:#000;font-weight:500;
+  white-space:nowrap;
+  display:flex;align-items:center;gap:16px;
+}
+.ht-item::after{content:'·';opacity:.4}
+.ht-item:last-child::after{display:none}
+
+/* ── OFFRES DIAGONALES ── */
+.offre{
+  position:relative;
+  min-height:clamp(500px,70vh,800px);
+  display:flex;align-items:flex-end;
+  overflow:hidden;
+}
+.offre-media{position:absolute;inset:0;z-index:0}
+.offre-media img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  filter:brightness(.38) saturate(.7);
+  transition:transform .6s ease,filter .4s;
+}
+.offre:hover .offre-media img{transform:scale(1.03);filter:brightness(.45) saturate(.8)}
+
+/* Découpe diagonale bas de section */
+.offre::after{
+  content:'';
+  position:absolute;bottom:-2px;left:0;right:0;z-index:3;
+  height:80px;
+  background:var(--bg);
+  clip-path:polygon(0 60%,100% 0,100% 100%,0 100%);
+}
+.offre--alt::after{
+  clip-path:polygon(0 0,100% 60%,100% 100%,0 100%);
+}
+.offre-overlay{
+  position:absolute;inset:0;z-index:1;
+  background:
+    linear-gradient(to top,rgba(4,10,30,.98) 0%,rgba(4,10,30,.55) 50%,transparent 100%),
+    linear-gradient(to right,rgba(4,10,30,.85) 0%,transparent 60%);
+}
+.offre--alt .offre-overlay{
+  background:
+    linear-gradient(to top,rgba(4,10,30,.98) 0%,rgba(4,10,30,.55) 50%,transparent 100%),
+    linear-gradient(to left,rgba(4,10,30,.85) 0%,transparent 60%);
+}
+
+/* Numéro grand en fond */
+.offre-bg-num{
+  position:absolute;z-index:1;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(200px,30vw,380px);
+  line-height:.85;
+  color:rgba(255,207,0,.05);
+  top:50%;transform:translateY(-50%);
+  right:clamp(20px,5vw,80px);
+  user-select:none;pointer-events:none;
+}
+.offre--alt .offre-bg-num{right:auto;left:clamp(20px,5vw,80px)}
+
+.offre-inner{
+  position:relative;z-index:2;
+  width:100%;
+  padding:0 clamp(20px,5vw,80px) clamp(80px,10vw,120px);
+  display:flex;align-items:flex-end;
+  gap:clamp(24px,4vw,60px);
+}
+.offre--alt .offre-inner{justify-content:flex-end}
+
+.offre-content{
+  max-width:640px;
+  display:flex;flex-direction:column;gap:clamp(16px,2vw,22px);
+}
+.oc-stripe{
+  width:48px;height:3px;background:var(--accent);
+}
+.oc-tag{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--accent);
+}
+.oc-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(48px,7.5vw,100px);
+  line-height:.85;
+}
+.oc-title em{font-style:normal;color:var(--accent)}
+.oc-lead{
+  font-size:clamp(14px,1.3vw,16px);line-height:1.7;
+  color:var(--ink-soft);max-width:560px;
+}
+.oc-specs{
+  display:flex;flex-wrap:wrap;gap:2px;
+  background:rgba(255,207,0,.12);
+  border:1px solid rgba(255,207,0,.2);
+  align-self:flex-start;
+}
+.os-item{
+  background:rgba(4,10,30,.75);backdrop-filter:blur(8px);
+  padding:12px 18px;display:flex;flex-direction:column;gap:4px;
+  min-width:100px;
+}
+.os-v{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,3vw,36px);
+  color:var(--accent);line-height:1;
+}
+.os-k{
+  font-family:'DM Mono',monospace;font-size:8px;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--ink-mute);
+}
+.oc-cta{
+  background:var(--accent);color:#000;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;padding:13px 24px;
+  display:inline-flex;align-items:center;gap:8px;
+  align-self:flex-start;transition:all .2s;
+}
+.oc-cta:hover{filter:brightness(1.08);transform:translateY(-1px)}
+
+/* ── DISCIPLINES ── */
+.disciplines{
+  padding:clamp(80px,10vw,120px) clamp(20px,5vw,80px);
+  background:var(--bg);
+  position:relative;
+}
+.disc-kicker{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--accent);margin-bottom:16px;
+}
+.disc-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,5vw,64px);line-height:.9;
+  margin-bottom:clamp(36px,5vw,56px);
+}
+.disc-title em{font-style:normal;color:var(--accent)}
+.disc-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:2px;background:var(--rule);border:1px solid var(--rule);
+}
+.dc{
+  background:var(--bg-mid);
+  padding:clamp(24px,3vw,36px);
+  display:flex;flex-direction:column;gap:12px;
+  transition:background .2s;
+  border-top:2px solid transparent;
+}
+.dc:hover{background:rgba(255,207,0,.04);border-top-color:var(--accent)}
+.dc-n{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,64px);
+  color:rgba(255,207,0,.12);line-height:.9;
+}
+.dc-name{font-size:17px;font-weight:500}
+.dc-desc{font-size:13px;line-height:1.7;color:var(--ink-soft)}
+.dc-tag{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--accent);
+  padding:5px 10px;border:1px solid rgba(255,207,0,.2);
+  align-self:flex-start;margin-top:4px;
+}
+
+/* ── CTA FINAL ── */
+.cta-final{
+  padding:clamp(80px,10vw,120px) clamp(20px,5vw,80px);
+  background:var(--bg-dark);
+  border-top:1px solid var(--rule);
+  text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:24px;
+}
+.cf-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(44px,7vw,96px);line-height:.88;
+}
+.cf-title em{font-style:normal;color:var(--accent)}
+.cf-lead{
+  font-size:16px;line-height:1.7;color:var(--ink-soft);
+  max-width:540px;margin-bottom:8px;
+}
+.cf-ctas{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <a class="tb-back" href="academie.html">← Académie</a>
+  <span class="tb-brand">JB EMERIC</span>
+  <a class="tb-cta" href="contact.html">Nous contacter</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-media">
+    <img src="assets/images/bmw-325i-htcc.jpg" alt="JB EMERIC compétition">
+  </div>
+  <div class="hero-diagonal"></div>
+  <div class="hero-inner">
+    <div class="hero-sup">Vers la Compétition</div>
+    <h1 class="hero-title">Former<br>des pilotes.<span class="ht-sub">Pas des touristes.</span></h1>
+    <div class="hero-row">
+      <p class="hero-lead">Deux formations sérieuses — kart 125cc à boîte et voiture de circuit. Pour les pilotes qui ont l'ambition de courir en championnat.</p>
+      <div class="hero-nums">
+        <div class="hn-item"><span class="hn-val">18 000</span><span class="hn-key">tr/min Rotax</span></div>
+        <div class="hn-item"><span class="hn-val">1.2s</span><span class="hn-key">0 → 100</span></div>
+        <div class="hn-item"><span class="hn-val">37+</span><span class="hn-key">Ans enseign.</span></div>
+      </div>
+    </div>
+    <div class="hero-ctas">
+      <a href="#karting125" class="btn-a">Kart 125cc →</a>
+      <a href="#voiture" class="btn-b">Formation voiture →</a>
+    </div>
+  </div>
+  <div class="hero-ticker">
+    <span class="ht-item">Kart 125cc à boîte</span>
+    <span class="ht-item">Peugeot 206 S16</span>
+    <span class="ht-item">Formule Renault</span>
+    <span class="ht-item">Champion de France 1988</span>
+    <span class="ht-item">Championnats FFSA</span>
+  </div>
+</section>
+
+<!-- OFFRE 01 — KARTING 125CC -->
+<section class="offre" id="karting125">
+  <div class="offre-media">
+    <img src="assets/images/karting-adulte-depart.jpg" alt="Karting 125cc compétition">
+  </div>
+  <div class="offre-overlay"></div>
+  <div class="offre-bg-num">01</div>
+  <div class="offre-inner">
+    <div class="offre-content">
+      <div class="oc-stripe"></div>
+      <div class="oc-tag">Karting Compétition · Rotax 125cc</div>
+      <h2 class="oc-title">Kart 125cc<br>à <em>boîte.</em></h2>
+      <p class="oc-lead">Ce n'est plus le kart de location. Le Rotax 125cc 2 temps à boîte séquentielle est une machine de compétition à part entière. 18 000 tr/min, 0–100 en 1.2 secondes. La suite logique du cursus C1→C5.</p>
+      <div class="oc-specs">
+        <div class="os-item"><span class="os-v">1.2s</span><span class="os-k">0 → 100 km/h</span></div>
+        <div class="os-item"><span class="os-v">18K</span><span class="os-k">tr/min max</span></div>
+        <div class="os-item"><span class="os-v">125cc</span><span class="os-k">2T · Rotax</span></div>
+        <div class="os-item"><span class="os-v">×6</span><span class="os-k">Boîte séq.</span></div>
+      </div>
+      <a href="contact.html" class="oc-cta">Réserver une session →</a>
+    </div>
+  </div>
+</section>
+
+<!-- OFFRE 02 — FORMATION VOITURE -->
+<section class="offre offre--alt" id="voiture">
+  <div class="offre-media">
+    <img src="assets/images/peugeot-206-s16-ricard.jpg" alt="Peugeot 206 S16 formation">
+  </div>
+  <div class="offre-overlay"></div>
+  <div class="offre-bg-num">02</div>
+  <div class="offre-inner">
+    <div class="offre-content">
+      <div class="oc-stripe"></div>
+      <div class="oc-tag">Formation Voiture · 206 S16 → FR</div>
+      <h2 class="oc-title">De la 206<br>à la <em>monoplace.</em></h2>
+      <p class="oc-lead">Deux étapes successives sur deux machines différentes. La 206 S16 pour maîtriser les fondamentaux. La Formule Renault pour passer à la monoplace. Validation par JB à chaque étape — aucun raccourci possible.</p>
+      <div class="oc-specs">
+        <div class="os-item"><span class="os-v">206</span><span class="os-k">S16 étape 01</span></div>
+        <div class="os-item"><span class="os-v">FR</span><span class="os-k">Formule Renault</span></div>
+        <div class="os-item"><span class="os-v">FFSA</span><span class="os-k">Circuits</span></div>
+      </div>
+      <a href="contact.html" class="oc-cta">Discuter de mon projet →</a>
+    </div>
+  </div>
+</section>
+
+<!-- DISCIPLINES -->
+<section class="disciplines">
+  <div class="disc-kicker">— L'accompagnement</div>
+  <h2 class="disc-title">Les championnats.<br><em>On vous y emmène.</em></h2>
+  <div class="disc-grid">
+    <div class="dc">
+      <div class="dc-n">01</div>
+      <div class="dc-name">Karting compétition FFSA</div>
+      <p class="dc-desc">Continuation naturelle du 125cc. Championnats régionaux et nationaux.</p>
+      <div class="dc-tag">Voiture fournie</div>
+    </div>
+    <div class="dc">
+      <div class="dc-n">02</div>
+      <div class="dc-name">Mitjet 1.6</div>
+      <p class="dc-desc">Entrée en compétition automobile accessible. Budget maîtrisé, voiture en location.</p>
+      <div class="dc-tag">Location équipe</div>
+    </div>
+    <div class="dc">
+      <div class="dc-n">03</div>
+      <div class="dc-name">Clio Cup</div>
+      <p class="dc-desc">Monotype national, bonne visibilité sponsors. Scène compétitive sérieuse.</p>
+      <div class="dc-tag">Location équipe</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <h2 class="cf-title">La prochaine étape<br>commence <em>ici.</em></h2>
+  <p class="cf-lead">Quinze minutes avec JB. Votre profil, votre budget, votre ambition — une réponse directe et honnête.</p>
+  <div class="cf-ctas">
+    <a href="contact.html" class="btn-a">Parler de mon projet →</a>
+    <a href="academie.html" class="btn-b">Retour Académie</a>
+  </div>
+</section>
+
+</body>
+</html>

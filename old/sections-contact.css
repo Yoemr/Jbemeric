@@ -1,0 +1,131 @@
+/* ══════════════════════════════════════════════════════════════
+   sections-contact.css — JB EMERIC
+   Section "Nous contacter" + Section "Avis clients"
+   Inclure dans : academie-*.html, coaching.html, track.html
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Section Nous contacter ──────────────────────────────────── */
+.section-contact {
+  background: #07080f;
+  padding: clamp(40px,5vw,64px) clamp(20px,5vw,72px);
+  scroll-margin-top: 56px;
+}
+.section-contact .inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+.section-contact .sc-kicker {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+  color: rgba(255,207,0,.5);
+  margin-bottom: 12px;
+}
+.section-contact .sc-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px,5vw,48px);
+  color: #fff; line-height: .95;
+  margin-bottom: 28px;
+}
+.section-contact .sc-title em {
+  font-style: normal; color: #FFCF00;
+}
+.sc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+@media (max-width: 640px) {
+  .sc-grid { grid-template-columns: 1fr }
+}
+
+/* Cards coordonnées */
+.sc-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all .2s;
+}
+.sc-card:hover {
+  border-color: rgba(255,207,0,.2);
+  background: rgba(255,255,255,.06);
+}
+.sc-card-icon {
+  width: 38px; height: 38px; flex-shrink: 0;
+  border-radius: 7px;
+  background: rgba(10,61,145,.25);
+  border: 1px solid rgba(10,61,145,.4);
+  display: flex; align-items: center; justify-content: center;
+}
+.sc-card-icon svg { fill: #FFCF00 }
+.sc-card-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px; color: #fff; line-height: 1;
+}
+.sc-card-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: rgba(255,255,255,.4);
+  margin-top: 2px;
+}
+.sc-contact-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,207,0,.7);
+  text-decoration: none;
+  transition: color .15s;
+}
+.sc-contact-link:hover { color: #FFCF00 }
+
+/* ── Section Avis clients ─────────────────────────────────────── */
+.section-avis {
+  background: #040a1e;
+  padding: clamp(40px,5vw,64px) clamp(20px,5vw,72px);
+}
+.section-avis .inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+.section-avis .sa-kicker {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+  color: rgba(255,207,0,.5);
+  margin-bottom: 12px;
+}
+.section-avis .sa-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px,5vw,48px);
+  color: #fff; line-height: .95;
+  margin-bottom: 28px;
+}
+.sa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.sa-card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+}
+.sa-stars {
+  color: #FFCF00; font-size: 14px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+.sa-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: rgba(255,255,255,.7);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.sa-author {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(255,207,0,.6);
+}

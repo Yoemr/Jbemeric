@@ -1,4 +1,4 @@
-// live-editor.js — JB EMERIC
+// live-editor.js : JB EMERIC
 // ZERO class ES6 · ZERO template literal · ZERO arrow function
 console.log("live-editor.js charge !");
 console.log("Configuration OK : Utilisation des colonnes id et content uniquement");
@@ -10,6 +10,46 @@ var SB_ANON = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
 var sb      = createClient(SB_URL, SB_ANON)
 
 var PAGE = (location.pathname.split('/').pop().replace('.html','')) || 'index'
+
+// ─── RENOMMAGES DE PAGES ─────────────────────────────────────────────
+// La cle Supabase derive du nom de fichier. Renommer une page orphelinerait
+// donc tout ce que JB y a deja saisi. Cette table declare l'ancienne cle, qui
+// reste lisible : au chargement, un contenu trouve sous l'ancienne est repris
+// sous la nouvelle si celle-ci est vide. Les sauvegardes suivantes ecrivent
+// sous la nouvelle, donc la base se migre d'elle-meme au rythme des editions.
+//
+// 6 aout 2026 : karting.html devient karting-adulte.html, pour etre symetrique
+// de karting-enfant.html. 21 contenus etaient en jeu.
+//
+// 9 aout 2026 : track.html devient evenements.html. Le nom ne voulait plus rien
+// dire : les track-days ne sont qu'une section parmi celles a venir. 1 contenu
+// en jeu, la video du hero.
+//
+// Une entree ne se retire d'ici que le jour ou la base a ete migree pour de
+// bon, et seulement ce jour-la.
+var PAGE_ALIASES = { 'karting-adulte': 'karting', 'evenements': 'track' }
+
+function _reprendreAncienneCle() {
+  var ancien = PAGE_ALIASES[PAGE]
+  if (!ancien) return
+  var av = ancien + '__', ap = PAGE + '__', n = 0
+  for (var cle in _db) {
+    if (cle.indexOf(av) !== 0) continue
+    var nouvelle = ap + cle.slice(av.length)
+    if (_db[nouvelle]) continue
+    _db[nouvelle] = _db[cle]
+    if (_dbMeta[cle]) _dbMeta[nouvelle] = _dbMeta[cle]
+    n++
+  }
+  if (n) console.log('[JBE] ' + n + ' contenu(s) repris de l\'ancienne cle « ' + ancien + ' »')
+}
+
+// Chemin complet de la page depuis la racine du site, utilisé UNIQUEMENT pour
+// écrire le cache HTML local via /save-html.
+// PAGE reste la clé Supabase (PAGE + '__' + id) et ne doit pas changer :
+// la modifier orphelinerait tout le contenu déjà enregistré dans site_content
+// pour les pages rangées en sous-dossier.
+var PAGE_PATH = location.pathname.replace(/^\/+/, '').replace(/\.html$/, '') || 'index'
 
 var SEL = [
   '.hero-title', '.hero-lead', '.hero-kicker', '.hero-sub', '.hero-eyebrow',
@@ -80,10 +120,149 @@ var _db       = {}
 var _dbMeta   = {}
 var _els      = []
 var _imgs     = []
-// _vidCtrls supprimé — ctrl ancré au .hero, plus de repositionnement JS
+// _vidCtrls supprimé : ctrl ancré au .hero, plus de repositionnement JS
 var _dirty    = {}
 var _active = null
 var _bar    = null
+
+// ─── ID STABLES (universal : anchor + DOM path) ──────
+// Format : s_<anchor>__<tag.class[-idx]>__<...>
+// L'anchor = ancêtre le plus proche avec un id explicite (non auto-généré).
+// Robuste aux ajouts/retraits d'éléments : l'ID ne dépend pas de l'ordre
+// document, juste de la position relative à un anchor stable.
+
+function _isExplicitId(id) {
+  if (!id) return false
+  return !/^(jbe-u-|txt-|img-|s_)/.test(id)
+}
+
+function _classKey(node) {
+  if (typeof node.className !== 'string' || !node.className) return ''
+  var parts = node.className.split(/\s+/)
+  var kept = []
+  for (var i = 0; i < parts.length; i++) {
+    var c = parts[i]
+    if (c && !/^jbe-/.test(c)) kept.push(c)
+  }
+  kept.sort()
+  return kept.join('-')
+}
+
+function _pathSegment(node) {
+  var tag = node.tagName.toLowerCase()
+  var cls = _classKey(node)
+  var key = cls ? (tag + '_' + cls) : tag
+  // Index parmi les frères de même tag+class (sous le même parent)
+  var p = node.parentElement
+  if (p) {
+    var sibs = []
+    for (var i = 0; i < p.children.length; i++) {
+      var s = p.children[i]
+      if (s.tagName !== node.tagName) continue
+      if (_classKey(s) !== cls) continue
+      sibs.push(s)
+    }
+    if (sibs.length > 1) {
+      key += '-' + sibs.indexOf(node)
+    }
+  }
+  return key
+}
+
+function _computeStableId(el) {
+  // 1. Trouve le plus proche ancêtre avec un id explicite
+  var anchor = null
+  var anchorEl = null
+  var ancestor = el.parentElement
+  while (ancestor && ancestor !== document.body && ancestor !== document.documentElement) {
+    if (_isExplicitId(ancestor.id)) {
+      anchor   = ancestor.id
+      anchorEl = ancestor
+      break
+    }
+    ancestor = ancestor.parentElement
+  }
+  // 2. Construit le chemin de l'anchor jusqu'à l'élément
+  var path = []
+  var cur = el
+  while (cur && cur !== anchorEl && cur !== document.body && cur !== document.documentElement) {
+    path.unshift(_pathSegment(cur))
+    cur = cur.parentElement
+  }
+  return 's_' + (anchor || 'body') + '__' + path.join('__')
+}
+
+// ─── SANITY CHECKS pour migration legacy → stable ────
+// Stratégie : check de longueur + check de chevauchement de mots significatifs.
+// Un mot signif de data-orig (HTML par défaut) doit apparaître dans le contenu DB,
+// sinon c'est probablement du drift entre éléments différents.
+var _SANITY_STOP = {
+  'les':1,'des':1,'son':1,'ses':1,'une':1,'leur':1,'cette':1,'tous':1,'toutes':1,
+  'nous':1,'vous':1,'elle':1,'elles':1,'sont':1,'pour':1,'avec':1,'sans':1,'sous':1,
+  'comme':1,'tout':1,'meme':1,'plus':1,'bien':1,'dans':1,'mais':1,'donc':1,
+  'qui':1,'que':1,'quoi':1,'avant':1,'apres':1,'aussi':1,'tres':1,'fait':1,
+  'etre':1,'avoir':1,'faire':1,'dire':1,'voir':1,'autre':1,'chez':1,
+  'chaque':1,'celui':1,'celle':1,'cela':1,'voici':1,'voila':1,'leur':1,
+  'votre':1,'notre':1,'nos':1,'vos':1,'mes':1,'tes':1,'ans':1,'depuis':1,
+  'this':1,'that':1,'with':1,'from':1,'they':1,'their':1,'have':1,'been':1
+}
+function _normWord(s) {
+  return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+}
+function _legacyTextSanity(el, dbContent) {
+  if (!dbContent) return false
+  var orig = el.getAttribute('data-orig') || ''
+  if (!orig) return true
+  var lo = orig.length, ld = dbContent.length
+  if (lo < 1 || ld < 1) return false
+  var ratio = Math.max(lo, ld) / Math.min(lo, ld)
+  if (ratio > 5) return false
+  // Word overlap : au moins 1 mot signif de data-orig doit apparaître dans dbContent
+  var origNorm = _normWord(orig)
+  var dbNorm   = _normWord(dbContent)
+  var words    = origNorm.split(/[^a-z0-9]+/)
+  var signif   = []
+  for (var i = 0; i < words.length; i++) {
+    var w = words[i]
+    if (w.length >= 4 && !_SANITY_STOP[w]) signif.push(w)
+  }
+  if (!signif.length) return true // pas de mot signif → tolérer
+  for (var j = 0; j < signif.length; j++) {
+    if (dbNorm.indexOf(signif[j]) !== -1) return true
+  }
+  return false
+}
+
+function _legacyMediaSanity(el, dbContent, dbType) {
+  if (!dbContent) return false
+  if (dbType === 'video') {
+    if (/\.(mp4|webm|ogg|mov)(\?|$)/i.test(dbContent)) return true
+    return el.tagName === 'VIDEO'
+  }
+  if (/\.(jpg|jpeg|png|gif|webp|svg|avif)(\?|$)/i.test(dbContent)) return true
+  // URL Supabase sans extension claire → on tolère
+  return true
+}
+
+// ─── MIGRATION SILENCIEUSE legacy → stable ───────────
+var _migrationsPending = []
+function _scheduleMigration(stableKey, content, mediaType) {
+  _migrationsPending.push({ stableKey: stableKey, content: content, mediaType: mediaType })
+}
+function _flushMigrations() {
+  if (!_migrationsPending.length) return
+  var batch = _migrationsPending.slice()
+  _migrationsPending = []
+  console.log('[JBE] Migration de ' + batch.length + ' entrée(s) legacy → stable')
+  for (var i = 0; i < batch.length; i++) {
+    var m = batch[i]
+    var payload = { id: m.stableKey, content: m.content }
+    if (m.mediaType) payload.media_type = m.mediaType
+    sb.from('site_content').upsert(payload, { onConflict: 'id' })
+      .then(function() {})
+      .catch(function(err) { console.warn('[JBE] Migration échouée:', err.message) })
+  }
+}
 
 // Anti-flash
 var _hs = document.createElement('style')
@@ -125,11 +304,14 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 // ─── SCAN TEXTES ─────────────────────────────
+// IDs assignés : stables (basés sur DOM path + anchor explicite).
+// Le legacy ID positionnel ('txt-N' / 'jbe-u-N') est conservé en data-legacy-id
+// pour permettre le fallback DB lors des chargements (migration silencieuse).
 function scanElements() {
   _els = []
-  var n = 1
+  var n = 1, u = 1
 
-  // ── Phase 1 : sélecteurs connus — IDs stables, compat DB existante ──
+  // ── Phase 1 : sélecteurs connus ──
   var p1 = document.querySelectorAll(SEL)
   for (var i = 0; i < p1.length; i++) {
     var el = p1[i]
@@ -137,16 +319,21 @@ function scanElements() {
     if (el.querySelector('a,img,button,input,select,textarea')) continue
     var txt = el.textContent.trim()
     if (!txt || txt.length < 2) continue
-    if (!el.id) el.id = 'txt-' + n
-    n++
+    var legacyId
+    if (el.id) {
+      legacyId = el.id
+    } else {
+      legacyId = 'txt-' + n; n++
+      el.id = _computeStableId(el)
+    }
+    el.setAttribute('data-legacy-id', legacyId)
     el.setAttribute('data-orig-html', el.innerHTML)
     el.setAttribute('data-orig', txt)
     if (el.getAttribute('style')) el.setAttribute('data-orig-style', el.getAttribute('style'))
     _els.push(el)
   }
 
-  // ── Phase 2 : scan universel — éléments non couverts par SEL ──
-  var u = 1
+  // ── Phase 2 : scan universel ──
   var p2 = document.querySelectorAll(SEL_UNIV)
   for (var j = 0; j < p2.length; j++) {
     var el2 = p2[j]
@@ -156,8 +343,14 @@ function scanElements() {
     if (el2.querySelector('p,h1,h2,h3,h4,h5,h6,div,section,article,ul,ol,table,form')) continue
     var txt2 = el2.textContent.trim()
     if (!txt2 || txt2.length < 2) continue
-    if (!el2.id) el2.id = 'jbe-u-' + u
-    u++
+    var legacyId2
+    if (el2.id) {
+      legacyId2 = el2.id
+    } else {
+      legacyId2 = 'jbe-u-' + u; u++
+      el2.id = _computeStableId(el2)
+    }
+    el2.setAttribute('data-legacy-id', legacyId2)
     el2.setAttribute('data-orig-html', el2.innerHTML)
     el2.setAttribute('data-orig', txt2)
     if (el2.getAttribute('style')) el2.setAttribute('data-orig-style', el2.getAttribute('style'))
@@ -175,18 +368,21 @@ function scanImages() {
   for (var i = 0; i < all.length; i++) {
     var img = all[i]
     if (img.closest('nav') || img.closest('footer') || img.closest('svg')) continue
-    if (img.id === 'jbe-vid-prev-el') continue // preview interne du modal
-    // Récupérer la source (img.src ou <source> enfant pour les vidéos)
+    if (img.id === 'jbe-vid-prev-el') continue
     var elSrc = img.src || (img.querySelector && img.querySelector('source') ? img.querySelector('source').getAttribute('src') : '') || ''
     if (!elSrc) continue
-    // Exclure les thumbnails YouTube auto-générés (img uniquement — les <video> n'ont pas d'URL youtube)
     if (img.tagName === 'IMG' && (elSrc.indexOf('youtube.com') !== -1 || elSrc.indexOf('youtu.be') !== -1)) continue
-    // Exclure les images des cards gérées depuis le Dashboard
-    if (img.closest('.ov-card-img')) continue   // cards miroir index
-    if (img.closest('.sr-card'))     continue   // cards track-days
-    if (img.closest('[data-dashboard]')) continue // marqueur générique
-    if (!img.id) img.id = 'img-' + n
-    n++
+    if (img.closest('.ov-card-img')) continue
+    if (img.closest('.sr-card'))     continue
+    if (img.closest('[data-dashboard]')) continue
+    var legacyId
+    if (img.id) {
+      legacyId = img.id
+    } else {
+      legacyId = 'img-' + n; n++
+      img.id = _computeStableId(img)
+    }
+    img.setAttribute('data-legacy-id', legacyId)
     img.setAttribute('data-orig-src', elSrc)
     _imgs.push(img)
   }
@@ -199,11 +395,26 @@ function _loadFromCache() {
   if (!cacheEl) return
   try {
     var cached = JSON.parse(cacheEl.textContent || '{}')
+
+    // Format v2 (build-cache.js) : { v:2, c:{id:contenu}, m:{id:type} }
+    // Le type de media est indispensable, sans lui une video repasse en image
+    // des que le filet prend le relais.
+    // Format historique : objet plat { id: contenu }. Toujours accepte.
+    var contenus = (cached && cached.v === 2 && cached.c) ? cached.c : cached
+    var medias   = (cached && cached.v === 2 && cached.m) ? cached.m : null
+
     var n = 0
-    for (var k in cached) {
-      if (cached[k]) { _db[k] = cached[k]; n++ }
+    for (var k in contenus) {
+      if (contenus[k]) { _db[k] = contenus[k]; n++ }
     }
-    console.log('[JBE] Fallback cache HTML: ' + n + ' entree(s)')
+    var nm = 0
+    if (medias) {
+      for (var mk in medias) {
+        if (medias[mk]) { _dbMeta[mk] = medias[mk]; nm++ }
+      }
+    }
+    _reprendreAncienneCle()
+    console.log('[JBE] Fallback cache HTML: ' + n + ' entree(s)' + (nm ? ', ' + nm + ' media(s)' : ''))
   } catch (e) { console.warn('[JBE] Cache parse error', e) }
 }
 
@@ -218,6 +429,7 @@ function loadTexts() {
             if (res.data[i].media_type) _dbMeta[res.data[i].id] = res.data[i].media_type
           }
         }
+        _reprendreAncienneCle()
         console.log('[JBE] ' + res.data.length + ' entree(s) Supabase')
       }
     })
@@ -242,23 +454,47 @@ function autoCapitalizeSentences(text) {
 
 function applyTexts() {
   for (var i = 0; i < _els.length; i++) {
-    var el  = _els[i]
-    var key = PAGE + '__' + el.id
-    if (!_db[key]) continue
+    var el        = _els[i]
+    var stableKey = PAGE + '__' + el.id
+    var legacyId  = el.getAttribute('data-legacy-id') || el.id
+    var legacyKey = PAGE + '__' + legacyId
+
+    // 1. Stable wins. 2. Legacy fallback avec sanity check (migration silencieuse).
+    var content = null
+    var fromLegacy = false
+    if (_db[stableKey]) {
+      content = _db[stableKey]
+    } else if (legacyKey !== stableKey && _db[legacyKey]) {
+      if (_legacyTextSanity(el, _db[legacyKey])) {
+        content    = _db[legacyKey]
+        fromLegacy = true
+      } else {
+        console.warn('[JBE] Legacy text rejected (drift?):', legacyKey, '→', el.id)
+      }
+    }
+    if (!content) continue
+
     var origHtmlTemplate = el.getAttribute('data-orig-html') || ''
-    var hasStructure = /<(em|span|b|strong|i|br)\b/i.test(origHtmlTemplate)
-    // Sanitize la valeur DB avant de l'appliquer
-    var dbValue = autoCapitalizeSentences(_db[key])
-    var rebuilt = rebuildHTML(el, dbValue)
+    var hasStructure     = /<(em|span|b|strong|i|br)\b/i.test(origHtmlTemplate)
+    var dbValue          = autoCapitalizeSentences(content)
+    var rebuilt          = rebuildHTML(el, dbValue)
     if (hasStructure && !/<(em|span|b|strong|i|br)\b/i.test(rebuilt)) {
-      console.log('[JBE] Corruption detectee, ignoree:', key)
+      console.log('[JBE] Corruption detectee, ignoree:', stableKey)
       continue
     }
     el.innerHTML = rebuilt
     var origStyle = el.getAttribute('data-orig-style') || ''
     if (origStyle) el.setAttribute('style', origStyle)
-    console.log('[JBE] Applique:', key)
+
+    if (fromLegacy) {
+      _db[stableKey] = content
+      _scheduleMigration(stableKey, content, null)
+      console.log('[JBE] Migré:', legacyKey, '→', stableKey)
+    } else {
+      console.log('[JBE] Applique:', stableKey)
+    }
   }
+  _flushMigrations()
 }
 
 function _makeVideoFromImg(img, url) {
@@ -308,13 +544,26 @@ function _addVideoControls(vid) {
     wrap.style.display  = 'block'
     wrap.style.width    = cs.width
     wrap.style.height   = cs.height
+    // Préserver float + marges de la vidéo (ex: portrait float-left dans article)
+    if (cs.cssFloat && cs.cssFloat !== 'none') {
+      wrap.style.cssFloat     = cs.cssFloat
+      wrap.style.marginTop    = cs.marginTop
+      wrap.style.marginRight  = cs.marginRight
+      wrap.style.marginBottom = cs.marginBottom
+      wrap.style.marginLeft   = cs.marginLeft
+      // shape-outside éventuel (non utilisé sur le portrait actuel mais générique)
+      if (cs.shapeOutside && cs.shapeOutside !== 'none') {
+        wrap.style.shapeOutside = cs.shapeOutside
+      }
+    }
   }
 
   vid.parentNode.insertBefore(wrap, vid)
   wrap.appendChild(vid)
 
   // Réinitialiser le style inline de la vidéo (supprime inset, z-index, etc.)
-  vid.style.cssText = 'position:static;width:100%;height:100%;object-fit:' + cs.objectFit + ';object-position:' + cs.objectPosition + ';display:block'
+  // float:none pour éviter qu'un float hérité de la classe casse le wrap
+  vid.style.cssText = 'position:static;width:100%;height:100%;object-fit:' + cs.objectFit + ';object-position:' + cs.objectPosition + ';display:block;float:none;margin:0'
 
   vid.volume = 0.1
 
@@ -346,8 +595,9 @@ function _addVideoControls(vid) {
   volWrap.appendChild(volSlider)
   ctrl.appendChild(btnPlay)
   ctrl.appendChild(volWrap)
+  // Ancrage : .hero pour vidéos hero (CSS spécifique), sinon le wrap (vidéos in-flow type étapes)
   var heroSection = vid.closest ? vid.closest('.hero') : null
-  ;(heroSection || document.body).appendChild(ctrl)
+  ;(heroSection || wrap).appendChild(ctrl)
 
   btnPlay.addEventListener('click', function(e) {
     e.stopPropagation()
@@ -384,21 +634,83 @@ function applyVideoControlsToAll() {
   }
 }
 
+function _setVideoSrc(vid, url) {
+  var srcChild = vid.querySelector('source')
+  var current  = srcChild ? (srcChild.getAttribute('src') || '') : (vid.getAttribute('src') || '')
+  if (current === url) return
+  if (srcChild) srcChild.setAttribute('src', url)
+  else          vid.setAttribute('src', url)
+  vid.load()
+}
+
+function _makeImgFromVideo(vid, url) {
+  var img = document.createElement('img')
+  img.id        = vid.id
+  img.className = vid.className
+  img.src       = url
+  if (vid.alt) img.alt = vid.alt
+  return img
+}
+
 function applyImages() {
   for (var i = 0; i < _imgs.length; i++) {
-    var img = _imgs[i]
-    var key = PAGE + '__' + img.id
-    if (!_db[key]) continue
-    if (_dbMeta[key] === 'video') {
-      if (img.tagName === 'VIDEO') continue // déjà une vidéo, pas de re-conversion
-      var vid = _makeVideoFromImg(img, _db[key])
-      img.parentNode.replaceChild(vid, img)
-      _imgs[i] = vid  // mettre à jour la référence : l'<img> est retiré du DOM
-      _addVideoControls(vid)
+    var img       = _imgs[i]
+    var stableKey = PAGE + '__' + img.id
+    var legacyId  = img.getAttribute('data-legacy-id') || img.id
+    var legacyKey = PAGE + '__' + legacyId
+
+    // 1. Stable wins. 2. Legacy fallback avec sanity check (migration silencieuse).
+    var url = null, dbType = null, fromLegacy = false
+    if (_db[stableKey]) {
+      url    = _db[stableKey]
+      dbType = _dbMeta[stableKey]
+    } else if (legacyKey !== stableKey && _db[legacyKey]) {
+      if (_legacyMediaSanity(img, _db[legacyKey], _dbMeta[legacyKey])) {
+        url        = _db[legacyKey]
+        dbType     = _dbMeta[legacyKey]
+        fromLegacy = true
+      } else {
+        console.warn('[JBE] Legacy media rejected (drift?):', legacyKey, '→', img.id)
+      }
+    }
+    if (!url) continue
+
+    var elIsVideo = (img.tagName === 'VIDEO')
+    var finalEl   = img
+    if (dbType === 'video') {
+      if (elIsVideo) {
+        _setVideoSrc(img, url)
+      } else {
+        var vid = _makeVideoFromImg(img, url)
+        img.parentNode.replaceChild(vid, img)
+        _imgs[i] = vid
+        _addVideoControls(vid)
+        finalEl  = vid
+      }
     } else {
-      img.src = _db[key]
+      if (elIsVideo) {
+        var newImg = _makeImgFromVideo(img, url)
+        var wrap = img.parentNode
+        if (wrap && wrap.classList && wrap.classList.contains('jbe-vid-wrap')) {
+          wrap.parentNode.replaceChild(newImg, wrap)
+        } else {
+          img.parentNode.replaceChild(newImg, img)
+        }
+        _imgs[i] = newImg
+        finalEl  = newImg
+      } else {
+        img.src = url
+      }
+    }
+
+    if (fromLegacy) {
+      _db[stableKey]     = url
+      if (dbType) _dbMeta[stableKey] = dbType
+      _scheduleMigration(stableKey, url, dbType || 'image')
+      console.log('[JBE] Migré image:', legacyKey, '→', stableKey)
     }
   }
+  _flushMigrations()
 }
 
 // ─── NAV ─────────────────────────────────────
@@ -492,7 +804,7 @@ function activateEditing() {
     stopEdit(_active, true)
   })
 
-  // Bouton saut de ligne flottant — affiché pendant l'édition
+  // Bouton saut de ligne flottant : affiché pendant l'édition
   var brFloat = document.createElement('button')
   brFloat.id          = 'jbe-br-float'
   brFloat.type        = 'button'
@@ -891,7 +1203,7 @@ function activateImages() {
             '</div>' +
             '<div style="display:flex;flex-direction:column;gap:6px">' +
               '<label style="font-family:\'DM Mono\';font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4)">L\u00e9gende / texte alternatif <span style="color:rgba(255,207,0,.5)">(SEO)</span></label>' +
-              '<input id="jbe-img-alt" type="text" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:#fff;padding:10px 12px;font-family:\'DM Mono\';font-size:11px;outline:none;width:100%;box-sizing:border-box" placeholder="ex: Stage karting enfant JB EMERIC, circuit PACA">' +
+              '<input id="jbe-img-alt" type="text" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:#fff;padding:10px 12px;font-family:\'DM Mono\';font-size:11px;outline:none;width:100%;box-sizing:border-box" placeholder="ex: Stage karting enfant JB EMERIC, circuit de Brignoles">' +
             '</div>' +
             '<div style="display:flex;gap:8px">' +
               '<input id="jbe-img-file" type="file" accept="image/*,video/mp4,video/webm,video/ogg" style="display:none">' +
@@ -1111,8 +1423,25 @@ function activateImages() {
                   _addVideoControls(vid)
                 }
               } else {
-                savedTarget.src = url
-                if (altVal) savedTarget.alt = altVal
+                // Upload image
+                if (savedTarget.tagName === 'VIDEO') {
+                  // Swap vidéo → image : reconstruire <img> et virer wrap+contrôles
+                  var newImg = document.createElement('img')
+                  newImg.id        = savedTarget.id
+                  newImg.className = savedTarget.className
+                  newImg.src       = url
+                  if (altVal) newImg.alt = altVal
+                  var wrap = savedTarget.parentNode
+                  if (wrap && wrap.classList && wrap.classList.contains('jbe-vid-wrap')) {
+                    wrap.parentNode.replaceChild(newImg, wrap)
+                  } else {
+                    savedTarget.parentNode.replaceChild(newImg, savedTarget)
+                  }
+                  savedTarget = newImg
+                } else {
+                  savedTarget.src = url
+                  if (altVal) savedTarget.alt = altVal
+                }
               }
               saveMedia(savedTarget, url, isVid ? 'video' : 'image', altVal, nameVal)
             } else {
@@ -1217,9 +1546,15 @@ function activateImages() {
 function bindImage(img, floatBtn) {
   var target
   if (img.tagName === 'VIDEO') {
-    // Vidéo background : .hero-content (z-index:3) intercepte tous les events souris.
-    // On remonte à la section parente (.hero ou section) qui est accessible par la souris.
-    target = (img.closest && (img.closest('.hero') || img.closest('section'))) || img.parentNode || img
+    // Hero vidéos plein écran : utiliser .hero (l'overlay intercepte les events).
+    // Vidéos en flux (étapes, articles) : utiliser le wrap pour isoler chaque vidéo.
+    var heroAncestor = img.closest && img.closest('.hero')
+    if (heroAncestor) {
+      target = heroAncestor
+    } else {
+      var vWrap = img.closest && img.closest('.jbe-vid-wrap')
+      target = vWrap || (img.closest && img.closest('section')) || img.parentNode || img
+    }
   } else {
     // Utiliser le premier ancêtre positionné comme target des events mouse.
     var op = img.offsetParent
@@ -1292,13 +1627,15 @@ function saveMedia(el, url, mediaType, altText, fileName) {
   var payload = { id: key, content: url }
   if (altText)  payload.alt_text  = altText
   if (fileName) payload.file_name = fileName
-  if (mediaType === 'video') payload.media_type = 'video'
+  // Toujours envoyer media_type explicite \u2014 sinon en swap video\u2192image, l'ancien 'video' reste en DB
+  payload.media_type = (mediaType === 'video') ? 'video' : 'image'
   setStatus('\u23f3 Sauvegarde...')
   sb.from('site_content')
     .upsert(payload, { onConflict: 'id' })
     .then(function (res) {
       if (res.error) throw res.error
       _db[key] = url
+      _dbMeta[key] = payload.media_type
       setStatus('\u2705 ' + (mediaType === 'video' ? 'Vid\u00e9o' : 'Image') + ' sauvegard\u00e9e')
       flashImg(el)
     })
@@ -1482,14 +1819,15 @@ function updateLocalHTML() {
   fetch('/save-html', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify({ page: PAGE, entries: entries })
+    body:    JSON.stringify({ page: PAGE, path: PAGE_PATH, entries: entries })
   })
   .then(function (r) { return r.json() })
   .then(function (d) {
-    if (d.ok) console.log('[JBE] HTML local mis \u00e0 jour : ' + PAGE + '.html')
+    if (d.ok) console.log('[JBE] HTML local mis \u00e0 jour : ' + PAGE_PATH + '.html')
+    else if (d.error) console.warn('[JBE] save-html : ' + d.error)
   })
   .catch(function () {
-    // Normal si on est sur Netlify — pas de serveur local, on ignore
+    // Normal si on est sur Netlify : pas de serveur local, on ignore
   })
 }
 
@@ -1602,8 +1940,22 @@ function injectVideoCSS() {
   s.id = 'jbe-vid-css'
   var css = ''
   css += '.jbe-vid-wrap{display:block}'
-  css += '.jbe-vid-ctrl{position:absolute;bottom:clamp(20px,4vw,36px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;z-index:9999}'
-  css += '[data-theme="index"] .jbe-vid-ctrl{bottom:clamp(120px,18vw,200px)}'
+  // Ancrage en HAUT a droite.
+  //
+  // Les heros du site sont en 'justify-content: flex-end' : titre, accroche,
+  // boutons et bande de statistiques sont tous colles en bas par construction.
+  // Le haut du hero ne contient que la video et son voile. C'est donc la seule
+  // zone libre sur toutes les pages, et elle l'est par regle de mise en page,
+  // pas par hasard.
+  //
+  // L'ancienne position, centree en bas, recouvrait les boutons d'appel a
+  // l'action. Elle avait donne lieu a un correctif par page
+  // ([data-theme="index"]), supprime ici au profit d'une regle unique.
+  // Un ancrage en bas a droite a aussi ete essaye : il tombe sur la bande de
+  // statistiques, qui fait partie du hero.
+  css += '.jbe-vid-ctrl{position:absolute;top:clamp(16px,2.5vw,28px);right:clamp(16px,2.5vw,28px);bottom:auto;left:auto;transform:none;display:flex;align-items:center;gap:8px;z-index:60}'
+  // Videos en cours de page : pas de hero, le wrapper epouse la video.
+  css += '.jbe-vid-wrap > .jbe-vid-ctrl{top:auto;bottom:clamp(10px,1.5vw,16px)}'
   css += '.jbe-vid-btn{width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;opacity:1;line-height:1;padding:0;flex-shrink:0}'
   css += '.jbe-vid-vol-wrap{display:flex;align-items:center;gap:6px}'
   css += '.jbe-vid-vol{width:0;opacity:0;transition:width .25s,opacity .25s;cursor:pointer;accent-color:#fff;height:4px}'

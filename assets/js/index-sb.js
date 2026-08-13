@@ -1,4 +1,4 @@
-// index-sb.js — JB EMERIC
+// index-sb.js : JB EMERIC
 // Supabase : paddock grille (événement, forum, calendrier)
 
 (async function() {
@@ -14,7 +14,7 @@
   if (dateEl) dateEl.textContent = now.getDate() + ' ' + MOL[now.getMonth()] + ' ' + now.getFullYear()
 
   try {
-    // ① Prochain événement (sans jointure circuits — évite le 400)
+    // ① Prochain événement (sans jointure circuits, évite le 400)
     var r1 = await fetch(SB + 'events?status=eq.Open&visible_site=eq.true&order=date_event.asc&limit=1&select=date_event,type', { headers: H })
     var evts = await r1.json()
     if (evts && evts[0]) {

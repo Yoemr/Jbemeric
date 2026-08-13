@@ -1,4 +1,4 @@
-// admin.js — JB EMERIC
+// admin.js : JB EMERIC
 // Dashboard admin : gestion événements, threads, documents
 // Chargé dans admin.html (réservé admins connectés)
 
@@ -20,13 +20,46 @@ async function sbLogout() {
   window.location.href = 'login.html'
 }
 
-// Éditeur de contenu — non disponible (editor.js supprimé)
+// Éditeur de contenu : non disponible (editor.js supprimé)
 // Le contenu est éditable directement sur le site via live-editor.js
 window.saveAllPending = function() { toast('Utilisez le mode édition sur le site', 'info') }
 window.filterEditor   = function() {}
 
 // ═══════════════════════════════════════════════════════════════════
-//  AUTH GUARD — bloquer les non-admins
+//  ACTIONS DE TABLEAU
+// ═══════════════════════════════════════════════════════════════════
+// Un identifiant ne s'écrit jamais dans un attribut onclick. Les clés de
+// toutes les tables sauf circuits sont des UUID, et
+//
+//   onclick="setStatus(53713c81-583c-43b6-a6c9-0b108ae18b48,'Open',this)"
+//
+// n'est pas du JavaScript. Le navigateur lève une erreur de syntaxe au
+// moment du clic, sans rien afficher : le bouton semble simplement inerte.
+// Les sept boutons d'action du dashboard étaient morts pour cette raison,
+// y compris la corbeille et l'interrupteur « visible sur le site ».
+//
+// L'action, la clé et l'éventuel argument passent donc par des attributs
+// data-, relus par un unique écouteur posé sur le document. Plus aucune
+// valeur venue de la base n'est interprétée comme du code, quel que soit
+// le type de la clé, et la délégation survit au remplacement du tbody.
+const ACTIONS = {}
+window.enregistrerAction = (nom, fn) => { ACTIONS[nom] = fn }
+
+document.addEventListener('click', ev => {
+  const el = ev.target.closest('[data-action]')
+  if (!el) return
+  const fn = ACTIONS[el.dataset.action]
+  if (!fn) return
+  ev.preventDefault()
+  fn(el.dataset.id, el, el.dataset.arg)
+})
+
+// Toute valeur insérée dans un attribut passe par ici. Un titre de fil de
+// forum contenant un guillemet suffirait sinon à casser la ligne entière.
+const attr = v => String(v ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
+
+// ═══════════════════════════════════════════════════════════════════
+//  AUTH GUARD : bloquer les non-admins
 // ═══════════════════════════════════════════════════════════════════
 const ALLOWED_ROLES = ['admin', 'moderateur']
 let currentUser = null
@@ -57,85 +90,31 @@ let currentRole = null
   }
 
   // Charger les données initiales
-  await Promise.all([loadKPIs(), loadEvents(), loadVotes(), loadInscriptions()])
+  await Promise.all([loadKPIs(), loadEvents(), loadInscriptions()])
   initEditor(supabase, currentRole)
   startClock()
 })()
 
 // ═══════════════════════════════════════════════════════════════════
-//  ÉVÉNEMENTS — CRUD
+//  ÉVÉNEMENTS : CRUD
 // ═══════════════════════════════════════════════════════════════════
-async function loadEvents() {
-  const statusFilter = document.getElementById('filter-status')?.value || ''
-  let query = supabase
-    .from('events')
-    .select('id,date_event,type,status,prix,nb_places,nb_inscrits,visible_site,circuit_id,circuits(nom)')
-    .order('date_event', { ascending: true })
-    .limit(50)
-
-  if (statusFilter) query = query.eq('status', statusFilter)
-
-  const { data, error } = await query
-  if (error) { toast('Erreur chargement events: ' + error.message, 'err'); return }
-
-  const tbody = document.querySelector('#v-sessions table tbody')
-  if (!tbody) return
-
-  const MONTHS = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc']
-
-  tbody.innerHTML = (data||[]).map(ev => {
-    const d = new Date(ev.date_event)
-    const dateStr = d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear()
-    const circuit = ev.circuits?.nom || '—'
-    const badge = badgeStatus(ev.status)
-    const vis = ev.visible_site
-      ? '<span style="color:#4ade80;font-size:11px">✓ Visible</span>'
-      : '<span style="color:rgba(255,255,255,.3);font-size:11px">Masqué</span>'
-
-    return `<tr id="erow-${ev.id}">
-      <td class="td-mono">${dateStr}</td>
-      <td>${ev.type || '—'}</td>
-      <td>${circuit}</td>
-      <td>${badge}</td>
-      <td class="td-mono">${ev.prix ? ev.prix + ' €' : '—'}</td>
-      <td class="td-mono">${ev.nb_inscrits || 0} / ${ev.nb_places || 10}</td>
-      <td>${vis}</td>
-      <td><div class="td-acts">
-        <button class="btn btn-sm" onclick="toggleEventVisible('${ev.id}', ${!vis})">
-          ${vis ? '👁 Masquer' : '👁 Publier'}
-        </button>
-        <button class="btn btn-sm btn-err" onclick="deleteEvent('${ev.id}')">✕</button>
-      </div></td>
-    </tr>`
-  }).join('') || `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:24px">Aucun événement</td></tr>`
-}
-
-window.filterEventsTable = function(q) {
-  const rows = document.querySelectorAll('#v-sessions table tbody tr')
-  rows.forEach(row => {
-    row.style.display = row.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none'
-  })
-}
-
-window.toggleEventVisible = async function(id, visible) {
-  const { error } = await supabase.from('events').update({ visible_site: visible }).eq('id', id)
-  if (error) { toast('Erreur: ' + error.message, 'err'); return }
-  toast(visible ? 'Event publié ✓' : 'Event masqué', 'ok')
-  loadEvents()
-}
-
-window.deleteEvent = async function(id, btn) {
-  if (!confirm('Supprimer cet événement ? Cette action est irréversible.')) return
-  const { error } = await supabase.from('events').delete().eq('id', id)
-  if (error) { toast('Erreur: ' + error.message, 'err'); return }
-  toast('Événement supprimé', 'ok')
-  const row = document.getElementById('erow-' + id)
-  if (row) row.remove()
-  loadKPIs()
-}
+// Un premier rendu de la table des événements vivait ici. Il a été retiré le
+// 8 août 2026 au profit de l'unique loadEvents plus bas. Deux raisons, l'une
+// et l'autre visibles chez JB :
+//
+//   1. Les deux versions ne visaient pas le même tableau. Celle-ci rendait au
+//      chargement, l'autre reprenait la main dès que JB touchait un filtre, et
+//      écrivait dans un identifiant absent du HTML. Le filtre et la recherche
+//      étaient donc sans effet.
+//   2. Son bouton de publication passait « ${!vis} » où vis contenait déjà du
+//      HTML. La négation d'une chaîne non vide vaut toujours faux : « Publier »
+//      envoyait visible_site = false, donc ne publiait jamais rien.
+//
+// La suite du fichier définit loadEvents, filterEventsTable, toggleVisible et
+// deleteEvent une seule fois chacun.
 
 // ═══════════════════════════════════════════════════════════════════
-//  FORUM — MODÉRATION
+//  FORUM : MODÉRATION
 // ═══════════════════════════════════════════════════════════════════
 window.togglePin = async function(id, pinned) {
   const { error } = await supabase.from('forum_threads').update({ pinned }).eq('id', id)
@@ -161,7 +140,7 @@ window.deleteThread = async function(id) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  DOCS — CRUD
+//  DOCS : CRUD
 // ═══════════════════════════════════════════════════════════════════
 window.saveDoc = async function() {
   const title    = document.getElementById('doc-title')?.value?.trim()
@@ -186,7 +165,7 @@ window.saveDoc = async function() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  INSCRIPTIONS — LISTE COMPLÈTE
+//  INSCRIPTIONS : LISTE COMPLÈTE
 // ═══════════════════════════════════════════════════════════════════
 var _inscrPage = 0
 var INSCR_PER_PAGE = 20
@@ -196,7 +175,7 @@ async function loadInscriptions() {
   var tbody = document.getElementById('inscriptions-tbody')
   if (!tbody) return
 
-  tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;font-family:'DM Mono';font-size:9px">Chargement…</td></tr>'
+  tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;font-family:\'DM Mono\';font-size:9px">Chargement…</td></tr>'
 
   var query = supabase
     .from('inscriptions')
@@ -210,7 +189,7 @@ async function loadInscriptions() {
   if (error) { toast('Erreur: ' + error.message, 'err'); return }
 
   if (!data || data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;font-family:'DM Mono';font-size:10px">Aucune inscription pour l'instant.</td></tr>'
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:24px;font-family:\'DM Mono\';font-size:10px">Aucune inscription pour l\'instant.</td></tr>'
     return
   }
 
@@ -219,11 +198,11 @@ async function loadInscriptions() {
   tbody.innerHTML = data.map(ins => {
     var d = new Date(ins.created_at)
     var dateStr = d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear()
-    var name = ins.prenom && ins.nom ? ins.prenom + ' ' + ins.nom : (ins.user_name || '—')
+    var name = ins.prenom && ins.nom ? ins.prenom + ' ' + ins.nom : (ins.user_name || '…')
     var ev = ins.events
-    var evDate = ev ? new Date(ev.date_event).toLocaleDateString('fr-FR', {day:'numeric',month:'short'}) : '—'
-    var evType = ev ? (ev.type || '—') : '—'
-    var circuit = ev && ev.circuits ? ev.circuits.nom : '—'
+    var evDate = ev ? new Date(ev.date_event).toLocaleDateString('fr-FR', {day:'numeric',month:'short'}) : '…'
+    var evType = ev ? (ev.type || '…') : '…'
+    var circuit = ev && ev.circuits ? ev.circuits.nom : '…'
     var coaching = ins.coaching_requested ? '<span style="color:#FFCF00">✓ Oui</span>' : '<span style="color:rgba(255,255,255,.3)">Non</span>'
     var statutColor = ins.statut === 'confirme' ? '#4ade80' : ins.statut === 'annule' ? '#f87171' : '#FFCF00'
     var statutLabel = ins.statut === 'confirme' ? 'Confirmé' : ins.statut === 'annule' ? 'Annulé' : 'En attente'
@@ -231,12 +210,12 @@ async function loadInscriptions() {
     return `<tr>
       <td class="td-mono" style="font-size:10px">${dateStr}</td>
       <td style="font-weight:500">${name}</td>
-      <td class="td-mono" style="font-size:9px">${ins.email || '—'}</td>
-      <td class="td-mono" style="font-size:9px">${ins.telephone || '—'}</td>
+      <td class="td-mono" style="font-size:9px">${ins.email || '…'}</td>
+      <td class="td-mono" style="font-size:9px">${ins.telephone || '…'}</td>
       <td style="font-size:10px">${evDate} · ${evType}</td>
       <td style="font-size:10px">${circuit}</td>
       <td style="text-align:center">${coaching}</td>
-      <td><span style="font-family:'DM Mono';font-size:9px;color:${statutColor};padding:2px 6px;background:${statutColor}22;border-radius:3px">${statutLabel}</span></td>
+      <td><span style="font-family:\'DM Mono\';font-size:9px;color:${statutColor};padding:2px 6px;background:${statutColor}22;border-radius:3px">${statutLabel}</span></td>
       <td><div class="td-acts">
         <button class="btn btn-ok btn-sm" onclick="confirmInscr('${ins.id}')">✓</button>
         <button class="btn btn-err btn-sm" onclick="cancelInscr('${ins.id}')">✕</button>
@@ -276,8 +255,7 @@ window.exportInscriptions = async function() {
 
   if (!data || !data.length) { toast('Aucune donnée à exporter', 'info'); return }
 
-  var header = 'Date,Prénom,Nom,Email,Téléphone,Événement,Circuit,Coaching,Statut
-'
+  var header = 'Date,Prénom,Nom,Email,Téléphone,Événement,Circuit,Coaching,Statut\n'
   var rows = data.map(ins => {
     var ev = ins.events
     return [
@@ -289,8 +267,7 @@ window.exportInscriptions = async function() {
       ins.coaching_requested ? 'Oui' : 'Non',
       ins.statut || 'en_attente'
     ].map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')
-  }).join('
-')
+  }).join('\n')
 
   var blob = new Blob(['﻿' + header + rows], { type: 'text/csv;charset=utf-8' })
   var a = document.createElement('a')
@@ -311,9 +288,8 @@ window.doLogout = async () => { await sbLogout() }
 // ═══════════════════════════════════════════════════════════════════
 const TITLES = {
   dashboard:    'Dashboard',
-  sessions:     'Track-Days — Sessions',
+  sessions:     'Track-Days · Sessions',
   inscriptions: 'Inscriptions reçues',
-  votes:        'Votes Potential',
   coaching:     'Coaching',
   paddock:      'Paddock',
   editeur:      'Éditeur de contenu',
@@ -352,14 +328,13 @@ async function loadKPIs() {
       supabase.from('events').select('id',{count:'exact'}).eq('status','Full'),
       supabase.from('inscriptions').select('id',{count:'exact'}),
     ])
-    document.getElementById('k-open').textContent    = open.count    ?? '—'
-    document.getElementById('k-votes').textContent   = potential.count ?? '—'
-    document.getElementById('k-full').textContent    = full.count    ?? '—'
+    document.getElementById('k-open').textContent    = open.count    ?? '…'
+    document.getElementById('k-preparation').textContent = potential.count ?? '…'
+    document.getElementById('k-full').textContent    = full.count    ?? '…'
     document.getElementById('k-inscrits').textContent =
       inscrits.count ?? 0
 
     document.getElementById('pill-open').textContent = open.count    ?? '?'
-    document.getElementById('pill-vote').textContent = potential.count
     var _pillInscr = document.getElementById('pill-inscr')
     if (_pillInscr) _pillInscr.textContent = inscrits.count ?? '0' ?? '?'
     // KPIs supplémentaires
@@ -369,8 +344,8 @@ async function loadKPIs() {
     ])
     const kThreads = document.getElementById('k-threads')
     const kDocs    = document.getElementById('k-docs')
-    if (kThreads) kThreads.textContent = threads.count ?? '—'
-    if (kDocs)    kDocs.textContent    = docs.count    ?? '—'
+    if (kThreads) kThreads.textContent = threads.count ?? '…'
+    if (kDocs)    kDocs.textContent    = docs.count    ?? '…'
 
     // Charger les inscriptions récentes
     const { data: recInscrits } = await supabase
@@ -382,15 +357,15 @@ async function loadKPIs() {
     const inscList = document.getElementById('inscriptions-list')
     if (inscList && recInscrits) {
       if (recInscrits.length === 0) {
-        inscList.innerHTML = '<div style="font-family:'DM Mono';font-size:10px;color:rgba(255,255,255,.3)">Aucune inscription pour l'instant.</div>'
+        inscList.innerHTML = '<div style="font-family:\'DM Mono\';font-size:10px;color:rgba(255,255,255,.3)">Aucune inscription pour l\'instant.</div>'
       } else {
         inscList.innerHTML = recInscrits.map(function(ins) {
           var d = new Date(ins.created_at)
           var dd = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear()
           return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">' +
-            '<div><div style="font-family:'DM Mono';font-size:11px;color:#fff">' + (ins.user_name||'—') + '</div>' +
-            '<div style="font-family:'DM Mono';font-size:9px;color:rgba(255,255,255,.35);margin-top:2px">' + (ins.email||'') + '</div></div>' +
-            '<div style="font-family:'DM Mono';font-size:9px;color:rgba(255,207,0,.5)">' + dd + '</div>' +
+            '<div><div style="font-family:\'DM Mono\';font-size:11px;color:#fff">' + (ins.user_name||'…') + '</div>' +
+            '<div style="font-family:\'DM Mono\';font-size:9px;color:rgba(255,255,255,.35);margin-top:2px">' + (ins.email||'') + '</div></div>' +
+            '<div style="font-family:\'DM Mono\';font-size:9px;color:rgba(255,207,0,.5)">' + dd + '</div>' +
             '</div>'
         }).join('')
       }
@@ -401,43 +376,87 @@ async function loadKPIs() {
 // ═══════════════════════════════════════════════════════════════════
 //  EVENTS TABLE
 // ═══════════════════════════════════════════════════════════════════
-window.loadEvents = async () => {
+// Une seule fonction, contrairement à avant. Il en existait deux : une
+// déclaration lue au chargement de la page, et cette affectation sur window
+// qui l'écrasait pour tout ce qui vient du HTML. Elles ne visaient pas le même
+// tableau, et celle branchée sur le filtre Statut et sur la case Rechercher
+// écrivait dans #events-tbody, un identifiant absent du HTML. Résultat chez
+// JB : la liste s'affichait, puis le filtre et la recherche ne répondaient
+// plus. Le tbody porte désormais cet identifiant, et cette fonction est la
+// seule.
+const loadEvents = async () => {
   const status  = document.getElementById('filter-status')?.value
+  const periode = document.getElementById('filter-periode')?.value || 'tous'
   const today   = new Date().toISOString().split('T')[0]
 
+  // Aucun filtre de date par défaut. Le dashboard filtrait sur
+  // date_event >= aujourd'hui, ce qui rendait invisibles les dates passées :
+  // JB ne pouvait plus consulter une session qu'il venait de faire tourner,
+  // ni corriger une erreur de saisie dessus. La demande était que tous les
+  // événements soient sur son dashboard. Le tri par période reste offert,
+  // mais c'est un choix qu'il fait, pas une amputation qu'il subit.
   let q = supabase
     .from('events')
     .select('id,date_event,type,status,prix,nb_places,nb_inscrits,visible_site,circuit_id,circuits(nom)')
-    .gte('date_event', today)
-    .order('date_event')
-    .limit(30)
+    .limit(300)
+
+  if (periode === 'avenir') q = q.gte('date_event', today).order('date_event')
+  else if (periode === 'passe') q = q.lt('date_event', today).order('date_event', { ascending: false })
+  else q = q.order('date_event', { ascending: false })
 
   if (status) q = q.eq('status', status)
 
   const { data, error } = await q
   const tbody = document.getElementById('events-tbody')
   const dashTbody = document.getElementById('dash-events-tbody')
+  if (!tbody) return
   if (error) { tbody.innerHTML = `<tr><td colspan="8" style="color:var(--err);padding:16px;font-size:11px">${error.message}</td></tr>`; return }
 
+  // L'ordre des colonnes suit l'en-tête du tableau dans dashboard.html :
+  // Date, Type, Circuit, Statut, Prix, Places, Visibilité, Actions.
   const rows = (data ?? []).map(ev => `
-    <tr id="erow-${ev.id}">
+    <tr id="erow-${attr(ev.id)}"${ev.date_event < today ? ' class="erow-passe"' : ''}>
       <td class="td-mono td-main">${fmtDate(ev.date_event)}</td>
-      <td class="td-main">${ev.circuits?.nom ?? '—'}</td>
-      <td style="font-size:11px">${ev.type}</td>
+      <td style="font-size:11px">${ev.type ?? '…'}</td>
+      <td class="td-main">${ev.circuits?.nom ?? '…'}</td>
       <td>${badgeStatus(ev.status)}</td>
-      <td class="td-mono">${ev.nb_inscrits}/${ev.nb_places}</td>
-      <td class="td-mono">${Number(ev.prix).toLocaleString('fr-FR')} €</td>
+      <td class="td-mono">${ev.prix ? Number(ev.prix).toLocaleString('fr-FR') + ' €' : '…'}</td>
+      <td class="td-mono">${ev.nb_inscrits ?? 0}/${ev.nb_places ?? 10}</td>
       <td><div class="tog${ev.visible_site?' on':''}"
-        onclick="toggleVisible(${ev.id},this)"></div></td>
+        data-action="event-visible" data-id="${attr(ev.id)}"></div></td>
       <td><div class="td-acts">
-        ${ev.status==='Potential'?`<button class="btn btn-ok btn-sm" onclick="setStatus(${ev.id},'Open',this)">→ Open</button>`:''}
-        <button class="btn btn-err btn-sm" onclick="deleteEvent(${ev.id},this)">✕</button>
+        ${ev.status==='Potential'?`<button class="btn btn-ok btn-sm" data-action="event-statut" data-id="${attr(ev.id)}" data-arg="Open">→ Open</button>`:''}
+        <button class="btn btn-err btn-sm" data-action="event-supprimer" data-id="${attr(ev.id)}">✕</button>
       </div></td>
     </tr>`).join('')
 
   tbody.innerHTML = rows || `<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Aucun événement</td></tr>`
-  if (dashTbody) dashTbody.innerHTML = rows.split('</tr>').slice(0,5).join('</tr>')
+
+  // L'encart du tableau de bord montre les cinq prochaines dates, pas les
+  // cinq premières de la liste : quand JB trie du plus récent au plus ancien,
+  // découper le début de la liste lui montrerait le passé.
+  if (dashTbody) {
+    const prochains = (data ?? [])
+      .filter(ev => ev.date_event >= today)
+      .sort((a, b) => a.date_event < b.date_event ? -1 : 1)
+      .slice(0, 5)
+      .map(ev => `
+    <tr>
+      <td class="td-mono td-main">${fmtDate(ev.date_event)}</td>
+      <td class="td-main">${ev.circuits?.nom ?? '…'}</td>
+      <td style="font-size:11px">${ev.type}</td>
+      <td>${badgeStatus(ev.status)}</td>
+      <td class="td-mono">${ev.nb_inscrits}/${ev.nb_places}</td>
+    </tr>`).join('')
+    dashTbody.innerHTML = prochains || `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Aucune date à venir</td></tr>`
+  }
 }
+
+window.loadEvents = loadEvents
+
+enregistrerAction('event-visible',   (id, el)      => toggleVisible(id, el))
+enregistrerAction('event-statut',    (id, el, st)  => setStatus(id, st, el))
+enregistrerAction('event-supprimer', (id, el)      => deleteEvent(id, el))
 
 window.filterEventsTable = (q) => {
   document.querySelectorAll('#events-tbody tr').forEach(tr => {
@@ -484,7 +503,7 @@ window.previewDocFile = (input) => {
   const prev = document.getElementById('doc-preview')
   if (file && prev) {
     const size = (file.size / 1024 / 1024).toFixed(1)
-    prev.textContent = `✓ ${file.name} — ${size} Mo`
+    prev.textContent = `✓ ${file.name} · ${size} Mo`
   }
 }
 
@@ -551,15 +570,15 @@ async function loadForumMod() {
         ${t.pinned?'📌 ':''}${t.title}
       </td>
       <td>${tagLabels[t.tag]??'?'} ${t.tag}</td>
-      <td style="font-size:11px">${t.author_name??'—'}</td>
+      <td style="font-size:11px">${t.author_name??'…'}</td>
       <td class="td-mono">${t.reply_count}</td>
       <td><div class="td-acts">
-        <button class="btn btn-ok btn-sm" onclick="pinThread(${t.id},${!t.pinned})">
+        <button class="btn btn-ok btn-sm" data-action="fil-epingler" data-id="${attr(t.id)}" data-arg="${t.pinned?'':'1'}">
           ${t.pinned?'Désépingler':'Épingler'}
         </button>
-        <button class="btn btn-err btn-sm" onclick="deleteThread(${t.id})">Suppr.</button>
+        <button class="btn btn-err btn-sm" data-action="fil-supprimer" data-id="${attr(t.id)}">Suppr.</button>
       </div></td>
-    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px;font-family:'DM Mono';font-size:9px">Aucun sujet</td></tr>'
+    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:16px;font-family:\'DM Mono\';font-size:9px">Aucun sujet</td></tr>'
 }
 
 window.pinThread = async (id, pin) => {
@@ -574,6 +593,11 @@ window.deleteThread = async (id) => {
   if (!error) { document.getElementById(`ft-${id}`)?.remove(); toast('Fil supprimé') }
   else toast(error.message, 'err')
 }
+
+// data-arg vaut '1' pour épingler, chaîne vide pour désépingler : un attribut
+// ne transporte que du texte, « false » y serait vrai.
+enregistrerAction('fil-epingler',  (id, el, arg) => pinThread(id, arg === '1'))
+enregistrerAction('fil-supprimer', (id)          => deleteThread(id))
 
 window.openNewEventForm = function() {
   var modal = document.getElementById('new-event-modal')
@@ -606,38 +630,15 @@ window.saveNewEvent = async function() {
   loadEvents()
 }
 
-// ═══════════════════════════════════════════════════════════════════
-//  VOTES TABLE
-// ═══════════════════════════════════════════════════════════════════
-async function loadVotes() {
-  const { data } = await supabase
-    .from('events')
-    .select('id,date_event,nb_votes,circuits(nom)')
-    .eq('status','Potential')
-    .order('nb_votes',{ascending:false})
-    .limit(15)
-
-  const tbody = document.getElementById('votes-tbody')
-  if (!data?.length) { tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Aucun vote</td></tr>`; return }
-
-  const SEUIL = 5
-  tbody.innerHTML = data.map(ev => {
-    const pct = Math.min(100, Math.round((ev.nb_votes||0)/SEUIL*100))
-    return `<tr>
-      <td class="td-mono td-main">${fmtDate(ev.date_event)}</td>
-      <td class="td-main">${ev.circuits?.nom??'—'}</td>
-      <td class="td-mono">${ev.nb_votes||0}</td>
-      <td><div class="vbar-wrap">
-        <div class="vbar"><div class="vbar-fill" style="width:${pct}%"></div></div>
-        <span class="vcnt">${ev.nb_votes||0}/${SEUIL}</span>
-      </div></td>
-      <td><div class="td-acts">
-        <button class="btn btn-ok btn-sm" onclick="setStatus(${ev.id},'Open',this)">✓ Valider</button>
-        <button class="btn btn-err btn-sm" onclick="setStatus(${ev.id},'Annulé',this)">✕</button>
-      </div></td>
-    </tr>`
-  }).join('')
-}
+// Le tableau des votes a été retiré le 8 août 2026. Décision de Yoan :
+// « y a plus besoin de vote car même un seul client génère des bénéfices ».
+// Le seuil de cinq pilotes venait du modèle où JB louait la piste entière et
+// devait la remplir. Il loue désormais un box ou se greffe sur l'événement
+// d'un autre, et sort gagnant dès le premier inscrit.
+//
+// Le statut Potential survit au vote : il désigne maintenant une date que JB
+// prépare et n'a pas encore ouverte. Elle se gère dans la table Événements,
+// avec toutes les autres, par le bouton « → Open ».
 
 // ═══════════════════════════════════════════════════════════════════
 //  UTILISATEURS
@@ -685,7 +686,7 @@ function loadMainEditor() {
 //  UTILS
 // ═══════════════════════════════════════════════════════════════════
 function badgeStatus(s) {
-  const m = {Open:'b-open Open',Potential:'b-potential Vote',Full:'b-full Full',Draft:'b-draft Draft'}
+  const m = {Open:'b-open Open',Potential:'b-potential Préparation',Full:'b-full Full',Draft:'b-draft Draft'}
   const [cls, lbl] = (m[s]||'b-draft '+s).split(' ')
   return `<span class="badge ${cls}">${lbl}</span>`
 }
@@ -700,7 +701,7 @@ window.toast = (msg, type='ok') => {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  RADAR — Détection automatique de journées circuit
+//  RADAR : Détection automatique de journées circuit
 // ═══════════════════════════════════════════════════════════════════
 
 // ── Configuration sources (ajouter des URLs ici) ───────────────────
@@ -711,7 +712,7 @@ const RADAR_SOURCES = [
   { id:'brignoles',      name:'Circuit Brignoles',      region:'PACA',       active:true,  type:'tour', rss:null },
   { id:'ledenon',        name:'Circuit de Lédenon',     region:'Occitanie',  active:true,  type:'tour', rss:null },
   { id:'nogaro',         name:'Circuit de Nogaro',      region:'Occitanie',  active:false, type:'gt',   rss:null },
-  { id:'albi',           name:'Circuit d'Albi',        region:'Occitanie',  active:false, type:'gt',   rss:null },
+  { id:'albi',           name:'Circuit d\'Albi',        region:'Occitanie',  active:false, type:'gt',   rss:null },
   { id:'magny-cours',    name:'Circuit de Magny-Cours', region:'Autre France',active:false,type:'gt',   rss:null },
 ]
 
@@ -760,7 +761,7 @@ function generateSimulatedDates() {
 let _radarResults  = []
 let _radarNewCount = 0
 
-// Persistance localStorage — retrouver les décisions (validé/ignoré)
+// Persistance localStorage : retrouver les décisions (validé/ignoré)
 const RADAR_KEY = 'jbe_radar_decisions'
 function getDecisions() { return JSON.parse(localStorage.getItem(RADAR_KEY) || '{}') }
 function saveDecision(id, status) {
@@ -809,7 +810,7 @@ window.runRadarScan = async function() {
   _radarNewCount = _radarResults.filter(r => r.status === 'new').length
 
   spinner.style.display = 'none'
-  status.textContent    = `Scan terminé — ${_radarResults.length} dates trouvées`
+  status.textContent    = `Scan terminé, ${_radarResults.length} dates trouvées`
   scanTime.textContent  = 'Mis à jour : ' + new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})
 
   // Mettre à jour la pastille
@@ -832,7 +833,7 @@ function renderRadarResults() {
   })
 
   if (!sorted.length) {
-    container.innerHTML = '<div style="padding:24px;text-align:center;font-family:'DM Mono';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25)">Aucune date détectée</div>'
+    container.innerHTML = '<div style="padding:24px;text-align:center;font-family:\'DM Mono\';font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25)">Aucune date détectée</div>'
     return
   }
 
@@ -875,9 +876,9 @@ function renderRadarResults() {
           <button class="btn-validate-radar" onclick="validateRadarDate('${r.id}')">✅ Valider</button>
           <button class="btn-ignore-radar"   onclick="ignoreRadarDate('${r.id}')">❌ Ignorer</button>
         ` : isValidated ? `
-          <span style="font-family:'DM Mono';font-size:8px;color:rgba(34,197,94,.5)">✓ Validé</span>
+          <span style="font-family:\'DM Mono\';font-size:8px;color:rgba(34,197,94,.5)">✓ Validé</span>
         ` : `
-          <span style="font-family:'DM Mono';font-size:8px;color:rgba(255,255,255,.2)">Ignoré</span>
+          <span style="font-family:\'DM Mono\';font-size:8px;color:rgba(255,255,255,.2)">Ignoré</span>
         `}
       </div>
     </div>`
@@ -909,12 +910,11 @@ window.validateRadarDate = async function(id) {
         circuit_id,
         date_event:   result.date,
         type:         result.type_tag === 'gt' ? 'Stage GT' : 'Track-Day',
-        status:       'Potential',       // Démarre en Potential — JB valide ensuite
+        status:       'Potential',       // Démarre en Potential : JB valide ensuite
         prix:         result.prix,
         visible_site: false,             // Masqué jusqu'à validation manuelle
         source_veille:result.source_url,
         nb_places:    10,
-        nb_votes:     0,
       })
       .select()
       .single()

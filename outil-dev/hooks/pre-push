@@ -1,0 +1,14 @@
+#!/bin/sh
+# Crochet pre-push : le garde-fou du jour et le budget du mois.
+#
+# Regle de Yoan : 300 publications par mois, c'est ce qu'il paie. Un garde-fou de
+# trois par jour calendaire contre les journees a seize pushes.
+#
+# Pourquoi un crochet et pas une consigne. Le 9 aout, seize pushes sont partis
+# en vingt-deux heures alors que CLAUDE.md disait « jamais de push ». Une regle
+# qu'on peut oublier n'est pas une regle, c'est un souhait.
+#
+# Pour passer outre, quand Yoan le demande : git push --no-verify
+
+node "$(dirname "$0")/../deploiements.js" --peut-on || exit 1
+exit 0

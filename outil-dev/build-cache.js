@@ -1,26 +1,42 @@
 // build-cache.js
-// Lance ce script avant chaque push GitHub Desktop :
-//   node build-cache.js
+// Recuit le contenu Supabase dans le filet de secours des pages HTML.
 //
-// Ce qu'il fait :
-//   1. Lit tout le contenu de la table site_content dans Supabase
-//   2. Pour chaque fichier HTML, remplace la balise jbe-content-cache
-//      avec les contenus correspondants à cette page
-//   3. Les fichiers HTML locaux sont mis à jour — prêts à être pushés
+// Lancement manuel :  node outil-dev/build-cache.js
+// Lancement Netlify : declare dans netlify.toml, avant chaque publication.
+//
+// ── Pourquoi ce script existe ────────────────────────────────────────────────
+// Le live-editor ecrit dans Supabase, puis tente de recopier le contenu dans
+// le HTML via POST /save-html. Cet appel n'existe que sur le serveur local.
+// En production il echoue en silence, volontairement ignore. Le filet de
+// secours (jbe-content-cache) reste donc vide, et le jour ou Supabase ne
+// repond pas, le visiteur voit le texte d'origine au lieu de celui de JB.
+//
+// ── Bug corrige le 1er aout 2026 ─────────────────────────────────────────────
+// Le script listait les fichiers HTML avec fs.readdirSync(__dirname), c'est a
+// dire dans outil-dev/, qui n'en contient aucun. Ecrit du temps ou il vivait a
+// la racine, il tournait dans le vide depuis son deplacement : il annoncait
+// "73 entrees recuperees" puis "0 fichier mis a jour". Il parcourt desormais
+// la racine du projet, recursivement.
+//
+// Corriges en meme temps :
+//   - media_type est desormais recupere. Sans lui, une video repassait en
+//     image quand le filet prenait le relais.
+//   - le script ne sort plus en code 1 sur erreur reseau : un filet perime
+//     vaut mieux qu'une publication bloquee.
 
-var https  = require('https')
-var fs     = require('fs')
-var path   = require('path')
+var https = require('https')
+var fs    = require('fs')
+var path  = require('path')
 
-var SUPABASE_URL  = 'https://fyaybxamuabawerqzuud.supabase.co'
-var SUPABASE_ANON = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
+var SUPABASE_URL  = process.env.SUPABASE_URL      || 'https://fyaybxamuabawerqzuud.supabase.co'
+var SUPABASE_ANON = process.env.SUPABASE_ANON_KEY || 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
 
-// Fichiers HTML à ignorer (backups, etc.)
-var SKIP = ['academie_backup_pre_refonte.html']
+var ROOT   = path.resolve(__dirname, '..')
+var IGNORE = ['old', 'node_modules', '.git', 'docs', '.claude', 'outil-dev', 'assets']
 
 // ── Fetch Supabase ────────────────────────────────────────────────────────────
 function fetchSupabase(cb) {
-  var url = SUPABASE_URL + '/rest/v1/site_content?select=id,content'
+  var url = SUPABASE_URL + '/rest/v1/site_content?select=id,content,media_type'
   var opts = {
     headers: {
       'apikey': SUPABASE_ANON,
@@ -33,39 +49,69 @@ function fetchSupabase(cb) {
     res.on('end', function () {
       try {
         var rows = JSON.parse(data)
-        if (!Array.isArray(rows)) throw new Error('Réponse inattendue : ' + data.substring(0, 200))
+        if (!Array.isArray(rows)) throw new Error('Reponse inattendue : ' + data.substring(0, 200))
         cb(null, rows)
       } catch (e) { cb(e) }
     })
   }).on('error', cb)
 }
 
-// ── Mise à jour d'un fichier HTML ─────────────────────────────────────────────
-function updateHtml(file, entriesForPage) {
+// ── Liste recursive des pages, depuis la racine du projet ─────────────────────
+function listHtml(dir, rel, out) {
+  var entries = fs.readdirSync(dir, { withFileTypes: true })
+  for (var i = 0; i < entries.length; i++) {
+    var e = entries[i]
+    var child = rel ? rel + '/' + e.name : e.name
+    if (e.isDirectory()) {
+      if (IGNORE.indexOf(e.name) !== -1) continue
+      listHtml(path.join(dir, e.name), child, out)
+    } else if (e.name.slice(-5) === '.html') {
+      out.push(child)
+    }
+  }
+  return out
+}
+
+// ── Mise a jour d'un fichier HTML ─────────────────────────────────────────────
+function updateHtml(rel, payload) {
+  var file = path.join(ROOT, rel)
   var html = fs.readFileSync(file, 'utf8')
-  var cacheJson = JSON.stringify(entriesForPage)
-  var cacheTag  = '<script id="jbe-content-cache" type="application/json">' + cacheJson + '</script>'
+  var tag  = '<script id="jbe-content-cache" type="application/json">' + JSON.stringify(payload) + '</script>'
 
   var newHtml
   if (html.indexOf('<script id="jbe-content-cache"') !== -1) {
-    newHtml = html.replace(/<script id="jbe-content-cache"[^>]*>[\s\S]*?<\/script>/, cacheTag)
+    newHtml = html.replace(/<script id="jbe-content-cache"[^>]*>[\s\S]*?<\/script>/, tag)
+  } else if (html.indexOf('</body>') !== -1) {
+    newHtml = html.replace('</body>', tag + '\n</body>')
   } else {
-    newHtml = html.replace('</body>', cacheTag + '\n</body>')
+    return 'pas de </body>'
   }
 
-  if (newHtml === html) return false
+  if (newHtml === html) return 'inchange'
   fs.writeFileSync(file, newHtml, 'utf8')
-  return true
+  return 'ecrit'
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 console.log('Lecture Supabase...')
 
 fetchSupabase(function (err, rows) {
-  if (err) { console.error('Erreur Supabase :', err.message); process.exit(1) }
-  console.log(rows.length + ' entrées récupérées')
+  if (err) {
+    // Volontairement code 0 : ne jamais bloquer une publication pour ca.
+    console.warn('Supabase injoignable : ' + err.message)
+    console.warn('Les pages conservent leur filet actuel.')
+    return
+  }
+  console.log(rows.length + ' entrees recuperees')
 
-  // Grouper par page : { "index": { "index__txt-1": "...", ... }, ... }
+  // Regroupement par page. La cle de page est le nom de fichier sans .html,
+  // meme regle que la variable PAGE de live-editor.js. Voir docs/03-technique.md.
+  //
+  // ATTENTION : cette table doit rester identique a PAGE_ALIASES de
+  // live-editor.js. La regle d'audit « renommages » verifie cette egalite a
+  // chaque execution, donc une divergence sera signalee.
+  var PAGE_ALIASES = { 'karting-adulte': 'karting', 'evenements': 'track' }
+
   var byPage = {}
   for (var i = 0; i < rows.length; i++) {
     var row = rows[i]
@@ -73,26 +119,50 @@ fetchSupabase(function (err, rows) {
     var parts = row.id.split('__')
     if (parts.length < 2) continue
     var page = parts[0]
-    if (!byPage[page]) byPage[page] = {}
-    byPage[page][row.id] = row.content
+    if (!byPage[page]) byPage[page] = { v: 2, c: {}, m: {} }
+    byPage[page].c[row.id] = row.content
+    if (row.media_type) byPage[page].m[row.id] = row.media_type
   }
 
-  // Parcourir les fichiers HTML du projet
-  var dir   = __dirname
-  var files = fs.readdirSync(dir).filter(function (f) {
-    return f.endsWith('.html') && SKIP.indexOf(f) === -1
-  })
+  var files   = listHtml(ROOT, '', [])
+  var written = 0, empty = 0, seen = {}
 
-  var updated = 0
   for (var j = 0; j < files.length; j++) {
-    var filename = files[j]
-    var pageName = filename.replace('.html', '')
-    var entries  = byPage[pageName] || {}
-    var changed  = updateHtml(path.join(dir, filename), entries)
-    if (changed) { console.log('  ✓ ' + filename); updated++ }
-    else         { console.log('  - ' + filename + ' (inchangé)') }
+    var rel     = files[j]
+    var pageKey = path.basename(rel, '.html')
+    seen[pageKey] = true
+
+    // Page renommee : les lignes Supabase portent encore l'ancienne cle. Sans
+    // ce repli, la page recevrait un cache vide et son contenu passerait pour
+    // orphelin, donc le filet de secours tomberait exactement sur la page qui
+    // vient d'etre renommee.
+    var payload = byPage[pageKey]
+    if (!payload && PAGE_ALIASES[pageKey]) {
+      var ancien = PAGE_ALIASES[pageKey]
+      payload = byPage[ancien]
+      if (payload) { seen[ancien] = true; console.log('  ..  ' + rel + '  contenu repris de la cle « ' + ancien + ' »') }
+    }
+    if (!payload) { empty++; continue }
+
+    var res = updateHtml(rel, payload)
+    var nbC = Object.keys(payload.c).length
+    var nbM = Object.keys(payload.m).length
+    if (res === 'ecrit') {
+      console.log('  ok  ' + rel + '  ' + nbC + ' contenu(s)' + (nbM ? ', ' + nbM + ' media(s)' : ''))
+      written++
+    } else if (res === 'inchange') {
+      console.log('  =   ' + rel + '  deja a jour')
+    } else {
+      console.warn('  !   ' + rel + '  ignore : ' + res)
+    }
   }
 
-  console.log('\nTerminé — ' + updated + ' fichier(s) mis à jour.')
-  console.log('Tu peux maintenant pousser via GitHub Desktop.')
+  var orphans = []
+  for (var k in byPage) if (!seen[k]) orphans.push(k)
+
+  console.log('')
+  console.log(written + ' page(s) recuite(s), ' + empty + ' sans contenu Supabase.')
+  if (orphans.length) {
+    console.warn('Cles Supabase sans page correspondante : ' + orphans.join(', '))
+  }
 })

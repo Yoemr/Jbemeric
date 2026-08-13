@@ -1,0 +1,286 @@
+# Acquis et pièges
+
+**Établi le** : 8 août 2026, à la demande de Yoan.
+**À lire au début de chaque session, avant de vérifier quoi que ce soit.**
+
+---
+
+## 1. Pourquoi ce fichier existe
+
+Mot de Yoan, 8 août :
+
+> « On perd un temps fou à tout corriger et à faire des choses cachées. On fait 95 % de correction, 5 % de visible sur le site, c'est pas normal. Et le pire c'est qu'une nouvelle session te ferait sûrement re-re-revérifier des trucs inutiles. »
+
+Il a raison sur les deux points. Ce fichier attaque le second, qui est le seul que la documentation puisse résoudre. Le premier est traité en section 6.
+
+**Ce fichier ne contient que ce qu'un outil ne peut pas contenir.** Tout ce qui est mesurable est mesuré par `node outil-dev/audit/audit.js`, et ne doit jamais être recopié ici : un document se périme, un audit se recalcule. Voir D-024.
+
+---
+
+## 2. Les pièges d'instrument, tous payés comptant
+
+**C'est la section la plus importante du fichier.** Sur trois jours, presque toutes les fausses conclusions sont venues d'un instrument fabriqué sur le moment, jamais du site. Chacun de ces pièges a coûté un aller-retour complet : une conclusion fausse, une correction inutile, puis la découverte de l'erreur.
+
+### 2.1 La règle du contrôle négatif
+
+**Avant de croire un « identique », un « aucune faute » ou un « zéro occurrence », introduire volontairement le défaut et vérifier que l'instrument le voit.**
+
+Une comparaison qui ne sait pas voir une différence dira toujours « identique ». Une règle qui ne signale jamais rien est indiscernable d'une règle correcte. Cette vérification prend trente secondes et a démasqué quatre faux résultats le 7 août.
+
+### 2.2 Les captures d'écran mentent de trois façons
+
+Détail complet dans `docs/03-technique.md` section 6bis. En résumé :
+
+| Piège | Effet |
+|---|---|
+| Sans `--no-proxy-server` | `localhost` part dans le proxy et la page revient d'un cache |
+| Fenêtre très haute, `1300x7000` | le PNG est identique quoi qu'on change dans le CSS |
+| URL avec ancre, `page.html#section` | trois exécutions donnent trois empreintes différentes |
+| Page rendue en JavaScript | `palmares.html` n'est jamais reproductible, la comparaison est sans valeur |
+
+**Corollaire** : pour prouver qu'une règle CSS est morte, chercher ses classes dans le HTML et le JS des pages qui chargent la feuille. C'est déterministe, instantané, et ne dépend d'aucun navigateur. Le pixel ne sert qu'à corroborer.
+
+### 2.3 Les analyses statiques ratent tout ce qui est construit à l'exécution
+
+Quatre fois le même piège, sous quatre habillages.
+
+- **Le balisage venu d'une autre page.** `sync-mirror.js` injecte des sections d'`academie.html` et `coaching.html` dans `index.html`. Résultat avant correction : 114 sélecteurs d'`index.css` sur 286 déclarés morts, alors qu'ils habillent la page d'accueil.
+- **La classe construite par concaténation.** `palmares.js` écrit `class="pal-year pal-year--heavy' + (isHL ? ' pal-year--highlight' : '')`. Lire le préfixe littéral seul ratait 107 sélecteurs sur 332.
+- **Les balises fabriquées en JS.** `palmares.html` ne contient aucun `<a>` écrit à la main.
+- **Les chemins d'images écrits dans du code.** `track-render.js` réclamait trois fichiers absents, dont l'image de repli. La règle des liens ne lisait que le HTML.
+- **Les ancres construites en JavaScript.** La règle `liens` lisait `sansScripts`, donc le HTML privé de ses balises script. Le menu et le miroir de l'accueil pointaient sur cinq ancres inexistantes, invisibles pendant des mois.
+
+### 2.4 Le mode de parsing change le verdict
+
+`node --check` sur un fichier `.js` **a validé** un `admin.js` qui contenait sept chaînes cassées. Les mêmes octets copiés dans un `.mjs` échouent immédiatement. Le fichier étant chargé en `type="module"`, le tableau de bord admin ne fonctionnait pas du tout.
+
+**Règle** : un script chargé quelque part en `type="module"` se vérifie en tant que module. La règle d'audit le fait maintenant, en lisant le mode dans les pages.
+
+### 2.5 L'outil qui se compte lui-même
+
+La règle des tirets cadratins contenait le caractère qu'elle traque. La règle de référencement contient le mot « PACA ». La règle des images citait des noms de fichiers en commentaire et les déclarait donc employés. La règle du ton IA signalait la documentation qui la décrit.
+
+**Règle** : écrire le motif par son code Unicode, ou exclure `outil-dev/audit/` du corpus, ou retirer les exemples cités entre guillemets.
+
+### 2.6 Le champ « où » d'une anomalie doit être un chemin de page
+
+C'est lui qui range l'anomalie dans le périmètre ou dehors. Un libellé libre ou un chemin d'image la classe hors périmètre, donc masquée par défaut, et la règle passe inaperçue au moment précis où elle sert. Rencontré deux fois, dans `renommages` puis dans `images`.
+
+### 2.7 Les pièges de recherche textuelle
+
+- `grep -w` traite le tiret comme une frontière : `prix-item` matche dans `oc-prix-item`. A produit une fausse alerte le 7 août.
+- `src="([^"?]+)"` pour couper un `?v=21` fait rater la balise entière. `palmares.js` et cinq autres fichiers n'étaient pas lus, et une vérification a répondu « aucune classe présente » sans avoir ouvert le fichier qui les contient toutes.
+- Chercher un nom de fichier dans tout le HTML tombe sur les commentaires. `<!-- Chargé par sync-mirror.js -->` signalait un faux désordre de chargement.
+- Un `grep` qui inclut `old/` produit des alertes sur une archive assumée.
+
+### 2.8 Une valeur inventée passe tous les contrôles
+
+Le 8 août, en écrivant un message de repli sur la page Événements, j'ai inventé un numéro de téléphone. Le 06 08 33 10 76 n'appartient à personne dans ce projet. Il a passé l'audit, la fumée et les parcours sans qu'aucun ne bronche : c'est un lien `tel:` parfaitement valide vers un numéro parfaitement syntaxique.
+
+Aucun de ces outils ne pouvait le voir. Ils vérifient des formes, pas des faits. Seule une lecture manuelle l'a attrapé, par hasard, en comptant les numéros du site.
+
+**Règle** : toute donnée du monde réel écrite dans le code (numéro, adresse, prix, date, nom de circuit) se recopie depuis une source du dépôt, jamais depuis la mémoire. Si elle n'existe nulle part dans le dépôt, c'est une question pour Yoan, pas une valeur à choisir.
+
+`outil-dev/audit/regles/contacts.js` ferme le cas des coordonnées. Les autres catégories restent ouvertes.
+
+### 2.9bis Un profil de navigateur reutilise sert la page d'avant
+
+Le 8 août, trois essais de suite ont montré l'ancien comportement du formulaire de contact **après** sa correction. Le script se chargeait, le formulaire était trouvé, et la page se rechargeait quand même.
+
+C'était le `--user-data-dir` fixe d'un banc d'essai bricolé, qui servait la page mise en cache au premier essai. Il s'en est fallu de peu que je conclue à une correction sans effet et que je reparte casser autre chose.
+
+**Règle** : tout banc d'essai jetable crée son profil avec `mkdtemp`, comme le font `parcours.js` et `fumee.js`, et coupe le cache par `Network.setCacheDisabled`. C'est le même piège que la section 2.2 sur les captures d'écran, sous un autre déguisement.
+
+### 2.8bis Un banc qui fait le travail a la place du code ne mesure que lui-meme
+
+Le 9 août, le contrôle négatif de la FAQ n'a rien vu. J'ai retiré le filtre par tag de `faq.js`, et le parcours est resté vert.
+
+Le banc remplaçait la réponse de Supabase **en filtrant déjà** selon la requête. Il testait donc son propre filtre, pas celui de la page. En rendant tout, sans trier, le contrôle négatif échoue correctement et nomme la question intruse.
+
+**Règle** : un banc d'essai rend des données brutes. Dès qu'il applique la logique qu'il est censé éprouver, il valide n'importe quel code, y compris du code absent.
+
+### 2.8ter `git checkout` n'annule pas un contrôle négatif, il annule la journée
+
+Le 9 août, pour éprouver un parcours, j'ai vidé le bloc d'avis de `academie.html`, puis remis le fichier d'aplomb avec `git checkout academie.html`. Le contrôle négatif a bien échoué, comme voulu. Mais le fichier portait aussi le travail non commité de la matinée, et `checkout` l'a emporté avec le défaut. Le parcours suivant est passé au rouge sans que la cause soit visible dans le diff.
+
+**Règle** : avant d'abîmer volontairement un fichier, en faire une copie dans le scratchpad et restaurer depuis cette copie. `git checkout` ne connaît que le dernier commit, il ne sait pas distinguer le défaut qu'on vient d'introduire du travail qu'on vient d'écrire. La même précaution appliquée à `avis.js` le même jour a fonctionné sans incident.
+
+### 2.9 Un outil doit distinguer « c'est cassé » de « je n'ai pas pu voir »
+
+Deux parcours ont annoncé « aucune date affichée » sur la page Événements. Le site n'y était pour rien : le poste ne joignait plus Supabase ni jsdelivr. Un outil qui confond les deux ment dans les deux sens, et c'est le sens favorable qu'on croit.
+
+**Règle** : un contrôle qui dépend d'une ressource extérieure vérifie d'abord qu'elle répond, et se déclare non concluant sinon. Jamais en échec, jamais en succès. Implémenté par le champ `besoinBase` de `parcours.js`.
+
+### 2.10 Un test de syntaxe ne dit pas quel code s'exécute
+
+`admin.js` définissait deux fois `loadEvents`, deux fois `deleteEvent` et deux fois `deleteThread`. Le fichier compilait. L'audit le déclarait valide, y compris en mode module. Rien n'indiquait que la moitié de ce code était mort, ni surtout **laquelle**.
+
+Dans un module ES, une déclaration `function f()` et une affectation `window.f =` ne se recouvrent pas : le code du module appelle la première, le HTML appelle la seconde. Les deux vivaient, sur deux tableaux différents, et se contredisaient.
+
+**Règle** : avant de corriger une fonction, chercher si son nom est défini plusieurs fois dans le fichier. Une ligne suffit :
+
+```
+grep -c "^function f\|^window\.f =\|^const f =" fichier.js
+```
+
+### 2.11 Construire avant d'avoir vérifié de quoi on parle
+
+Le 9 août, Yoan a écrit « tu recommences à envoyer sur Notify sans me demander, sauf que ça coûte cher ». J'ai lu « notifications vers son téléphone », et j'ai écrit un compteur de notifications complet, testé, documenté et poussé. Il parlait de l'hébergement Netlify et du coût des constructions déclenchées par chaque push.
+
+Vingt minutes de travail, deux fichiers créés puis supprimés, un commit et une publication pour rien. La publication est le comble : elle a consommé précisément la ressource dont il parlait.
+
+Le signe était pourtant là. Le dépôt ne contenait **pas une ligne de code de notification**. J'avais fait la recherche, j'avais vu le résultat vide, et au lieu d'en conclure que je m'étais trompé de sujet, j'ai conclu que la cause devait être ailleurs et j'ai continué.
+
+**Règle** : quand une demande porte sur quelque chose dont le dépôt ne montre aucune trace, l'absence de trace est la réponse, pas un obstacle à contourner. Une question d'une ligne coûte moins qu'un chantier entier.
+
+**Second signe, plus fiable encore** : le nombre. Yoan a dit « 300 ». Le plafond gratuit de Netlify se compte en minutes de construction par mois, et il vaut 300. Un chiffre qui colle exactement à un plafond connu du projet désigne le sujet mieux qu'un mot mal orthographié.
+
+### 2.12 Une étiquette sûre mais fausse cache une ligne, un « à vérifier » ne coûte qu'un coup d'œil
+
+Le 10 août, la veille classait les dates par mots-clés du titre. « Mitjet Academy » tombait dans « stage » parce qu'il contient « academy ». Mitjet est autant un nom de série qu'un nom d'école, et les pages d'événement du circuit n'ont aucune description qui permettrait de trancher.
+
+Conséquence si le classement se trompe : la date disparaît dès que JB coche « trackday, voiture perso ». Elle ne revient jamais, et personne ne saura qu'elle a existé.
+
+**Règle** : un classement automatique qui alimente un filtre doit préférer « à juger » au doute résolu par une supposition. Le coût des deux erreurs n'est pas le même. Un « à juger » se lit en une seconde puisque la donnée d'origine reste affichée à côté ; une étiquette confiante et fausse masque, et le masquage ne se voit pas.
+
+Corollaire : le libellé d'un filtre doit dire ce qui change pour l'utilisateur, pas reprendre le vocabulaire de la source. « Roulage libre » était le mot du circuit, exact et inutile. « Trackday, voiture perso » et « Stage, voiture du circuit » disent qui fournit la voiture, qui est la seule chose que JB a besoin de savoir.
+
+### 2.13 Chercher la norme avant d'écrire un parseur
+
+Le 10 août, j'ai écrit un parseur propre à Wix puis un autre propre à Lédenon. Les pages d'événement du premier publiaient du `schema.org/Event`, la norme que Google impose à tout site qui veut apparaître dans ses résultats d'événements. Tout ce que j'extrayais à coups d'expressions régulières était déjà là, en JSON structuré.
+
+**Règle** : avant d'écrire une lecture propre à un site, chercher ce qu'il publie de normalisé. Trois marqueurs à tester, une requête suffit : `application/ld+json`, `text/calendar` ou un `.ics`, un flux `rss+xml`. La lecture normalisée sert ensuite pour tous les sites, et un site de plus ne coûte rien.
+
+**Et l'inverse est vrai** : la même mesure a montré que l'agenda du Var et tout le site de Lédenon ne publient rien de standard. Un cas particulier reste donc nécessaire, en secours. Ce qu'il faut refuser, ce n'est pas le cas particulier, c'est qu'il soit le chemin principal.
+
+### 2.14 Dans une expression régulière Postgres, le premier quantificateur commande
+
+`<script[^>]*application/ld\+json[^>]*>(.*?)</script>` capturait jusqu'à la fin du document. En ARE, **si le premier quantificateur est gourmand, tout le motif le devient**, et le `.*?` qui suit cesse d'être paresseux.
+
+**Règle** : pour extraire un bloc délimité, découper avec `string_to_array` et `position` plutôt que de confier les deux bornes à une seule expression. C'est plus long à écrire et impossible à se faire piéger.
+
+### 2.15 Un `element.click()` réussit sur un élément caché, donc il ne prouve plus rien
+
+Les parcours qui cochaient les cases de filtre ont continué à passer, sans une ligne modifiée, le jour où ces cases sont passées dans un panneau replié en `display:none`. Le protocole DevTools déclenche le gestionnaire sans se soucier de ce qui est à l'écran.
+
+**Conséquence** : un parcours vert ne dit plus qu'un humain peut faire le geste, il dit seulement que le gestionnaire existe. Dès qu'un élément peut être caché, le vérifier explicitement. `offsetParent` vaut `null` quand l'élément ou l'un de ses parents est en `display:none` ; c'est le test le plus court qui distingue les deux.
+
+### 2.16 Un contrôle négatif sur du code redondant ne prouve rien, il le révèle
+
+Pour prouver que le panneau déplié survit au redessin, j'ai retiré la ligne qui le rouvrait. Les parcours sont restés verts. La conclusion n'était pas « le test est mauvais » mais « cette ligne ne servait à rien » : la classe était déjà posée par la fonction qui construit le HTML. Ligne supprimée, contrôle refait au bon endroit, et là il a mordu.
+
+**Règle** : quand un contrôle négatif ne casse rien, chercher d'abord si le code retiré était mort. C'est la troisième fois. Voir aussi 2.3 sur les no-ops.
+
+---
+
+## 3. Ce qui est vérifié, ne pas revérifier
+
+Établi entre le 4 et le 8 août 2026. Recalculable par l'audit sauf mention contraire.
+
+- **Les 9 pages du périmètre se chargent sans une seule erreur locale.** Mesuré par `node outil-dev/fumee.js`, exceptions JavaScript, console et requêtes en échec.
+- **Zéro tiret cadratin** dans le site, dans `site_content` et dans `events.type`.
+- **Zéro tournure antithétique** dans le périmètre.
+- **Zéro offre morte** dans le texte visible du périmètre et dans la base.
+- **Le footer et le menu sont uniques**, injectés par `footer.js` et `nav.js`.
+- **Aucun lien cassé, aucune ancre morte, aucune image manquante** dans le périmètre.
+- **Tous les scripts compilent**, y compris en mode module.
+- **856 lignes de CSS mort ont été retirées** de sept feuilles. Ce qui reste est dans des `@media`, volontairement non traité.
+
+---
+
+## 4. Ce que l'outillage ne voit pas
+
+**À connaître avant d'annoncer « zéro faute ».**
+
+**L'audit ne voit pas la base de données.** Pendant trois jours il a annoncé zéro tiret cadratin, zéro offre morte et zéro antithèse pendant que Supabase servait les trois aux visiteurs. Onze lignes ont dû être supprimées le 8 août, dont une promesse de BMW 325i en dotation et un tiret cadratin.
+
+> **Trou bouché le 8 août** : `node outil-dev/base.js` applique les mêmes règles au contenu de Supabase. Il ne réécrit aucun critère, il présente chaque ligne de la base comme une page et fait tourner les règles existantes dessus.
+
+> Le live-editor sert la base **avant** le HTML. Corriger un fichier ne change rien pour un visiteur si un texte existe en base sous la même clé. **Toute correction de texte doit être suivie d'une vérification en base.**
+
+**L'audit ne voit pas le rendu.** Il ne dira jamais qu'un filet est invisible sur fond sombre, qu'un bloc est sauté par le scroll snap, ou qu'un bouton tombe sous la ligne de flottaison.
+
+**L'audit ne voit pas l'exécution.** C'est le rôle de `fumee.js`.
+
+> **Trou partiellement bouché le 8 août** : `node outil-dev/parcours.js` clique. Accordéon de la FAQ, portes de l'Académie qui naviguent par `onclick` et non par un `<a>`, menu burger, tirage des vidéos, absence de vidéo sur téléphone, calendrier des Événements. Dix parcours.
+>
+> **Ce qui reste non testé** : inscription, connexion, sauvegarde d'un texte par JB. Ces parcours écrivent dans la base de production, et personne n'a demandé à y semer des données de test. Ils attendent un environnement séparé ou un compte d'essai.
+
+**Un outil neuf peut regarder au mauvais endroit.** Le contrôle négatif dit si un outil voit ce qu'il regarde. Il ne dit pas s'il regarde partout. `base.js` a été écrit le 8 août pour couvrir la base, validé par témoin, et il ratait quand même les tirets cadratins de `events.type` parce qu'il ne lisait que `site_content`. Avant de déclarer un domaine couvert, énumérer les endroits où la chose peut se trouver.
+
+**Sur cette machine, `cdn.jsdelivr.net` est bloqué**, donc `live-editor.js` ne se charge jamais et une page affiche toujours son HTML. Un rendu local ne prouve rien dès qu'un texte existe en base.
+
+> **Le 8 août, `fyaybxamuabawerqzuud.supabase.co` l'a été aussi**, en cours de session. Ce n'est donc pas un acquis stable : le vérifier plutôt que le supposer, dans un sens comme dans l'autre. `curl --noproxy '*' -o /dev/null -w '%{http_code}' https://fyaybxamuabawerqzuud.supabase.co/rest/v1/` répond en une seconde. Quand la base est injoignable en HTTP, le serveur MCP Supabase, lui, continue de répondre : c'est la voie de repli pour lire ou corriger du contenu.
+
+**L'audit ne voit pas le contrat entre la page et la base.** Le 8 août, la clé étrangère de `inscriptions.event_id` visait `track_days` alors que le site envoie un identifiant venu de `events`. Chaque inscription était refusée depuis toujours. Le code était correct, le schéma était cohérent, et c'est l'accord entre les deux qui ne l'était pas. Voir D-075.
+
+> **La façon de tester ça sans rien écrire en production** : remplacer `fetch` le temps du clic, capturer la requête et simuler la réponse. C'est ce que font les deux parcours d'inscription. Ils sont jouables partout, y compris chez Yoan.
+
+**L'audit ne voit pas les droits.** Aucun des quatre outils ne lit les policies de sécurité. Le 8 août, sept policies sur huit se sont révélées fausses en toutes circonstances, et rien ne l'avait jamais signalé : le code est correct, la base est correcte, c'est l'accord entre les deux qui ne l'est pas. Voir D-073.
+
+> **La question à poser avant de conclure qu'un bouton d'administration marche** : est-ce que la policy qui l'autorise cherche le rôle dans `user_metadata` ? Le claim `auth.jwt() ->> 'role'` vaut toujours `authenticated`, jamais le rôle applicatif. Une policy qui l'interroge est fausse par construction.
+
+**Le dashboard admin ne se teste pas ici.** Il exige une session authentifiée et importe Supabase depuis jsdelivr. Aucun des quatre outils ne l'atteint, et ce qui y est corrigé se vérifie par lecture, par banc d'essai isolé, ou chez Yoan. Le dire quand c'est le cas plutôt que laisser croire à une vérification.
+
+---
+
+## 5. Les décisions qui reviennent sans cesse
+
+Rappel des pièges de contenu qui ont coûté du temps plusieurs fois.
+
+- **Le Challenge JB EMERIC et la BMW 325i HTCC sont morts**, D-008. Ils ressortent régulièrement : dans des titres de vidéos, dans des classes CSS, dans la base. Régle `offres-mortes`.
+- **Le contenu du live-editor n'est jamais jugé ni réécrit** comme s'il était de nous, sauf demande explicite de Yoan. `ctx.pages[].utile` l'a déjà retiré.
+- **Les avis clients sont des citations réelles.** Ils restent mot pour mot, maladresses comprises.
+- **Un emplacement que JB doit remplir garde sa balise `<img>`.** Le live-editor ne voit que les `img` et `video` déjà présents. Un cadre vide lui est inaccessible.
+- **Les photos ont leurs droits acquis**, D-040. Question tranchée, ne pas la rouvrir.
+
+---
+
+## 6. Le ratio 95 % de correction, 5 % de visible
+
+La partie que la documentation ne résout pas, et qui demande un changement de méthode.
+
+### 6.1 D'où vient réellement le temps
+
+**Une dette accumulée qui se paie une fois.** Le site n'avait jamais été vérifié. Le tableau de bord admin ne fonctionnait pas, le calendrier de `track.html` n'existait pas, le vote était une animation décorative. Ce sont de vraies pannes, et les trouver a de la valeur même si ça ne se voit pas.
+
+**Mais deux causes sont de mon fait.**
+
+**La dérive.** Yoan demande une chose, je trouve un défaut en route, je le corrige, j'en trouve un autre. À la fin la demande initiale est faite, plus cinq réparations qu'il n'a pas demandées. Certaines étaient importantes. Le problème est que ses priorités cessent de conduire le travail.
+
+**Les instruments faux.** Section 2. Chaque piège a coûté un aller-retour complet, parfois deux.
+
+### 6.2 Ce qui change
+
+1. **Un défaut trouvé hors de la demande se note, il ne se corrige pas.** Sauf s'il casse la chose demandée, ou s'il est dangereux. Sinon il va dans `docs/05` et Yoan décide.
+2. **Avant de commencer, dire ce que Yoan verra à l'écran quand ce sera fini.** Si la réponse est « rien », le dire tout de suite et lui laisser le choix de continuer.
+3. **Contrôle négatif obligatoire** avant toute conclusion favorable. Section 2.1.
+4. **Un piège d'instrument rencontré s'écrit ici, dans la minute.** C'est ce qui rend la prochaine session moins chère.
+5. **Le cadrage avant la construction.** Le 7 août, Yoan a dû arrêter le travail pour parler de structure. La fiche `docs/chantiers/2026-08-07-page-evenements.md` en est sortie en une conversation. Elle aurait évité plusieurs jours de corrections sur une structure jamais validée.
+
+### 6.3 L'outillage, et ce qu'il couvre
+
+Quatre outils, tous dans `outil-dev/`, dossier forcé en 404 par `_redirects` avec `docs/` et `.claude/`. Aucun n'est servi au public.
+
+| Outil | Répond à |
+|---|---|
+| `node outil-dev/audit/audit.js` | ce qui est écrit dans les fichiers est-il correct |
+| `node outil-dev/base.js` | ce qui est enregistré dans Supabase est-il correct |
+| `node outil-dev/fumee.js` | les pages tournent-elles sans erreur |
+| `node outil-dev/parcours.js` | les boutons font-ils quelque chose |
+
+Les deux derniers ont besoin du serveur local, `node outil-dev/dev-server.js`.
+
+**Ce qui n'est toujours pas couvert** : le rendu visuel, qui demande un œil, et tout parcours qui écrit en base.
+
+---
+
+## 7. Comment se servir de ce fichier
+
+**Au début d'une session** : lire les sections 3 et 4. Elles disent ce qui est acquis et ce qui ne l'est pas. Ne pas revérifier ce qui est en section 3.
+
+**Avant de fabriquer un script de vérification** : lire la section 2. Le piège est probablement déjà décrit.
+
+**Avant d'annoncer un résultat favorable** : contrôle négatif.
+
+**En fin de session** : ajouter les pièges rencontrés en section 2, mettre à jour la section 3, et rien d'autre. Ce fichier doit rester court pour rester lu.

@@ -10,3 +10,10 @@ Disallow: /coming-soon.html
 Sitemap: https://jbemeric.netlify.app/sitemap.xml
 
 Disallow: /_data/
+
+# Netlify publie la racine entiere (publish = "." dans netlify.toml), donc
+# l'atelier, la documentation et les archives partent en ligne avec le site.
+# Rien n'y renvoie et rien n'y est indexable, mais autant le dire.
+Disallow: /outil-dev/
+Disallow: /docs/
+Disallow: /old/

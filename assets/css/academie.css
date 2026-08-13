@@ -1,5 +1,5 @@
 /*
- * academie.css — JB EMERIC
+ * academie.css : JB EMERIC
  * Page hub de l'Académie · refonte complète
  */
 
@@ -13,22 +13,22 @@ a { text-decoration: none; color: inherit }
 img { display: block; max-width: 100% }
 
 /* ═══════════════════════════════════════════════════════
-   SCROLL SNAP — ajustements spécifiques à academie.html
+   SCROLL SNAP : ajustements spécifiques à academie.html
    (règles de base dans assets/css/snap.css)
    ═══════════════════════════════════════════════════════ */
 
-/* Parcours — timeline étire pour remplir l'écran */
+/* Parcours : timeline étire pour remplir l'écran */
 .parcours.snap-section { display: flex; flex-direction: column }
 .parcours.snap-section .timeline { flex: 1; min-height: 0 }
 .parcours.snap-section .tl-step { min-height: 0 }
 
-/* Formateur — jb-split remplit la hauteur du wrapper (desktop uniquement) */
+/* Formateur : jb-split remplit la hauteur du wrapper (desktop uniquement) */
 @media(min-width:1100px) {
   .jb-pal-wrap.snap-section { min-height: unset }
   .jb-pal-wrap.snap-section .jb-split { min-height: 0; flex: 0 0 65% }
 }
 
-/* Mobile / tablette — laisser respirer la section formateur+palmarès
+/* Mobile / tablette : laisser respirer la section formateur+palmarès
    (override de la contrainte universelle .snap-section { height: ...; overflow: hidden }) */
 @media(max-width:1099px) {
   .jb-pal-wrap.snap-section {
@@ -38,17 +38,17 @@ img { display: block; max-width: 100% }
   }
 }
 
-/* Portes+citation — override min-height pour que les cartes se contractent */
+/* Portes+citation : override min-height pour que les cartes se contractent */
 .portes-citation-wrap.snap-section .porte { min-height: 0 }
 
-/* Dernière section — FAQ + boutique, scrollable en interne */
+/* Dernière section : FAQ + boutique, scrollable en interne */
 .snap-fin { overflow-y: auto; display: flex; flex-direction: column }
 
-/* Footer — point d'ancrage terminal comme sur index */
+/* Footer : point d'ancrage terminal comme sur index */
 #footer-root { scroll-snap-align: start }
 
 /* ═══════════════════════════════════════════════════════
-   THÈME — Variables page Académie
+   THÈME : Variables page Académie
    ═══════════════════════════════════════════════════════ */
 :root {
   --accent:      #0A3D91;
@@ -80,7 +80,7 @@ body { background: var(--bg-base) }
 .sb strong { font-weight: 500; opacity: 1 }
 
 /* ═══════════════════════════════════════════════════════
-   HERO — Plein écran photo
+   HERO : Plein écran photo
    ═══════════════════════════════════════════════════════ */
 .hero {
   position: relative; min-height: calc(100svh - 56px);
@@ -134,26 +134,12 @@ body { background: var(--bg-base) }
 .chip-solid { background: #FFCF00; border-color: #FFCF00; color: #000; opacity: 1; font-weight: 500 }
 
 /* ═══════════════════════════════════════════════════════
-   ACCROCHE — Intro post-hero fond blanc
+   ACCROCHE : Intro post-hero fond blanc
    ═══════════════════════════════════════════════════════ */
-.accroche {
-  background: #fff;
-  padding: clamp(48px,6.5vw,88px) clamp(20px,5vw,72px);
-  border-left: 5px solid #FFCF00;
-}
-.ac-title {
-  font-family: 'Bebas Neue'; font-size: clamp(30px,4.5vw,56px);
-  color: #040a1e; line-height: .95; max-width: 720px; margin-bottom: 22px;
-}
-.ac-title em { font-style: normal; color: #0A3D91; display: block }
-.ac-body {
-  font-size: clamp(15px,1.6vw,17px); color: rgba(4,10,30,.52);
-  line-height: 1.82; max-width: 560px;
-}
 
 
 /* ═══════════════════════════════════════════════════════
-   JB-PAL WRAP — Formateur + Palmarès côte à côte, full screen
+   JB-PAL WRAP : Formateur + Palmarès côte à côte, full screen
    ═══════════════════════════════════════════════════════ */
 .jb-pal-wrap {
   display: flex; flex-direction: column;
@@ -181,7 +167,7 @@ body { background: var(--bg-base) }
 }
 
 /* ═══════════════════════════════════════════════════════
-   JB SPLIT — Portrait formateur plein écran
+   JB SPLIT : Portrait formateur plein écran
    ═══════════════════════════════════════════════════════ */
 .jb-split {
   position: relative;
@@ -209,7 +195,7 @@ body { background: var(--bg-base) }
   background: linear-gradient(135deg, rgba(4,10,30,.72) 0%, rgba(4,10,30,.28) 45%, transparent 75%);
 }
 
-/* Bloc texte — nuage bas-gauche collé aux bords */
+/* Bloc texte : nuage bas-gauche collé aux bords */
 .jb-body {
   position: absolute;
   bottom: 0;
@@ -254,7 +240,7 @@ body { background: var(--bg-base) }
   padding-left: 14px; margin: 0; max-width: 100%;
 }
 
-/* Mobile — bloc texte en statique sous l'image */
+/* Mobile : bloc texte en statique sous l'image */
 @media(max-width:699px) {
   .jb-split { min-height: 320px; display: flex; flex-direction: column; overflow: visible; height: auto }
   .jb-img { position: relative; flex: 0 0 320px }
@@ -270,20 +256,9 @@ body { background: var(--bg-base) }
     border-image: linear-gradient(180deg,#F5D061,#C8860A) 1;
   }
 }
-.palm-row { display: flex; align-items: baseline; gap: 16px; padding: 13px 0; border-top: 1px solid rgba(4,10,30,.08) }
-.palm-row:last-child { border-bottom: 1px solid rgba(4,10,30,.08) }
-.palm-yr {
-  font-family: 'Bebas Neue'; font-size: 18px;
-  background: linear-gradient(135deg,#F5D061,#C8860A);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text; line-height: 1; min-width: 52px; flex-shrink: 0;
-}
-.palm-info { display: flex; flex-direction: column; gap: 2px }
-.palm-name { font-size: 13px; font-weight: 600; color: #040a1e; display: block }
-.palm-detail { font-size: 12px; color: rgba(4,10,30,.45) }
 
 /* ═══════════════════════════════════════════════════════
-   PARCOURS — Timeline 5 étapes
+   PARCOURS : Timeline 5 étapes
    ═══════════════════════════════════════════════════════ */
 .parcours {
   background: #fff;
@@ -350,7 +325,7 @@ body { background: var(--bg-base) }
 }
 .tl-num { font-family: 'Bebas Neue'; font-size: 24px; color: #040a1e; line-height: 1 }
 
-/* Badge catégorie — ligne basse */
+/* Badge catégorie : ligne basse */
 .tl-badge {
   font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
   text-transform: uppercase; color: rgba(255,207,0,.75);
@@ -369,7 +344,7 @@ body { background: var(--bg-base) }
 .tl-link:hover { gap: 14px; color: #fff }
 .tl-link::after { content: '→'; font-size: 12px }
 
-/* ─── Step 5 — BMW HTCC — inversée or/nuit ─── */
+/* ─── Step 5 : BMW HTCC, inversée or/nuit ─── */
 .tl-step--finale {
   background: linear-gradient(160deg, #FFCF00 0%, #E6BB00 100%);
   border-top: 4px solid #040a1e;
@@ -402,10 +377,14 @@ body { background: var(--bg-base) }
 }
 
 /* ═══════════════════════════════════════════════════════
-   PORTES — 2 entrées (cartes photo plein format)
+   PORTES : 2 entrées (cartes photo plein format)
    ═══════════════════════════════════════════════════════ */
+/* Trois portes depuis le 6 aout 2026 : enfant, adulte, competition. En deux
+   colonnes la troisieme restait seule avec un vide a cote, d'ou le passage a
+   trois colonnes des que la largeur le permet. */
 .portes { display: grid; grid-template-columns: 1fr }
-@media(min-width:700px) { .portes { grid-template-columns: repeat(2,1fr) } }
+@media(min-width:700px)  { .portes { grid-template-columns: repeat(2,1fr) } }
+@media(min-width:1000px) { .portes { grid-template-columns: repeat(3,1fr) } }
 
 .porte {
   position: relative; overflow: hidden;
@@ -427,17 +406,17 @@ body { background: var(--bg-base) }
   transition: background .35s;
 }
 
-/* Enfant — navy profond (couleur karting.css) */
+/* Enfant : navy profond (couleur karting.css) */
 .porte.enfant .porte-overlay        { background: linear-gradient(to top, rgba(10,26,74,.92) 30%, rgba(10,26,74,.06) 100%) }
 .porte.enfant:hover .porte-overlay  { background: linear-gradient(to top, rgba(10,26,74,.97) 30%, rgba(10,26,74,.22) 100%) }
 
-/* Adulte — bleu royal (couleur adulte.css) */
+/* Adulte : bleu royal (couleur adulte.css) */
 .porte.adulte .porte-overlay        { background: linear-gradient(to top, rgba(7,31,92,.92) 30%, rgba(7,31,92,.06) 100%) }
 .porte.adulte:hover .porte-overlay  { background: linear-gradient(to top, rgba(7,31,92,.97) 30%, rgba(7,31,92,.22) 100%) }
 
-/* Challenge — nuit avec touche dorée (couleur challenge.css) */
-.porte.challenge .porte-overlay       { background: linear-gradient(to top, rgba(4,10,30,.94) 30%, rgba(200,160,0,.14) 100%) }
-.porte.challenge:hover .porte-overlay { background: linear-gradient(to top, rgba(4,10,30,.98) 30%, rgba(200,160,0,.32) 100%) }
+/* Challenge : nuit avec touche dorée (couleur challenge.css) */
+.porte.competition .porte-overlay       { background: linear-gradient(to top, rgba(4,10,30,.94) 30%, rgba(200,160,0,.14) 100%) }
+.porte.competition:hover .porte-overlay { background: linear-gradient(to top, rgba(4,10,30,.98) 30%, rgba(200,160,0,.32) 100%) }
 .porte-content {
   position: relative; z-index: 2;
   padding: clamp(36px,5vw,72px) clamp(32px,5vw,72px);
@@ -462,11 +441,11 @@ body { background: var(--bg-base) }
 .porte:hover .porte-cta {
   background: rgba(255,255,255,.22); border-color: rgba(255,255,255,.5); gap: 12px;
 }
-.porte.challenge .porte-cta { background: rgba(200,160,0,.18); border-color: rgba(200,160,0,.5); color: #FFCF00 }
-.porte.challenge:hover .porte-cta { background: rgba(200,160,0,.32); border-color: rgba(200,160,0,.8) }
+.porte.competition .porte-cta { background: rgba(200,160,0,.18); border-color: rgba(200,160,0,.5); color: #FFCF00 }
+.porte.competition:hover .porte-cta { background: rgba(200,160,0,.32); border-color: rgba(200,160,0,.8) }
 
 /* ═══════════════════════════════════════════════════════
-   PORTES + CITATION — wrapper full screen
+   PORTES + CITATION : wrapper full screen
    ═══════════════════════════════════════════════════════ */
 .portes-citation-wrap {
   display: flex; flex-direction: column;
@@ -474,7 +453,9 @@ body { background: var(--bg-base) }
 }
 .portes-citation-wrap .portes {
   flex: 1; min-height: 0;
-  grid-template-columns: repeat(2,1fr);
+  /* Le nombre de colonnes n'est plus fixe ici. Cette regle, plus specifique
+     que les media queries de .portes, les ecrasait toutes : la troisieme porte
+     restait seule sur une deuxieme ligne, a cote d'un vide. */
   grid-auto-rows: 1fr;
 }
 .portes-citation-wrap .porte { min-height: 0 }
@@ -557,34 +538,14 @@ body { background: var(--bg-base) }
 /* ═══════════════════════════════════════════════════════
    FAQ
    ═══════════════════════════════════════════════════════ */
-.jbe-faq {
-  background: var(--bg-base);
-  padding: clamp(64px,8vw,100px) clamp(20px,5vw,72px);
-}
-.faq-list { max-width: 780px }
+/* La FAQ vit dans faq.css. L'Académie posait ici son propre fond et sa
+   propre largeur, ce qui rendait la page differente des cinq autres sans
+   raison. Si elle doit redevenir sombre, un attribut suffit :
+   data-faq-fond="sombre" sur le bloc, et pas une ligne de CSS ici. */
 
 /* ═══════════════════════════════════════════════════════
    BOUTIQUE CTA
    ═══════════════════════════════════════════════════════ */
-.shop-cta {
-  background: linear-gradient(135deg,#040a1e 0%,#0A3D91 100%);
-  padding: clamp(28px,4vw,44px) clamp(20px,5vw,72px);
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 16px;
-}
-.shop-kicker {
-  font-family: 'DM Mono'; font-size: 8px; letter-spacing: 3px;
-  text-transform: uppercase; color: rgba(255,207,0,.6); margin-bottom: 6px;
-}
-.shop-title { font-family: 'Bebas Neue'; font-size: clamp(20px,3.5vw,34px); color: #fff; line-height: .95 }
-.shop-body { font-family: 'DM Mono'; font-size: 10px; color: rgba(255,255,255,.45); margin-top: 6px; line-height: 1.6 }
-.shop-btn {
-  padding: 13px 26px; background: #FFCF00; color: #000;
-  font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
-  text-transform: uppercase; font-weight: 700; text-decoration: none;
-  border-radius: 6px; white-space: nowrap; transition: background .15s; flex-shrink: 0;
-}
-.shop-btn:hover { background: #C8A000 }
 
 /* ═══════════════════════════════════════════════════════
    SECTION VIDÉOS YOUTUBE
@@ -638,5 +599,12 @@ body { background: var(--bg-base) }
   display: flex; gap: 10px; margin-top: auto;
   padding-top: 8px; border-top: 1px solid var(--sep); flex-wrap: wrap;
 }
+/* Sous le seuil, videos.js ne construit rien : la section resterait un cadre
+   vide sous son titre. On la retire donc du flux. Masquer ne suffirait pas a
+   economiser les requetes, c'est le script qui s'en charge, et le script ne
+   suffirait pas a eviter le cadre vide. Les deux vont ensemble.
+   Meme seuil que nav.css, hero-video.js et videos.js. */
+@media(max-width:699px) { .ac-videos { display: none } }
+
 .yt-grid--4 { grid-template-columns: 1fr 1fr }
 @media(min-width:960px) { .yt-grid--4 { grid-template-columns: repeat(4,1fr) } }

@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="assets/css/theme.css">
   <link rel="stylesheet" href="assets/css/nav.css">
   <link rel="stylesheet" href="assets/css/admin.css">
-<title>Admin — JB EMERIC</title>
+<title>Admin · JB EMERIC</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -25,7 +25,7 @@
     <div class="sb-av" id="sb-av">?</div>
     <div>
       <div class="sb-uname" id="sb-uname">Chargement…</div>
-      <div class="sb-urole" id="sb-urole">—</div>
+      <div class="sb-urole" id="sb-urole">…</div>
     </div>
   </div>
 
@@ -40,18 +40,13 @@
     <button class="sb-btn" onclick="nav('sessions')">
       <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
       Sessions
-      <span class="sb-pill" id="pill-open">—</span>
+      <span class="sb-pill" id="pill-open">…</span>
       <span class="sb-pill-notif" id="pill-radar" style="display:none">!</span>
     </button>
     <button class="sb-btn" onclick="nav('inscriptions')">
       <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM8 16h8v2H8zm0-4h8v2H8zm0-4h5v2H8z"/></svg>
       Inscriptions
-      <span class="sb-pill" id="pill-inscr">—</span>
-    </button>
-    <button class="sb-btn" onclick="nav('votes')">
-      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-      Votes Potential
-      <span class="sb-pill vote" id="pill-vote">—</span>
+      <span class="sb-pill" id="pill-inscr">…</span>
     </button>
 
     <div class="sb-group">Contenu</div>
@@ -95,7 +90,7 @@
     <div class="topbar-title"><strong id="page-title">Dashboard</strong> · JB EMERIC Admin</div>
     <div class="topbar-right">
       <span class="tb-time" id="tb-clock"></span>
-      <a href="track.html" class="btn btn-ghost btn-sm">Track-Days</a>
+      <a href="evenements.html" class="btn btn-ghost btn-sm">Track-Days</a>
       <button class="btn btn-gold btn-sm" onclick="nav('sessions')">+ Session</button>
     </div>
   </div>
@@ -105,12 +100,12 @@
   <!-- ═══ DASHBOARD ═══ -->
   <div id="v-dashboard" class="section-view active">
     <div class="kpis" id="kpis-container">
-      <div class="kpi"><div class="kpi-l">Sessions ouvertes</div><div class="kpi-v" id="k-open">—</div><div class="kpi-s">Inscriptions actives</div></div>
-      <div class="kpi" style="--kc:linear-gradient(90deg,#6366f1,#818cf8)"><div class="kpi-l">Votes en attente</div><div class="kpi-v" id="k-votes">—</div><div class="kpi-s">Dates Potential</div></div>
-      <div class="kpi"><div class="kpi-l">Inscrits</div><div class="kpi-v" id="k-inscrits">—</div><div class="kpi-s">Sessions ouvertes</div></div>
-      <div class="kpi" style="--kc:linear-gradient(90deg,#059669,#10b981)"><div class="kpi-l">Threads Forum</div><div class="kpi-v" id="k-threads">—</div><div class="kpi-s">Discussions actives</div></div>
-      <div class="kpi" style="--kc:linear-gradient(90deg,#0284c7,#38bdf8)"><div class="kpi-l">Docs bibliothèque</div><div class="kpi-v" id="k-docs">—</div><div class="kpi-s">Documents publiés</div></div>
-      <div class="kpi" style="--kc:linear-gradient(90deg,#ef4444,#dc2626)"><div class="kpi-l">Complet</div><div class="kpi-v" id="k-full">—</div></div>
+      <div class="kpi"><div class="kpi-l">Sessions ouvertes</div><div class="kpi-v" id="k-open">…</div><div class="kpi-s">Inscriptions actives</div></div>
+      <div class="kpi" style="--kc:linear-gradient(90deg,#6366f1,#818cf8)"><div class="kpi-l">En préparation</div><div class="kpi-v" id="k-preparation">…</div><div class="kpi-s">Dates pas encore ouvertes</div></div>
+      <div class="kpi"><div class="kpi-l">Inscrits</div><div class="kpi-v" id="k-inscrits">…</div><div class="kpi-s">Sessions ouvertes</div></div>
+      <div class="kpi" style="--kc:linear-gradient(90deg,#059669,#10b981)"><div class="kpi-l">Threads Forum</div><div class="kpi-v" id="k-threads">…</div><div class="kpi-s">Discussions actives</div></div>
+      <div class="kpi" style="--kc:linear-gradient(90deg,#0284c7,#38bdf8)"><div class="kpi-l">Docs bibliothèque</div><div class="kpi-v" id="k-docs">…</div><div class="kpi-s">Documents publiés</div></div>
+      <div class="kpi" style="--kc:linear-gradient(90deg,#ef4444,#dc2626)"><div class="kpi-l">Complet</div><div class="kpi-v" id="k-full">…</div></div>
     </div>
 
     <div class="grid3c">
@@ -121,7 +116,7 @@
         </div>
         <div class="tw">
           <table>
-            <thead><tr><th>Date</th><th>Circuit</th><th>Statut</th><th>Places</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Date</th><th>Circuit</th><th>Type</th><th>Statut</th><th>Places</th></tr></thead>
             <tbody id="dash-events-tbody">
               <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Chargement…</td></tr>
             </tbody>
@@ -137,7 +132,7 @@
           <div class="log-item">
             <div class="log-dot" style="background:var(--ok)"></div>
             <div class="log-txt">Dashboard chargé</div>
-            <div class="log-time" id="log-time-1">—</div>
+            <div class="log-time" id="log-time-1">…</div>
           </div>
         </div>
       </div>
@@ -160,6 +155,12 @@
           <option>Open</option><option>Potential</option>
           <option>Full</option><option>Draft</option>
         </select>
+        <label>Période</label>
+        <select id="filter-periode" onchange="loadEvents()">
+          <option value="tous">Tous</option>
+          <option value="avenir">À venir</option>
+          <option value="passe">Passés</option>
+        </select>
         <input type="text" id="filter-search" placeholder="Rechercher…"
           oninput="filterEventsTable(this.value)" style="flex:1;min-width:160px">
       </div>
@@ -171,7 +172,7 @@
               <th>Prix</th><th>Places</th><th>Visibilité</th><th>Actions</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="events-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -182,11 +183,11 @@
       <div class="radar-header">
         <div class="radar-title">
           <div class="radar-pulse"></div>
-          Radar — Dates détectées automatiquement
+          Radar · Dates détectées automatiquement
         </div>
         <div class="radar-meta">
           <span id="radar-new-count" class="radar-count" style="display:none">0 nouvelles</span>
-          <span id="radar-last-scan" class="radar-scan-time">—</span>
+          <span id="radar-last-scan" class="radar-scan-time">…</span>
           <button class="btn btn-ghost btn-sm" onclick="runRadarScan()">
             ↻ Scanner maintenant
           </button>
@@ -209,28 +210,10 @@
       <div class="radar-scan-bar">
         <div class="radar-spinner" id="radar-spinner"></div>
         <div class="radar-scan-status" id="radar-scan-status">En veille</div>
-        <div class="radar-scan-time" id="radar-scan-time">—</div>
+        <div class="radar-scan-time" id="radar-scan-time">…</div>
       </div>
     </div>
 
-  <!-- ═══ VOTES ═══ -->
-  <div id="v-votes" class="section-view">
-    <div class="card">
-      <div class="card-head">
-        <div class="card-title"><div class="ctd" style="background:#6366f1"></div>Sessions Potential — Votes clients</div>
-      </div>
-      <div class="tw">
-        <table>
-          <thead><tr>
-            <th>Date</th><th>Circuit</th><th>Votes</th><th>Progression</th><th>Actions</th>
-          </tr></thead>
-          <tbody id="votes-tbody">
-            <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px;font-family:'DM Mono';font-size:9px">Chargement…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
   
   <!-- ═══ INSCRIPTIONS ══════════════════════════════════════════════ -->
@@ -279,7 +262,7 @@
         <div class="card-title"><div class="ctd"></div>Offres Coaching</div>
         <div class="card-acts">
           <span style="font-family:'DM Mono';font-size:8px;color:var(--muted)">
-            Édition directe — sauvegardé sur blur
+            Édition directe, sauvegardé sur blur
           </span>
         </div>
       </div>
@@ -387,7 +370,7 @@
     <div class="card">
       <div class="card-head">
         <div class="card-title"><div class="ctd" style="background:var(--B4)"></div>Utilisateurs</div>
-        <span id="users-count" style="font-family:'DM Mono';font-size:9px;color:var(--muted)">—</span>
+        <span id="users-count" style="font-family:'DM Mono';font-size:9px;color:var(--muted)">…</span>
       </div>
       <div class="tw">
         <table>

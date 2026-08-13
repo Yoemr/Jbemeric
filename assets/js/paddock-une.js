@@ -1,8 +1,8 @@
-// paddock-une.js — JB EMERIC
+// paddock-une.js : JB EMERIC
 // Alimentation de la grille newsletter "À la Une" depuis Supabase
 // Chargé dans paddock.html
 
-// ── Newsletter "À la Une" — données Supabase ────────────────────
+// ── Newsletter "À la Une" : données Supabase ────────────────────
 (async function() {
   var SB_URL = 'https://fyaybxamuabawerqzuud.supabase.co/rest/v1/'
   var SB_KEY = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
@@ -53,7 +53,7 @@
       if (threadsEl) threadsEl.textContent = threads.length
     }
 
-    // ③ Calendrier — 4 prochaines dates
+    // ③ Calendrier : 4 prochaines dates
     var r3 = await fetch(SB_URL + 'events?visible_site=eq.true&order=date_event.asc&limit=4&select=date_event,type,circuits(nom)', { headers: H })
     var evtsCal = await r3.json()
     var calList = document.getElementById('une-cal-list')

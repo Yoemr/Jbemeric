@@ -591,6 +591,52 @@ img{display:block;width:100%;height:100%;object-fit:cover}
   #cd .sec-coach{grid-template-columns:1fr}
   #cd .coach-photo{min-height:50svh}
 }
+
+/* ════════════════════════════════════════════════════ */
+/* ══ F REDESIGN : luminosité, air, sections claires ═ */
+/* ════════════════════════════════════════════════════ */
+
+/* Académie F : fond blanc cassé */
+#cf .sec-acad{background:#f6f6f4;padding:clamp(64px,9vw,108px) clamp(24px,4vw,64px) clamp(80px,10vw,128px)}
+#cf .acad-top{margin-bottom:clamp(44px,6vw,68px)}
+#cf .sec-acad .eyebrow{color:#0A3D91}
+#cf .sec-acad .sec-title{color:#040a1e}
+#cf .sec-link{color:#0A3D91;border-bottom-color:rgba(10,61,145,.3)}
+#cf .acad-grid{gap:clamp(14px,2.5vw,24px)}
+#cf .acad-card{border:1px solid rgba(0,0,0,.07);background:#fff}
+#cf .acad-card:hover{transform:translateY(-6px);box-shadow:0 14px 40px rgba(0,0,0,.1),0 0 0 1px rgba(10,61,145,.15)}
+#cf .ac-body{background:#fff}
+#cf .ac-tag{color:#0A3D91}
+#cf .ac-name{color:#040a1e}
+#cf .ac-desc{color:rgba(0,0,0,.48)}
+#cf .ac-cta{color:#040a1e}
+#cf .acad-card:hover .ac-cta{color:#040a1e}
+
+/* Stats band F : fond or (plus de punch) */
+#cf .stats-band{background:#FFCF00;border-top:none;border-bottom:3px solid rgba(0,0,0,.08)}
+#cf .sb-item:hover{background:rgba(0,0,0,.05)}
+#cf .sb-item{border-right-color:rgba(0,0,0,.1)}
+
+/* Coaching F : fond blanc, portrait JB */
+#cf .sec-coach{background:#fff;color:#040a1e}
+#cf .coach-glow,#cf .coach-ring{display:none}
+#cf .coach-photo-side{background:#eeede9}
+#cf .coach-photo-side img{filter:brightness(.8) saturate(.9)}
+#cf .coach-photo-side::after{background:linear-gradient(to right,transparent 55%,rgba(255,255,255,.75) 100%)}
+#cf .coach-eyebrow{color:#0A3D91}
+#cf .coach-title{color:#040a1e}
+#cf .coach-body{color:rgba(0,0,0,.52)}
+#cf .co-item{border-bottom-color:rgba(0,0,0,.09)}
+#cf .co-item:first-child{border-top-color:rgba(0,0,0,.09)}
+#cf .co-name{color:#040a1e}
+#cf .co-tag{color:rgba(10,61,145,.65)}
+
+/* Events F : épuré, photo qui respire */
+#cf .ev-g1,#cf .ev-g2,#cf .ev-bg-t{display:none}
+#cf .ev-ov{background:linear-gradient(to top,rgba(4,10,30,.92) 0%,rgba(4,10,30,.35) 55%,rgba(4,10,30,.08) 100%)}
+#cf .sec-ev img{filter:brightness(.52) saturate(.9)}
+#cf .ev-content{padding:clamp(60px,8vw,120px) clamp(24px,5vw,80px)}
+#cf .ev-chip{padding:8px 18px}
 </style>
 </head>
 <body>
@@ -897,7 +943,7 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 <section class="sec-coach">
   <div class="coach-glow"></div>
   <div class="coach-photo-side">
-    <img src="assets/images/bmw-325i-htcc.jpg" alt="BMW 325i HTCC JB Emeric coaching">
+    <img src="assets/images/jb-emeric-pilote.jpg" alt="Jean-Baptiste Emeric pilote">
     <div class="coach-ring"></div>
   </div>
   <div class="coach-content">
@@ -914,7 +960,7 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 
 <!-- Events F : vraie photo -->
 <section class="sec-ev">
-  <img src="assets/images/karting-adulte-circuit.jpg" alt="Karting adulte circuit">
+  <img src="assets/images/porsche-gt3-circuit-albi.jpg" alt="Porsche GT3 circuit d'Albi">
   <div class="ev-ov"></div>
   <div class="ev-g1"></div>
   <div class="ev-g2"></div>

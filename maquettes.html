@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Maquettes Index — JB EMERIC</title>
+<meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -21,6 +22,21 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 .sw-btn.active{background:#FFCF00;color:#000;font-weight:700}
 .sw-btn:hover:not(.active){color:#fff;background:#111}
 .sw-label{flex:0 0 auto;padding:0 18px;height:100%;display:flex;align-items:center;font-family:'DM Mono',monospace;font-size:7px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.2);border-right:1px solid #222}
+/* Bannière maquette */
+.mockup-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(255,207,0,.95);color:#000;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:6px;pointer-events:none}
+/* ── IMAGES RÉELLES C/D/E ───────────────────── */
+#cc .hero-img{position:absolute;inset:0;z-index:0}
+#cc .hero-img img{filter:brightness(.28) saturate(.6)}
+#cc .acad-card-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.55)}
+#cc .coach-photo img{position:absolute;inset:0;filter:brightness(.4) saturate(.7)}
+#cd .hero-photo-zone img{filter:brightness(.5) saturate(.8)}
+#cd .coach-photo img{position:absolute;inset:0;filter:brightness(.4) saturate(.7)}
+#ce .hg-cell img{filter:brightness(.5) saturate(.7)}
+#ce .ac-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.55)}
+#ce .coach-photo-col img{position:absolute;inset:0;filter:brightness(.4) saturate(.7)}
+#ce .ev-photo img{position:absolute;inset:0;filter:brightness(.4) saturate(.7)}
+/* Vidéo hero F */
+#cf .hero-img video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.3) saturate(.7)}
 
 /* ── CONCEPTS ───────────────────────────────── */
 .concept{display:none}
@@ -578,6 +594,7 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 </style>
 </head>
 <body>
+<div class="mockup-banner">MAQUETTES · PAGE DE TEST · NON INDEXÉE</div>
 
 <!-- ── SWITCHER ─────────────────────────────── -->
 <nav class="switcher">
@@ -792,7 +809,11 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 
 <!-- Hero F : glows animés + vraie photo -->
 <section class="hero">
-  <div class="hero-img"><img src="assets/images/podium-paul-ricard-1994.jpg" alt="JB Emeric podium Paul Ricard 1994"></div>
+  <div class="hero-img">
+    <video autoplay muted loop playsinline poster="assets/images/podium-paul-ricard-1994.jpg">
+      <source src="assets/images/Presentation%20Jbemeric.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="hero-ov"></div>
   <div class="g1"></div>
   <div class="g2"></div>
@@ -920,7 +941,8 @@ img{display:block;width:100%;height:100%;object-fit:cover}
   <a class="nav-cta" href="#">Contact →</a>
 </nav>
 <section class="hero">
-  <div class="hero-caption">Podium Paul Ricard · 1994 · Champion de France 1988</div>
+  <div class="hero-img"><img src="assets/images/porsche-gt3-circuit-albi.jpg" alt="Porsche GT3 circuit d'Albi"></div>
+  <div class="hero-caption">Circuit d'Albi · Porsche GT3 · JB EMERIC</div>
   <div class="hero-name-block">
     <span class="hero-jb">JB</span>
     <span class="hero-emeric">EMERIC</span>
@@ -944,13 +966,14 @@ img{display:block;width:100%;height:100%;object-fit:cover}
     <a class="acad-link" href="#">Voir l'Académie →</a>
   </div>
   <div class="acad-cards">
-    <div class="acad-card"><div class="acad-card-photo photo-enfant"></div><div class="acad-card-body"><div class="card-tag">Dès 7 ans · 1,30 m</div><div class="card-name">Karting<br>Enfant</div><div class="card-desc">Moniteur diplômé d'État, briefing, sessions courtes, debrief. Équipement fourni.</div><a class="card-cta" href="#">Voir la journée →</a></div></div>
-    <div class="acad-card"><div class="acad-card-photo photo-adulte"></div><div class="acad-card-body"><div class="card-tag">Débutant · Tous niveaux</div><div class="card-name">Karting<br>Adulte</div><div class="card-desc">Cursus C1 à C5. Chaque niveau validé sur chronos et points techniques objectifs.</div><a class="card-cta" href="#">Découvrir le cursus →</a></div></div>
-    <div class="acad-card"><div class="acad-card-photo photo-compet"></div><div class="acad-card-body"><div class="card-tag">Kart 125cc · Voiture · Monoplace</div><div class="card-name">Vers la<br>Compétition</div><div class="card-desc">JB accompagne jusqu'à la piste, le jour de la course, selon le profil et le budget.</div><a class="card-cta" href="#">Voir les voies →</a></div></div>
+    <div class="acad-card"><div class="acad-card-photo photo-enfant"><img src="assets/images/briefing-karting-enfant.jpg" alt="Briefing karting enfant"></div><div class="acad-card-body"><div class="card-tag">Dès 7 ans · 1,30 m</div><div class="card-name">Karting<br>Enfant</div><div class="card-desc">Moniteur diplômé d'État, briefing, sessions courtes, debrief. Équipement fourni.</div><a class="card-cta" href="#">Voir la journée →</a></div></div>
+    <div class="acad-card"><div class="acad-card-photo photo-adulte"><img src="assets/images/karting-adulte-depart.jpg" alt="Karting adulte départ"></div><div class="acad-card-body"><div class="card-tag">Débutant · Tous niveaux</div><div class="card-name">Karting<br>Adulte</div><div class="card-desc">Cursus C1 à C5. Chaque niveau validé sur chronos et points techniques objectifs.</div><a class="card-cta" href="#">Découvrir le cursus →</a></div></div>
+    <div class="acad-card"><div class="acad-card-photo photo-compet"><img src="assets/images/karting-challenge-auto.jpg" alt="Karting compétition challenge auto"></div><div class="acad-card-body"><div class="card-tag">Kart 125cc · Voiture · Monoplace</div><div class="card-name">Vers la<br>Compétition</div><div class="card-desc">JB accompagne jusqu'à la piste, le jour de la course, selon le profil et le budget.</div><a class="card-cta" href="#">Voir les voies →</a></div></div>
   </div>
 </div>
 <div class="sec-coach">
   <div class="coach-photo">
+    <img src="assets/images/jb-emeric-pilote.jpg" alt="JB Emeric pilote">
     <div class="coach-quote">
       <div class="cq-mark">"</div>
       <div class="cq-text">Un virage se comprend en piste et se corrige au debrief. Pas l'inverse.</div>
@@ -967,7 +990,7 @@ img{display:block;width:100%;height:100%;object-fit:cover}
   </div>
 </div>
 <div class="sec-ev">
-  <div class="ev-bg-text">PAUL RICARD</div>
+  <div class="ev-bg-text">CIRCUIT D'ALBI</div>
   <div class="ev-content">
     <div class="ev-eyebrow">03 — Événements · Saison 2026</div>
     <div class="ev-title">Sur les<br><em>circuits</em></div>
@@ -993,7 +1016,7 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 <section class="hero">
   <div class="hero-stripe"></div>
   <div class="hero-stripe2"></div>
-  <div class="hero-photo-zone"></div>
+  <div class="hero-photo-zone"><img src="assets/images/lotus-circuit-du-luc.jpg" alt="Lotus Circuit du Luc"></div>
   <div class="hero-content">
     <div class="hero-kicker">École de pilotage sur circuit · Fondée en 1989</div>
     <div class="hero-name"><span class="w1">JB</span><span class="w2">EMERIC</span></div>
@@ -1022,6 +1045,7 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 </div>
 <div class="sec-coach">
   <div class="coach-photo">
+    <img src="assets/images/jb-emeric-pilote.jpg" alt="JB Emeric pilote">
     <div class="coach-photo-quote">
       <div class="cq-mark">"</div>
       <div class="cq-text">Un virage se comprend en piste et se corrige au debrief. Pas l'inverse.</div>
@@ -1064,8 +1088,12 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 </nav>
 <section class="hero">
   <div class="hero-grid-bg">
-    <div class="hg-cell hg-1"></div><div class="hg-cell hg-2"></div><div class="hg-cell hg-3"></div>
-    <div class="hg-cell hg-4"></div><div class="hg-cell hg-5"></div><div class="hg-cell hg-6"></div>
+    <div class="hg-cell hg-1"><img src="assets/images/podium-paul-ricard-1994.jpg" alt=""></div>
+    <div class="hg-cell hg-2"><img src="assets/images/peugeot-206-s16-ricard.jpg" alt=""></div>
+    <div class="hg-cell hg-3"><img src="assets/images/bmw-325i-htcc.jpg" alt=""></div>
+    <div class="hg-cell hg-4"><img src="assets/images/briefing-karting-enfant.jpg" alt=""></div>
+    <div class="hg-cell hg-5"><img src="assets/images/karting-adulte-depart.jpg" alt=""></div>
+    <div class="hg-cell hg-6"><img src="assets/images/porsche-gt3-circuit-albi.jpg" alt=""></div>
   </div>
   <div class="hero-grid-ov"></div>
   <div class="hero-top-line"></div>
@@ -1090,13 +1118,14 @@ img{display:block;width:100%;height:100%;object-fit:cover}
     <a class="sec-link" href="#">Voir l'Académie →</a>
   </div>
   <div class="acad-cards">
-    <div class="acad-card"><div class="ac-photo acp-1"></div><div class="acad-card-body"><div class="card-tag">Dès 7 ans · 1,30 m</div><div class="card-name">Karting Enfant</div><div class="card-desc">Moniteur diplômé d'État, briefing, sessions courtes, debrief. Équipement fourni sur place.</div><a class="card-cta" href="#">Voir la journée →</a></div></div>
-    <div class="acad-card"><div class="ac-photo acp-2"></div><div class="acad-card-body"><div class="card-tag">Débutant · Tous niveaux</div><div class="card-name">Karting Adulte</div><div class="card-desc">Cursus C1 à C5. Chaque niveau validé sur chronos et points techniques objectifs.</div><a class="card-cta" href="#">Découvrir le cursus →</a></div></div>
-    <div class="acad-card"><div class="ac-photo acp-3"></div><div class="acad-card-body"><div class="card-tag">Kart 125cc · Voiture · Monoplace</div><div class="card-name">Vers la Compétition</div><div class="card-desc">Discipline choisie selon le profil et le budget. JB accompagne jusqu'à la piste, le jour de la course.</div><a class="card-cta" href="#">Voir les voies →</a></div></div>
+    <div class="acad-card"><div class="ac-photo acp-1"><img src="assets/images/karting-enfant-circuit.jpg" alt="Karting enfant circuit"></div><div class="acad-card-body"><div class="card-tag">Dès 7 ans · 1,30 m</div><div class="card-name">Karting Enfant</div><div class="card-desc">Moniteur diplômé d'État, briefing, sessions courtes, debrief. Équipement fourni sur place.</div><a class="card-cta" href="#">Voir la journée →</a></div></div>
+    <div class="acad-card"><div class="ac-photo acp-2"><img src="assets/images/karting-adulte-circuit.jpg" alt="Karting adulte circuit"></div><div class="acad-card-body"><div class="card-tag">Débutant · Tous niveaux</div><div class="card-name">Karting Adulte</div><div class="card-desc">Cursus C1 à C5. Chaque niveau validé sur chronos et points techniques objectifs.</div><a class="card-cta" href="#">Découvrir le cursus →</a></div></div>
+    <div class="acad-card"><div class="ac-photo acp-3"><img src="assets/images/karting-challenge-auto.jpg" alt="Karting compétition"></div><div class="acad-card-body"><div class="card-tag">Kart 125cc · Voiture · Monoplace</div><div class="card-name">Vers la Compétition</div><div class="card-desc">Discipline choisie selon le profil et le budget. JB accompagne jusqu'à la piste, le jour de la course.</div><a class="card-cta" href="#">Voir les voies →</a></div></div>
   </div>
 </div>
 <div class="sec-coach">
   <div class="coach-photo-col">
+    <img src="assets/images/jb-emeric-pilote.jpg" alt="JB Emeric pilote">
     <div class="coach-photo-content">
       <div class="cq-mark">"</div>
       <div class="cq-text">Un virage se comprend en piste et se corrige au debrief. Pas l'inverse.</div>
@@ -1113,7 +1142,10 @@ img{display:block;width:100%;height:100%;object-fit:cover}
   </div>
 </div>
 <div class="sec-ev">
-  <div class="ev-photo"><div class="ev-photo-num">03</div></div>
+  <div class="ev-photo">
+    <img src="assets/images/lotus-circuit-du-luc.jpg" alt="Lotus circuit du Luc">
+    <div class="ev-photo-num">03</div>
+  </div>
   <div class="ev-content">
     <div class="ev-eyebrow">03 — Événements · Saison 2026</div>
     <div class="ev-title">Sur les<br><em>circuits</em></div>

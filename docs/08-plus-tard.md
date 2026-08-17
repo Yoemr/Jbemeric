@@ -88,6 +88,8 @@ Mot de Yoan, 11 août 2026 : « reste à réfléchir à la partie business plan,
 
 - **Où la FAQ mérite d'être, et où elle ne sert à rien.** Mot de Yoan, 9 août : « faudrait aussi réfléchir à la pertinence de la FAQ, elle est peut-être à des endroits pas forcément essentiels, mais pour l'instant pas grave. Une fois que le système marche c'est très facile d'ajouter ou supprimer une section sur une page. » Elle est aujourd'hui sur six pages, par héritage et non par choix. À reprendre page par page quand le site tournera. Le bloc d'avis pose la même question.
 - La page JB, validée dans le principe, avec le palmarès dedans. Entrée de menu à décider.
+- **Section « JB + les pilotes qu'il a formés » absente de `coaching.html`** (et probablement de `competition.html` plus tard). Hyper importante : le site vend un homme, pas un parc. La liste des pilotes formés est le seul argument d'autorité concret. À construire avec les données de JB.
+- **Les deux offres de `coaching.html` sont à re-travailler.** Visuellement présentables depuis le 17 août, mais le marketing est mauvais : un pilote fortuné ne clique pas sur l'offre Compétition telle qu'elle est formulée, et l'offre Amateur ne dit pas clairement ce qu'elle inclut. À reprendre avec Yoan quand la structure technique sera stable.
 - La page « nos voitures », sujet séparé. Idées de Yoan dans `docs/99` : louer aux équipes, s'appuyer sur les clients qui en possèdent, reconstruire un parc avec des investisseurs rémunérés.
 - Photos et vidéos, reprise complète avec JB. Beaucoup sont provisoires.
 

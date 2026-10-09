@@ -28,7 +28,7 @@
 
   <div class="nav-mobile-auth">
     <a class="mob-login" href="/admin/login.html">Se connecter</a>
-    <a class="mob-signup" href="/admin/signup.html">S'inscrire</a>
+    <a class="mob-signup" data-route="signup" href="/admin/signup.html">S'inscrire</a>
   </div>
 </div>
 
@@ -41,15 +41,15 @@
       <div class="auth-brand-name">Bon <em>retour.</em></div>
       <div class="auth-brand-sub">JB EMERIC · Espace Membre</div>
       <div class="auth-perks">
-        <div class="auth-perk">
+        <div class="auth-perk" data-route="evenements">
           <div class="auth-perk-dot"></div>
           <div class="auth-perk-text"><strong>Votre tableau de bord</strong> : sessions, chronos, historique d'inscription</div>
         </div>
-        <div class="auth-perk">
+        <div class="auth-perk" data-route="paddock">
           <div class="auth-perk-dot"></div>
           <div class="auth-perk-text"><strong>Blog &amp; Tribune</strong> : contenu exclusif et discussions avec JB</div>
         </div>
-        <div class="auth-perk">
+        <div class="auth-perk" data-route="evenements">
           <div class="auth-perk-dot"></div>
           <div class="auth-perk-text"><strong>Réservations</strong> : accès direct aux sessions disponibles</div>
         </div>
@@ -61,7 +61,7 @@
   <div class="auth-form-wrap">
     <div class="auth-box">
       <div class="auth-box-title">Se <em>connecter</em></div>
-      <p class="auth-box-sub">Pas encore membre ? <a href="/admin/signup.html">Créer un compte →</a></p>
+      <p class="auth-box-sub" data-route="signup">Pas encore membre ? <a href="/admin/signup.html">Créer un compte →</a></p>
 
       <form id="login-form" action="#" method="POST">
 

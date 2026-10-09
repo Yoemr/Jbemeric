@@ -1,6 +1,6 @@
 // fumee.js : est-ce que les pages tournent ?
 //
-//   node outil-dev/fumee.js                  les 9 pages du perimetre
+//   node outil-dev/fumee.js                  les pages du perimetre (audit/perimetre.js)
 //   node outil-dev/fumee.js academie.html    une page precise
 //   node outil-dev/fumee.js --tout           toutes les pages du site
 //

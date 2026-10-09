@@ -7,6 +7,9 @@
 
   var R = window.ROUTES || {}
 
+  // data-route : une page masquée disparaît du pied de page par la règle
+  // de la section 5 de theme.css, sans que ce fichier ait à le savoir.
+
   var footerHTML =
     '<footer class="footer">' +
     '<div class="footer-top">' +
@@ -28,9 +31,9 @@
       '<div class="ft-col-title">Navigation</div>' +
       '<a href="' + R.index + '">Accueil</a>' +
       '<a href="' + R.academie + '">Académie</a>' +
-      '<a href="' + R.coaching + '">Coaching</a>' +
-      '<a href="' + R.evenements + '">Événements</a>' +
-      '<a href="' + R.paddock + '">Paddock</a>' +
+      '<a data-route="coaching" href="' + R.coaching + '">Coaching</a>' +
+      '<a data-route="evenements" href="' + R.evenements + '">Événements</a>' +
+      '<a data-route="paddock" href="' + R.paddock + '">Paddock</a>' +
     '</div>' +
 
     // Académie
@@ -38,8 +41,8 @@
       '<div class="ft-col-title">Académie</div>' +
       '<a href="' + R.kartingEnfant + '">Karting enfant</a>' +
       '<a href="' + R.karting + '">Karting adulte</a>' +
-      '<a href="' + R.competition + '">Vers la Compétition</a>' +
-      '<a href="' + R.coaching + '">Coaching vidéo</a>' +
+      '<a data-route="competition" href="' + R.competition + '">Vers la Compétition</a>' +
+      '<a data-route="coaching" href="' + R.coaching + '">Coaching vidéo</a>' +
     '</div>' +
 
     // Contact

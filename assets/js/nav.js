@@ -21,9 +21,9 @@
     { type:'link', href:R.index,    key:'index',    label:'Accueil' },
     { type:'sub',  href:R.academie, key:'academie', label:'Acad&eacute;mie',
       subs:[
-        { href:R.kartingEnfant, label:'Karting enfant' },
-        { href:R.karting,       label:'Karting adulte' },
-        { href:R.competition,   label:'Vers la Comp&eacute;tition' },
+        { href:R.kartingEnfant, route:'kartingEnfant', label:'Karting enfant' },
+        { href:R.karting,       route:'karting',       label:'Karting adulte' },
+        { href:R.competition,   route:'competition',   label:'Vers la Comp&eacute;tition' },
       ]
     },
     { type:'link', href:R.coaching, key:'coaching', label:'Coaching' },
@@ -34,14 +34,20 @@
     { type:'link', href:R.evenements, key:'evenements', label:'&Eacute;v&eacute;nements' },
     { type:'sub',  href:R.paddock,  key:'paddock',  label:'Paddock',
       subs:[
-        { href:R.paddock + '#blog',   label:'Biblioth&egrave;que tech.' },
-        { href:R.paddock + '#forum',  label:'Forum pilotes' },
-        { href:R.paddock + '#media',  label:'Cha&icirc;ne YouTube' },
-        { href:R.paddock + '#events', label:'Calendrier 2026' },
-        { href:R.palmares,            label:'Palmar&egrave;s' },
+        { href:R.paddock + '#blog',   route:'paddock',  label:'Biblioth&egrave;que tech.' },
+        { href:R.paddock + '#forum',  route:'paddock',  label:'Forum pilotes' },
+        { href:R.paddock + '#media',  route:'paddock',  label:'Cha&icirc;ne YouTube' },
+        { href:R.paddock + '#events', route:'paddock',  label:'Calendrier 2026' },
+        { href:R.palmares,            route:'palmares', label:'Palmar&egrave;s' },
       ]
     },
   ]
+
+  // ── Clé de route : c'est elle qui masque une entrée ──────────────
+  // Une entrée dont la page est masquée disparaît par la règle de la
+  // section 5 de theme.css. Rien n'est filtré ici, pour qu'il n'existe
+  // qu'un seul endroit où décider de ce qui se montre.
+  function attrRoute(k) { return k ? ' data-route="' + k + '"' : '' }
 
   // ── Détecter la page active via ROUTES.matchCurrent ─────────────
   var current = R.matchCurrent && R.matchCurrent()
@@ -53,12 +59,12 @@
     return NAV_ITEMS.map(function(item) {
       var isActive = item.key === activeKey
       if (item.type === 'link') {
-        return '<a class="nav-tab' + (isActive ? ' active' : '') + '" href="' + item.href + '">' + item.label + '</a>'
+        return '<a class="nav-tab' + (isActive ? ' active' : '') + '"' + attrRoute(item.key) + ' href="' + item.href + '">' + item.label + '</a>'
       }
       var subHtml = item.subs.map(function(s) {
-        return '<a class="nav-sub-item" href="' + s.href + '">' + s.label + '</a>'
+        return '<a class="nav-sub-item"' + attrRoute(s.route) + ' href="' + s.href + '">' + s.label + '</a>'
       }).join('')
-      return '<div class="nav-tab has-sub' + (isActive ? ' active' : '') + '" onclick="location.href=\'' + item.href + '\'">' +
+      return '<div class="nav-tab has-sub' + (isActive ? ' active' : '') + '"' + attrRoute(item.key) + ' onclick="location.href=\'' + item.href + '\'">' +
         item.label +
         '<div class="nav-sub">' + subHtml + '</div>' +
         '</div>'
@@ -70,11 +76,11 @@
     var items = []
     NAV_ITEMS.forEach(function(item) {
       var isActive = item.key === activeKey
-      items.push('<a class="nav-tab' + (isActive ? ' active' : '') + '" href="' + item.href + '">' + item.label + '</a>')
+      items.push('<a class="nav-tab' + (isActive ? ' active' : '') + '"' + attrRoute(item.key) + ' href="' + item.href + '">' + item.label + '</a>')
       if (item.subs) {
         item.subs.forEach(function(s) {
           if (!s.href.startsWith('http') && !s.href.includes('#')) {
-            items.push('<a class="nav-tab" href="' + s.href + '" style="opacity:.65;font-size:9px">&nbsp;&nbsp;' + s.label + '</a>')
+            items.push('<a class="nav-tab"' + attrRoute(s.route || item.key) + ' href="' + s.href + '" style="opacity:.65;font-size:9px">&nbsp;&nbsp;' + s.label + '</a>')
           }
         })
       }
@@ -98,7 +104,7 @@
   var AUTH_HTML =
     '<div class="nav-auth">' +
       '<a class="nav-btn-login"  href="' + R.login  + '" onclick="try{sessionStorage.setItem(\'jbe_return_url\',location.href)}catch(e){}">Se connecter</a>' +
-      '<a class="nav-btn-signup" href="' + R.signup + '" onclick="try{sessionStorage.setItem(\'jbe_return_url\',location.href)}catch(e){}">S\'inscrire</a>' +
+      '<a class="nav-btn-signup" data-route="signup" href="' + R.signup + '" onclick="try{sessionStorage.setItem(\'jbe_return_url\',location.href)}catch(e){}">S\'inscrire</a>' +
     '</div>'
 
   // ── Injecter la nav ──────────────────────────────────────────────

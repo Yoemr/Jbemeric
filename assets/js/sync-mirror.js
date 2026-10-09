@@ -52,6 +52,13 @@ function getTarget(id) {
   return document.getElementById(id)
 }
 
+// Une cible masquée (section d'une page cachée, theme.css section 5) ne
+// déclenche aucun chargement : inutile d'aller chercher coaching.html ou les
+// événements pour remplir un bloc que personne ne voit.
+function estAffiche(el) {
+  return !!(el && el.getClientRects().length)
+}
+
 function setLoading(target) {
   if (!target) return
   target.innerHTML = ''
@@ -77,25 +84,26 @@ function injectSkeletonCSS() {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  ACADÉMIE : extrait les 3 portes + le parcours de academie.html
+//  ACADÉMIE : les voies de academie.html#parcours, en portes
 // ─────────────────────────────────────────────────────────────
+// La source était la section #portes, retirée de academie.html le 14 août
+// 2026 comme doublon. Depuis ce jour, l'accueil affichait « Contenu non
+// disponible » en lieu et place de l'Académie, à 40 % d'opacité, donc
+// invisible. La source est maintenant la frise des voies, qui existe pour
+// de bon : une voie = une .tl-step, qui porte sa photo (data-photo), sa
+// couleur (data-porte) et, si sa page est masquée, son data-route.
+// Le data-route est recopié sur la porte et sur sa place dans le bandeau :
+// la règle de theme.css section 5 les masque ici comme là-bas.
 function mirrorAcademie() {
   var target = getTarget('mirror-academie')
-  if (!target) return
+  if (!estAffiche(target)) return
   setLoading(target)
 
-  fetch('academie.html', { cache: 'no-store' })
-    .then(function(res) {
-      if (!res.ok) throw new Error('academie.html -> ' + res.status)
-      return res.text()
-    })
-    .then(function(html) {
-      var parser = new DOMParser()
-      var doc = parser.parseFromString(html, 'text/html')
-      var portesEl   = doc.getElementById('portes')
-      var parcoursEl = doc.getElementById('parcours')
-      if (!portesEl) throw new Error('#portes introuvable dans academie.html')
-      target.innerHTML = buildAcademieCards(portesEl, parcoursEl)
+  fetchSection('academie.html', 'parcours')
+    .then(function (parcoursEl) {
+      var html = buildAcademieCards(parcoursEl)
+      if (!html) throw new Error('aucune voie dans academie.html#parcours')
+      target.innerHTML = html
       notifyMirrorLoaded()
     })
     .catch(function (err) {
@@ -104,46 +112,63 @@ function mirrorAcademie() {
     })
 }
 
-function buildAcademieCards(section, parcours) {
-  var portes = section.querySelectorAll('.porte')
-  if (!portes.length) return ''
+function attrRoute(el) {
+  var r = el && el.getAttribute('data-route')
+  return r ? ' data-route="' + ech(r) + '"' : ''
+}
 
-  // Extraire données des 3 portes
-  var data = []
-  var hrefs = [R.karting || 'academie-karting.html', R.competition || 'academie-competition.html']
-  for (var i = 0; i < portes.length; i++) {
-    var p = portes[i]
-    var onclick = p.getAttribute('onclick') || ''
-    var hrefMatch = onclick.match(/'([^']+)'/)
-    data.push({
-      href:  hrefMatch ? hrefMatch[1] : hrefs[i] || 'academie.html',
-      cls:   p.className,
-      inner: p.innerHTML
+function ech(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
+function texte(el, sel) {
+  var x = el.querySelector(sel)
+  return x ? x.textContent.trim() : ''
+}
+
+function buildAcademieCards(parcours) {
+  var steps = parcours.querySelectorAll('.tl-step')
+  if (!steps.length) return ''
+
+  var portes = []
+  for (var i = 0; i < steps.length; i++) {
+    var st   = steps[i]
+    var lien = st.querySelector('.tl-link')
+    portes.push({
+      href:  lien ? lien.getAttribute('href') : 'academie.html',
+      cta:   lien ? lien.textContent.trim() : 'Découvrir',
+      badge: texte(st, '.tl-badge'),
+      nom:   texte(st, '.tl-name'),
+      desc:  texte(st, '.tl-desc'),
+      photo: st.getAttribute('data-photo') || '',
+      porte: st.getAttribute('data-porte') || '',
+      route: attrRoute(st)
     })
   }
 
-  if (data.length < 2) return ''
-
-  // Layout B : grande porte gauche + 2 vignettes droite
-  var html = '<div class="acad-layout">'
-
-  // Grande porte principale (Karting Enfant)
-  html += '<a href="' + data[0].href + '" class="acad-main ' + data[0].cls + '">'
-  html += data[0].inner
-  html += '</a>'
-
-  // Deux vignettes droite
-  html += '<div class="acad-side">'
-  for (var j = 1; j < data.length; j++) {
-    html += '<a href="' + data[j].href + '" class="acad-side-item ' + data[j].cls + '">'
-    html += data[j].inner
-    html += '</a>'
+  function porteHtml(p, cls) {
+    return '<a href="' + ech(p.href) + '" class="' + cls + ' porte ' + ech(p.porte) + '"' + p.route + '>' +
+      (p.photo ? '<div class="porte-bg"><img src="' + ech(p.photo) + '" alt="' + ech(p.badge + ', ' + p.nom) + '" loading="lazy"></div>' : '') +
+      '<div class="porte-overlay"></div>' +
+      '<div class="porte-content">' +
+        '<div class="porte-tag">' + ech(p.nom) + '</div>' +
+        '<div class="porte-title">' + ech(p.badge) + '</div>' +
+        '<p class="porte-body">' + ech(p.desc) + '</p>' +
+        '<span class="porte-cta">' + ech(p.cta) + '</span>' +
+      '</div>' +
+    '</a>'
   }
-  html += '</div>'
 
-  // Bandeau parcours en bas : miroir de academie.html#parcours
+  // Layout B : grande porte à gauche, les autres empilées à droite
+  var html = '<div class="acad-layout">'
+  html += porteHtml(portes[0], 'acad-main')
+  if (portes.length > 1) {
+    html += '<div class="acad-side">'
+    for (var j = 1; j < portes.length; j++) html += porteHtml(portes[j], 'acad-side-item')
+    html += '</div>'
+  }
   html += buildParcoursBar(parcours)
-
   html += '</div>'
   return html
 }
@@ -167,8 +192,9 @@ function buildParcoursBar(parcours) {
       var numCls   = 'acad-step-n'
       var numDisp  = num
 
-      if (i > 0) html += '<span class="acad-arrow">→</span>'
-      html += '<div class="' + stepCls + '">'
+      var route = attrRoute(step)
+      if (i > 0) html += '<span class="acad-arrow"' + route + '>→</span>'
+      html += '<div class="' + stepCls + '"' + route + '>'
       html += '<span class="' + numCls + '">' + numDisp + '</span>'
       html += '<div class="acad-step-info">'
       html += '<div class="acad-step-name">' + badge + '</div>'
@@ -196,7 +222,7 @@ function buildParcoursBar(parcours) {
 // ─────────────────────────────────────────────────────────────
 function mirrorCoaching() {
   var target = getTarget('mirror-coaching')
-  if (!target) return
+  if (!estAffiche(target)) return
   setLoading(target)
 
   fetchSection('coaching.html', 'formules')
@@ -279,7 +305,7 @@ function buildCoachingCards(section) {
 // ─────────────────────────────────────────────────────────────
 function mirrorTrack() {
   var target = getTarget('mirror-track')
-  if (!target) return
+  if (!estAffiche(target)) return
   setLoading(target)
 
   var SB_URL  = 'https://fyaybxamuabawerqzuud.supabase.co'
@@ -388,7 +414,7 @@ function buildTrackCards(section) {
 // ─────────────────────────────────────────────────────────────
 function mirrorPaddock() {
   var target = getTarget('mirror-paddock')
-  if (!target) return
+  if (!estAffiche(target)) return
   setLoading(target)
 
   var SB_URL = 'https://fyaybxamuabawerqzuud.supabase.co'

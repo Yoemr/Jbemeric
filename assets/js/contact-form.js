@@ -41,6 +41,7 @@
     trackday:  'Track-Day en voiture personnelle',
     coaching:  'Coaching vidéo',
     karting:   'Karting enfant',
+    'karting-adulte': 'Karting adulte',
     challenge: 'Vers la compétition',
     autre:     'Demande de renseignements',
   }

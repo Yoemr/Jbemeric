@@ -599,7 +599,9 @@ a{text-decoration:none;color:inherit}
   grid-column: 2;
   grid-row: 1;
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  /* auto et non 1fr 1fr : une voie masquée (theme.css section 5) ne laisse
+     pas de case vide, la porte restante prend toute la hauteur */
+  grid-auto-rows: 1fr;
   gap: 1px;
 }
 .acad-side-item {
@@ -710,7 +712,7 @@ a{text-decoration:none;color:inherit}
 @media(max-width:800px) {
   .acad-layout { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr 1fr auto }
   .acad-main { grid-column:1; grid-row:1 }
-  .acad-side { grid-column:1; grid-row:2/4; grid-template-rows:1fr 1fr }
+  .acad-side { grid-column:1; grid-row:2/4 }
   .acad-parcours { grid-column:1; grid-row:4 }
   .acad-step-sub { display:none }
   .acad-step { padding:10px 8px; gap:8px }

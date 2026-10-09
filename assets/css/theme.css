@@ -188,3 +188,36 @@
 /* L'auto-capitalisation phrase-par-phrase est gérée dans live-editor.js */
 /* via autoCapitalizeSentences() au load et au save.                    */
 /* Conserver le texte source tel quel pour préserver les majuscules.    */
+
+
+/* ══════════════════════════════════════════════════
+   5. PAGES MASQUÉES : le site se limite au karting
+   ══════════════════════════════════════════════════
+   Décision de Yoan, 9 octobre 2026 : « on se focus uniquement sur le
+   karting. On cache le reste : ça existe, on ne le supprime pas, mais on
+   ne le fait plus apparaître nulle part sur le site. »
+
+   LE RÉGLAGE EST ICI, ET NULLE PART AILLEURS POUR CE QUI SE VOIT.
+   Tout ce qui mène à une page porte data-route="<clé de routes.js>" :
+   les entrées du menu (nav.js), les liens du pied de page (footer.js),
+   les sections et les boutons écrits dans les pages, le miroir de
+   l'accueil (sync-mirror.js). Une clé listée ci-dessous disparaît partout
+   d'un coup.
+
+   Pour réafficher une page : retirer sa ligne ici, puis retirer son
+   en-tête noindex dans netlify.toml et la remettre dans sitemap.xml.
+   Fiche : docs/chantiers/2026-10-09-site-karting-seul.md.
+
+   Un attribut et pas une classe : le live-editor calcule l'adresse des
+   textes de JB à partir des classes. Un élément masqué reste aussi dans
+   la page, pour la même raison : le retirer décalerait la numérotation
+   des anciens contenus. */
+[data-route="competition"],
+[data-route="coaching"],
+[data-route="evenements"],
+[data-route="paddock"],
+[data-route="palmares"],
+[data-route="articles"],
+[data-route="signup"] {
+  display: none !important;
+}

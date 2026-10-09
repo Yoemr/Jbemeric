@@ -209,28 +209,64 @@ var _SANITY_STOP = {
 function _normWord(s) {
   return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 }
+// Les mots significatifs d'un texte, sans doublon : quatre lettres et plus,
+// hors mots vides, accents retirés.
+function _motsSignif(s) {
+  var words = _normWord(s).split(/[^a-z0-9]+/)
+  var vus = {}, out = []
+  for (var i = 0; i < words.length; i++) {
+    var w = words[i]
+    if (w.length >= 4 && !_SANITY_STOP[w] && !vus[w]) { vus[w] = 1; out.push(w) }
+  }
+  return out
+}
+
+// Un ancien contenu, rangé sous un numéro d'ordre (txt-N, jbe-u-N), ne
+// s'affiche que s'il ressemble au texte qu'il remplace. Le numéro d'ordre
+// change dès qu'un élément est ajouté ou retiré avant lui, et le contenu
+// tombe alors sur un autre élément.
+//
+// Jusqu'au 9 octobre 2026, un seul mot commun suffisait, cherché comme
+// morceau de mot, et un texte court passait toujours. Trois dérives en
+// ligne en sont venues, mises au jour en rejouant la base dans un
+// navigateur :
+//   - academie.html, titre du palmarès : « 40 ans de compétition » devenait
+//     « 01 de compétition », le numéro de l'ancien hero ;
+//   - academie.html, voie Karting enfant : la description du parcours
+//     adulte, parce que « enfant » est un morceau de « enfants » ;
+//   - index.html, sous-titre du hero : « Karting, coaching, stages en
+//     voiture de course », un texte d'avant la refonte.
+//
+// La règle maintenant, sur des mots entiers :
+//   - deux textes sans mot significatif (« 40 ans », « 01 ») : longueurs
+//     voisines, au plus du simple au double ;
+//   - un texte court contre un texte long : refusé ;
+//   - sinon, au moins 40 % de mots en commun (indice de Jaccard).
+// Un refus ne perd rien : la page montre son HTML, et la prochaine
+// modification de JB s'enregistre sous l'identifiant stable, qui ne passe
+// pas par ici. Voir docs/07-acquis.md, une étiquette sûre mais fausse cache
+// plus qu'un doute assumé.
 function _legacyTextSanity(el, dbContent) {
   if (!dbContent) return false
-  var orig = el.getAttribute('data-orig') || ''
+  // Le texte d'origine se relit depuis le HTML, balises remplacées par une
+  // espace : data-orig vient de textContent, qui colle les mots de part et
+  // d'autre d'un <br> (« Du volant<br>à la course » y devient « volantà »).
+  var origHtml = el.getAttribute('data-orig-html')
+  var orig = origHtml != null
+    ? origHtml.replace(/<[^>]*>/g, ' ').replace(/&[a-z0-9#]+;/gi, ' ').replace(/\s+/g, ' ').trim()
+    : (el.getAttribute('data-orig') || '')
   if (!orig) return true
   var lo = orig.length, ld = dbContent.length
   if (lo < 1 || ld < 1) return false
   var ratio = Math.max(lo, ld) / Math.min(lo, ld)
   if (ratio > 5) return false
-  // Word overlap : au moins 1 mot signif de data-orig doit apparaître dans dbContent
-  var origNorm = _normWord(orig)
-  var dbNorm   = _normWord(dbContent)
-  var words    = origNorm.split(/[^a-z0-9]+/)
-  var signif   = []
-  for (var i = 0; i < words.length; i++) {
-    var w = words[i]
-    if (w.length >= 4 && !_SANITY_STOP[w]) signif.push(w)
-  }
-  if (!signif.length) return true // pas de mot signif → tolérer
-  for (var j = 0; j < signif.length; j++) {
-    if (dbNorm.indexOf(signif[j]) !== -1) return true
-  }
-  return false
+  var a = _motsSignif(orig), b = _motsSignif(dbContent)
+  if (!a.length && !b.length) return ratio <= 2
+  if (!a.length || !b.length) return false
+  var dansB = {}, communs = 0
+  for (var j = 0; j < b.length; j++) dansB[b[j]] = 1
+  for (var i = 0; i < a.length; i++) if (dansB[a[i]]) communs++
+  return communs / (a.length + b.length - communs) >= 0.4
 }
 
 function _legacyMediaSanity(el, dbContent, dbType) {

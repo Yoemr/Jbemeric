@@ -548,6 +548,10 @@ function _makeVideoFromImg(img, url) {
   vid.style.right     = cs.right
   vid.style.bottom    = cs.bottom
   vid.src      = url
+  // L'image remplacée devient l'image d'attente : sans elle, le cadre reste
+  // vide (ou noir) jusqu'à la première image de la vidéo.
+  var attente = img.currentSrc || img.getAttribute('src') || ''
+  if (attente) vid.poster = attente
   vid.autoplay = true
   vid.muted    = true
   vid.volume   = 0.1
@@ -575,11 +579,25 @@ function _addVideoControls(vid) {
     wrap.style.bottom   = cs.bottom
     if (cs.zIndex !== 'auto') wrap.style.zIndex = cs.zIndex
   } else {
-    // Vidéo en flux : wrapper relatif avec dimensions computées
+    // Vidéo en flux : wrapper relatif avec dimensions computées.
+    // Une vidéo qui remplit son parent (hero, étape) garde 100 % : en pixels,
+    // elle restait figée à la taille du chargement quand la fenêtre grandit.
+    // La hauteur ne passe à 100 % que si le parent a la sienne propre : si
+    // c'est la vidéo qui fait la hauteur du parent, 100 % s'effondrerait.
+    var par = vid.parentElement
+    var pleineL = par && Math.abs(parseFloat(cs.width) - par.clientWidth) < 2
+    var pleineH = false
+    var hVid = parseFloat(cs.height)   // lu avant de masquer : cs est vivant
+    if (par && par.clientHeight > 0 && Math.abs(hVid - par.clientHeight) < 2) {
+      var avant = vid.style.display
+      vid.style.display = 'none'
+      pleineH = Math.abs(par.clientHeight - hVid) < 2
+      vid.style.display = avant
+    }
     wrap.style.position = 'relative'
     wrap.style.display  = 'block'
-    wrap.style.width    = cs.width
-    wrap.style.height   = cs.height
+    wrap.style.width    = pleineL ? '100%' : cs.width
+    wrap.style.height   = pleineH ? '100%' : cs.height
     // Préserver float + marges de la vidéo (ex: portrait float-left dans article)
     if (cs.cssFloat && cs.cssFloat !== 'none') {
       wrap.style.cssFloat     = cs.cssFloat
@@ -688,6 +706,11 @@ function _makeImgFromVideo(vid, url) {
   return img
 }
 
+// Même seuil que hero-video.js et la nav (nav.css).
+function _grandEcran() {
+  return !window.matchMedia || window.matchMedia('(min-width: 700px)').matches
+}
+
 function applyImages() {
   for (var i = 0; i < _imgs.length; i++) {
     var img       = _imgs[i]
@@ -710,6 +733,14 @@ function applyImages() {
       }
     }
     if (!url) continue
+
+    // Une vidéo de la base ne se pose ni sur un téléphone, ni dans une partie
+    // masquée de la page. Décision de Yoan du 6 août 2026, « ne pas mettre ces
+    // vidéos sur la version téléphone », que hero-video.js applique au HTML
+    // mais que la base contournait : le 9 octobre, un téléphone téléchargeait
+    // 26 Mo sur l'Académie et trois vidéos sur Karting adulte, dont une dans
+    // une section masquée. L'image d'origine reste affichée.
+    if (dbType === 'video' && (!_grandEcran() || !img.getClientRects().length)) continue
 
     var elIsVideo = (img.tagName === 'VIDEO')
     var finalEl   = img

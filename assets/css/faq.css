@@ -29,7 +29,7 @@
   --faq-question:#0d0d0d;
   --faq-reponse: rgba(0,0,0,.62);
   --faq-filet:   rgba(0,0,0,.09);
-  --faq-accent:  #FFCF00;
+  --faq-accent:  #C8860A;   /* or sombre : le jaune sur blanc ne se lit pas (1,5 pour 1) */
   --faq-kicker:  rgba(0,0,0,.32);
 
   background: var(--faq-fond);
@@ -45,6 +45,7 @@
   --faq-question:rgba(255,255,255,.92);
   --faq-reponse: rgba(255,255,255,.62);
   --faq-filet:   rgba(255,255,255,.10);
+  --faq-accent:  #FFCF00;
   --faq-kicker:  rgba(255,207,0,.55);
 }
 

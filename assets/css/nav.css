@@ -89,7 +89,9 @@
 
 /* ── Auth buttons ── */
 .nav-auth { display: none; align-items: center; gap: 8px; flex-shrink: 0 }
-@media(min-width:1040px) { .nav-auth { display: flex } }
+/* 700 px et non 1040 : entre les deux, ni burger ni bouton, la connexion
+   était introuvable sur tablette. Sous 700 px, elle est dans le menu mobile. */
+@media(min-width:700px) { .nav-auth { display: flex } }
 .nav-btn-login {
   font-family: 'DM Mono', monospace;
   font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
@@ -208,7 +210,7 @@
 .ft-brand { display: flex; flex-direction: column; gap: 12px }
 .ft-logo { font-family: 'Bebas Neue'; font-size: 32px; letter-spacing: 3px; color: #fff; line-height: 1 }
 .ft-logo em { font-style: normal; background: linear-gradient(135deg,#F5D061,#C8860A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text }
-.ft-tagline { font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.28); line-height: 1.7; max-width: 220px }
+.ft-tagline { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.55); line-height: 1.7; max-width: 220px }
 .ft-socials { display: flex; gap: 14px; margin-top: 4px }
 .ft-social { color: rgba(255,255,255,.25); text-decoration: none; transition: color .18s; display: flex; align-items: center }
 .ft-social:hover { color: #FFCF00 }
@@ -216,7 +218,7 @@
 
 /* Colonnes nav */
 .ft-col { display: flex; flex-direction: column; gap: 4px }
-.ft-col-title { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,.25); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,.07) }
+.ft-col-title { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,.55); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,.07) }
 .ft-col a { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.35); text-decoration: none; padding: 5px 0; transition: color .18s; display: flex; align-items: center; gap: 7px }
 .ft-col a::before { content: '›'; color: rgba(255,207,0,.2); font-size: 14px; transition: color .18s }
 .ft-col a:hover { color: #fff }
@@ -225,7 +227,7 @@
 /* Contact */
 .ft-contact { display: flex; flex-direction: column; gap: 12px }
 .ft-contact-item { display: flex; flex-direction: column; gap: 3px }
-.ft-contact-label { font-family: 'DM Mono'; font-size: 7px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.2) }
+.ft-contact-label { font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.5) }
 .ft-contact-val { font-family: 'DM Mono'; font-size: 11px; letter-spacing: 1px; color: rgba(255,255,255,.55); text-decoration: none; word-break: break-word; transition: color .18s }
 .ft-contact-val:hover { color: #FFCF00 }
 
@@ -236,9 +238,11 @@
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 8px;
 }
-.fb-copy { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.15) }
-.fb-badge { font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.15); display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
-.fb-badge a { color: rgba(255,255,255,.25); text-decoration: none; transition: color .15s }
+/* Contrastes relevés le 9 octobre 2026 : 1,5 à 2,4 pour 1 sur fond nuit, en 7 à 9 px,
+   le pied de page se lisait à peine. Seuil visé 4,5 pour 1. */
+.fb-copy { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.45) }
+.fb-badge { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.45); display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
+.fb-badge a { color: rgba(255,255,255,.6); text-decoration: none; transition: color .15s }
 .fb-badge a:hover { color: rgba(255,207,0,.6) }
 .fb-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg,#F5D061,#C8860A); flex-shrink: 0 }
 

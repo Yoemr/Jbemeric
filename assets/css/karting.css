@@ -284,6 +284,9 @@ img{display:block;max-width:100%}
 }
 .etape-img img{
   width:100%;height:100%;object-fit:cover;display:block;
+  /* Un visuel vertical posé par JB (étape 3, briefing) était coupé au milieu
+     de son titre incrusté. Sans effet visible sur une photo paysage. */
+  object-position:center 30%;
 }
 /* Cadrage des visuels verticaux (captures de video) places dans un cadre
    paysage : object-position center coupe le sujet, qui est rarement au

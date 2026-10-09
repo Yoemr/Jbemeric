@@ -190,8 +190,8 @@ body { background: var(--night); min-height: 100vh }
   content: ''; flex: 1; height: 1px; background: var(--sep);
 }
 .form-sep-txt {
-  font-family: 'DM Mono'; font-size: 8px; letter-spacing: 2px;
-  text-transform: uppercase; color: rgba(255,255,255,.2);
+  font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(255,255,255,.5);
   white-space: nowrap;
 }
 
@@ -213,10 +213,10 @@ body { background: var(--night); min-height: 100vh }
 
 /* Mentions CGU */
 .form-cgu {
-  font-size: 11px; color: rgba(255,255,255,.22);
+  font-size: 11px; color: rgba(255,255,255,.55);
   line-height: 1.6; margin-top: 16px; text-align: center;
 }
-.form-cgu a { color: rgba(255,255,255,.4); text-decoration: none }
+.form-cgu a { color: rgba(255,255,255,.75); text-decoration: none }
 .form-cgu a:hover { color: var(--gd) }
 
 /* Mot de passe oublié */
@@ -225,8 +225,8 @@ body { background: var(--night); min-height: 100vh }
   margin-bottom: 20px; margin-top: -10px;
 }
 .form-forgot a {
-  font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px;
-  text-transform: uppercase; color: rgba(255,255,255,.28);
+  font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: rgba(255,255,255,.6);
   text-decoration: none; transition: color .18s;
 }
 .form-forgot a:hover { color: var(--gd) }

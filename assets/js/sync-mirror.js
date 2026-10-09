@@ -160,14 +160,10 @@ function buildAcademieCards(parcours) {
     '</a>'
   }
 
-  // Layout B : grande porte à gauche, les autres empilées à droite
-  var html = '<div class="acad-layout">'
-  html += porteHtml(portes[0], 'acad-main')
-  if (portes.length > 1) {
-    html += '<div class="acad-side">'
-    for (var j = 1; j < portes.length; j++) html += porteHtml(portes[j], 'acad-side-item')
-    html += '</div>'
-  }
+  // Portes égales, côte à côte : une voie masquée laisse la place aux autres
+  var html = '<div class="acad-layout"><div class="acad-portes">'
+  for (var j = 0; j < portes.length; j++) html += porteHtml(portes[j], 'acad-main')
+  html += '</div>'
   html += buildParcoursBar(parcours)
   html += '</div>'
   return html

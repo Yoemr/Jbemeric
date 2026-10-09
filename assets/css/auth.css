@@ -130,6 +130,7 @@ body { background: var(--night); min-height: 100vh }
   max-width: 420px;
 }
 .auth-box-title {
+  font-weight: normal; /* h1 depuis le 9 octobre 2026, la page n'avait pas de titre principal */
   font-family: 'Bebas Neue';
   font-size: clamp(36px,5vw,52px);
   color: #fff;

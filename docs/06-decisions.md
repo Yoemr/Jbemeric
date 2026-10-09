@@ -6,6 +6,50 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 octobre 2026, le site se limite au karting, et l'audit qui a suivi
+
+### D-186, Tout ce qui n'est pas karting est masqué, rien n'est supprimé
+
+Mot de Yoan : « Je voudrais qu'on se focus uniquement sur tout ce qui concerne le karting et rien d'autre pour l'instant. On va cacher le reste. C'est-à-dire que ça existe et ne le supprime pas, mais on ne le fait plus apparaître nulle part sur le site. Pour une raison simple : c'est qu'on va pas tarder à le déployer. »
+
+Restent visibles l'accueil, l'Académie, le karting enfant et le karting adulte, plus le contact, la connexion et les pages légales. Masqués : Compétition, Coaching, Événements, Paddock, Palmarès, Bibliothèque, création de compte.
+
+**Un seul réglage pour ce qui se voit**, la section 5 de `theme.css` : tout ce qui mène à une page porte `data-route`, une clé listée là-bas disparaît du menu, du pied de page, des pages et du miroir de l'accueil. Un attribut et pas une classe, parce que le live-editor calcule l'adresse des textes de JB à partir des classes. Rien n'est retiré de la page, pour ne pas décaler la numérotation des anciens contenus.
+
+Ce que le réglage ne couvre pas, et comment le défaire, est dans `docs/chantiers/2026-10-09-site-karting-seul.md` : en-têtes `noindex` dans `netlify.toml`, `sitemap.xml`, sujets du formulaire de contact, deux réponses de FAQ sur la voiture passées à `visible = false` (le mécanisme prévu par D-117).
+
+Le périmètre de l'audit suit ce qui se voit : `outil-dev/audit/perimetre.js`.
+
+### D-187, Un ancien texte de base ne s'affiche que s'il ressemble au texte qu'il remplace
+
+Trois textes de la base étaient affichés au mauvais endroit, en ligne : « 01 de compétition » dans le titre du palmarès de l'Académie, la description du parcours adulte sur la voie Karting enfant, « Karting, coaching, stages en voiture » sous le titre de l'accueil. Cause : `_legacyTextSanity` acceptait un seul mot commun, cherché comme morceau de mot, et tout texte court.
+
+Règle : mots entiers, 40 % de mots communs, textes courts de longueur voisine. Les textes que JB a vraiment saisis restent appliqués, les trois dérives sont refusées. Un refus ne perd rien : la page montre son HTML, et la prochaine modification de JB s'enregistre sous l'identifiant stable.
+
+### D-188, Rejouer la base pour voir ce que voit le visiteur
+
+`outil-dev/visiteur.js`, cinquième outil. Dans le bac à sable cloud, jsdelivr et Supabase sont bloqués et le live-editor ne tourne jamais : un rendu local montrait le HTML, jamais la base. Le banc remplace le module supabase-js par un faux client qui rend un instantané, répond aux requêtes REST, et liste ce que la base remplace. C'est lui qui a montré D-187.
+
+### D-189, Pas de vidéo sur téléphone, y compris celles posées par la base
+
+Décision de Yoan du 6 août : « ne pas mettre ces vidéos sur la version téléphone ». `hero-video.js` l'appliquait au HTML, mais une vidéo posée par JB à la place d'une image passait outre. Un téléphone téléchargeait 45 Mo sur l'accueil, deux fois, 26 Mo sur l'Académie, trois vidéos sur Karting adulte dont une dans une section masquée. Le live-editor ne pose plus de vidéo de base sous 700 px de large, ni dans une partie masquée. L'accueil passe par `hero-video.js` comme les pages karting.
+
+### D-190, Le document défile, plus body
+
+`snap.css` posait `overflow-y: scroll` et `height: 100%` sur html et body. body devenait la zone qui défile : le clavier ne faisait rien tant qu'on n'avait pas cliqué, deux barres de défilement sous Windows, et `window.scrollY` restait à 0, ce qui décalait la barre d'outils du live-editor. Le snap est maintenant porté par html seul.
+
+La dernière section ne défile plus en interne (D-028) : elle grandit avec son contenu. La moitié de la FAQ de l'Académie était invisible sans rien l'indiquer. Une zone aimantée plus haute que l'écran se parcourt librement.
+
+### D-191, L'Académie de l'accueil lit la frise des voies
+
+`sync-mirror.js` cherchait la section `#portes` d'`academie.html`, retirée le 14 août : depuis, l'accueil affichait un message d'erreur à 40 % d'opacité à la place de l'Académie. Il lit maintenant la frise, chaque voie porte sa photo (`data-photo`) et sa couleur (`data-porte`). Les portes se partagent la largeur à parts égales, une voie masquée laisse la place aux autres.
+
+### D-192, La connexion existe sur téléphone et tablette
+
+Le bouton « Se connecter » n'apparaissait qu'à partir de 1040 px, et le menu mobile n'en avait pas. JB ne pouvait pas se connecter depuis son téléphone. Il est dans la barre dès 700 px et dans le menu mobile en dessous, et le live-editor le remplace par « Déconnexion » une fois connecté.
+
+---
+
 ## 11 août 2026, la barre de filtres, et de vraies dates sur le site
 
 ### D-183, Les cases en vrac deviennent des listes déroulantes

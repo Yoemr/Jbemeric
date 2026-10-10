@@ -8,16 +8,16 @@
   <link rel="stylesheet" href="assets/css/nav.css">
   <link rel="stylesheet" href="assets/css/auth.css">
 <title>Connexion · Espace Membre JB EMERIC</title>
-  <meta name="description" content="Connectez-vous à votre espace membre JB EMERIC pour accéder au Paddock, au forum pilotes et au calendrier exclusif.">
+  <meta name="description" content="Accès réservé à l'administration du site JB EMERIC.">
   <meta property="og:title" content="Connexion · Espace Membre JB EMERIC">
-  <meta property="og:description" content="Connectez-vous à votre espace membre JB EMERIC pour accéder au Paddock, au forum pilotes et au calendrier exclusif.">
+  <meta property="og:description" content="Accès réservé à l'administration du site JB EMERIC.">
   <meta property="og:image" content="https://jbemeric.netlify.app/assets/images/podium-paul-ricard-1994.jpg">
-  <meta property="og:url" content="https://jbemeric.netlify.app/login.html">
+  <meta property="og:url" content="https://jbemeric.netlify.app/admin/login.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="JB EMERIC École de Pilotage">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Connexion · Espace Membre JB EMERIC">
-  <meta name="twitter:description" content="Connectez-vous à votre espace membre JB EMERIC pour accéder au Paddock, au forum pilotes et au calendrier exclusif.">
+  <meta name="twitter:description" content="Accès réservé à l'administration du site JB EMERIC.">
   <meta name="twitter:image" content="https://jbemeric.netlify.app/assets/images/podium-paul-ricard-1994.jpg">
   <link rel="canonical" href="https://jbemeric.netlify.app/admin/login.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +57,9 @@
       <h1 class="auth-box-title">Se <em>connecter</em></h1>
       <p class="auth-box-sub" data-route="signup">Pas encore membre ? <a href="/admin/signup.html">Créer un compte →</a></p>
 
-      <form id="login-form" action="#" method="POST">
+      <!-- Sans action ni méthode : si le script de connexion ne se charge pas (jsdelivr
+           injoignable), le formulaire envoyait email et mot de passe en POST vers la racine. -->
+      <form id="login-form" onsubmit="if(!window.__authPret){event.preventDefault();var e=document.getElementById('login-error');e.textContent='Connexion indisponible pour le moment. Réessayez dans quelques minutes.';e.style.display='block'}">
 
         <div class="form-group">
           <label class="form-label" for="email">Email</label>
@@ -76,12 +78,14 @@
         <button class="form-submit" type="submit" id="login-submit">Se connecter →</button>
         <div id="login-error" style="display:none;margin-top:14px;padding:10px 14px;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.35);border-radius:4px;color:#ff6b7a;font-family:'DM Mono';font-size:11px;letter-spacing:1px"></div>
 
-        <div class="form-sep">
+        <!-- Masqués le 9 octobre 2026 : ces deux boutons ne faisaient rien. Ils restent
+             dans la page pour ne pas décaler la numérotation des textes du live-editor. -->
+        <div class="form-sep" style="display:none">
           <span class="form-sep-txt">ou continuer avec</span>
         </div>
 
         <!-- Boutons OAuth futurs -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+        <div style="display:none;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
           <button type="button" style="padding:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.5);font-family:'DM Mono';font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .18s" onmouseover="this.style.background='rgba(255,255,255,.08)'" onmouseout="this.style.background='rgba(255,255,255,.04)'">
             Google
           </button>
@@ -90,7 +94,20 @@
           </button>
         </div>
 
-        <p class="form-cgu">Protégé par reCAPTCHA · <a href="/admin/legal/confidentialite.html">Confidentialité</a> · <a href="/admin/legal/mentions-legales.html">Conditions</a> · <a href="/admin/legal/contact.html">Contact</a></p>
+        <p class="form-cgu"><a href="/admin/legal/confidentialite.html">Confidentialité</a> · <a href="/admin/legal/mentions-legales.html">Conditions</a> · <a href="/admin/legal/contact.html">Contact</a></p>
+      </form>
+
+      <!-- Nouveau mot de passe : affiché seulement quand JB arrive par le lien du
+           courriel « mot de passe oublié ». Jusqu'au 9 octobre 2026, ce lien le
+           connectait sans jamais lui demander de nouveau mot de passe. -->
+      <form id="recovery-form" style="display:none">
+        <p class="auth-box-sub">Choisissez votre nouveau mot de passe.</p>
+        <div class="form-group">
+          <label class="form-label" for="new-password">Nouveau mot de passe</label>
+          <input class="form-input" type="password" id="new-password" name="new-password" placeholder="8 caractères minimum" autocomplete="new-password" minlength="8" required>
+        </div>
+        <button class="form-submit" type="submit" id="recovery-submit">Enregistrer le mot de passe →</button>
+        <div id="recovery-msg" style="margin-top:14px;font-family:'DM Mono';font-size:11px;letter-spacing:1px;min-height:16px"></div>
       </form>
     </div>
   </div>
@@ -106,7 +123,8 @@
 <script id="jbe-content-cache" type="application/json">{}</script>
 
 <script type="module">
-  import { signIn, consumeReturnUrl, humanError } from '/assets/js/auth.js'
+  import { sb, signIn, updatePassword, consumeReturnUrl, humanError } from '/assets/js/auth.js'
+  window.__authPret = true
 
   var form    = document.getElementById('login-form')
   var btn     = document.getElementById('login-submit')
@@ -133,6 +151,41 @@
       showError(humanError(err))
       btn.disabled = false
       btn.textContent = originalLabel
+    }
+  })
+
+  // ── Retour par le lien « mot de passe oublié » ──────────────────
+  // Le lien du courriel porte type=recovery ; supabase-js le lit, ouvre la
+  // session et émet PASSWORD_RECOVERY. On affiche alors le champ du nouveau
+  // mot de passe à la place du formulaire de connexion.
+  var recForm = document.getElementById('recovery-form')
+  var recBtn  = document.getElementById('recovery-submit')
+  var recMsg  = document.getElementById('recovery-msg')
+  var recPwd  = document.getElementById('new-password')
+  function modeRecuperation() {
+    form.style.display = 'none'
+    recForm.style.display = 'block'
+    var titre = document.querySelector('.auth-box-title')
+    if (titre) titre.innerHTML = 'Nouveau <em>mot de passe</em>'
+    recPwd.focus()
+  }
+  if (/type=recovery/.test(location.hash + location.search)) modeRecuperation()
+  sb.auth.onAuthStateChange(function (evt) { if (evt === 'PASSWORD_RECOVERY') modeRecuperation() })
+
+  recForm.addEventListener('submit', async function (e) {
+    e.preventDefault()
+    recBtn.disabled = true
+    recMsg.style.color = 'rgba(255,255,255,.6)'
+    recMsg.textContent = 'Enregistrement…'
+    try {
+      await updatePassword(recPwd.value)
+      recMsg.style.color = '#5fd97e'
+      recMsg.textContent = 'Mot de passe enregistré.'
+      setTimeout(function () { location.href = consumeReturnUrl() }, 1500)
+    } catch (err) {
+      recMsg.style.color = '#ff6b7a'
+      recMsg.textContent = humanError(err)
+      recBtn.disabled = false
     }
   })
 </script>

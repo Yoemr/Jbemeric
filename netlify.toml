@@ -92,3 +92,22 @@
   for = "/maquettes.html"
   [headers.values]
     X-Robots-Tag = "noindex"
+
+# ── Pages de connexion et d'administration : jamais dans les moteurs ──
+# Les pages légales et le contact restent indexables, d'où une ligne par page.
+[[headers]]
+  for = "/admin/login.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/admin/mot-de-passe-oublie.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/admin/dashboard.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/admin/gestion.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"

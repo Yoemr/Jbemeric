@@ -18,12 +18,21 @@ function notifyMirrorLoaded() {
 // ─────────────────────────────────────────────────────────────
 //  INIT
 // ─────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function () {
+// Un module en attente retarde DOMContentLoaded : live-editor.js importe
+// supabase-js depuis jsdelivr, et jsdelivr lent laissait les portes de
+// l'accueil vides, indéfiniment s'il ne répondait pas. Passé 2,5 s, elles
+// se posent quand même. Le script est en defer : le DOM est déjà prêt.
+var _demarre = false
+function demarrer() {
+  if (_demarre) return
+  _demarre = true
   mirrorAcademie()
   mirrorCoaching()
   mirrorTrack()
   mirrorPaddock()
-})
+}
+document.addEventListener('DOMContentLoaded', demarrer)
+setTimeout(demarrer, 2500)
 
 // ─────────────────────────────────────────────────────────────
 //  HELPERS

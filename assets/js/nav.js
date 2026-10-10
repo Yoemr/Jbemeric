@@ -64,7 +64,9 @@
       var subHtml = item.subs.map(function(s) {
         return '<a class="nav-sub-item"' + attrRoute(s.route) + ' href="' + s.href + '">' + s.label + '</a>'
       }).join('')
-      return '<div class="nav-tab has-sub' + (isActive ? ' active' : '') + '"' + attrRoute(item.key) + ' onclick="location.href=\'' + item.href + '\'">' +
+      // tabindex, role et Entrée : sans eux, la touche Tab sautait l'entrée
+      // et son sous-menu (audit du 9 octobre 2026).
+      return '<div class="nav-tab has-sub' + (isActive ? ' active' : '') + '"' + attrRoute(item.key) + ' tabindex="0" role="link" onclick="location.href=\'' + item.href + '\'" onkeydown="if(event.key===\'Enter\'){location.href=\'' + item.href + '\'}">' +
         item.label +
         '<div class="nav-sub">' + subHtml + '</div>' +
         '</div>'

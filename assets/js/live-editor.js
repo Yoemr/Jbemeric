@@ -3,11 +3,10 @@
 console.log("live-editor.js charge !");
 console.log("Configuration OK : Utilisation des colonnes id et content uniquement");
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-
-var SB_URL  = 'https://fyaybxamuabawerqzuud.supabase.co'
-var SB_ANON = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
-var sb      = createClient(SB_URL, SB_ANON)
+// Un seul client Supabase par page, celui d'auth.js : la connexion et le
+// mot de passe oublié en créaient deux, qui géraient la même session en
+// parallèle (avertissement « Multiple GoTrueClient instances »).
+import { sb, SB_URL, SB_ANON } from '/assets/js/auth.js'
 
 var PAGE = (location.pathname.split('/').pop().replace('.html','')) || 'index'
 
@@ -285,7 +284,11 @@ var _migrationsPending = []
 function _scheduleMigration(stableKey, content, mediaType) {
   _migrationsPending.push({ stableKey: stableKey, content: content, mediaType: mediaType })
 }
+// Seul un administrateur écrit : un visiteur anonyme tentait jusqu'à six
+// écritures par page, toutes refusées (erreurs 401 en console).
+var _estAdmin = false
 function _flushMigrations() {
+  if (!_estAdmin) { _migrationsPending = []; return }
   if (!_migrationsPending.length) return
   var batch = _migrationsPending.slice()
   _migrationsPending = []
@@ -304,6 +307,11 @@ function _flushMigrations() {
 var _hs = document.createElement('style')
 _hs.textContent = 'body{opacity:0}'
 document.head.appendChild(_hs)
+// Délai maximal de l'écran blanc. Sans lui, une base lente ou en panne
+// laissait la page vide pendant des secondes, ou indéfiniment si elle ne
+// répondait pas (audit du 9 octobre 2026). Au pire, le visiteur voit le
+// texte du HTML, puis celui de la base le remplacer.
+setTimeout(function () { showPage() }, 1200)
 function showPage() {
   document.body.style.opacity    = '1'
   document.body.style.transition = 'opacity .18s'
@@ -315,17 +323,20 @@ document.addEventListener('DOMContentLoaded', function () {
   scanElements()
   Promise.all([loadTexts(), sb.auth.getSession()])
     .then(function (results) {
+      var sess    = results[1]
+      var session = (sess && sess.data) ? sess.data.session : null
+      var user    = session ? session.user : null
+      // Le rôle se lit dans app_metadata, que seul le serveur écrit.
+      // user_metadata est modifiable par l'utilisateur lui-même : jusqu'au
+      // 9 octobre 2026, n'importe qui pouvait s'y déclarer administrateur.
+      var role    = (user && user.app_metadata && user.app_metadata.role) || null
+      var isAdmin = (role === 'admin' || role === 'moderateur')
+      _estAdmin   = isAdmin
       applyTexts()
       scanImages()
       applyImages()
       injectVideoCSS()
       applyVideoControlsToAll()
-      var sess    = results[1]
-      var session = (sess && sess.data) ? sess.data.session : null
-      var user    = session ? session.user : null
-      var meta    = (user && user.user_metadata) ? user.user_metadata : {}
-      var role    = meta.role || null
-      var isAdmin = (role === 'admin' || role === 'moderateur')
       console.log('[JBE] role:', role, '| isAdmin:', isAdmin)
       updateNav(user, isAdmin)
       if (isAdmin) {

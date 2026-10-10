@@ -62,3 +62,9 @@
 /docs/*          /404-atelier    404!
 /outil-dev/*     /404-atelier    404!
 /.claude/*       /404-atelier    404!
+# Audit du 9 octobre 2026 : les fichiers de la racine et l'archive suivent
+# la meme regle. CLAUDE.md raconte la faillite de l'entreprise, old/ garde
+# l'ancienne strategie commerciale.
+/CLAUDE.md       /404-atelier    404!
+/old/*           /404-atelier    404!
+/serveur.bat     /404-atelier    404!

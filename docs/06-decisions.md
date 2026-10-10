@@ -48,6 +48,28 @@ La dernière section ne défile plus en interne (D-028) : elle grandit avec son 
 
 Le bouton « Se connecter » n'apparaissait qu'à partir de 1040 px, et le menu mobile n'en avait pas. JB ne pouvait pas se connecter depuis son téléphone. Il est dans la barre dès 700 px et dans le menu mobile en dessous, et le live-editor le remplace par « Déconnexion » une fois connecté.
 
+### D-193, Le rôle d'administrateur se lit dans app_metadata
+
+Trouvé par l'audit d'exécution. `est_admin()`, la policy de `site_content`, le live-editor, la fenêtre de gestion et le tableau de bord lisaient le rôle dans `user_metadata`. Supabase laisse l'utilisateur écrire lui-même ces métadonnées, à l'inscription comme après. N'importe qui pouvait donc se créer un compte avec `role: admin` et réécrire les textes du site, la FAQ, les avis et les événements, script compris, puisque le live-editor injecte `site_content` en HTML. L'avis de sécurité de Supabase le signalait en erreur. Un seul compte existait, rien n'a été abusé.
+
+**Appliqué en base le 10 octobre, dans cet ordre, pour ne pas enfermer JB dehors** : son rôle recopié dans `app_metadata`, que seul le serveur écrit ; `est_admin()` lit `app_metadata` ; la policy de `site_content` passe par `est_admin()` comme toutes les autres tables ; `handle_new_user()` donne `client` à toute inscription. Contrôle négatif dans une transaction annulée : un jeton `user_metadata.role = admin` est refusé (42501), un jeton `app_metadata.role = admin` écrit.
+
+**Conséquence pour JB** : une déconnexion puis une reconnexion, une seule fois, pour que son jeton porte le nouveau rôle. La règle de `docs/07` section 4, qui recommandait `user_metadata`, est corrigée.
+
+### D-194, L'écran blanc du live-editor a un délai maximal
+
+Le live-editor cache la page le temps de charger les textes de la base. Sans réponse de Supabase, la page restait blanche indéfiniment, et 7,5 secondes si la base répondait en erreur. Elle s'affiche maintenant au plus tard à 1,2 seconde. Au pire, le visiteur voit le texte du HTML puis celui de la base le remplacer.
+
+### D-195, Le lien « mot de passe oublié » demande enfin un nouveau mot de passe
+
+Le parcours s'arrêtait à l'envoi du courriel. Le lien reçu connectait JB en silence sur la page de connexion, sans rien changer à son mot de passe. La page de connexion affiche maintenant un champ « Nouveau mot de passe » quand on y arrive par ce lien, et l'enregistre. Ce n'est pas une section nouvelle : c'est la fin d'un parcours qui existait à moitié.
+
+### D-196, Ce qui reste à Yoan dans l'audit d'exécution
+
+- **Le formulaire de contact n'envoie rien lui-même** : il ouvre la messagerie du visiteur (D-082). C'est désormais le seul chemin de réservation du site karting. Netlify Forms le ferait sans serveur, cent messages par mois gratuits. À trancher.
+- **Aucune page 404 propre au site.** Une adresse fausse affiche la page anglaise de Netlify. La créer demande son accord, c'est une page.
+- **Les inscriptions de compte restent ouvertes côté Supabase**, même si la page est masquée. Elles ne donnent plus aucun droit (D-193). Les fermer se fait dans le tableau de bord Supabase, Authentication.
+
 ---
 
 ## 11 août 2026, la barre de filtres, et de vraies dates sur le site

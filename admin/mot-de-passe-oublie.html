@@ -41,7 +41,7 @@
   <p style="margin-bottom:32px;color:rgba(255,255,255,.6);font-size:15px">
     Entrez votre adresse e-mail. Nous vous enverrons un lien pour réinitialiser votre mot de passe.
   </p>
-  <form id="reset-form" style="max-width:400px;margin:0 auto;text-align:left">
+  <form id="reset-form" style="max-width:400px;margin:0 auto;text-align:left" onsubmit="if(!window.__authPret){event.preventDefault();var m=document.getElementById('reset-msg');m.style.color='#ff6b7a';m.textContent='Envoi indisponible pour le moment. Appelez JB au 06 60 18 87 87.'}">
     <label style="display:block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px">
       Adresse e-mail
     </label>
@@ -71,6 +71,7 @@
 
 <script type="module">
   import { resetPassword, humanError } from '/assets/js/auth.js'
+  window.__authPret = true
 
   var form  = document.getElementById('reset-form')
   var input = document.getElementById('reset-email')

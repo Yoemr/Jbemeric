@@ -2,6 +2,19 @@
 // Supabase : paddock grille (événement, forum, calendrier)
 
 (async function() {
+  // Section masquée (theme.css section 5) : rien à charger. Avant le 9
+  // octobre 2026, chaque visite de l'accueil interrogeait trois fois la base
+  // pour une section que personne ne voyait.
+  var section = document.getElementById('section-paddock')
+  if (!section || !section.getClientRects().length) return
+
+  // Les champs du forum sont écrits par n'importe quel membre : ils passent
+  // en texte, jamais en HTML.
+  function ech(v) {
+    return String(v == null ? '' : v)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+  }
+
   var SB  = 'https://fyaybxamuabawerqzuud.supabase.co/rest/v1/'
   var KEY = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
   var H   = { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY }
@@ -34,11 +47,11 @@
     var forumList = document.getElementById('idx-une-forum-list')
     if (forumList && threads && threads.length) {
       forumList.innerHTML = threads.map(function(t) {
-        var tag = t.tag || 'meca'
+        var tag = ech(t.tag || 'meca')
         return '<a class="nl-forum-row" href="paddock.html#forum">' +
           '<span class="nl-forum-tag ' + tag + '">' + tag + '</span>' +
-          '<div class="nl-forum-title">' + t.title + '</div>' +
-          '<div class="nl-forum-meta">' + (t.author_name || 'Anonyme') + ' · ' + (t.reply_count || 0) + ' réponse' + (t.reply_count !== 1 ? 's' : '') + '</div>' +
+          '<div class="nl-forum-title">' + ech(t.title) + '</div>' +
+          '<div class="nl-forum-meta">' + ech(t.author_name || 'Anonyme') + ' · ' + (t.reply_count || 0) + ' réponse' + (t.reply_count !== 1 ? 's' : '') + '</div>' +
           '</a>'
       }).join('')
       var threadsEl = document.getElementById('idx-une-threads')
@@ -54,7 +67,7 @@
         var d = new Date(ev.date_event)
         return '<div class="nl-cal-row">' +
           '<div class="nl-cal-date">' + d.getDate() + '<span>' + MO[d.getMonth()] + '</span></div>' +
-          '<div class="nl-cal-info"><div class="nl-cal-title">' + ev.type + '</div></div>' +
+          '<div class="nl-cal-info"><div class="nl-cal-title">' + ech(ev.type) + '</div></div>' +
           '</div>'
       }).join('')
     }

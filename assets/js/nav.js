@@ -21,9 +21,9 @@
     { type:'link', href:R.index,    key:'index',    label:'Accueil' },
     { type:'sub',  href:R.academie, key:'academie', label:'Acad&eacute;mie',
       subs:[
-        { href:R.kartingEnfant, label:'Karting enfant' },
-        { href:R.karting,       label:'Karting adulte' },
-        { href:R.competition,   label:'Vers la Comp&eacute;tition' },
+        { href:R.kartingEnfant, route:'kartingEnfant', label:'Karting enfant' },
+        { href:R.karting,       route:'karting',       label:'Karting adulte' },
+        { href:R.competition,   route:'competition',   label:'Vers la Comp&eacute;tition' },
       ]
     },
     { type:'link', href:R.coaching, key:'coaching', label:'Coaching' },
@@ -34,14 +34,20 @@
     { type:'link', href:R.evenements, key:'evenements', label:'&Eacute;v&eacute;nements' },
     { type:'sub',  href:R.paddock,  key:'paddock',  label:'Paddock',
       subs:[
-        { href:R.paddock + '#blog',   label:'Biblioth&egrave;que tech.' },
-        { href:R.paddock + '#forum',  label:'Forum pilotes' },
-        { href:R.paddock + '#media',  label:'Cha&icirc;ne YouTube' },
-        { href:R.paddock + '#events', label:'Calendrier 2026' },
-        { href:R.palmares,            label:'Palmar&egrave;s' },
+        { href:R.paddock + '#blog',   route:'paddock',  label:'Biblioth&egrave;que tech.' },
+        { href:R.paddock + '#forum',  route:'paddock',  label:'Forum pilotes' },
+        { href:R.paddock + '#media',  route:'paddock',  label:'Cha&icirc;ne YouTube' },
+        { href:R.paddock + '#events', route:'paddock',  label:'Calendrier 2026' },
+        { href:R.palmares,            route:'palmares', label:'Palmar&egrave;s' },
       ]
     },
   ]
+
+  // ── Clé de route : c'est elle qui masque une entrée ──────────────
+  // Une entrée dont la page est masquée disparaît par la règle de la
+  // section 5 de theme.css. Rien n'est filtré ici, pour qu'il n'existe
+  // qu'un seul endroit où décider de ce qui se montre.
+  function attrRoute(k) { return k ? ' data-route="' + k + '"' : '' }
 
   // ── Détecter la page active via ROUTES.matchCurrent ─────────────
   var current = R.matchCurrent && R.matchCurrent()
@@ -53,12 +59,14 @@
     return NAV_ITEMS.map(function(item) {
       var isActive = item.key === activeKey
       if (item.type === 'link') {
-        return '<a class="nav-tab' + (isActive ? ' active' : '') + '" href="' + item.href + '">' + item.label + '</a>'
+        return '<a class="nav-tab' + (isActive ? ' active' : '') + '"' + attrRoute(item.key) + ' href="' + item.href + '">' + item.label + '</a>'
       }
       var subHtml = item.subs.map(function(s) {
-        return '<a class="nav-sub-item" href="' + s.href + '">' + s.label + '</a>'
+        return '<a class="nav-sub-item"' + attrRoute(s.route) + ' href="' + s.href + '">' + s.label + '</a>'
       }).join('')
-      return '<div class="nav-tab has-sub' + (isActive ? ' active' : '') + '" onclick="location.href=\'' + item.href + '\'">' +
+      // tabindex, role et Entrée : sans eux, la touche Tab sautait l'entrée
+      // et son sous-menu (audit du 9 octobre 2026).
+      return '<div class="nav-tab has-sub' + (isActive ? ' active' : '') + '"' + attrRoute(item.key) + ' tabindex="0" role="link" onclick="location.href=\'' + item.href + '\'" onkeydown="if(event.key===\'Enter\'){location.href=\'' + item.href + '\'}">' +
         item.label +
         '<div class="nav-sub">' + subHtml + '</div>' +
         '</div>'
@@ -70,11 +78,11 @@
     var items = []
     NAV_ITEMS.forEach(function(item) {
       var isActive = item.key === activeKey
-      items.push('<a class="nav-tab' + (isActive ? ' active' : '') + '" href="' + item.href + '">' + item.label + '</a>')
+      items.push('<a class="nav-tab' + (isActive ? ' active' : '') + '"' + attrRoute(item.key) + ' href="' + item.href + '">' + item.label + '</a>')
       if (item.subs) {
         item.subs.forEach(function(s) {
           if (!s.href.startsWith('http') && !s.href.includes('#')) {
-            items.push('<a class="nav-tab" href="' + s.href + '" style="opacity:.65;font-size:9px">&nbsp;&nbsp;' + s.label + '</a>')
+            items.push('<a class="nav-tab"' + attrRoute(s.route || item.key) + ' href="' + s.href + '" style="opacity:.65;font-size:9px">&nbsp;&nbsp;' + s.label + '</a>')
           }
         })
       }
@@ -98,7 +106,18 @@
   var AUTH_HTML =
     '<div class="nav-auth">' +
       '<a class="nav-btn-login"  href="' + R.login  + '" onclick="try{sessionStorage.setItem(\'jbe_return_url\',location.href)}catch(e){}">Se connecter</a>' +
-      '<a class="nav-btn-signup" href="' + R.signup + '" onclick="try{sessionStorage.setItem(\'jbe_return_url\',location.href)}catch(e){}">S\'inscrire</a>' +
+      '<a class="nav-btn-signup" data-route="signup" href="' + R.signup + '" onclick="try{sessionStorage.setItem(\'jbe_return_url\',location.href)}catch(e){}">S\'inscrire</a>' +
+    '</div>'
+
+  // ── Connexion dans le menu mobile ───────────────────────────────
+  // Le bouton de la barre (.nav-auth) n'apparaît qu'à partir de 700 px.
+  // En dessous, sans ce bloc, JB n'avait aucun moyen de se connecter depuis
+  // son téléphone. Le live-editor remplace ce bloc par « Déconnexion » une
+  // fois JB connecté (updateNav cherche .nav-mobile-auth).
+  var AUTH_MOBILE_HTML =
+    '<div class="nav-mobile-auth">' +
+      '<a class="mob-login" href="' + R.login + '" onclick="try{sessionStorage.setItem(\'jbe_return_url\',location.href)}catch(e){}">Se connecter</a>' +
+      '<a class="mob-signup" data-route="signup" href="' + R.signup + '" onclick="try{sessionStorage.setItem(\'jbe_return_url\',location.href)}catch(e){}">S\'inscrire</a>' +
     '</div>'
 
   // ── Injecter la nav ──────────────────────────────────────────────
@@ -108,6 +127,7 @@
       '<button class="nav-burger" id="nav-burger" aria-label="Menu"><span></span><span></span><span></span></button>' +
       '<div class="nav-mobile" id="nav-mobile">' +
         buildMobileItems() +
+        AUTH_MOBILE_HTML +
         '<div class="nav-mobile-socials">' +
           '<a href="' + R.youtube + '" target="_blank" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8ZM9.7 15.5V8.5l6.3 3.5-6.3 3.5Z"/></svg></a>' +
           '<a href="' + R.instagram + '" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.2.1 4.6 1.6 4.7 4.7.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.1-1.5 4.6-4.7 4.7-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1C4 21.2 2.5 19.8 2.4 16.6c-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8C2.5 3.8 4 2.3 7.2 2.2c1.2 0 1.6-.1 4.8-.1zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1.1 8.3 0 8.7 0 12c0 3.3 0 3.7.1 4.9.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9 0-3.3 0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/></svg></a>' +

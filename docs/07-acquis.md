@@ -171,6 +171,16 @@ Pour prouver que le panneau déplié survit au redessin, j'ai retiré la ligne q
 
 **Règle** : quand un contrôle négatif ne casse rien, chercher d'abord si le code retiré était mort. C'est la troisième fois. Voir aussi 2.3 sur les no-ops.
 
+### 2.17 Une page locale ne montre jamais ce que voit le visiteur, il faut rejouer la base
+
+Le 9 octobre 2026, en rejouant la base dans un navigateur, trois textes sont apparus au mauvais endroit, en ligne depuis des semaines : « 01 de compétition » dans le titre du palmarès de l'Académie, la description du parcours adulte sur la voie Karting enfant, un ancien « Karting, coaching, stages en voiture » sous le titre de l'accueil. Aucun outil ne pouvait les voir, puisque le rendu local montre le HTML et que l'audit ne lit pas la base.
+
+**La façon de rejouer la base dans ce bac à sable**, où jsdelivr et Supabase sont bloqués : `outil-dev/visiteur.js`, un banc playwright qui remplace le module supabase-js de jsdelivr par un faux client rendant un instantané de la base tel quel, et qui répond aux requêtes REST de `faq.js`, `avis.js` et `index-sb.js` en appliquant les filtres de l'URL. Le live-editor, lui, tourne pour de vrai. Le banc compare ensuite chaque élément à son `data-orig` et liste ce que la base a remplacé.
+
+**La cause des trois dérives** : `_legacyTextSanity` acceptait un ancien contenu, rangé sous un numéro d'ordre, dès qu'un seul mot était commun, cherché comme morceau de mot (« enfant » dans « enfants »), et laissait passer sans condition tout texte court (« 01 » sur « 40 ans »). Règle actuelle : mots entiers, 40 % de mots communs, textes courts de longueur voisine. Le contrôle négatif est l'état d'avant : le même banc voyait les trois dérives.
+
+**Règle** : toute conclusion sur ce qu'affiche une page qui porte du contenu en base passe par ce rejeu, jamais par une capture locale seule.
+
 ---
 
 ## 3. Ce qui est vérifié, ne pas revérifier
@@ -218,7 +228,9 @@ Pour prouver que le panneau déplié survit au redessin, j'ai retiré la ligne q
 
 **L'audit ne voit pas les droits.** Aucun des quatre outils ne lit les policies de sécurité. Le 8 août, sept policies sur huit se sont révélées fausses en toutes circonstances, et rien ne l'avait jamais signalé : le code est correct, la base est correcte, c'est l'accord entre les deux qui ne l'est pas. Voir D-073.
 
-> **La question à poser avant de conclure qu'un bouton d'administration marche** : est-ce que la policy qui l'autorise cherche le rôle dans `user_metadata` ? Le claim `auth.jwt() ->> 'role'` vaut toujours `authenticated`, jamais le rôle applicatif. Une policy qui l'interroge est fausse par construction.
+> **La question à poser avant de conclure qu'un bouton d'administration marche** : est-ce que la policy qui l'autorise cherche le rôle dans `app_metadata`, par `est_admin()` ? Le claim `auth.jwt() ->> 'role'` vaut toujours `authenticated`, jamais le rôle applicatif. Une policy qui l'interroge est fausse par construction.
+>
+> **Et jamais dans `user_metadata`.** Cette règle disait le contraire jusqu'au 9 octobre 2026. `user_metadata` est écrit par l'utilisateur lui-même, à l'inscription comme après : n'importe qui pouvait se créer un compte, s'y déclarer `admin` et réécrire le site. Le rôle vit maintenant dans `app_metadata`, que seul le serveur écrit, et `handle_new_user()` donne `client` à toute inscription. Voir D-193.
 
 **Le dashboard admin ne se teste pas ici.** Il exige une session authentifiée et importe Supabase depuis jsdelivr. Aucun des quatre outils ne l'atteint, et ce qui y est corrigé se vérifie par lecture, par banc d'essai isolé, ou chez Yoan. Le dire quand c'est le cas plutôt que laisser croire à une vérification.
 
@@ -268,8 +280,9 @@ Quatre outils, tous dans `outil-dev/`, dossier forcé en 404 par `_redirects` av
 | `node outil-dev/base.js` | ce qui est enregistré dans Supabase est-il correct |
 | `node outil-dev/fumee.js` | les pages tournent-elles sans erreur |
 | `node outil-dev/parcours.js` | les boutons font-ils quelque chose |
+| `node outil-dev/visiteur.js --base=<instantané>` | que voit le visiteur, textes de la base compris (section 2.17) |
 
-Les deux derniers ont besoin du serveur local, `node outil-dev/dev-server.js`.
+Les trois derniers ont besoin du serveur local, `node outil-dev/dev-server.js`.
 
 **Ce qui n'est toujours pas couvert** : le rendu visuel, qui demande un œil, et tout parcours qui écrit en base.
 

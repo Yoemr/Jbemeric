@@ -40,3 +40,74 @@
   for = "/*.html"
   [headers.values]
     Cache-Control = "public, max-age=3600"
+
+# ── Pages masquées : le site se limite au karting (9 octobre 2026) ──
+# Rien ne mène plus à ces pages (theme.css section 5), mais elles restent
+# en ligne pour qui a l'adresse. noindex les retire des moteurs de recherche
+# sans les bloquer : un robot doit pouvoir lire l'en-tête pour l'appliquer,
+# c'est pourquoi robots.txt ne les interdit pas.
+# Pour réafficher une page : retirer son bloc ici, sa ligne dans theme.css,
+# et la remettre dans sitemap.xml.
+[[headers]]
+  for = "/coaching.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/evenements.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/evenements"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/evenements/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/evenement.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/events.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/paddock.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/paddock/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/academie/competition.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/admin/signup.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/maquettes.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+# ── Pages de connexion et d'administration : jamais dans les moteurs ──
+# Les pages légales et le contact restent indexables, d'où une ligne par page.
+[[headers]]
+  for = "/admin/login.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/admin/mot-de-passe-oublie.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/admin/dashboard.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/admin/gestion.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"

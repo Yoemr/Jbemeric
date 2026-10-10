@@ -560,15 +560,28 @@ a{text-decoration:none;color:inherit}
    ACADÉMIE : Layout B + bandeau parcours
    ════════════════════════════════════════════════════ */
 
-/* Conteneur principal */
+/* Conteneur principal : les portes en haut, le bandeau du parcours en bas */
 .acad-layout {
   display: grid;
-  grid-template-columns: 1.8fr 1fr;
+  grid-template-columns: 1fr;
   grid-template-rows: 1fr auto;
   height: 100%;
   gap: 1px;
   background: rgba(255,255,255,.04);
 }
+
+/* Les portes se partagent la largeur à parts égales. Une voie masquée
+   (theme.css section 5) sort du flux et les autres s'élargissent : deux
+   voies, deux moitiés ; trois voies, trois tiers. Jusqu'au 9 octobre
+   2026, une grande porte et deux vignettes : le masquage de la
+   Compétition laissait le Karting adulte en vignette. */
+.acad-portes {
+  grid-row: 1;
+  display: flex;
+  gap: 1px;
+  min-height: 0;
+}
+.acad-portes > .acad-main { flex: 1 1 0; min-width: 0 }
 
 /* Grande porte gauche */
 .acad-main {
@@ -587,6 +600,9 @@ a{text-decoration:none;color:inherit}
 .acad-main:hover .porte-bg img { transform: scale(1.04) }
 .acad-main .porte-overlay { position:absolute; inset:0; z-index:1; transition: opacity .4s }
 .acad-main.porte.enfant .porte-overlay { background: linear-gradient(to top, rgba(10,26,74,.97) 0%, rgba(10,26,74,.55) 55%, rgba(10,26,74,.05) 100%) }
+.acad-main.porte.adulte .porte-overlay { background: linear-gradient(to top, rgba(7,31,92,.95) 0%, rgba(7,31,92,.5) 60%, rgba(7,31,92,.05) 100%) }
+.acad-main.porte.competition .porte-overlay { background: linear-gradient(to top, rgba(100,74,0,.97) 0%, rgba(140,100,0,.5) 60%, rgba(160,120,0,.05) 100%) }
+.acad-main.porte.competition .porte-title { color: #FFCF00 }
 .acad-main .porte-content { position:relative; z-index:2; padding: clamp(28px,4vw,52px) }
 .acad-main .porte-tag { font-family:'DM Mono'; font-size:9px; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:10px }
 .acad-main .porte-title { font-family:'Bebas Neue'; font-size:clamp(48px,7vw,88px); color:#fff; line-height:.85; margin-bottom:16px }
@@ -594,41 +610,9 @@ a{text-decoration:none;color:inherit}
 .acad-main .porte-cta { display:inline-block; font-family:'DM Mono'; font-size:10px; letter-spacing:2px; text-transform:uppercase; padding:13px 24px; background:#fff; color:#0a1a4a; border-radius:3px; transition: all .2s }
 .acad-main:hover .porte-cta { background:#FFCF00; color:#000 }
 
-/* Colonne droite : 2 vignettes empilées */
-.acad-side {
-  grid-column: 2;
-  grid-row: 1;
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 1px;
-}
-.acad-side-item {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  text-decoration: none;
-  cursor: pointer;
-}
-.acad-side-item .porte-bg { position:absolute; inset:0; z-index:0 }
-.acad-side-item .porte-bg img { width:100%; height:100%; object-fit:cover; transition:transform .55s ease }
-.acad-side-item:hover .porte-bg img { transform:scale(1.06) }
-.acad-side-item .porte-overlay { position:absolute; inset:0; z-index:1; transition:opacity .3s }
-.acad-side-item.porte.competition .porte-overlay { background:linear-gradient(to top,rgba(100,74,0,.97) 0%,rgba(140,100,0,.5) 60%,rgba(160,120,0,.05) 100%) }
-.acad-side-item.porte.adulte .porte-overlay { background: linear-gradient(to top, rgba(7,31,92,.95) 0%, rgba(7,31,92,.5) 60%, rgba(7,31,92,.05) 100%) }
-.acad-side-item .porte-content { position:relative; z-index:2; padding:clamp(14px,2vw,24px) }
-.acad-side-item .porte-tag { font-family:'DM Mono'; font-size:7.5px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:6px }
-.acad-side-item .porte-title { font-family:'Bebas Neue'; font-size:clamp(22px,3.5vw,38px); color:#fff; line-height:.88; margin-bottom:10px }
-.acad-side-item.porte.competition .porte-title { color:#FFCF00 }
-.acad-side-item .porte-body { display:none }
-.acad-side-item .porte-cta { display:inline-block; font-family:'DM Mono'; font-size:8px; letter-spacing:1.5px; text-transform:uppercase; padding:8px 14px; border-radius:2px; transition:all .2s }
-.acad-side-item.porte.competition .porte-cta { background:#FFCF00; color:#000 }
-.acad-side-item.porte.competition:hover .porte-cta { background:#fff; color:#000 }
-
 /* Bandeau parcours en bas : toute la largeur */
 .acad-parcours {
-  grid-column: 1 / 3;
+  grid-column: 1 / -1;
   grid-row: 2;
   background: rgba(4,10,30,.97);
   border-top: 2px solid rgba(255,207,0,.15);
@@ -708,10 +692,7 @@ a{text-decoration:none;color:inherit}
 
 /* Responsive */
 @media(max-width:800px) {
-  .acad-layout { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr 1fr auto }
-  .acad-main { grid-column:1; grid-row:1 }
-  .acad-side { grid-column:1; grid-row:2/4; grid-template-rows:1fr 1fr }
-  .acad-parcours { grid-column:1; grid-row:4 }
+  .acad-portes { flex-direction: column }
   .acad-step-sub { display:none }
   .acad-step { padding:10px 8px; gap:8px }
 }

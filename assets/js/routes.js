@@ -110,7 +110,9 @@
     if (el) {
       e.preventDefault()
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      history.replaceState(null, '', href)
+      // Chemin complet : avec <base href="/">, un « #journee » seul devenait
+      // « /#journee », et un rechargement ou un lien partagé menait à l'accueil.
+      history.replaceState(null, '', location.pathname + location.search + href)
     }
   })
 })()

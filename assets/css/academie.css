@@ -17,6 +17,11 @@ img { display: block; max-width: 100% }
    (règles de base dans assets/css/snap.css)
    ═══════════════════════════════════════════════════════ */
 
+/* Frise et palmarès : au moins un écran, plus si le contenu l'exige.
+   À hauteur fixe, un portable de 768 px de haut coupait les cartes des
+   voies et leurs liens « Voir la journée » (snap.css masque ce qui déborde). */
+.parcours.snap-section, .jb-pal-wrap.snap-section { height: auto; min-height: calc(100svh - 56px) }
+
 /* Parcours : timeline étire pour remplir l'écran */
 .parcours.snap-section { display: flex; flex-direction: column }
 .parcours.snap-section .timeline { flex: 1; min-height: 0 }
@@ -24,7 +29,6 @@ img { display: block; max-width: 100% }
 
 /* Formateur : jb-split remplit la hauteur du wrapper (desktop uniquement) */
 @media(min-width:1100px) {
-  .jb-pal-wrap.snap-section { min-height: unset }
   .jb-pal-wrap.snap-section .jb-split { min-height: 0; flex: 0 0 65% }
 }
 
@@ -41,8 +45,7 @@ img { display: block; max-width: 100% }
 /* Portes+citation : override min-height pour que les cartes se contractent */
 .portes-citation-wrap.snap-section .porte { min-height: 0 }
 
-/* Dernière section : FAQ + boutique, scrollable en interne */
-.snap-fin { overflow-y: auto; display: flex; flex-direction: column }
+/* Dernière section : FAQ, elle grandit avec son contenu (snap.css) */
 
 /* Footer : point d'ancrage terminal comme sur index */
 #footer-root { scroll-snap-align: start }

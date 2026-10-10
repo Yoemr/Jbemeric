@@ -8,17 +8,17 @@
   <link rel="stylesheet" href="assets/css/nav.css">
   <link rel="stylesheet" href="assets/css/snap.css">
   <link rel="stylesheet" href="assets/css/index.css">
-<title>JB EMERIC · École de Pilotage sur Circuit · Depuis 1989</title>
-  <meta name="description" content="Stages de pilotage et karting, coaching sur circuit, track-days. Paul Ricard, Grand Sambuc, Lédenon. Jean-Baptiste Emeric, Champion de France Formule Ford 1988.">
-  <meta property="og:title" content="JB EMERIC · École de Pilotage sur Circuit · Depuis 1989">
-  <meta property="og:description" content="Stages de pilotage et karting, coaching sur circuit, track-days. Paul Ricard, Grand Sambuc, Lédenon. Jean-Baptiste Emeric, Champion de France Formule Ford 1988.">
+<title>JB EMERIC · École de karting enfant et adulte · Depuis 1989</title>
+  <meta name="description" content="Karting enfant dès 7 ans et karting adulte, du premier tour au niveau compétition. Encadré par Jean-Baptiste Emeric, Champion de France Formule Ford 1988, sur cinq circuits de karting.">
+  <meta property="og:title" content="JB EMERIC · École de karting enfant et adulte · Depuis 1989">
+  <meta property="og:description" content="Karting enfant dès 7 ans et karting adulte, du premier tour au niveau compétition. Encadré par Jean-Baptiste Emeric, Champion de France Formule Ford 1988, sur cinq circuits de karting.">
   <meta property="og:image" content="https://jbemeric.netlify.app/assets/images/podium-paul-ricard-1994.jpg">
   <meta property="og:url" content="https://jbemeric.netlify.app/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="JB EMERIC École de Pilotage">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="JB EMERIC · École de Pilotage sur Circuit · Depuis 1989">
-  <meta name="twitter:description" content="Stages de pilotage et karting, coaching sur circuit, track-days. Paul Ricard, Grand Sambuc, Lédenon. Jean-Baptiste Emeric, Champion de France Formule Ford 1988.">
+  <meta name="twitter:title" content="JB EMERIC · École de karting enfant et adulte · Depuis 1989">
+  <meta name="twitter:description" content="Karting enfant dès 7 ans et karting adulte, du premier tour au niveau compétition. Encadré par Jean-Baptiste Emeric, Champion de France Formule Ford 1988, sur cinq circuits de karting.">
   <meta name="twitter:image" content="https://jbemeric.netlify.app/assets/images/podium-paul-ricard-1994.jpg">
   <link rel="canonical" href="https://jbemeric.netlify.app/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +30,7 @@
 
 <section class="hero snap-section">
   <video class="hero-video" autoplay muted loop playsinline poster="assets/images/podium-paul-ricard-1994.jpg">
-    <source src="assets/images/Presentation%20Jbemeric.mp4" type="video/mp4">
+    <source data-src="assets/images/Presentation%20Jbemeric.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
   <div class="hero-top-line"></div>
@@ -40,7 +40,7 @@
     <p class="hero-sub">De 7 ans à la compétition officielle. 40 ans de circuits. C'est Jean-Baptiste Emeric qui encadre, du briefing au dernier tour.</p>
     <div class="hero-btns">
       <a class="btn btn-y" href="academie.html">Découvrir l'Académie</a>
-      <a class="btn btn-g" href="evenements.html">Stages &amp; Track-Days</a>
+      <a class="btn btn-g" data-route="evenements" href="evenements.html">Stages &amp; Track-Days</a>
     </div>
   </div>
   <div class="hero-stats-bar">
@@ -76,7 +76,7 @@
 </div>
 
 <!-- ═══ 02 · COACHING ════════════════════════ -->
-<div class="snap-section" id="section-coaching" data-section="coaching">
+<div class="snap-section" id="section-coaching" data-section="coaching" data-route="coaching">
   <div class="snap-label">
     <span class="snap-num">02</span>
     <span class="snap-name">Coaching</span>
@@ -88,7 +88,7 @@
 </div>
 
 <!-- ═══ 03 · ÉVÉNEMENTS ═══════════════════════ -->
-<div class="snap-section snap-section-track" id="section-track" data-section="track">
+<div class="snap-section snap-section-track" id="section-track" data-section="track" data-route="evenements">
   <div class="snap-label">
     <span class="snap-num">03</span>
     <span class="snap-name">Événements</span>
@@ -118,7 +118,7 @@
 </div>
 
 <!-- ═══ 04 · PADDOCK ══════════════════════════ -->
-<div class="snap-section snap-section-paddock" id="section-paddock" data-section="paddock">
+<div class="snap-section snap-section-paddock" id="section-paddock" data-section="paddock" data-route="paddock">
   <div class="snap-label">
     <span class="snap-num">04</span>
     <span class="snap-name">Le Paddock</span>
@@ -230,9 +230,6 @@
   </div><!-- /nl-wrap -->
 </div>
 
-  
-</div>
-
 <div id="footer-root"></div>
 
 <!-- ── Paddock Newsletter Grid : données Supabase ──────────────── -->
@@ -240,6 +237,7 @@
 <script src="assets/js/routes.js"></script>
 <script src="assets/js/nav.js"></script>
 <script src="assets/js/footer.js"></script>
+<script src="assets/js/hero-video.js"></script>
 <script src="assets/js/sync-mirror.js" defer></script>
 <script type="module" src="assets/js/live-editor.js"></script>
 

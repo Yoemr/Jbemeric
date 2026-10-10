@@ -54,21 +54,43 @@
   function brancherAccordeon(bloc) {
     if (bloc.dataset.faqBranche) return
     bloc.dataset.faqBranche = '1'
-    bloc.addEventListener('click', function (ev) {
-      var fq = ev.target.closest ? ev.target.closest('.fq') : null
-      if (!fq || !bloc.contains(fq)) return
+    accessible(bloc)
+    function basculer(fq) {
       var ouvert = fq.classList.contains('open')
       var toutes = bloc.querySelectorAll('.fq')
       for (var i = 0; i < toutes.length; i++) toutes[i].classList.remove('open')
       if (!ouvert) fq.classList.add('open')
+    }
+    bloc.addEventListener('click', function (ev) {
+      var fq = ev.target.closest ? ev.target.closest('.fq') : null
+      if (!fq || !bloc.contains(fq)) return
+      basculer(fq)
     })
+    // Entrée ou Espace sur une question : même geste que le clic.
+    bloc.addEventListener('keydown', function (ev) {
+      if (ev.key !== 'Enter' && ev.key !== ' ') return
+      var q = ev.target.closest ? ev.target.closest('.fq-q') : null
+      if (!q || !bloc.contains(q)) return
+      ev.preventDefault()
+      basculer(q.closest('.fq'))
+    })
+  }
+
+  // Chaque question prend le focus et se lit comme un bouton. Des attributs
+  // seulement : le live-editor adresse les textes par leurs classes.
+  function accessible(bloc) {
+    var qs = bloc.querySelectorAll('.fq-q')
+    for (var i = 0; i < qs.length; i++) {
+      qs[i].setAttribute('role', 'button')
+      qs[i].setAttribute('tabindex', '0')
+    }
   }
 
   function remplir(bloc, questions) {
     var liste = bloc.querySelector('.faq-list') || bloc
     liste.innerHTML = questions.map(function (q) {
       return '<div class="fq">' +
-        '<div class="fq-q">' + ech(q.question) + '</div>' +
+        '<div class="fq-q" role="button" tabindex="0">' + ech(q.question) + '</div>' +
         '<div class="fq-a">' + enHtml(q.reponse) + '</div>' +
       '</div>'
     }).join('')

@@ -37,6 +37,7 @@ const MASQUEES = [
   'evenements.html',
   'paddock.html',
   'paddock/palmares.html',
+  'evenement.html',             // la page d'une date suit les Evenements
 ]
 
 // Volontairement dehors : le tableau de bord et les autres pages admin/, les

@@ -79,6 +79,7 @@ export function createClient() {
       signInWithPassword: () => Promise.resolve({ data: null, error: { message: 'banc' } }),
       signUp: () => Promise.resolve({ data: null, error: { message: 'banc' } }),
       resetPasswordForEmail: () => Promise.resolve({ data: null, error: null }),
+      updateUser: () => Promise.resolve({ data: { user: {} }, error: null }),
     },
     storage: { from: () => ({ upload: () => Promise.resolve({ data: null, error: null }), getPublicUrl: () => ({ data: { publicUrl: '' } }) }) },
     channel: () => ({ on() { return this }, subscribe() { return this } }),

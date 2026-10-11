@@ -921,7 +921,7 @@ Huit pages, la liste qui fait foi est `outil-dev/audit/perimetre.js` : accueil, 
 
 ### 15.2 L'audit en huit angles
 
-Rendu ordinateur, rendu téléphone, exécution du code, base de données, contenu, référencement et accessibilité, puis masquage, code et performance. Chaque constat porte une preuve mesurée et un contrôle négatif ; la conversation principale l'a revérifié avant d'y toucher.
+Six angles ont rendu leur relevé : rendu ordinateur, rendu téléphone, exécution du code, base de données, contenu, référencement et accessibilité, masquage. Les angles code et performance ont été coupés deux fois par la limite d'usage et n'ont rien rendu. Chaque constat porte une preuve mesurée et un contrôle négatif ; la conversation principale l'a revérifié avant d'y toucher.
 
 Ce qui était réellement cassé, et qui est corrigé :
 
@@ -937,6 +937,7 @@ Ce qui était réellement cassé, et qui est corrigé :
 | Connexion introuvable sur téléphone | D-192 |
 | Libellés illisibles, voile du hero de l'Académie à l'envers | D-201, D-202 |
 | Préférence « réduire les animations » ignorée | D-200 |
+| Filet de secours périmé, contenu masqué encore téléchargé | D-206 |
 
 Le reste, trié selon `CLAUDE.md` : les améliorations et les décisions qui reviennent à Yoan sont dans `docs/08`, les questions de faits dans le questionnaire « Questions pour JB, Académie et karting ».
 

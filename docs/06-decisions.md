@@ -115,6 +115,15 @@ L'audit proposait que le live-editor applique `alt_text` aux photos remplacées 
 
 Le menu et les questions de FAQ disent s'ils sont ouverts (`aria-expanded`), Échap ferme le menu et rend le focus au bouton. Les commandes vidéo ont un nom (« Mettre en pause », « Activer le son », « Volume ») et le curseur de volume s'ouvre au clavier. Le champ actif du formulaire de contact a un filet jaune plein. Les liens vers les réseaux portent `rel="noopener"`. Le lien d'évitement et la balise `<main>` sont repoussés : envelopper les sections changerait l'adresse de tous les textes de JB.
 
+### D-206, Ce qui est masqué ne se télécharge plus, et le filet de secours colle à la base
+
+- **Filet de secours recuit.** Les blocs `jbe-content-cache` de l'Académie et de Karting adulte dataient d'avant le nettoyage du 8 août : si Supabase tombait, Karting adulte reprenait « une voiture de course à la clé », et le source portait encore la BMW du Challenge et un tiret cadratin. Recuits par `build-cache.js` lui-même, nourri d'un instantané de la base vérifié au caractère près (empreinte md5 identique à celle calculée par Supabase). Netlify continue de les recuire à chaque publication.
+- **Images masquées en `loading="lazy"`** : une image en `display:none` se télécharge quand même, sauf en chargement différé. L'accueil ne demande plus la Porsche, la BMW ni deux miniatures à YouTube ; Karting adulte ne demande plus la BMW du pont. Un attribut, sans effet sur la numérotation du live-editor.
+- **`avis.js` ne lit plus la base pour un bloc masqué**, même garde que `sync-mirror.js`.
+- **Vidéos YouTube en `rel=0`** : les suggestions de fin de lecture restent sur la chaîne de JB.
+
+Chaque point vérifié dans Chromium avec son contrôle négatif : l'attribut retiré, la requête revient ; l'ancien `avis.js` remis, la requête à la table revient.
+
 ---
 
 ## 11 août 2026, la barre de filtres, et de vraies dates sur le site

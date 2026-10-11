@@ -111,6 +111,8 @@ Mot de Yoan, 11 août 2026 : « reste à réfléchir à la partie business plan,
 - **Les données structurées pour Google** (fiche d'entreprise). Aucune sur les huit pages. À écrire une fois depuis `site-data.js` ; reste à choisir entre l'adresse d'Aubagne et la seule liste des circuits (`docs/04` section 6).
 - **Le « 01 » devant l'Académie sur l'accueil** ne renvoie plus à aucune suite depuis que les sections 02 à 04 sont masquées.
 - **« Un moniteur diplômé d'État »** sur la carte Karting enfant et dans sa description Google présente un moniteur anonyme, alors que la FAQ dit « c'est JB ou personne ».
+- **La compétition en kart 125 cc fait-elle partie du site karting ?** La page Compétition est masquée, mais l'accueil promet « de 7 ans à la compétition officielle », Karting adulte « au bout, la compétition », Karting enfant garde sa section sur le 125 cc à boîte (sans bouton), et trois questions de FAQ en parlent (ordres 30, 40 et 180). Si non : ces trois questions en `visible = false`, les phrases se reformulent dans le HTML.
+- **Les raccourcis de `_redirects`** : `/stages`, `/coaching`, `/palmares` et `/inscription` mènent à des pages masquées. Les pointer vers l'Académie ou le contact le temps du masquage (en 302), ou les laisser.
 
 ## D. Propre mais sans conséquence
 
@@ -118,7 +120,7 @@ Mot de Yoan, 11 août 2026 : « reste à réfléchir à la partie business plan,
 
 - Le live-editor balaie aussi la FAQ et les avis écrits dans la page : ce que JB y modifierait au crayon serait remplacé par la base à l'affichage. Les exclure du balayage décalerait la numérotation des anciens contenus qui les suivent ; à faire le jour où ces anciens contenus auront tous migré.
 - Sur ordinateur, la vidéo du hero est téléchargée deux fois quand la base en fournit une autre (fichier local, puis copie de la base).
-- Le filet de secours du dépôt (`jbe-content-cache`) est périmé ; Netlify le recuit à chaque publication. Le recuire depuis un poste qui joint Supabase, et faire écrire un filet vide à `build-cache.js` pour une page sans contenu.
+- `build-cache.js` laisse en place le filet d'une page qui n'a plus aucun contenu en base. Lui faire écrire un filet vide. (Le filet de l'Académie et de Karting adulte a été recuit le 11 octobre, D-206.)
 - Si jsdelivr ne répond pas, le filet de secours ne sert pas : le live-editor ne s'exécute pas du tout (import statique).
 - `karting__img-5` : une vidéo d'étape tomberait sur le fond de la section pont de Karting adulte le jour où la Compétition reviendra.
 - Les images d'attente des vidéos (`poster`) font 300 px de large et s'affichent floues en grand.
@@ -126,6 +128,8 @@ Mot de Yoan, 11 août 2026 : « reste à réfléchir à la partie business plan,
 - Des libellés de 7 et 8 px : catégories du palmarès de l'Académie, méta des vidéos, nom des sections de l'accueil. La couleur a été relevée (D-201), la taille est restée.
 - Les descriptions Google de l'accueil (187 caractères) et de l'Académie (183) sont coupées vers 155.
 - L'accueil n'a qu'un titre, « JB EMERIC » : les intitulés des portes sont des `div`. Les passer en `h2` dans `sync-mirror.js`, ou poser `role="heading"`.
+- Pied de page entre 640 et 959 px : le bloc Contact reste seul sur une deuxième ligne, plus visible depuis que le masquage a réduit les colonnes à deux liens.
+- Le contenu masqué reste dans le HTML (D-186) : un robot lit sur l'accueil 187 mots masqués pour 205 visibles. Les trois sections finales de l'accueil pourraient passer dans un `<template>` sans décaler aucun texte balayé.
 - Les grilles d'évaluation enfant et adulte disent la même chose avec des mots différents, et la typographie flotte : « 195€ » et « 195 € », « 125cc » et « 125 cc », « 1m30 » et « 1,30 m ».
 
 

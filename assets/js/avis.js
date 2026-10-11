@@ -70,7 +70,10 @@
 
   // Le contrat est l'attribut, pas la classe : une page recopiée porterait le
   // même nom de conteneur sans que personne ait à tenir une liste de noms.
-  var blocs = document.querySelectorAll('[data-avis]')
+  // Un bloc masqué (data-route, section 5 de theme.css) ne demande rien à la
+  // base : même garde que sync-mirror.js.
+  var blocs = Array.prototype.filter.call(document.querySelectorAll('[data-avis]'),
+    function (el) { return el.getClientRects().length })
   if (!blocs.length) return
 
   var tags = []

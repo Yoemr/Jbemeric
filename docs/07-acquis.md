@@ -187,6 +187,12 @@ Le 9 octobre 2026, en rejouant la base dans un navigateur, trois textes sont app
 
 La colonne `alt_text` de `site_content` est remplie par la fenêtre d'envoi du live-editor : titre de la section suivi de « JB EMERIC », ou description de la photo précédente recopiée quand JB change d'image. Relevé du 11 octobre : sur 11 lignes du périmètre, une seule décrit sa photo. Le live-editor ne la lit pas, et c'est heureux. Ne pas la brancher avant d'avoir réécrit les descriptions (D-203).
 
+### 2.19 Un instantané recopié à la main perd les espaces insécables
+
+L'instantané de la base du 9 octobre (`visiteur.js --base`) avait été recopié depuis la sortie de l'outil MCP : quatre textes y avaient perdu leurs espaces insécables (« 40 ans », « Jb emeric »). Sans effet sur le banc visiteur, mais un filet de secours recuit depuis lui aurait été faux. **Avant d'écrire quoi que ce soit à partir d'un instantané**, comparer son empreinte à celle de la base : `select md5(string_agg(id || '|' || content || '|' || coalesce(media_type,''), '#' order by id)) from site_content`, et la même chaîne en Node, lignes triées par octets. Pour réparer une ligne, la lire en hexadécimal (`encode(convert_to(content,'UTF8'),'hex')`), jamais en texte.
+
+**Faire tourner `build-cache.js` dans ce bac à sable**, où Supabase ne répond pas : précharger un module qui remplace `https.get` et rend les lignes de l'instantané (`node -r <stub> outil-dev/build-cache.js`). Le script tourne alors tel quel, regroupement et alias de pages compris, au lieu d'être réécrit à la main.
+
 ---
 
 ## 3. Ce qui est vérifié, ne pas revérifier

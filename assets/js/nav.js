@@ -118,13 +118,13 @@
 
   // ── Icônes réseaux sociaux ──────────────────────────────────────
   var SOCIALS_HTML =
-    '<a class="nav-social" href="' + R.youtube + '" target="_blank" aria-label="YouTube">' +
+    '<a class="nav-social" href="' + R.youtube + '" target="_blank" rel="noopener" aria-label="YouTube">' +
       '<svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8ZM9.7 15.5V8.5l6.3 3.5-6.3 3.5Z"/></svg>' +
     '</a>' +
-    '<a class="nav-social" href="' + R.instagram + '" target="_blank" aria-label="Instagram">' +
+    '<a class="nav-social" href="' + R.instagram + '" target="_blank" rel="noopener" aria-label="Instagram">' +
       '<svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.2.1 4.6 1.6 4.7 4.7.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.1-1.5 4.6-4.7 4.7-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1C4 21.2 2.5 19.8 2.4 16.6c-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8C2.5 3.8 4 2.3 7.2 2.2c1.2 0 1.6-.1 4.8-.1zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1.1 8.3 0 8.7 0 12c0 3.3 0 3.7.1 4.9.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9 0-3.3 0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/></svg>' +
     '</a>' +
-    '<a class="nav-social" href="' + R.facebook + '" target="_blank" aria-label="Facebook">' +
+    '<a class="nav-social" href="' + R.facebook + '" target="_blank" rel="noopener" aria-label="Facebook">' +
       '<svg viewBox="0 0 24 24"><path d="M24 12.1C24 5.4 18.6 0 12 0S0 5.4 0 12.1C0 18.1 4.4 23.1 10.1 24v-8.4H7.1v-3.5h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v2.9h-1.5c-1.5 0-1.9.9-1.9 1.9v2.3h3.3l-.5 3.5h-2.8V24C19.6 23.1 24 18.1 24 12.1z"/></svg>' +
     '</a>'
 
@@ -150,14 +150,14 @@
   var navRoot = document.getElementById('nav-root')
   if (navRoot) {
     navRoot.innerHTML =
-      '<button class="nav-burger" id="nav-burger" aria-label="Menu"><span></span><span></span><span></span></button>' +
+      '<button class="nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-mobile"><span></span><span></span><span></span></button>' +
       '<div class="nav-mobile" id="nav-mobile">' +
         buildMobileItems() +
         AUTH_MOBILE_HTML +
         '<div class="nav-mobile-socials">' +
-          '<a href="' + R.youtube + '" target="_blank" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8ZM9.7 15.5V8.5l6.3 3.5-6.3 3.5Z"/></svg></a>' +
-          '<a href="' + R.instagram + '" target="_blank" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.2.1 4.6 1.6 4.7 4.7.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.1-1.5 4.6-4.7 4.7-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1C4 21.2 2.5 19.8 2.4 16.6c-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8C2.5 3.8 4 2.3 7.2 2.2c1.2 0 1.6-.1 4.8-.1zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1.1 8.3 0 8.7 0 12c0 3.3 0 3.7.1 4.9.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9 0-3.3 0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/></svg></a>' +
-          '<a href="' + R.facebook + '" target="_blank" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.1C24 5.4 18.6 0 12 0S0 5.4 0 12.1C0 18.1 4.4 23.1 10.1 24v-8.4H7.1v-3.5h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v2.9h-1.5c-1.5 0-1.9.9-1.9 1.9v2.3h3.3l-.5 3.5h-2.8V24C19.6 23.1 24 18.1 24 12.1z"/></svg></a>' +
+          '<a href="' + R.youtube + '" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8ZM9.7 15.5V8.5l6.3 3.5-6.3 3.5Z"/></svg></a>' +
+          '<a href="' + R.instagram + '" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.2.1 4.6 1.6 4.7 4.7.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.1-1.5 4.6-4.7 4.7-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1C4 21.2 2.5 19.8 2.4 16.6c-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8C2.5 3.8 4 2.3 7.2 2.2c1.2 0 1.6-.1 4.8-.1zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1.1 8.3 0 8.7 0 12c0 3.3 0 3.7.1 4.9.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9 0-3.3 0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/></svg></a>' +
+          '<a href="' + R.facebook + '" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.1C24 5.4 18.6 0 12 0S0 5.4 0 12.1C0 18.1 4.4 23.1 10.1 24v-8.4H7.1v-3.5h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.7.2 2.7.2v2.9h-1.5c-1.5 0-1.9.9-1.9 1.9v2.3h3.3l-.5 3.5h-2.8V24C19.6 23.1 24 18.1 24 12.1z"/></svg></a>' +
         '</div>' +
       '</div>' +
       '<nav class="nav">' +
@@ -182,20 +182,29 @@
     // Burger logic
     var burger = document.getElementById('nav-burger')
     var mob    = document.getElementById('nav-mobile')
+    // aria-expanded dit au lecteur d'écran si le menu est ouvert.
+    function fermer() {
+      mob.classList.remove('open')
+      burger.classList.remove('open')
+      burger.setAttribute('aria-expanded', 'false')
+    }
     if (burger && mob) {
       burger.addEventListener('click', function() {
         var open = mob.classList.toggle('open')
         burger.classList.toggle('open', open)
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false')
+      })
+
+      // Fermer la nav mobile en cliquant ailleurs, ou avec Échap
+      document.addEventListener('click', function(e) {
+        if (!mob.contains(e.target) && !burger.contains(e.target)) fermer()
+      })
+      document.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape' || !mob.classList.contains('open')) return
+        fermer()
+        burger.focus()
       })
     }
-
-    // Fermer la nav mobile en cliquant ailleurs
-    document.addEventListener('click', function(e) {
-      if (mob && burger && !mob.contains(e.target) && !burger.contains(e.target)) {
-        mob.classList.remove('open')
-        burger.classList.remove('open')
-      }
-    })
   }
 
 })()

@@ -61,7 +61,7 @@
     var titreComplet = lieu ? titre + ', ' + lieu : titre
     return '<div class="yt-card">' +
       '<div class="yt-thumb">' +
-        '<iframe src="https://www.youtube.com/embed/' + echapper(v.id) + '"' +
+        '<iframe src="https://www.youtube-nocookie.com/embed/' + echapper(v.id) + '"' +
         ' title="' + titreComplet + '"' +
         ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
         ' allowfullscreen loading="lazy"></iframe>' +

@@ -60,6 +60,7 @@
       var toutes = bloc.querySelectorAll('.fq')
       for (var i = 0; i < toutes.length; i++) toutes[i].classList.remove('open')
       if (!ouvert) fq.classList.add('open')
+      etat(bloc)
     }
     bloc.addEventListener('click', function (ev) {
       var fq = ev.target.closest ? ev.target.closest('.fq') : null
@@ -84,13 +85,24 @@
       qs[i].setAttribute('role', 'button')
       qs[i].setAttribute('tabindex', '0')
     }
+    etat(bloc)
+  }
+
+  // aria-expanded suit la classe open : le lecteur d'écran dit si la
+  // réponse est dépliée.
+  function etat(bloc) {
+    var fqs = bloc.querySelectorAll('.fq')
+    for (var i = 0; i < fqs.length; i++) {
+      var q = fqs[i].querySelector('.fq-q')
+      if (q) q.setAttribute('aria-expanded', fqs[i].classList.contains('open') ? 'true' : 'false')
+    }
   }
 
   function remplir(bloc, questions) {
     var liste = bloc.querySelector('.faq-list') || bloc
     liste.innerHTML = questions.map(function (q) {
       return '<div class="fq">' +
-        '<div class="fq-q" role="button" tabindex="0">' + ech(q.question) + '</div>' +
+        '<div class="fq-q" role="button" tabindex="0" aria-expanded="false">' + ech(q.question) + '</div>' +
         '<div class="fq-a">' + enHtml(q.reponse) + '</div>' +
       '</div>'
     }).join('')

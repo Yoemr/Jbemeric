@@ -181,6 +181,12 @@ Le 9 octobre 2026, en rejouant la base dans un navigateur, trois textes sont app
 
 **Règle** : toute conclusion sur ce qu'affiche une page qui porte du contenu en base passe par ce rejeu, jamais par une capture locale seule.
 
+**Avant de réécrire un texte de la page**, lire dans `rapport.json` du banc (champ `logs`) les lignes « Legacy text rejected (drift?) : clé → chemin ». Elles disent sur quel élément chaque ancien contenu tombe par sa position, et qu'il est refusé. Le 11 octobre, `karting__jbe-u-31` (« On filme chaque session… ») tombait sur l'accroche de l'étape 3, et non sur l'étape 2 qu'il décrit : la réécriture de l'étape 2 était sans risque, celle de l'étape 3 aussi tant que les deux textes ne se ressemblent pas. Repasser le banc après coup : la liste des remplacements doit rester la même.
+
+### 2.18 La description d'image enregistrée en base n'est pas fiable
+
+La colonne `alt_text` de `site_content` est remplie par la fenêtre d'envoi du live-editor : titre de la section suivi de « JB EMERIC », ou description de la photo précédente recopiée quand JB change d'image. Relevé du 11 octobre : sur 11 lignes du périmètre, une seule décrit sa photo. Le live-editor ne la lit pas, et c'est heureux. Ne pas la brancher avant d'avoir réécrit les descriptions (D-203).
+
 ---
 
 ## 3. Ce qui est vérifié, ne pas revérifier

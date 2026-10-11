@@ -86,6 +86,35 @@ Les anciens contenus sont rangés sous un numéro d'ordre attribué au premier b
 
 Un téléphone tenu à l'horizontale fait 844 px de large : il passait le seuil de 700 px et chargeait les 45 Mo de l'accueil. `ROUTES.GRAND_ECRAN` dans `routes.js` exige aussi 600 px de haut, et `hero-video.js`, `videos.js`, le live-editor et `academie.css` lisent cette même définition. Une tablette reçoit toujours les vidéos : à trancher par Yoan.
 
+### D-200, Les vidéos de fond suivent la préférence « réduire les animations »
+
+Un visiteur qui l'a demandé à son système recevait quand même les vidéos en boucle, le halo qui pulse sur l'accueil et le défilement animé. `ROUTES.VIDEO_FOND` (grand écran, animations non réduites) remplace `GRAND_ECRAN` dans `hero-video.js` et le live-editor : ce visiteur suit le chemin du téléphone, image d'attente comprise. `videos.js` garde `GRAND_ECRAN`, une vidéo YouTube ne démarre qu'au clic. Section 6 de `theme.css` : animations d'un instant, défilement sans animation. Vérifié dans Chromium : aucune requête vidéo avec la préférence, la vidéo de l'accueil sans elle.
+
+### D-201, Un plancher de contraste pour les petits libellés
+
+Sept textes étaient sous 3 pour 1 (le sur-titre de la FAQ claire à 2,2), une vingtaine entre 3 et 4,5. Plancher appliqué règle par règle, couleurs seulement : blanc à 60 % et jaune à 70 % sur fond sombre, noir à 60 % sur fond clair, or `#946200` sous 24 px et `#A86F00` au-dessus sur fond clair (bloc formateur de l'Académie). `--ink-mute` de `karting.css` passe à 60 %, une ligne pour six règles. Les tailles de 7 et 8 px restent, notées dans `docs/08`.
+
+### D-202, Le voile du hero de l'Académie passe du côté du texte
+
+Sur ordinateur, le dégradé était opaque à droite, où il n'y a rien, et transparent à gauche, sous le titre et l'accroche : des mots disparaissaient sur les casques blancs. `--hero-overlay` va maintenant de la gauche vers la droite.
+
+### D-203, La description d'image enregistrée en base n'est pas branchée
+
+L'audit proposait que le live-editor applique `alt_text` aux photos remplacées par JB. Relevé en base : sur 11 descriptions du périmètre, la plupart sont le titre de la section suivi de « JB EMERIC », ou la description de l'ancienne photo recopiée par la fenêtre d'envoi. Les appliquer dégraderait l'affichage. Trois photos remplacées gardent donc une description fausse (podium de 1991 décrit comme une salle de briefing). Décision à Yoan : écrire les vraies descriptions, puis brancher la lecture.
+
+### D-204, Contact, confidentialité, référencement
+
+- Le bloc « Boutique en ligne · Paiement 4× sans frais » de la page Contact menait à un domaine mort. Il porte la clé `boutique`, ajoutée à la section 5 de `theme.css`.
+- La politique de confidentialité ne parle plus de stages, de track-days ni d'inscription. Les vidéos YouTube passent par `youtube-nocookie.com`, ce qui rend vraie la phrase sur les cookies.
+- Titre de Karting adulte : « Karting adulte · Formation C1 à C5 · JB EMERIC ». La page vers laquelle mènent `/karting` et `/karting-adulte` ne contenait pas le mot.
+- Contact ajouté au sitemap ; `og:url` des deux pages légales alignés sur leur adresse réelle ; `og:url` posé sur les deux pages karting.
+- Karting adulte : trois tournures antithétiques réécrites, « sud de la France » remplacé (docs/04, la géographie passe par les circuits), le renvoi à une « étape 01 » qui n'existe plus remplacé par la journée Découverte. Les anciens textes de base de ces zones restent refusés, vérifié au banc visiteur.
+- La règle `ton-ia` reconnaît « cesse d'être X, devient Y » et « n'est pas X : Y », contrôle négatif fait.
+
+### D-205, Clavier et lecteur d'écran
+
+Le menu et les questions de FAQ disent s'ils sont ouverts (`aria-expanded`), Échap ferme le menu et rend le focus au bouton. Les commandes vidéo ont un nom (« Mettre en pause », « Activer le son », « Volume ») et le curseur de volume s'ouvre au clavier. Le champ actif du formulaire de contact a un filet jaune plein. Les liens vers les réseaux portent `rel="noopener"`. Le lien d'évitement et la balise `<main>` sont repoussés : envelopper les sections changerait l'adresse de tous les textes de JB.
+
 ---
 
 ## 11 août 2026, la barre de filtres, et de vraies dates sur le site

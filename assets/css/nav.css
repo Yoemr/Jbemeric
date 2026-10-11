@@ -246,7 +246,7 @@
 }
 /* Contrastes relevés le 9 octobre 2026 : 1,5 à 2,4 pour 1 sur fond nuit, en 7 à 9 px,
    le pied de page se lisait à peine. Seuil visé 4,5 pour 1. */
-.fb-copy { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.45) }
+.fb-copy { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.6) }
 .fb-badge { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.45); display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
 .fb-badge a { display: inline-block; padding: 10px 0; color: rgba(255,255,255,.6); text-decoration: none; transition: color .15s }
 .fb-badge a:hover { color: rgba(255,207,0,.6) }

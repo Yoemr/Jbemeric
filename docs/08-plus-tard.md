@@ -102,8 +102,15 @@ Mot de Yoan, 11 août 2026 : « reste à réfléchir à la partie business plan,
 - **Les vidéos sur tablette.** Une tablette les charge (45 Mo sur l'accueil). La règle du 6 août visait le téléphone.
 - **La vidéo du hero de l'accueil montre des GT au Paul Ricard.** Proposition : « Conseil karting », 4,6 Mo, JB qui briefe des enfants.
 - **Le bandeau du parcours sous les portes de l'accueil** répète les deux voies avec une flèche, ce qui suggère qu'on passe de l'enfant à l'adulte.
-- **La FAQ commune aux trois pages de l'Académie** (D-117) : la page des parents montre des questions d'adultes et deux prix.
+- **La FAQ commune aux trois pages de l'Académie** (D-117) : la page des parents montre des questions d'adultes et deux prix. Elle pose aussi deux fois les mêmes questions : ordres 30 et 140 (délai pour atteindre C5), 50 et 130 (journée sans engagement), 120 et 160 (circuits), 100 et 150 (matériel). Passer en `visible = false` les ordres 140, 160 et l'un de 50 ou 130.
 - **Fermer les inscriptions de compte dans Supabase** (Authentication). Elles ne donnent plus aucun droit (D-193), mais la page est masquée.
+- **Les descriptions d'image en base** (D-203). Trois photos remplacées par JB gardent la description de l'ancienne : le podium de 1991 sur l'Académie, le kart de 1986 et le briefing des enfants sur Karting adulte. Écrire les vraies descriptions en base, puis faire lire `alt_text` par le live-editor.
+- **La photo de partage.** Le podium Paul Ricard 1994 sert d'aperçu à l'accueil, au contact, aux pages légales et à la connexion ; Karting adulte n'en a aucune. Toutes font 300 px de large, floues en grand. Une photo karting d'au moins 1200 × 630 réglerait les deux.
+- **Le mot « cursus »**, que `docs/04` demande d'éviter, apparaît 27 fois (boutons, sur-titres, FAQ). La règle tient-elle encore ?
+- **Le domaine définitif.** 75 adresses `jbemeric.netlify.app` écrites en dur (canoniques, `og:url`, sitemap, `robots.txt`). Le jour de la bascule vers jbemeric.com, les changer en une fois.
+- **Les données structurées pour Google** (fiche d'entreprise). Aucune sur les huit pages. À écrire une fois depuis `site-data.js` ; reste à choisir entre l'adresse d'Aubagne et la seule liste des circuits (`docs/04` section 6).
+- **Le « 01 » devant l'Académie sur l'accueil** ne renvoie plus à aucune suite depuis que les sections 02 à 04 sont masquées.
+- **« Un moniteur diplômé d'État »** sur la carte Karting enfant et dans sa description Google présente un moniteur anonyme, alors que la FAQ dit « c'est JB ou personne ».
 
 ## D. Propre mais sans conséquence
 
@@ -115,6 +122,11 @@ Mot de Yoan, 11 août 2026 : « reste à réfléchir à la partie business plan,
 - Si jsdelivr ne répond pas, le filet de secours ne sert pas : le live-editor ne s'exécute pas du tout (import statique).
 - `karting__img-5` : une vidéo d'étape tomberait sur le fond de la section pont de Karting adulte le jour où la Compétition reviendra.
 - Les images d'attente des vidéos (`poster`) font 300 px de large et s'affichent floues en grand.
+- Un lien « aller au contenu » et une balise `<main>`. La balise changerait l'adresse de tous les textes de JB (elles commencent par `s_body__`) : à faire avec une migration des clés.
+- Des libellés de 7 et 8 px : catégories du palmarès de l'Académie, méta des vidéos, nom des sections de l'accueil. La couleur a été relevée (D-201), la taille est restée.
+- Les descriptions Google de l'accueil (187 caractères) et de l'Académie (183) sont coupées vers 155.
+- L'accueil n'a qu'un titre, « JB EMERIC » : les intitulés des portes sont des `div`. Les passer en `h2` dans `sync-mirror.js`, ou poser `role="heading"`.
+- Les grilles d'évaluation enfant et adulte disent la même chose avec des mots différents, et la typographie flotte : « 195€ » et « 195 € », « 125cc » et « 125 cc », « 1m30 » et « 1,30 m ».
 
 
 À ne traiter que si un jour il n'y a plus rien d'autre à faire.

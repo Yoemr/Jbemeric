@@ -678,6 +678,7 @@ function _addVideoControls(vid) {
   btnPlay.className   = 'jbe-vid-btn jbe-vid-play'
   btnPlay.textContent = '\u23F8'
   btnPlay.title       = 'Pause / Lecture'
+  btnPlay.setAttribute('aria-label', 'Mettre en pause')
 
   var volWrap = document.createElement('div')
   volWrap.className = 'jbe-vid-vol-wrap'
@@ -686,6 +687,7 @@ function _addVideoControls(vid) {
   btnMute.className   = 'jbe-vid-btn jbe-vid-mute'
   btnMute.textContent = '\uD83D\uDD07'
   btnMute.title       = 'Son'
+  btnMute.setAttribute('aria-label', 'Activer le son')
 
   var volSlider = document.createElement('input')
   volSlider.type      = 'range'
@@ -694,6 +696,7 @@ function _addVideoControls(vid) {
   volSlider.max       = '1'
   volSlider.step      = '0.05'
   volSlider.value     = '0.1'
+  volSlider.setAttribute('aria-label', 'Volume')
 
   volWrap.appendChild(btnMute)
   volWrap.appendChild(volSlider)
@@ -705,8 +708,8 @@ function _addVideoControls(vid) {
 
   btnPlay.addEventListener('click', function(e) {
     e.stopPropagation()
-    if (vid.paused) { vid.play();  btnPlay.textContent = '\u23F8' }
-    else            { vid.pause(); btnPlay.textContent = '\u25B6' }
+    if (vid.paused) { vid.play();  btnPlay.textContent = '\u23F8'; btnPlay.setAttribute('aria-label', 'Mettre en pause') }
+    else            { vid.pause(); btnPlay.textContent = '\u25B6'; btnPlay.setAttribute('aria-label', 'Lire la vidéo') }
   })
 
   btnMute.addEventListener('click', function(e) {
@@ -720,6 +723,7 @@ function _addVideoControls(vid) {
       volSlider.value = vid.volume
       btnMute.textContent = '\uD83D\uDD0A'
     }
+    btnMute.setAttribute('aria-label', vid.muted ? 'Activer le son' : 'Couper le son')
   })
 
   volSlider.addEventListener('input', function(e) {
@@ -727,6 +731,7 @@ function _addVideoControls(vid) {
     vid.volume = parseFloat(volSlider.value)
     vid.muted  = (vid.volume === 0)
     btnMute.textContent = vid.muted ? '\uD83D\uDD07' : '\uD83D\uDD0A'
+    btnMute.setAttribute('aria-label', vid.muted ? 'Activer le son' : 'Couper le son')
   })
 }
 
@@ -756,9 +761,10 @@ function _makeImgFromVideo(vid, url) {
   return img
 }
 
-// Même seuil que hero-video.js et la nav (nav.css).
-function _grandEcran() {
-  var q = (window.ROUTES && window.ROUTES.GRAND_ECRAN) || '(min-width: 700px) and (min-height: 600px)'
+// Même règle que hero-video.js : ROUTES.VIDEO_FOND, grand écran et
+// animations non réduites.
+function _videoFond() {
+  var q = (window.ROUTES && window.ROUTES.VIDEO_FOND) || '(min-width: 700px) and (min-height: 600px) and (prefers-reduced-motion: no-preference)'
   return !window.matchMedia || window.matchMedia(q).matches
 }
 
@@ -791,7 +797,7 @@ function applyImages() {
     // mais que la base contournait : le 9 octobre, un téléphone téléchargeait
     // 26 Mo sur l'Académie et trois vidéos sur Karting adulte, dont une dans
     // une section masquée. L'image d'origine reste affichée.
-    if (dbType === 'video' && (!_grandEcran() || !img.getClientRects().length)) continue
+    if (dbType === 'video' && (!_videoFond() || !img.getClientRects().length)) continue
 
     var elIsVideo = (img.tagName === 'VIDEO')
     var finalEl   = img
@@ -2085,7 +2091,7 @@ function injectVideoCSS() {
   css += '.jbe-vid-btn{width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;opacity:1;line-height:1;padding:0;flex-shrink:0}'
   css += '.jbe-vid-vol-wrap{display:flex;align-items:center;gap:6px}'
   css += '.jbe-vid-vol{width:0;opacity:0;transition:width .25s,opacity .25s;cursor:pointer;accent-color:#fff;height:4px}'
-  css += '.jbe-vid-vol-wrap:hover .jbe-vid-vol{width:80px;opacity:1}'
+  css += '.jbe-vid-vol-wrap:hover .jbe-vid-vol,.jbe-vid-vol-wrap:focus-within .jbe-vid-vol{width:80px;opacity:1}'
   s.textContent = css
   document.head.appendChild(s)
 }

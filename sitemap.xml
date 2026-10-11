@@ -25,6 +25,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://jbemeric.netlify.app/admin/legal/contact.html</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://jbemeric.netlify.app/admin/legal/mentions-legales.html</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>yearly</changefreq>
@@ -32,7 +38,7 @@
   </url>
   <url>
     <loc>https://jbemeric.netlify.app/admin/legal/confidentialite.html</loc>
-    <lastmod>2026-04-24</lastmod>
+    <lastmod>2026-10-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>

@@ -30,7 +30,7 @@
   --faq-reponse: rgba(0,0,0,.62);
   --faq-filet:   rgba(0,0,0,.09);
   --faq-accent:  #C8860A;   /* or sombre : le jaune sur blanc ne se lit pas (1,5 pour 1) */
-  --faq-kicker:  rgba(0,0,0,.32);
+  --faq-kicker:  rgba(0,0,0,.6);
 
   background: var(--faq-fond);
   padding: clamp(48px,7vw,96px) clamp(20px,5vw,72px);
@@ -46,7 +46,7 @@
   --faq-reponse: rgba(255,255,255,.62);
   --faq-filet:   rgba(255,255,255,.10);
   --faq-accent:  #FFCF00;
-  --faq-kicker:  rgba(255,207,0,.55);
+  --faq-kicker:  rgba(255,207,0,.7);
 }
 
 /* ── L'en-tête ─────────────────────────────────────────────────────────── */

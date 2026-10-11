@@ -109,7 +109,8 @@
       + 'font-family:\'DM Mono\';font-size:10px;letter-spacing:1.5px">' + TEL_LU + '</a>',
         'ok')
 
-      zone.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      var reduit = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      zone.scrollIntoView({ behavior: reduit ? 'auto' : 'smooth', block: 'center' })
     })
   }
 

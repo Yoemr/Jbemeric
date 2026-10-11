@@ -93,6 +93,12 @@
   // Lu par hero-video.js, videos.js et live-editor.js ; academie.css porte la
   // même requête en CSS pour la section des vidéos YouTube.
   ROUTES.GRAND_ECRAN = '(min-width: 700px) and (min-height: 600px)'
+  // Vidéos de fond : le grand écran, sauf pour un visiteur qui a demandé à
+  // son système de réduire les animations. Il garde l'image d'attente, comme
+  // un téléphone. Lu par hero-video.js et live-editor.js. videos.js garde
+  // GRAND_ECRAN : une vidéo YouTube ne démarre qu'au clic.
+  ROUTES.VIDEO_FOND = ROUTES.GRAND_ECRAN + ' and (prefers-reduced-motion: no-preference)'
+  ROUTES.MOUVEMENT_REDUIT = '(prefers-reduced-motion: reduce)'
 
   window.ROUTES = ROUTES
 
@@ -117,7 +123,8 @@
     var el = document.getElementById(href.slice(1))
     if (el) {
       e.preventDefault()
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      var reduit = window.matchMedia && window.matchMedia(ROUTES.MOUVEMENT_REDUIT).matches
+      el.scrollIntoView({ behavior: reduit ? 'auto' : 'smooth', block: 'start' })
       // Chemin complet : avec <base href="/">, un « #journee » seul devenait
       // « /#journee », et un rechargement ou un lien partagé menait à l'accueil.
       history.replaceState(null, '', location.pathname + location.search + href)

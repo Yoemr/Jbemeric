@@ -62,7 +62,7 @@ img { display: block; max-width: 100% }
   --ink:         #0d0d0d;
   --ink-soft:    rgba(13,13,13,.5);
   --sep:         rgba(10,61,145,.09);
-  --hero-overlay: linear-gradient(110deg, rgba(7,31,92,0) 20%, rgba(7,31,92,.55) 52%, rgba(7,31,92,.97) 100%);
+  --hero-overlay: linear-gradient(90deg, rgba(7,31,92,.92) 0%, rgba(7,31,92,.7) 45%, rgba(7,31,92,.15) 80%, rgba(7,31,92,0) 100%);
 }
 body { background: var(--bg-base) }
 
@@ -71,7 +71,7 @@ body { background: var(--bg-base) }
    ═══════════════════════════════════════════════════════ */
 .rubrik {
   font-family: 'DM Mono'; font-size: 9px; letter-spacing: 3.5px;
-  text-transform: uppercase; opacity: .4;
+  text-transform: uppercase; opacity: .65;
   display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
 }
 .rubrik::after { content: ''; flex: 1; height: 1px; background: currentColor; opacity: .2; max-width: 80px }
@@ -132,7 +132,7 @@ body { background: var(--bg-base) }
 .chip {
   font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
   text-transform: uppercase; padding: 6px 14px; border-radius: 20px;
-  border: 1px solid rgba(255,255,255,.22); color: rgba(255,255,255,.65); opacity: .7;
+  border: 1px solid rgba(255,255,255,.22); color: rgba(255,255,255,.85);
 }
 .chip-solid { background: #FFCF00; border-color: #FFCF00; color: #000; opacity: 1; font-weight: 500 }
 
@@ -223,18 +223,18 @@ body { background: var(--bg-base) }
 
 .jb-kicker {
   font-family: 'DM Mono'; font-size: 9px; letter-spacing: 3px;
-  text-transform: uppercase; color: #C8860A;
+  text-transform: uppercase; color: #946200;
   border: 1px solid rgba(245,208,97,.5);
   display: inline-block; padding: 5px 14px;
   border-radius: 2px; margin-bottom: 16px; align-self: flex-start;
 }
 .jb-name {
   font-family: 'Bebas Neue'; font-size: clamp(32px,3.5vw,52px);
-  color: #C8860A; line-height: .88; margin-bottom: 8px;
+  color: #A86F00; line-height: .88; margin-bottom: 8px;
 }
 .jb-sub {
   font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
-  text-transform: uppercase; color: rgba(4,10,30,.45); margin-bottom: 18px;
+  text-transform: uppercase; color: rgba(4,10,30,.6); margin-bottom: 18px;
 }
 .jb-quote {
   font-size: clamp(13px,1.3vw,15px); color: rgba(4,10,30,.78);
@@ -281,7 +281,7 @@ body { background: var(--bg-base) }
 .pc-kicker::before { content: ''; width: 20px; height: 2px; background: #040a1e }
 .pc-title { font-family: 'Bebas Neue'; font-size: clamp(36px,3.5vw,52px); color: #040a1e; line-height: .9; margin-bottom: 14px }
 .pc-title em { font-style: normal; color: var(--accent); display: block }
-.pc-lead { font-size: 13px; color: rgba(4,10,30,.55); line-height: 1.70; max-width: 100% }
+.pc-lead { font-size: 13px; color: rgba(4,10,30,.6); line-height: 1.70; max-width: 100% }
 
 /* ─── Grille des 5 étapes ─── */
 .timeline { display: grid; grid-template-columns: 1fr; gap: 2px; counter-reset: step }
@@ -506,7 +506,7 @@ body { background: var(--bg-base) }
 .ac-pal .rubrik::after { background: rgba(255,207,0,.4); opacity: 1 }
 .ac-pal .sh { color: #fff }
 .ac-pal .sh em { color: #FFCF00 }
-.ac-pal .sb { color: rgba(255,255,255,.45) }
+.ac-pal .sb { color: rgba(255,255,255,.7); opacity: 1 }
 .ac-pal-head { margin-bottom: clamp(36px,5vw,56px) }
 .ac-pal-list { display: flex; flex-direction: column; max-width: 760px }
 .ac-pal-item {
@@ -524,10 +524,10 @@ body { background: var(--bg-base) }
 .ac-pal-body { display: flex; flex-direction: column; gap: 4px }
 .ac-pal-cat {
   font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px;
-  text-transform: uppercase; color: rgba(255,207,0,.5); margin-bottom: 2px;
+  text-transform: uppercase; color: rgba(255,207,0,.7); margin-bottom: 2px;
 }
 .ac-pal-titre { font-family: 'Bebas Neue'; font-size: clamp(18px,2.5vw,26px); color: #fff; line-height: .92 }
-.ac-pal-detail { font-size: 13px; color: rgba(255,255,255,.45); line-height: 1.7; margin-top: 4px }
+.ac-pal-detail { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.7; margin-top: 4px }
 .ac-pal-cta {
   display: inline-flex; align-items: center; gap: 10px;
   margin-top: clamp(32px,4vw,48px);
@@ -598,7 +598,7 @@ body { background: var(--bg-base) }
 .yt-title { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.35 }
 .yt-meta {
   font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1px;
-  text-transform: uppercase; color: var(--ink-soft);
+  text-transform: uppercase; color: rgba(13,13,13,.6);
   display: flex; gap: 10px; margin-top: auto;
   padding-top: 8px; border-top: 1px solid var(--sep); flex-wrap: wrap;
 }

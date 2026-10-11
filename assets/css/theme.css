@@ -218,6 +218,23 @@
 [data-route="paddock"],
 [data-route="palmares"],
 [data-route="articles"],
-[data-route="signup"] {
+[data-route="signup"],
+[data-route="boutique"] {
   display: none !important;
+}
+
+/* ══════════════════════════════════════════════════
+   6. ANIMATIONS RÉDUITES
+   ══════════════════════════════════════════════════
+   Un visiteur qui a demandé à son système de réduire les animations ne
+   reçoit ni halo qui pulse, ni défilement animé. Chaque animation dure un
+   instant, ses états finaux restent atteints. Les vidéos de fond
+   suivent la même préférence par ROUTES.VIDEO_FOND (routes.js). */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
 }

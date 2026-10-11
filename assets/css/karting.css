@@ -76,6 +76,7 @@ img{display:block;max-width:100%}
   text-transform:uppercase;color:var(--ink-mute);
   display:inline-flex;align-items:center;gap:8px;
   transition:color .2s;align-self:flex-start;
+  padding:12px 0; /* zone tactile */
 }
 .hero-back::before{content:'←';font-size:13px}
 .hero-back:hover{color:var(--ink)}

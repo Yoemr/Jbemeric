@@ -66,12 +66,38 @@
       }).join('')
       // tabindex, role et Entrée : sans eux, la touche Tab sautait l'entrée
       // et son sous-menu (audit du 9 octobre 2026).
-      return '<div class="nav-tab has-sub' + (isActive ? ' active' : '') + '"' + attrRoute(item.key) + ' tabindex="0" role="link" onclick="location.href=\'' + item.href + '\'" onkeydown="if(event.key===\'Enter\'){location.href=\'' + item.href + '\'}">' +
+      return '<div class="nav-tab has-sub' + (isActive ? ' active' : '') + '"' + attrRoute(item.key) + ' tabindex="0" role="link" onclick="window.__jbeSousMenu(this,\'' + item.href + '\')" onkeydown="if(event.key===\'Enter\'){location.href=\'' + item.href + '\'}">' +
         item.label +
         '<div class="nav-sub">' + subHtml + '</div>' +
         '</div>'
     }).join('\n')
   }
+
+  // ── Sous-menu au toucher ─────────────────────────────────────────
+  // Sur tablette (barre complète, pas de burger, pas de survol), toucher
+  // « Académie » naviguait tout de suite : Karting enfant et Karting adulte
+  // n'étaient jamais atteints. Sans survol, le premier toucher ouvre le
+  // sous-menu, le second navigue.
+  function placerSousMenu(tab) {
+    var sub = tab.querySelector('.nav-sub')
+    if (!sub) return
+    var rect = tab.getBoundingClientRect()
+    sub.style.top  = (rect.bottom + 4) + 'px'
+    sub.style.left = Math.max(8, rect.left + rect.width/2 - 90) + 'px'
+  }
+  window.__jbeSousMenu = function (tab, href) {
+    var sansSurvol = window.matchMedia && window.matchMedia('(hover: none)').matches
+    if (sansSurvol && !tab.classList.contains('ouvert')) {
+      placerSousMenu(tab)
+      tab.classList.add('ouvert')
+      return
+    }
+    location.href = href
+  }
+  document.addEventListener('click', function (e) {
+    var ouverts = document.querySelectorAll('.nav-tab.has-sub.ouvert')
+    for (var i = 0; i < ouverts.length; i++) if (!ouverts[i].contains(e.target)) ouverts[i].classList.remove('ouvert')
+  })
 
   // ── Construire les items mobile ──────────────────────────────────
   function buildMobileItems() {
@@ -82,7 +108,7 @@
       if (item.subs) {
         item.subs.forEach(function(s) {
           if (!s.href.startsWith('http') && !s.href.includes('#')) {
-            items.push('<a class="nav-tab"' + attrRoute(s.route || item.key) + ' href="' + s.href + '" style="opacity:.65;font-size:9px">&nbsp;&nbsp;' + s.label + '</a>')
+            items.push('<a class="nav-tab"' + attrRoute(s.route || item.key) + ' href="' + s.href + '" style="opacity:.85;font-size:11px">&nbsp;&nbsp;' + s.label + '</a>')
           }
         })
       }

@@ -22,9 +22,14 @@
 // future.
 (function () {
   var SEUIL = 700   // le meme point de bascule que la nav, voir nav.css
+  // La définition du grand écran vit dans routes.js (ROUTES.GRAND_ECRAN).
+  // Repli identique si ce script passe avant routes.js dans la page.
+  function requeteGrandEcran() {
+    return (window.ROUTES && window.ROUTES.GRAND_ECRAN) || '(min-width: 700px) and (min-height: 600px)'
+  }
 
   function charger() {
-    if (!window.matchMedia('(min-width: ' + SEUIL + 'px)').matches) return
+    if (!window.matchMedia(requeteGrandEcran()).matches) return
 
     var sources = document.querySelectorAll('video > source[data-src]')
     for (var i = 0; i < sources.length; i++) {
@@ -49,7 +54,7 @@
   // Un passage en grand ecran apres coup, rotation de tablette par exemple,
   // declenche le chargement. L'inverse ne decharge rien : la video est deja la.
   if (window.matchMedia) {
-    var mq = window.matchMedia('(min-width: ' + SEUIL + 'px)')
+    var mq = window.matchMedia(requeteGrandEcran())
     if (mq.addEventListener) mq.addEventListener('change', charger)
     else if (mq.addListener) mq.addListener(charger)
   }

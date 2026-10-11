@@ -60,7 +60,8 @@
   box-shadow: 0 16px 40px rgba(0,0,0,.5);
 }
 .nav-tab.has-sub:hover .nav-sub,
-.nav-tab.has-sub:focus-within .nav-sub { display: flex }
+.nav-tab.has-sub:focus-within .nav-sub,
+.nav-tab.has-sub.ouvert .nav-sub { display: flex }
 .nav-tab.has-sub::after { content: ' ▾'; font-size: 8px; opacity: .35; margin-left: 2px }
 .nav-sub-item {
   display: block; padding: 10px 18px;
@@ -120,6 +121,10 @@
   gap: 5px; width: 36px; height: 36px;
   background: none; border: none; cursor: pointer;
   margin-left: auto; flex-shrink: 0; padding: 4px;
+  /* Posé dans #nav-root avant la barre, il formait sa propre ligne : un
+     en-tête de 92 px au lieu de 56 sur téléphone, menu ouvert sur le logo,
+     hero décalé par l'aimantation (audit du 10 octobre 2026). */
+  position: absolute; top: 10px; right: clamp(12px,2.5vw,24px); z-index: 2;
 }
 .nav-burger span {
   display: block; height: 2px;
@@ -158,7 +163,7 @@
 .nav-mobile-socials a {
   color: rgba(255,255,255,.3); text-decoration: none;
   transition: color .18s; display: flex; align-items: center;
-}
+ padding: 10px }
 .nav-mobile-socials a:hover { color: #FFCF00 }
 .nav-mobile-socials svg { width: 16px; height: 16px; fill: currentColor }
 
@@ -169,7 +174,7 @@
   border-top: 1px solid rgba(255,255,255,.07);
 }
 .nav-mobile-auth a {
-  flex: 1; text-align: center; padding: 11px;
+  flex: 1; text-align: center; padding: 14px;
   border-radius: 6px; font-family: 'DM Mono', monospace;
   font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
   text-decoration: none; transition: all .18s;
@@ -213,14 +218,14 @@
 .ft-logo em { font-style: normal; background: linear-gradient(135deg,#F5D061,#C8860A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text }
 .ft-tagline { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.55); line-height: 1.7; max-width: 220px }
 .ft-socials { display: flex; gap: 14px; margin-top: 4px }
-.ft-social { color: rgba(255,255,255,.25); text-decoration: none; transition: color .18s; display: flex; align-items: center }
+.ft-social { color: rgba(255,255,255,.5); text-decoration: none; transition: color .18s; display: flex; align-items: center; padding: 12px; margin: -12px }
 .ft-social:hover { color: #FFCF00 }
 .ft-social svg { width: 14px; height: 14px; fill: currentColor; display: block }
 
 /* Colonnes nav */
 .ft-col { display: flex; flex-direction: column; gap: 4px }
 .ft-col-title { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,.55); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,.07) }
-.ft-col a { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.35); text-decoration: none; padding: 5px 0; transition: color .18s; display: flex; align-items: center; gap: 7px }
+.ft-col a { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.6); text-decoration: none; padding: 11px 0; transition: color .18s; display: flex; align-items: center; gap: 7px }
 .ft-col a::before { content: '›'; color: rgba(255,207,0,.2); font-size: 14px; transition: color .18s }
 .ft-col a:hover { color: #fff }
 .ft-col a:hover::before { color: #FFCF00 }
@@ -229,7 +234,7 @@
 .ft-contact { display: flex; flex-direction: column; gap: 12px }
 .ft-contact-item { display: flex; flex-direction: column; gap: 3px }
 .ft-contact-label { font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,.5) }
-.ft-contact-val { font-family: 'DM Mono'; font-size: 11px; letter-spacing: 1px; color: rgba(255,255,255,.55); text-decoration: none; word-break: break-word; transition: color .18s }
+.ft-contact-val { font-family: 'DM Mono'; font-size: 11px; letter-spacing: 1px; color: rgba(255,255,255,.7); text-decoration: none; word-break: break-word; transition: color .18s; display: inline-block; padding: 8px 0 }
 .ft-contact-val:hover { color: #FFCF00 }
 
 /* Bottom bar */
@@ -243,7 +248,7 @@
    le pied de page se lisait à peine. Seuil visé 4,5 pour 1. */
 .fb-copy { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.45) }
 .fb-badge { font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.45); display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
-.fb-badge a { color: rgba(255,255,255,.6); text-decoration: none; transition: color .15s }
+.fb-badge a { display: inline-block; padding: 10px 0; color: rgba(255,255,255,.6); text-decoration: none; transition: color .15s }
 .fb-badge a:hover { color: rgba(255,207,0,.6) }
 .fb-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg,#F5D061,#C8860A); flex-shrink: 0 }
 

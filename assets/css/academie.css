@@ -607,7 +607,8 @@ body { background: var(--bg-base) }
    economiser les requetes, c'est le script qui s'en charge, et le script ne
    suffirait pas a eviter le cadre vide. Les deux vont ensemble.
    Meme seuil que nav.css, hero-video.js et videos.js. */
-@media(max-width:699px) { .ac-videos { display: none } }
+/* Même définition que ROUTES.GRAND_ECRAN (routes.js) : téléphone en portrait ou en paysage */
+@media(max-width:699px), (max-height:599px) { .ac-videos { display: none } }
 
 .yt-grid--4 { grid-template-columns: 1fr 1fr }
 @media(min-width:960px) { .yt-grid--4 { grid-template-columns: repeat(4,1fr) } }

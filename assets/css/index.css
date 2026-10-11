@@ -54,7 +54,7 @@ a{text-decoration:none;color:inherit}
 }
 .hsb-key {
   font-family: 'DM Mono', monospace;
-  font-size: clamp(8px,1vw,10px);
+  font-size: clamp(10px,1vw,11px);
   letter-spacing: 2px;
   text-transform: uppercase;
   color: #fff;
@@ -62,9 +62,9 @@ a{text-decoration:none;color:inherit}
 }
 .hsb-desc {
   font-family: 'DM Mono', monospace;
-  font-size: clamp(7px,.9vw,9px);
+  font-size: clamp(10px,.9vw,11px);
   letter-spacing: 1px;
-  color: rgba(255,255,255,.35);
+  color: rgba(255,255,255,.55);
   margin-top: 2px;
 }
 .hsb-divider {
@@ -91,6 +91,9 @@ a{text-decoration:none;color:inherit}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(4,10,30,.98) 0%,rgba(4,10,30,.55) 50%,rgba(4,10,30,.15) 100%)}
 .hero-top-line{position:absolute;top:0;left:0;height:2px;background:#FFCF00;animation:line-grow 1.2s ease .3s both;z-index:4;pointer-events:none}
 .hero-content{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:clamp(20px,4vw,48px) clamp(16px,4vw,52px) clamp(120px,18vw,200px)}
+/* La bande des chiffres grandit sur petit écran : le bouton passait dessous (iPhone SE). */
+@media(max-width:600px){.hero-content{padding-bottom:140px}}
+@media(max-width:380px){.hero-content{padding-bottom:196px}}
 .hero-kicker{font-family:'DM Mono';font-size:11px;letter-spacing:3px;color:rgba(255,255,255,.5);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
 .hero-kicker::before{content:'';width:20px;height:1px;background:var(--Y);flex-shrink:0}
 .hero-title{font-family:'Bebas Neue';font-size:clamp(52px,10vw,110px);line-height:.88;color:#fff;margin-bottom:14px}
@@ -446,6 +449,8 @@ a{text-decoration:none;color:inherit}
 .porte.competition .porte-title{color:var(--accent-em,#FFCF00)}
 .porte-body{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;max-width:280px;margin-bottom:24px;opacity:0;transform:translateY(8px);transition:all .35s}
 .porte:hover .porte-body{opacity:1;transform:translateY(0)}
+/* Sans survol (téléphone, tablette), la description restait invisible. */
+@media(hover:none){.porte-body{opacity:1;transform:none}}
 .porte-cta{display:inline-block;font-family:'DM Mono';font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:13px 24px;border-radius:3px;transition:all .2s;transform:translateY(4px);opacity:.85}
 .porte:hover .porte-cta{transform:translateY(0);opacity:1}
 .porte.enfant .porte-cta,.porte.adulte .porte-cta{background:#fff;color:#0a1a4a}
@@ -563,7 +568,9 @@ a{text-decoration:none;color:inherit}
 /* Conteneur principal : les portes en haut, le bandeau du parcours en bas */
 .acad-layout {
   display: grid;
-  grid-template-columns: 1fr;
+  /* minmax(0,1fr) : avec 1fr, la colonne prenait la largeur du bandeau du
+     parcours (566 px) et les portes débordaient d'un écran de 390 px. */
+  grid-template-columns: minmax(0,1fr);
   grid-template-rows: 1fr auto;
   height: 100%;
   gap: 1px;

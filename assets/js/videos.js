@@ -30,6 +30,11 @@
 // vaut toujours pour la FAQ et les avis, voir la fiche du 4 aout.
 ;(function () {
   var SEUIL = 700   // le meme point de bascule que la nav et hero-video.js
+  // La définition du grand écran vit dans routes.js (ROUTES.GRAND_ECRAN).
+  // Repli identique si ce script passe avant routes.js dans la page.
+  function requeteGrandEcran() {
+    return (window.ROUTES && window.ROUTES.GRAND_ECRAN) || '(min-width: 700px) and (min-height: 600px)'
+  }
 
   function melanger(liste) {
     // Fisher-Yates sur une copie : la liste d'origine n'est jamais touchee,
@@ -70,7 +75,7 @@
   }
 
   function remplir() {
-    if (!window.matchMedia('(min-width: ' + SEUIL + 'px)').matches) return
+    if (!window.matchMedia(requeteGrandEcran()).matches) return
 
     var data = window.JBEMERIC_DATA
     var toutes = data && data.videos
@@ -107,7 +112,7 @@
   // L'inverse ne vide rien : les iframes sont deja chargees, les retirer ne
   // rendrait pas la bande passante depensee.
   if (window.matchMedia) {
-    var mq = window.matchMedia('(min-width: ' + SEUIL + 'px)')
+    var mq = window.matchMedia(requeteGrandEcran())
     if (mq.addEventListener) mq.addEventListener('change', remplir)
     else if (mq.addListener) mq.addListener(remplir)
   }

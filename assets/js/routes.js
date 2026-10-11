@@ -86,6 +86,14 @@
     return internes(function(k) { return ROUTES[k].split('/').pop() === file ? k : null })
   }
 
+  // ── Grand écran : le seul endroit où il est défini ──────────────
+  // Décision de Yoan du 6 août 2026 : pas de vidéo sur téléphone. La largeur
+  // seule ne suffit pas : un téléphone tenu à l'horizontale fait 844 px de
+  // large et chargeait les 45 Mo de l'accueil. La hauteur l'exclut.
+  // Lu par hero-video.js, videos.js et live-editor.js ; academie.css porte la
+  // même requête en CSS pour la section des vidéos YouTube.
+  ROUTES.GRAND_ECRAN = '(min-width: 700px) and (min-height: 600px)'
+
   window.ROUTES = ROUTES
 
   // ── Favicon centralisée (déclarée une seule fois) ───────────────

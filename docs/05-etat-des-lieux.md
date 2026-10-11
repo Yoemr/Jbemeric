@@ -910,3 +910,38 @@ Les six anciennes ont été supprimées : trois `PROTOTYPE`, trois lignes d'avan
 Les quatre dates du Circuit du Luc portent la photo publiée par le circuit, importée par la veille. Les deux de Lédenon n'en ont pas à la source et portent une photo du dépôt.
 
 Le repli, quand une date n'a pas de photo du tout, montre désormais une voiture sur circuit. Il montrait un kart, ce qui illustrait un track-day en voiture personnelle par une photo de karting.
+
+---
+
+## 15. Mise à jour du 11 octobre 2026, le site karting et son audit
+
+### 15.1 Ce qui se voit
+
+Huit pages, la liste qui fait foi est `outil-dev/audit/perimetre.js` : accueil, Académie, karting enfant, karting adulte, contact, mentions légales, confidentialité, connexion. Le reste est masqué sans être supprimé (D-186), par la section 5 de `theme.css`, à laquelle s'ajoute le 11 octobre le bloc boutique de la page Contact.
+
+### 15.2 L'audit en huit angles
+
+Rendu ordinateur, rendu téléphone, exécution du code, base de données, contenu, référencement et accessibilité, puis masquage, code et performance. Chaque constat porte une preuve mesurée et un contrôle négatif ; la conversation principale l'a revérifié avant d'y toucher.
+
+Ce qui était réellement cassé, et qui est corrigé :
+
+| Défaut | Décision |
+|---|---|
+| Rôle administrateur lisible et modifiable par l'utilisateur lui-même | D-193 |
+| Stockage des médias modifiable par un visiteur anonyme, trois vues et les brouillons lisibles | D-197 |
+| Page blanche quand Supabase ne répond pas | D-194 |
+| Trois anciens textes de base affichés au mauvais endroit | D-187 |
+| Section Académie de l'accueil vide depuis le 14 août | D-191 |
+| En-tête de 92 px sur téléphone, page ouverte décalée | `nav.css`, bouton du menu sorti du flux |
+| 45 Mo de vidéo chargés par un téléphone tenu à l'horizontale | D-199 |
+| Connexion introuvable sur téléphone | D-192 |
+| Libellés illisibles, voile du hero de l'Académie à l'envers | D-201, D-202 |
+| Préférence « réduire les animations » ignorée | D-200 |
+
+Le reste, trié selon `CLAUDE.md` : les améliorations et les décisions qui reviennent à Yoan sont dans `docs/08`, les questions de faits dans le questionnaire « Questions pour JB, Académie et karting ».
+
+### 15.3 À savoir avant la mise en ligne
+
+- **JB doit se déconnecter puis se reconnecter une fois**, pour que son jeton porte le rôle lu dans `app_metadata` (D-193).
+- **Un envoi de photo par JB échoue tant que le code n'est pas publié** : l'ancien code envoie avec la clé publique, que le stockage refuse désormais (D-197).
+- La connexion et la sauvegarde d'un texte par JB restent hors de portée des outils de ce bac à sable (`docs/08`, A).

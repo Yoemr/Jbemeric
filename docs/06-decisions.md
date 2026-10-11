@@ -70,6 +70,22 @@ Le parcours s'arrêtait à l'envoi du courriel. Le lien reçu connectait JB en s
 - **Aucune page 404 propre au site.** Une adresse fausse affiche la page anglaise de Netlify. La créer demande son accord, c'est une page.
 - **Les inscriptions de compte restent ouvertes côté Supabase**, même si la page est masquée. Elles ne donnent plus aucun droit (D-193). Les fermer se fait dans le tableau de bord Supabase, Authentication.
 
+### D-197, Le stockage, trois vues et les brouillons fermés aux anonymes
+
+Trouvé par l'audit de la base, appliqué le 11 octobre avec contrôle négatif dans une transaction annulée.
+
+- **Stockage `media`** : un visiteur anonyme pouvait déposer et remplacer n'importe quel fichier, dont la vidéo du hero. Le live-editor envoyait avec la clé publique, les règles avaient dû suivre. Dépôt et remplacement passent par `est_admin()`, le live-editor envoie avec le jeton de session de JB. **Jusqu'à la publication du code, un envoi de photo par JB échoue**, l'ancien code utilisant encore la clé publique.
+- **Vues `inscriptions_view`, `event_chiffres`, `veille_file_utile`** : créées par postgres, elles ignoraient les règles des tables qu'elles lisent. Données personnelles des inscrits et marges des événements lisibles par l'API publique. Passées en `security_invoker`. `offres_publiques` reste publique, c'est voulu.
+- **`events_public_read`** ne laisse plus lire les dates en préparation.
+
+### D-198, Le live-editor ne renumérote plus à chaque balayage
+
+Les anciens contenus sont rangés sous un numéro d'ordre attribué au premier balayage de la page. Un second balayage (passage en mode édition, miroir arrivé après coup) repartait de 1 : en mode édition, la vidéo du hero de l'accueil se posait sur la porte Karting enfant, puis s'enregistrait en base. Les numéros ne valent plus qu'au premier balayage ; un élément découvert plus tard reçoit son identifiant stable. Le contenu recopié par le miroir (`data-jbe-externe`) n'est plus éditable sur l'accueil, il se modifie à sa source. Un ancien texte dont les nombres diffèrent du texte qu'il remplace est refusé.
+
+### D-199, Le grand écran est défini une seule fois, avec une hauteur
+
+Un téléphone tenu à l'horizontale fait 844 px de large : il passait le seuil de 700 px et chargeait les 45 Mo de l'accueil. `ROUTES.GRAND_ECRAN` dans `routes.js` exige aussi 600 px de haut, et `hero-video.js`, `videos.js`, le live-editor et `academie.css` lisent cette même définition. Une tablette reçoit toujours les vidéos : à trancher par Yoan.
+
 ---
 
 ## 11 août 2026, la barre de filtres, et de vraies dates sur le site

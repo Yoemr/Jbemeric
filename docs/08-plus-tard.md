@@ -95,7 +95,27 @@ Mot de Yoan, 11 août 2026 : « reste à réfléchir à la partie business plan,
 
 ---
 
+**Sur le site karting (audit du 9 au 11 octobre 2026)**
+
+- **Le formulaire de contact n'envoie rien lui-même** : il ouvre la messagerie du visiteur (D-082). C'est le seul chemin de réservation. Netlify Forms le ferait sans serveur.
+- **Une page 404 au style du site.** Une adresse fausse affiche la page anglaise de Netlify.
+- **Les vidéos sur tablette.** Une tablette les charge (45 Mo sur l'accueil). La règle du 6 août visait le téléphone.
+- **La vidéo du hero de l'accueil montre des GT au Paul Ricard.** Proposition : « Conseil karting », 4,6 Mo, JB qui briefe des enfants.
+- **Le bandeau du parcours sous les portes de l'accueil** répète les deux voies avec une flèche, ce qui suggère qu'on passe de l'enfant à l'adulte.
+- **La FAQ commune aux trois pages de l'Académie** (D-117) : la page des parents montre des questions d'adultes et deux prix.
+- **Fermer les inscriptions de compte dans Supabase** (Authentication). Elles ne donnent plus aucun droit (D-193), mais la page est masquée.
+
 ## D. Propre mais sans conséquence
+
+**Repoussé par l'audit du 9 au 11 octobre 2026**
+
+- Le live-editor balaie aussi la FAQ et les avis écrits dans la page : ce que JB y modifierait au crayon serait remplacé par la base à l'affichage. Les exclure du balayage décalerait la numérotation des anciens contenus qui les suivent ; à faire le jour où ces anciens contenus auront tous migré.
+- Sur ordinateur, la vidéo du hero est téléchargée deux fois quand la base en fournit une autre (fichier local, puis copie de la base).
+- Le filet de secours du dépôt (`jbe-content-cache`) est périmé ; Netlify le recuit à chaque publication. Le recuire depuis un poste qui joint Supabase, et faire écrire un filet vide à `build-cache.js` pour une page sans contenu.
+- Si jsdelivr ne répond pas, le filet de secours ne sert pas : le live-editor ne s'exécute pas du tout (import statique).
+- `karting__img-5` : une vidéo d'étape tomberait sur le fond de la section pont de Karting adulte le jour où la Compétition reviendra.
+- Les images d'attente des vidéos (`poster`) font 300 px de large et s'affichent floues en grand.
+
 
 À ne traiter que si un jour il n'y a plus rien d'autre à faire.
 

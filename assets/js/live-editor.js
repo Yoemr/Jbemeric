@@ -259,6 +259,12 @@ function _legacyTextSanity(el, dbContent) {
   if (lo < 1 || ld < 1) return false
   var ratio = Math.max(lo, ld) / Math.min(lo, ld)
   if (ratio > 5) return false
+  // Les nombres doivent être les mêmes : « 40 ans » et « 01 », « C1 » et
+  // « C5 », « 185 € » et « 195 € » ne sont pas le même texte. Sans ce
+  // contrôle, deux gabarits qui ne diffèrent que par un nombre passaient.
+  var nbA = (orig.match(/\d+/g) || []).sort().join(' ')
+  var nbB = (dbContent.match(/\d+/g) || []).sort().join(' ')
+  if (nbA !== nbB) return false
   var a = _motsSignif(orig), b = _motsSignif(dbContent)
   if (!a.length && !b.length) return ratio <= 2
   if (!a.length || !b.length) return false
@@ -354,15 +360,33 @@ document.addEventListener('DOMContentLoaded', function () {
 // IDs assignés : stables (basés sur DOM path + anchor explicite).
 // Le legacy ID positionnel ('txt-N' / 'jbe-u-N') est conservé en data-legacy-id
 // pour permettre le fallback DB lors des chargements (migration silencieuse).
+// Les numéros d'ordre (txt-N, jbe-u-N, img-N) ne valent que pour le premier
+// balayage, celui qui a servi à ranger les anciens contenus. Un balayage
+// suivant (passage en mode édition, miroir arrivé après coup) repartait de 1
+// et faisait tomber un ancien contenu sur un tout autre élément, puis
+// l'enregistrait en base : en mode édition, la vidéo du hero de l'accueil se
+// posait sur la porte Karting enfant (audit du 10 octobre 2026). Un élément
+// découvert plus tard reçoit son identifiant stable, sans repli.
+var _premierScanTextes = true
+var _premierScanImages = true
+
+// Un bloc recopié d'une autre page (data-jbe-externe, posé par sync-mirror)
+// se modifie à sa source, pas ici : ce qui y serait saisi ne serait jamais
+// relu par le miroir.
+function _externe(el) { return !!(el.closest && el.closest('[data-jbe-externe]')) }
+
 function scanElements() {
   _els = []
   var n = 1, u = 1
+  var premier = _premierScanTextes
+  _premierScanTextes = false
 
   // ── Phase 1 : sélecteurs connus ──
   var p1 = document.querySelectorAll(SEL)
   for (var i = 0; i < p1.length; i++) {
     var el = p1[i]
     if (el.closest('nav') || el.closest('footer') || el.closest('svg')) continue
+    if (_externe(el)) continue
     if (el.querySelector('a,img,button,input,select,textarea')) continue
     var txt = el.textContent.trim()
     if (!txt || txt.length < 2) continue
@@ -370,8 +394,9 @@ function scanElements() {
     if (el.id) {
       legacyId = el.id
     } else {
-      legacyId = 'txt-' + n; n++
       el.id = _computeStableId(el)
+      legacyId = premier ? 'txt-' + n : el.id
+      n++
     }
     el.setAttribute('data-legacy-id', legacyId)
     el.setAttribute('data-orig-html', el.innerHTML)
@@ -386,6 +411,7 @@ function scanElements() {
     var el2 = p2[j]
     if (_els.indexOf(el2) !== -1) continue
     if (el2.closest('nav') || el2.closest('footer') || el2.closest('svg')) continue
+    if (_externe(el2)) continue
     if (el2.querySelector('a,img,button,input,select,textarea')) continue
     if (el2.querySelector('p,h1,h2,h3,h4,h5,h6,div,section,article,ul,ol,table,form')) continue
     var txt2 = el2.textContent.trim()
@@ -394,8 +420,9 @@ function scanElements() {
     if (el2.id) {
       legacyId2 = el2.id
     } else {
-      legacyId2 = 'jbe-u-' + u; u++
       el2.id = _computeStableId(el2)
+      legacyId2 = premier ? 'jbe-u-' + u : el2.id
+      u++
     }
     el2.setAttribute('data-legacy-id', legacyId2)
     el2.setAttribute('data-orig-html', el2.innerHTML)
@@ -411,10 +438,13 @@ function scanElements() {
 function scanImages() {
   _imgs = []
   var n = 1
+  var premier = _premierScanImages
+  _premierScanImages = false
   var all = document.querySelectorAll('img, video')
   for (var i = 0; i < all.length; i++) {
     var img = all[i]
     if (img.closest('nav') || img.closest('footer') || img.closest('svg')) continue
+    if (_externe(img)) continue
     if (img.id === 'jbe-vid-prev-el') continue
     var elSrc = img.src || (img.querySelector && img.querySelector('source') ? img.querySelector('source').getAttribute('src') : '') || ''
     if (!elSrc) continue
@@ -426,8 +456,9 @@ function scanImages() {
     if (img.id) {
       legacyId = img.id
     } else {
-      legacyId = 'img-' + n; n++
       img.id = _computeStableId(img)
+      legacyId = premier ? 'img-' + n : img.id
+      n++
     }
     img.setAttribute('data-legacy-id', legacyId)
     img.setAttribute('data-orig-src', elSrc)
@@ -548,6 +579,10 @@ function _makeVideoFromImg(img, url) {
   var vid = document.createElement('video')
   vid.id        = img.id
   vid.className = img.className
+  // Garder la trace de l'image remplacée : le banc visiteur.js et les
+  // balayages suivants s'en servent pour savoir ce que la base a substitué.
+  if (img.getAttribute('data-legacy-id')) vid.setAttribute('data-legacy-id', img.getAttribute('data-legacy-id'))
+  if (img.getAttribute('data-orig-src'))  vid.setAttribute('data-orig-src', img.getAttribute('data-orig-src'))
   var cs = window.getComputedStyle(img)
   vid.setAttribute('style', img.getAttribute('style') || '')
   vid.style.position  = cs.position
@@ -574,6 +609,10 @@ function _makeVideoFromImg(img, url) {
 
 function _addVideoControls(vid) {
   if (vid.dataset.jbeCtrl) return
+  // Une vidéo sans source (téléphone : hero-video.js ne la charge pas) n'a
+  // rien à mettre en pause : pas de boutons qui ne feraient rien.
+  var aSource = vid.getAttribute('src') || (vid.querySelector('source[src]'))
+  if (!aSource) return
   vid.dataset.jbeCtrl = '1'
 
   var cs  = window.getComputedStyle(vid)
@@ -719,7 +758,8 @@ function _makeImgFromVideo(vid, url) {
 
 // Même seuil que hero-video.js et la nav (nav.css).
 function _grandEcran() {
-  return !window.matchMedia || window.matchMedia('(min-width: 700px)').matches
+  var q = (window.ROUTES && window.ROUTES.GRAND_ECRAN) || '(min-width: 700px) and (min-height: 600px)'
+  return !window.matchMedia || window.matchMedia(q).matches
 }
 
 function applyImages() {
@@ -1470,11 +1510,10 @@ function activateImages() {
           // Upload XHR direct → progress réel
           var xhr = new XMLHttpRequest()
           var uploadUrl = SB_URL + '/storage/v1/object/media/' + path
-          xhr.open('POST', uploadUrl)
-          xhr.setRequestHeader('Authorization', 'Bearer ' + SB_ANON)
-          xhr.setRequestHeader('apikey', SB_ANON)
-          xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream')
-          xhr.setRequestHeader('x-upsert', 'true')
+          // L'envoi se fait avec le jeton de session de JB, plus avec la clé
+          // publique : jusqu'au 10 octobre 2026, le stockage acceptait
+          // n'importe quel visiteur anonyme, qui pouvait écraser les photos et
+          // vidéos du site. Ouvert et envoyé plus bas, une fois le jeton lu.
 
           xhr.upload.addEventListener('progress', function(e) {
             if (e.lengthComputable) {
@@ -1528,7 +1567,16 @@ function activateImages() {
           }
 
           xhr.onerror = function() { removeOverlay(); setStatus('\u274c Erreur r\u00e9seau') }
-          xhr.send(file)
+          sb.auth.getSession().then(function (r) {
+            var session = r && r.data && r.data.session
+            if (!session) { removeOverlay(); setStatus('\u274c Session expir\u00e9e, reconnectez-vous'); return }
+            xhr.open('POST', uploadUrl)
+            xhr.setRequestHeader('Authorization', 'Bearer ' + session.access_token)
+            xhr.setRequestHeader('apikey', SB_ANON)
+            xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream')
+            xhr.setRequestHeader('x-upsert', 'true')
+            xhr.send(file)
+          })
           return
         }
         var url = (document.getElementById('jbe-img-url') || {}).value || ''

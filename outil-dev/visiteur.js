@@ -165,7 +165,9 @@ function mediaLocal(url) {
       page.on('response', r => { if (r.status() >= 400 && r.url().includes('localhost')) logs.push('HTTP ' + r.status() + ' ' + r.url()) })
       await page.goto('http://localhost:3000/' + p, { waitUntil: 'load', timeout: 45000 }).catch(e => logs.push('GOTO ' + e.message))
       await page.waitForTimeout(3000)
-      const etat = await page.evaluate(() => {
+      // Largeur demandee, pas window.innerWidth : en mode telephone, innerWidth
+      // suit la page quand elle deborde, et le debordement valait toujours 0.
+      const etat = await page.evaluate((largeur) => {
         const vis = el => !!(el.getClientRects().length) && getComputedStyle(el).visibility !== 'hidden'
         const remplaces = []
         document.querySelectorAll('[data-legacy-id]').forEach(el => {
@@ -176,8 +178,8 @@ function mediaLocal(url) {
         const liensVisibles = [...document.querySelectorAll('a[href]')].filter(vis).map(a => a.getAttribute('href'))
         const h1 = [...document.querySelectorAll('h1')].filter(vis).map(h => h.textContent.trim())
         const texte = document.body.innerText
-        return { remplaces, liensVisibles, h1, ecritures: window.__ecritures || 0, debordementX: document.documentElement.scrollWidth - window.innerWidth, texte }
-      })
+        return { remplaces, liensVisibles, h1, ecritures: window.__ecritures || 0, debordementX: document.documentElement.scrollWidth - largeur, texte }
+      }, vp.w)
       fs.writeFileSync(path.join(out, p.replace(/[\/.]/g, '_') + '-' + vp.n + '.txt'), etat.texte)
       delete etat.texte
       if (SHOTS) {

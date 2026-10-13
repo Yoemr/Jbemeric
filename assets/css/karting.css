@@ -20,7 +20,7 @@ img{display:block;max-width:100%}
   --bg-elev:#0a1028;
   --ink:#fff;
   --ink-soft:rgba(255,255,255,.65);
-  --ink-mute:rgba(255,255,255,.4);
+  --ink-mute:rgba(255,255,255,.6);
   --ink-faint:rgba(255,255,255,.15);
   --accent:#FFCF00;
   --accent-soft:rgba(255,207,0,.15);
@@ -76,6 +76,7 @@ img{display:block;max-width:100%}
   text-transform:uppercase;color:var(--ink-mute);
   display:inline-flex;align-items:center;gap:8px;
   transition:color .2s;align-self:flex-start;
+  padding:12px 0; /* zone tactile */
 }
 .hero-back::before{content:'←';font-size:13px}
 .hero-back:hover{color:var(--ink)}
@@ -284,6 +285,9 @@ img{display:block;max-width:100%}
 }
 .etape-img img{
   width:100%;height:100%;object-fit:cover;display:block;
+  /* Un visuel vertical posé par JB (étape 3, briefing) était coupé au milieu
+     de son titre incrusté. Sans effet visible sur une photo paysage. */
+  object-position:center 30%;
 }
 /* Cadrage des visuels verticaux (captures de video) places dans un cadre
    paysage : object-position center coupe le sujet, qui est rarement au

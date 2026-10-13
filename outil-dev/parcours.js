@@ -222,11 +222,11 @@ const PARCOURS = [
   },
   {
     nom: 'porte de l Academie, navigation par onclick',
-    page: 'academie.html',
+    page: 'index.html',
     largeur: 1300,
-    // Les portes ne sont pas des <a> : elles portent onclick="location.href=...".
-    // Un verificateur de liens ne voit donc rien a verifier ici.
-    action: `document.querySelector('.porte.enfant').click()`,
+    // Depuis le 9 octobre 2026, les portes n'existent plus que sur l'accueil,
+    // construites par sync-mirror.js a partir de la frise d'academie.html.
+    action: `document.querySelector('#mirror-academie .porte.enfant').click()`,
     attente: 1200,
     attendu: `location.pathname.includes('karting-enfant') || 'la porte n a pas navigue, on est reste sur ' + location.pathname`,
   },
@@ -262,6 +262,7 @@ const PARCOURS = [
     nom: 'carte Coaching de l accueil, vers la bonne offre',
     page: 'index.html',
     largeur: 1300,
+    masqueAvec: 'coaching.html',
     // Les cartes de l'accueil sont aspirees de coaching.html par sync-mirror.js
     // et pointent sur #amateur et #competition. Ces deux ancres ont manque
     // pendant des mois : le visiteur atterrissait en haut de la page au lieu
@@ -1484,7 +1485,17 @@ async function principal() {
     if (!joignable) console.log('  seront declares non concluants, pas en echec.')
     console.log('')
 
+    // Une page masquee (theme.css section 5) ne se teste pas : son parcours
+    // echouerait sans qu'aucun visiteur puisse rencontrer le defaut.
+    const { MASQUEES } = require('./audit/perimetre')
+    let masques = 0
     for (const p of liste) {
+      const fichier = p.page.split('?')[0]
+      if (MASQUEES.includes(fichier) || (p.masqueAvec && MASQUEES.includes(p.masqueAvec))) {
+        masques++
+        console.log(`  MASQUEE  ${p.nom}`)
+        continue
+      }
       if (p.besoinBase && !joignable) {
         sansBase++
         console.log(`  SANS BASE ${p.nom}`)
@@ -1503,6 +1514,7 @@ async function principal() {
     console.log('  ' + '-'.repeat(66))
     console.log(echecs ? `  ${echecs} parcours cassé(s).` : '  Tous les parcours joues passent.')
     if (sansBase) console.log(`  ${sansBase} parcours non joue(s), faute d acces a Supabase. A rejouer sur un poste connecte.`)
+    if (masques) console.log(`  ${masques} parcours non joue(s), leur page est masquee (audit/perimetre.js).`)
     console.log('')
     console.log('  L inscription est testee sans rien ecrire : fetch est remplace le temps')
     console.log('  du clic, la requete est capturee et la reponse simulee. Restent hors de')

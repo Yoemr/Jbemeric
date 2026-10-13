@@ -1,6 +1,6 @@
 // fumee.js : est-ce que les pages tournent ?
 //
-//   node outil-dev/fumee.js                  les 9 pages du perimetre
+//   node outil-dev/fumee.js                  les pages du perimetre (audit/perimetre.js)
 //   node outil-dev/fumee.js academie.html    une page precise
 //   node outil-dev/fumee.js --tout           toutes les pages du site
 //
@@ -161,6 +161,7 @@ async function principal() {
   ], { stdio: 'ignore' })
 
   let code = 0
+  let nonConcluantes = 0
   try {
     await attendrePret()
     console.log('')
@@ -179,7 +180,12 @@ async function principal() {
 
       const total = r.erreurs.length + r.console.length + r.reseau.length
       const dehors = r.externes.length ? `   (${r.externes.length} hote(s) externe(s) injoignable(s) : ${r.externes.join(', ')})` : ''
-      if (!total) { console.log(`  OK       ${page}${dehors}`); continue }
+      // Sans jsDelivr, live-editor.js ne se charge pas : la page n'a montre
+      // que son HTML, et les erreurs que produit la base chez le visiteur
+      // n'ont pas pu se produire ici (docs/07 2.9 et 2.17).
+      const sansEditeur = r.externes.some(h => /jsdelivr/.test(h))
+      if (sansEditeur) nonConcluantes++
+      if (!total) { console.log(`  ${sansEditeur ? 'NON CONCL.' : 'OK      '} ${page}${dehors}`); continue }
       code = 1
       console.log(`  PROBLEME ${page}`)
       for (const e of r.erreurs) console.log(`             erreur JS   ${e.slice(0, 110)}`)
@@ -190,6 +196,10 @@ async function principal() {
     console.log('')
     console.log('  ' + '-'.repeat(66))
     console.log(code ? '  Des pages ne tournent pas proprement.' : '  Toutes les pages se chargent sans erreur.')
+    if (nonConcluantes) {
+      console.log(`  ${nonConcluantes} page(s) NON CONCLUANTE(S) : jsDelivr injoignable, le live-editor n'a pas tourne.`)
+      console.log('  Rejouer la base avec node outil-dev/visiteur.js --base=<instantane>.')
+    }
     console.log('')
   } finally {
     nav.kill()

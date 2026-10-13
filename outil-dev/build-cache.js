@@ -136,11 +136,21 @@ fetchSupabase(function (err, rows) {
     // ce repli, la page recevrait un cache vide et son contenu passerait pour
     // orphelin, donc le filet de secours tomberait exactement sur la page qui
     // vient d'etre renommee.
+    // Fusion cle par cle, comme _reprendreAncienneCle du live-editor : en tout
+    // ou rien, la premiere ligne ecrite sous la nouvelle cle (une visite de JB
+    // connecte suffit, par la migration silencieuse) faisait disparaitre du
+    // filet tout ce qui restait sous l'ancienne (audit du 10 octobre 2026).
     var payload = byPage[pageKey]
-    if (!payload && PAGE_ALIASES[pageKey]) {
-      var ancien = PAGE_ALIASES[pageKey]
-      payload = byPage[ancien]
-      if (payload) { seen[ancien] = true; console.log('  ..  ' + rel + '  contenu repris de la cle « ' + ancien + ' »') }
+    var ancien = PAGE_ALIASES[pageKey]
+    if (ancien && byPage[ancien]) {
+      var vieux = byPage[ancien]
+      payload = {
+        v: 2,
+        c: Object.assign({}, vieux.c, payload ? payload.c : {}),
+        m: Object.assign({}, vieux.m, payload ? payload.m : {}),
+      }
+      seen[ancien] = true
+      console.log('  ..  ' + rel + '  contenu de la cle « ' + ancien + ' » fusionne')
     }
     if (!payload) { empty++; continue }
 

@@ -41,6 +41,7 @@
     trackday:  'Track-Day en voiture personnelle',
     coaching:  'Coaching vidéo',
     karting:   'Karting enfant',
+    'karting-adulte': 'Karting adulte',
     challenge: 'Vers la compétition',
     autre:     'Demande de renseignements',
   }
@@ -108,7 +109,8 @@
       + 'font-family:\'DM Mono\';font-size:10px;letter-spacing:1.5px">' + TEL_LU + '</a>',
         'ok')
 
-      zone.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      var reduit = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      zone.scrollIntoView({ behavior: reduit ? 'auto' : 'smooth', block: 'center' })
     })
   }
 

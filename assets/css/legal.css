@@ -40,7 +40,7 @@ a{text-decoration:none;color:inherit}
   font-size: 10px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(255,255,255,.35);
+  color: rgba(255,255,255,.6);
 }
 .legal-body {
   max-width: 740px;
@@ -75,7 +75,7 @@ a{text-decoration:none;color:inherit}
   font-size: 9px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: rgba(255,255,255,.25);
+  color: rgba(255,255,255,.6);
   text-align: center;
   padding: 0 0 60px;
 }

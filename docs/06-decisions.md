@@ -6,6 +6,126 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 9 octobre 2026, le site se limite au karting, et l'audit qui a suivi
+
+### D-186, Tout ce qui n'est pas karting est masqué, rien n'est supprimé
+
+Mot de Yoan : « Je voudrais qu'on se focus uniquement sur tout ce qui concerne le karting et rien d'autre pour l'instant. On va cacher le reste. C'est-à-dire que ça existe et ne le supprime pas, mais on ne le fait plus apparaître nulle part sur le site. Pour une raison simple : c'est qu'on va pas tarder à le déployer. »
+
+Restent visibles l'accueil, l'Académie, le karting enfant et le karting adulte, plus le contact, la connexion et les pages légales. Masqués : Compétition, Coaching, Événements, Paddock, Palmarès, Bibliothèque, création de compte.
+
+**Un seul réglage pour ce qui se voit**, la section 5 de `theme.css` : tout ce qui mène à une page porte `data-route`, une clé listée là-bas disparaît du menu, du pied de page, des pages et du miroir de l'accueil. Un attribut et pas une classe, parce que le live-editor calcule l'adresse des textes de JB à partir des classes. Rien n'est retiré de la page, pour ne pas décaler la numérotation des anciens contenus.
+
+Ce que le réglage ne couvre pas, et comment le défaire, est dans `docs/chantiers/2026-10-09-site-karting-seul.md` : en-têtes `noindex` dans `netlify.toml`, `sitemap.xml`, sujets du formulaire de contact, deux réponses de FAQ sur la voiture passées à `visible = false` (le mécanisme prévu par D-117).
+
+Le périmètre de l'audit suit ce qui se voit : `outil-dev/audit/perimetre.js`.
+
+### D-187, Un ancien texte de base ne s'affiche que s'il ressemble au texte qu'il remplace
+
+Trois textes de la base étaient affichés au mauvais endroit, en ligne : « 01 de compétition » dans le titre du palmarès de l'Académie, la description du parcours adulte sur la voie Karting enfant, « Karting, coaching, stages en voiture » sous le titre de l'accueil. Cause : `_legacyTextSanity` acceptait un seul mot commun, cherché comme morceau de mot, et tout texte court.
+
+Règle : mots entiers, 40 % de mots communs, textes courts de longueur voisine. Les textes que JB a vraiment saisis restent appliqués, les trois dérives sont refusées. Un refus ne perd rien : la page montre son HTML, et la prochaine modification de JB s'enregistre sous l'identifiant stable.
+
+### D-188, Rejouer la base pour voir ce que voit le visiteur
+
+`outil-dev/visiteur.js`, cinquième outil. Dans le bac à sable cloud, jsdelivr et Supabase sont bloqués et le live-editor ne tourne jamais : un rendu local montrait le HTML, jamais la base. Le banc remplace le module supabase-js par un faux client qui rend un instantané, répond aux requêtes REST, et liste ce que la base remplace. C'est lui qui a montré D-187.
+
+### D-189, Pas de vidéo sur téléphone, y compris celles posées par la base
+
+Décision de Yoan du 6 août : « ne pas mettre ces vidéos sur la version téléphone ». `hero-video.js` l'appliquait au HTML, mais une vidéo posée par JB à la place d'une image passait outre. Un téléphone téléchargeait 45 Mo sur l'accueil, deux fois, 26 Mo sur l'Académie, trois vidéos sur Karting adulte dont une dans une section masquée. Le live-editor ne pose plus de vidéo de base sous 700 px de large, ni dans une partie masquée. L'accueil passe par `hero-video.js` comme les pages karting.
+
+### D-190, Le document défile, plus body
+
+`snap.css` posait `overflow-y: scroll` et `height: 100%` sur html et body. body devenait la zone qui défile : le clavier ne faisait rien tant qu'on n'avait pas cliqué, deux barres de défilement sous Windows, et `window.scrollY` restait à 0, ce qui décalait la barre d'outils du live-editor. Le snap est maintenant porté par html seul.
+
+La dernière section ne défile plus en interne (D-028) : elle grandit avec son contenu. La moitié de la FAQ de l'Académie était invisible sans rien l'indiquer. Une zone aimantée plus haute que l'écran se parcourt librement.
+
+### D-191, L'Académie de l'accueil lit la frise des voies
+
+`sync-mirror.js` cherchait la section `#portes` d'`academie.html`, retirée le 14 août : depuis, l'accueil affichait un message d'erreur à 40 % d'opacité à la place de l'Académie. Il lit maintenant la frise, chaque voie porte sa photo (`data-photo`) et sa couleur (`data-porte`). Les portes se partagent la largeur à parts égales, une voie masquée laisse la place aux autres.
+
+### D-192, La connexion existe sur téléphone et tablette
+
+Le bouton « Se connecter » n'apparaissait qu'à partir de 1040 px, et le menu mobile n'en avait pas. JB ne pouvait pas se connecter depuis son téléphone. Il est dans la barre dès 700 px et dans le menu mobile en dessous, et le live-editor le remplace par « Déconnexion » une fois connecté.
+
+### D-193, Le rôle d'administrateur se lit dans app_metadata
+
+Trouvé par l'audit d'exécution. `est_admin()`, la policy de `site_content`, le live-editor, la fenêtre de gestion et le tableau de bord lisaient le rôle dans `user_metadata`. Supabase laisse l'utilisateur écrire lui-même ces métadonnées, à l'inscription comme après. N'importe qui pouvait donc se créer un compte avec `role: admin` et réécrire les textes du site, la FAQ, les avis et les événements, script compris, puisque le live-editor injecte `site_content` en HTML. L'avis de sécurité de Supabase le signalait en erreur. Un seul compte existait, rien n'a été abusé.
+
+**Appliqué en base le 10 octobre, dans cet ordre, pour ne pas enfermer JB dehors** : son rôle recopié dans `app_metadata`, que seul le serveur écrit ; `est_admin()` lit `app_metadata` ; la policy de `site_content` passe par `est_admin()` comme toutes les autres tables ; `handle_new_user()` donne `client` à toute inscription. Contrôle négatif dans une transaction annulée : un jeton `user_metadata.role = admin` est refusé (42501), un jeton `app_metadata.role = admin` écrit.
+
+**Conséquence pour JB** : une déconnexion puis une reconnexion, une seule fois, pour que son jeton porte le nouveau rôle. La règle de `docs/07` section 4, qui recommandait `user_metadata`, est corrigée.
+
+### D-194, L'écran blanc du live-editor a un délai maximal
+
+Le live-editor cache la page le temps de charger les textes de la base. Sans réponse de Supabase, la page restait blanche indéfiniment, et 7,5 secondes si la base répondait en erreur. Elle s'affiche maintenant au plus tard à 1,2 seconde. Au pire, le visiteur voit le texte du HTML puis celui de la base le remplacer.
+
+### D-195, Le lien « mot de passe oublié » demande enfin un nouveau mot de passe
+
+Le parcours s'arrêtait à l'envoi du courriel. Le lien reçu connectait JB en silence sur la page de connexion, sans rien changer à son mot de passe. La page de connexion affiche maintenant un champ « Nouveau mot de passe » quand on y arrive par ce lien, et l'enregistre. Ce n'est pas une section nouvelle : c'est la fin d'un parcours qui existait à moitié.
+
+### D-196, Ce qui reste à Yoan dans l'audit d'exécution
+
+- **Le formulaire de contact n'envoie rien lui-même** : il ouvre la messagerie du visiteur (D-082). C'est désormais le seul chemin de réservation du site karting. Netlify Forms le ferait sans serveur, cent messages par mois gratuits. À trancher.
+- **Aucune page 404 propre au site.** Une adresse fausse affiche la page anglaise de Netlify. La créer demande son accord, c'est une page.
+- **Les inscriptions de compte restent ouvertes côté Supabase**, même si la page est masquée. Elles ne donnent plus aucun droit (D-193). Les fermer se fait dans le tableau de bord Supabase, Authentication.
+
+### D-197, Le stockage, trois vues et les brouillons fermés aux anonymes
+
+Trouvé par l'audit de la base, appliqué le 11 octobre avec contrôle négatif dans une transaction annulée.
+
+- **Stockage `media`** : un visiteur anonyme pouvait déposer et remplacer n'importe quel fichier, dont la vidéo du hero. Le live-editor envoyait avec la clé publique, les règles avaient dû suivre. Dépôt et remplacement passent par `est_admin()`, le live-editor envoie avec le jeton de session de JB. **Jusqu'à la publication du code, un envoi de photo par JB échoue**, l'ancien code utilisant encore la clé publique.
+- **Vues `inscriptions_view`, `event_chiffres`, `veille_file_utile`** : créées par postgres, elles ignoraient les règles des tables qu'elles lisent. Données personnelles des inscrits et marges des événements lisibles par l'API publique. Passées en `security_invoker`. `offres_publiques` reste publique, c'est voulu.
+- **`events_public_read`** ne laisse plus lire les dates en préparation.
+
+### D-198, Le live-editor ne renumérote plus à chaque balayage
+
+Les anciens contenus sont rangés sous un numéro d'ordre attribué au premier balayage de la page. Un second balayage (passage en mode édition, miroir arrivé après coup) repartait de 1 : en mode édition, la vidéo du hero de l'accueil se posait sur la porte Karting enfant, puis s'enregistrait en base. Les numéros ne valent plus qu'au premier balayage ; un élément découvert plus tard reçoit son identifiant stable. Le contenu recopié par le miroir (`data-jbe-externe`) n'est plus éditable sur l'accueil, il se modifie à sa source. Un ancien texte dont les nombres diffèrent du texte qu'il remplace est refusé.
+
+### D-199, Le grand écran est défini une seule fois, avec une hauteur
+
+Un téléphone tenu à l'horizontale fait 844 px de large : il passait le seuil de 700 px et chargeait les 45 Mo de l'accueil. `ROUTES.GRAND_ECRAN` dans `routes.js` exige aussi 600 px de haut, et `hero-video.js`, `videos.js`, le live-editor et `academie.css` lisent cette même définition. Une tablette reçoit toujours les vidéos : à trancher par Yoan.
+
+### D-200, Les vidéos de fond suivent la préférence « réduire les animations »
+
+Un visiteur qui l'a demandé à son système recevait quand même les vidéos en boucle, le halo qui pulse sur l'accueil et le défilement animé. `ROUTES.VIDEO_FOND` (grand écran, animations non réduites) remplace `GRAND_ECRAN` dans `hero-video.js` et le live-editor : ce visiteur suit le chemin du téléphone, image d'attente comprise. `videos.js` garde `GRAND_ECRAN`, une vidéo YouTube ne démarre qu'au clic. Section 6 de `theme.css` : animations d'un instant, défilement sans animation. Vérifié dans Chromium : aucune requête vidéo avec la préférence, la vidéo de l'accueil sans elle.
+
+### D-201, Un plancher de contraste pour les petits libellés
+
+Sept textes étaient sous 3 pour 1 (le sur-titre de la FAQ claire à 2,2), une vingtaine entre 3 et 4,5. Plancher appliqué règle par règle, couleurs seulement : blanc à 60 % et jaune à 70 % sur fond sombre, noir à 60 % sur fond clair, or `#946200` sous 24 px et `#A86F00` au-dessus sur fond clair (bloc formateur de l'Académie). `--ink-mute` de `karting.css` passe à 60 %, une ligne pour six règles. Les tailles de 7 et 8 px restent, notées dans `docs/08`.
+
+### D-202, Le voile du hero de l'Académie passe du côté du texte
+
+Sur ordinateur, le dégradé était opaque à droite, où il n'y a rien, et transparent à gauche, sous le titre et l'accroche : des mots disparaissaient sur les casques blancs. `--hero-overlay` va maintenant de la gauche vers la droite.
+
+### D-203, La description d'image enregistrée en base n'est pas branchée
+
+L'audit proposait que le live-editor applique `alt_text` aux photos remplacées par JB. Relevé en base : sur 11 descriptions du périmètre, la plupart sont le titre de la section suivi de « JB EMERIC », ou la description de l'ancienne photo recopiée par la fenêtre d'envoi. Les appliquer dégraderait l'affichage. Trois photos remplacées gardent donc une description fausse (podium de 1991 décrit comme une salle de briefing). Décision à Yoan : écrire les vraies descriptions, puis brancher la lecture.
+
+### D-204, Contact, confidentialité, référencement
+
+- Le bloc « Boutique en ligne · Paiement 4× sans frais » de la page Contact menait à un domaine mort. Il porte la clé `boutique`, ajoutée à la section 5 de `theme.css`.
+- La politique de confidentialité ne parle plus de stages, de track-days ni d'inscription. Les vidéos YouTube passent par `youtube-nocookie.com`, ce qui rend vraie la phrase sur les cookies.
+- Titre de Karting adulte : « Karting adulte · Formation C1 à C5 · JB EMERIC ». La page vers laquelle mènent `/karting` et `/karting-adulte` ne contenait pas le mot.
+- Contact ajouté au sitemap ; `og:url` des deux pages légales alignés sur leur adresse réelle ; `og:url` posé sur les deux pages karting.
+- Karting adulte : trois tournures antithétiques réécrites, « sud de la France » remplacé (docs/04, la géographie passe par les circuits), le renvoi à une « étape 01 » qui n'existe plus remplacé par la journée Découverte. Les anciens textes de base de ces zones restent refusés, vérifié au banc visiteur.
+- La règle `ton-ia` reconnaît « cesse d'être X, devient Y » et « n'est pas X : Y », contrôle négatif fait.
+
+### D-205, Clavier et lecteur d'écran
+
+Le menu et les questions de FAQ disent s'ils sont ouverts (`aria-expanded`), Échap ferme le menu et rend le focus au bouton. Les commandes vidéo ont un nom (« Mettre en pause », « Activer le son », « Volume ») et le curseur de volume s'ouvre au clavier. Le champ actif du formulaire de contact a un filet jaune plein. Les liens vers les réseaux portent `rel="noopener"`. Le lien d'évitement et la balise `<main>` sont repoussés : envelopper les sections changerait l'adresse de tous les textes de JB.
+
+### D-206, Ce qui est masqué ne se télécharge plus, et le filet de secours colle à la base
+
+- **Filet de secours recuit.** Les blocs `jbe-content-cache` de l'Académie et de Karting adulte dataient d'avant le nettoyage du 8 août : si Supabase tombait, Karting adulte reprenait « une voiture de course à la clé », et le source portait encore la BMW du Challenge et un tiret cadratin. Recuits par `build-cache.js` lui-même, nourri d'un instantané de la base vérifié au caractère près (empreinte md5 identique à celle calculée par Supabase). Netlify continue de les recuire à chaque publication.
+- **Images masquées en `loading="lazy"`** : une image en `display:none` se télécharge quand même, sauf en chargement différé. L'accueil ne demande plus la Porsche, la BMW ni deux miniatures à YouTube ; Karting adulte ne demande plus la BMW du pont. Un attribut, sans effet sur la numérotation du live-editor.
+- **`avis.js` ne lit plus la base pour un bloc masqué**, même garde que `sync-mirror.js`.
+- **Vidéos YouTube en `rel=0`** : les suggestions de fin de lecture restent sur la chaîne de JB.
+
+Chaque point vérifié dans Chromium avec son contrôle négatif : l'attribut retiré, la requête revient ; l'ancien `avis.js` remis, la requête à la table revient.
+
+---
+
 ## 11 août 2026, la barre de filtres, et de vraies dates sur le site
 
 ### D-183, Les cases en vrac deviennent des listes déroulantes

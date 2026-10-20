@@ -90,13 +90,12 @@
   // Décision de Yoan du 6 août 2026 : pas de vidéo sur téléphone. La largeur
   // seule ne suffit pas : un téléphone tenu à l'horizontale fait 844 px de
   // large et chargeait les 45 Mo de l'accueil. La hauteur l'exclut.
-  // Lu par hero-video.js, videos.js et live-editor.js ; academie.css porte la
-  // même requête en CSS pour la section des vidéos YouTube.
+  // Les vidéos YouTube n'en dépendent plus depuis le 13 octobre 2026 :
+  // videos.js montre une miniature partout et ne pose le lecteur qu'au clic.
   ROUTES.GRAND_ECRAN = '(min-width: 700px) and (min-height: 600px)'
   // Vidéos de fond : le grand écran, sauf pour un visiteur qui a demandé à
   // son système de réduire les animations. Il garde l'image d'attente, comme
-  // un téléphone. Lu par hero-video.js et live-editor.js. videos.js garde
-  // GRAND_ECRAN : une vidéo YouTube ne démarre qu'au clic.
+  // un téléphone. Lu par hero-video.js et live-editor.js.
   ROUTES.VIDEO_FOND = ROUTES.GRAND_ECRAN + ' and (prefers-reduced-motion: no-preference)'
   ROUTES.MOUVEMENT_REDUIT = '(prefers-reduced-motion: reduce)'
 

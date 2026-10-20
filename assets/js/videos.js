@@ -8,12 +8,13 @@
 // doit pas figer huit choix ecrits en dur : la liste vit dans site-data.js et
 // la page en montre quelques-unes, differentes a chaque visite.
 //
-// ── Rien sur telephone ──────────────────────────────────────────────────────
-// Meme regle que hero-video.js, meme seuil. Huit iframes YouTube, c'est huit
-// connexions a un tiers pour un decor. Ici le script ne construit rien sous le
-// seuil, donc aucune requete n'est emise, et le CSS masque la section pour
-// qu'on ne voie pas un cadre vide. Les deux sont necessaires : masquer sans
-// s'abstenir de construire ferait quand meme payer le telechargement.
+// ── Une miniature, puis la video au toucher ─────────────────────────────────
+// Jusqu'au 13 octobre 2026, rien sur telephone : quatre iframes YouTube, c'est
+// quatre lecteurs a telecharger pour des videos que personne n'a demandees.
+// Yoan, ce jour-la : les videos de la chaine doivent se voir aussi sur
+// telephone. Chaque carte montre donc la miniature de la video et un bouton
+// de lecture ; l'iframe n'est posee qu'au toucher ou au clic. Meme regle sur
+// tous les ecrans : rien ne se charge tant qu'on n'a rien demande.
 //
 // ── Universel ───────────────────────────────────────────────────────────────
 // Aucun nom de page, aucun identifiant de video en dur. Tout element portant
@@ -29,13 +30,6 @@
 // YouTube ne porte aucun mot-cle qu'on cherche a defendre. La regle inverse
 // vaut toujours pour la FAQ et les avis, voir la fiche du 4 aout.
 ;(function () {
-  var SEUIL = 700   // le meme point de bascule que la nav et hero-video.js
-  // La définition du grand écran vit dans routes.js (ROUTES.GRAND_ECRAN).
-  // Repli identique si ce script passe avant routes.js dans la page.
-  function requeteGrandEcran() {
-    return (window.ROUTES && window.ROUTES.GRAND_ECRAN) || '(min-width: 700px) and (min-height: 600px)'
-  }
-
   function melanger(liste) {
     // Fisher-Yates sur une copie : la liste d'origine n'est jamais touchee,
     // sinon deux conteneurs sur la meme page se voleraient leur ordre.
@@ -59,12 +53,15 @@
     // Le titre de l'iframe reprend le lieu : c'est ce que lit un lecteur
     // d'ecran, et « Trajectoires sur circuit » tout seul ne dit pas ou.
     var titreComplet = lieu ? titre + ', ' + lieu : titre
+    var id = echapper(v.id)
     return '<div class="yt-card">' +
       '<div class="yt-thumb">' +
-        '<iframe src="https://www.youtube-nocookie.com/embed/' + echapper(v.id) + '?rel=0"' +
-        ' title="' + titreComplet + '"' +
-        ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"' +
-        ' allowfullscreen loading="lazy"></iframe>' +
+        '<button type="button" class="yt-lancer" data-yt="' + id + '" data-titre="' + titreComplet + '"' +
+        ' aria-label="Lire la vidéo : ' + titreComplet + '">' +
+          // Miniature introuvable : le cadre noir et le bouton suffisent.
+          '<img src="https://i.ytimg.com/vi/' + id + '/hqdefault.jpg" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
+          '<span class="yt-play" aria-hidden="true"></span>' +
+        '</button>' +
       '</div>' +
       '<div class="yt-info">' +
         '<div class="yt-title">' + titre + '</div>' +
@@ -74,9 +71,23 @@
     '</div>'
   }
 
-  function remplir() {
-    if (!window.matchMedia(requeteGrandEcran()).matches) return
+  // Le lecteur remplace la miniature et démarre : le toucher valait demande.
+  function lancer(bouton) {
+    var f = document.createElement('iframe')
+    f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(bouton.getAttribute('data-yt')) + '?rel=0&autoplay=1'
+    f.title = bouton.getAttribute('data-titre') || 'Vidéo YouTube'
+    f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+    f.setAttribute('allowfullscreen', '')
+    bouton.parentNode.replaceChild(f, bouton)
+    f.focus()
+  }
 
+  document.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest && e.target.closest('.yt-lancer')
+    if (b) lancer(b)
+  })
+
+  function remplir() {
     var data = window.JBEMERIC_DATA
     var toutes = data && data.videos
     if (!toutes || !toutes.length) return
@@ -108,12 +119,4 @@
     remplir()
   }
 
-  // Passage en grand ecran apres coup, rotation de tablette par exemple.
-  // L'inverse ne vide rien : les iframes sont deja chargees, les retirer ne
-  // rendrait pas la bande passante depensee.
-  if (window.matchMedia) {
-    var mq = window.matchMedia(requeteGrandEcran())
-    if (mq.addEventListener) mq.addEventListener('change', remplir)
-    else if (mq.addListener) mq.addListener(remplir)
-  }
 })()

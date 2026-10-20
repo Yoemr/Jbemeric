@@ -95,7 +95,7 @@ body { background: var(--night); min-height: 100vh }
 .auth-brand-sub {
   font-family: 'DM Mono';
   font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
-  color: rgba(255,255,255,.28);
+  color: rgba(255,255,255,.6);
   margin-bottom: 32px;
 }
 /* Avantages membres */
@@ -130,6 +130,7 @@ body { background: var(--night); min-height: 100vh }
   max-width: 420px;
 }
 .auth-box-title {
+  font-weight: normal; /* h1 depuis le 9 octobre 2026, la page n'avait pas de titre principal */
   font-family: 'Bebas Neue';
   font-size: clamp(36px,5vw,52px);
   color: #fff;
@@ -152,8 +153,8 @@ body { background: var(--night); min-height: 100vh }
 .form-group:last-of-type { margin-bottom: 24px }
 .form-label {
   font-family: 'DM Mono';
-  font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
-  color: rgba(255,255,255,.35);
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(255,255,255,.6);
 }
 .form-input {
   background: rgba(255,255,255,.04);
@@ -161,7 +162,7 @@ body { background: var(--night); min-height: 100vh }
   border-radius: 4px;
   padding: 13px 16px;
   font-family: 'Outfit', sans-serif;
-  font-size: 14px; color: #fff;
+  font-size: 16px; color: #fff; /* 16 px : en dessous, iPhone zoome à chaque saisie */
   outline: none;
   transition: border-color .18s, background .18s;
   width: 100%;
@@ -190,8 +191,8 @@ body { background: var(--night); min-height: 100vh }
   content: ''; flex: 1; height: 1px; background: var(--sep);
 }
 .form-sep-txt {
-  font-family: 'DM Mono'; font-size: 8px; letter-spacing: 2px;
-  text-transform: uppercase; color: rgba(255,255,255,.2);
+  font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(255,255,255,.5);
   white-space: nowrap;
 }
 
@@ -213,10 +214,10 @@ body { background: var(--night); min-height: 100vh }
 
 /* Mentions CGU */
 .form-cgu {
-  font-size: 11px; color: rgba(255,255,255,.22);
+  font-size: 11px; color: rgba(255,255,255,.55);
   line-height: 1.6; margin-top: 16px; text-align: center;
 }
-.form-cgu a { color: rgba(255,255,255,.4); text-decoration: none }
+.form-cgu a { color: rgba(255,255,255,.75); text-decoration: none }
 .form-cgu a:hover { color: var(--gd) }
 
 /* Mot de passe oublié */
@@ -225,9 +226,10 @@ body { background: var(--night); min-height: 100vh }
   margin-bottom: 20px; margin-top: -10px;
 }
 .form-forgot a {
-  font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px;
-  text-transform: uppercase; color: rgba(255,255,255,.28);
+  font-family: 'DM Mono'; font-size: 10px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: rgba(255,255,255,.6);
   text-decoration: none; transition: color .18s;
+  display: inline-block; padding: 12px 0; /* zone tactile */
 }
 .form-forgot a:hover { color: var(--gd) }
 

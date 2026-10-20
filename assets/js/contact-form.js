@@ -41,6 +41,10 @@
     trackday:  'Track-Day en voiture personnelle',
     coaching:  'Coaching vidéo',
     karting:   'Karting enfant',
+    'karting-adulte': 'Karting adulte',
+    entreprise: 'Karting pour une entreprise ou un CE',
+    colonie:   'Karting pour une colonie ou un centre de loisirs',
+    course:    'Course de karting',
     challenge: 'Vers la compétition',
     autre:     'Demande de renseignements',
   }
@@ -62,6 +66,17 @@
 
   function brancher(form) {
     var zone = document.getElementById(form.getAttribute('data-contact-alert') || 'contact-alert')
+
+    // ?sujet=entreprise dans l'adresse : le bouton « Demander un devis » d'une
+    // page d'offre arrive avec le bon sujet déjà choisi. Une valeur inconnue
+    // laisse le choix vide.
+    var demande = window.URLSearchParams ? new URLSearchParams(location.search).get('sujet') : null
+    var choix = form.elements['sujet']
+    if (demande && choix && choix.options) {
+      for (var o = 0; o < choix.options.length; o++) {
+        if (choix.options[o].value === demande) { choix.value = demande; break }
+      }
+    }
 
     form.addEventListener('submit', function (ev) {
       // Sans ceci, le navigateur recharge la page et le message est perdu.
@@ -108,7 +123,8 @@
       + 'font-family:\'DM Mono\';font-size:10px;letter-spacing:1.5px">' + TEL_LU + '</a>',
         'ok')
 
-      zone.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      var reduit = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      zone.scrollIntoView({ behavior: reduit ? 'auto' : 'smooth', block: 'center' })
     })
   }
 

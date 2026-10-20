@@ -9,11 +9,15 @@
  * Compatible : index.html, academie.html, et toute future page.
  */
 
-/* ── Activation sur html/body ─────────────────────────── */
-html, body {
+/* ── Activation sur le document ───────────────────────── */
+/* Le document défile, pas body. Jusqu'au 9 octobre 2026, html et body
+   portaient tous deux overflow-y:scroll et height:100% : body devenait la
+   zone qui défile, si bien que le clavier (Espace, Page suivante, flèches)
+   ne faisait rien tant qu'on n'avait pas cliqué dans la page, que deux
+   barres de défilement s'affichaient sous Windows, et que window.scrollY
+   restait à 0, ce qui décalait la barre d'outils du live-editor. */
+html {
   scroll-snap-type: y mandatory;
-  overflow-y: scroll;
-  height: 100%;
   scroll-padding-top: 56px; /* hauteur de la nav sticky */
 }
 
@@ -31,9 +35,14 @@ html, body {
   height: calc(100svh - 56px);
 }
 
-/* Dernière section avant footer : scrollable en interne */
+/* Dernière section avant footer : elle grandit avec son contenu.
+   Elle défilait en interne (D-028), ce qui cachait la moitié de la FAQ
+   de l'Académie sans rien indiquer. Une zone aimantée plus haute que
+   l'écran se parcourt librement, et le pied de page reste un arrêt. */
 .snap-fin {
-  overflow-y: auto;
+  height: auto;
+  min-height: calc(100svh - 56px);
+  overflow: visible;
   display: flex;
   flex-direction: column;
 }
@@ -45,5 +54,5 @@ html, body {
 
 /* ── Mobile : snap moins strict sous 500px ────────────── */
 @media(max-width:499px) {
-  html, body { scroll-snap-type: y proximity }
+  html { scroll-snap-type: y proximity }
 }

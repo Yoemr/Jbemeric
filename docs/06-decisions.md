@@ -6,6 +6,33 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 13 octobre 2026, le palmarès revient, les vidéos aussi sur téléphone, trois offres de plus
+
+### D-207, Le palmarès revient, avec une entrée de menu à lui
+
+Mot de Yoan : « Il manque énormément de trucs, y a plus la page palmarès. » Masqué le 9 octobre avec le Paddock, dont il était un sous-menu. Le palmarès vend l'homme : il sort du Paddock et devient une entrée du menu, après Académie, et un lien du pied de page. Retiré de la section 5 de `theme.css` et du noindex (les articles du Paddock y restent), remis au sitemap et au périmètre de l'audit.
+
+Sur téléphone, les trois chiffres et la citation du haut débordaient de 52 px : colonne de grille en `1fr`, qui ne descend pas sous la largeur de son contenu. Même remède qu'à l'Académie, `minmax(0, …)`.
+
+Deux anciens envois de JB posaient une photo de kart de 1986 sur les années 2022 et 1987 (`palmares__img-93` et `palmares__img-98`, description « Karting National 1 », envoyés les 22 et 23 avril pendant que la numérotation des anciens contenus dérivait, D-198). Yoan a décidé de les retirer. Sauvegarde des deux lignes :
+
+```
+palmares__img-93 | .../uploads/1776845885301-1986-karting-nice.jpg | alt « Karting National 1 » | file_name voitures-course-1986-karting-jb-emeric.jpg | 2026-04-22T08:18:07Z
+palmares__img-98 | .../uploads/1776924402394-1986-karting-nice.jpg | alt « Karting National 1 » | file_name voitures-course-1986-karting-jb-emeric.jpg | 2026-04-23T06:06:44Z
+```
+
+**Pas encore appliqué** : le 20 octobre, toute écriture par le connecteur Supabase expire avant d'atteindre la base (lecture normale, aucune requête bloquée, aucun déclencheur). Deux essais, puis arrêt (`CLAUDE.md`, deux tentatives). À refaire dès que le connecteur écrit de nouveau : `delete from site_content where id in ('palmares__img-93','palmares__img-98');`
+
+### D-208, Les vidéos YouTube se voient sur téléphone, le lecteur ne se charge qu'au clic
+
+Mot de Yoan : « Il n'y a plus les vidéos YouTube de sa chaîne. » Sur téléphone, la section était cachée (règle du 6 août : quatre lecteurs YouTube à télécharger pour rien). Chaque carte montre maintenant la miniature et un bouton de lecture ; le lecteur est posé au toucher ou au clic, sur tous les écrans. La section revient sur téléphone sans aucun poids à l'ouverture. Les styles de la grille passent dans `videos.css`, commune à toutes les pages.
+
+### D-209, Trois offres de plus : entreprises et CE, colonies, courses
+
+Mot de Yoan : « Le karting n'est pas fini. Il propose des comités d'entreprise, aucune page n'y figure. Il organise des événements karting comme des courses. Il fait des stages pour des colonies de vacances aussi. » Fiche : `docs/chantiers/2026-10-13-offres-karting.md`. Choix de Yoan : trois pages à leur adresse (`/groupes/karting-entreprise.html`, `/groupes/karting-colonie.html`, `/courses-karting.html`), menu Groupes (Entreprises et CE, Colonies et centres de loisirs) puis Courses, construction tout de suite avec les seuls faits sûrs, page Courses sans dates pour commencer. Les prix, tailles de groupe, âges, formats et références attendent les réponses de JB (questionnaire, section « Entreprises, colonies, courses »). Le formulaire de contact présélectionne le sujet par `?sujet=`.
+
+---
+
 ## 9 octobre 2026, le site se limite au karting, et l'audit qui a suivi
 
 ### D-186, Tout ce qui n'est pas karting est masqué, rien n'est supprimé

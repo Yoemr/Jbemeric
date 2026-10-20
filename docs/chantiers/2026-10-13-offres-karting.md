@@ -71,3 +71,16 @@ Les questions sont dans le questionnaire « Questions pour JB, Académie et kart
 2. **Les dates des courses** : dès le départ, ou une page de présentation d'abord ?
 3. **L'ordre** : construire les trois pages maintenant avec la structure et les textes sûrs, puis compléter avec les réponses de JB ; ou attendre ses réponses ?
 4. **Le devis** : le formulaire ouvre aujourd'hui la messagerie du visiteur (D-082). Pour un devis d'entreprise, Netlify Forms enverrait la demande sans messagerie (déjà noté dans `docs/08`).
+
+## 8. Passage de relais, 20 octobre 2026
+
+Yoan confie la construction des trois pages à ChatGPT, faute de quota. Le prompt lui donne le dépôt, la branche `claude/redesign-competition-page-pNx0Y`, cette fiche, `CLAUDE.md` et `docs/07`, et la suppression des deux photos du palmarès dans Supabase (D-207).
+
+**Ce que ChatGPT ne peut pas faire, à reprendre à la prochaine session Claude :**
+
+1. **Vérifier ce que voit le visiteur** : `outil-dev/visiteur.js` (base rejouée), `parcours.js`, `audit.js`, et les mesures de débordement sur téléphone (390, 320 px) et ordinateur. Repasser les trois pages, le palmarès et le menu.
+2. **Relire les trois pages contre les faits** : aucun prix, âge, taille de groupe, format ni client inventé ; ni tiret cadratin ni antithèse ; ids uniques préfixés `ent-`, `col-`, `crs-` (le live-editor adresse les textes par id).
+3. **Reprendre l'audit du palmarès** (rendu, interactions, accessibilité, contenu) : `Workflow` avec `resumeFromRunId: wf_6a2d91b5-4cf`, arrêté le 20 octobre.
+4. **Supabase** : vérifier que `palmares__img-93` et `palmares__img-98` ont disparu (D-207), sinon les retirer ; ajouter les tags `entreprise`, `colonie` et `course` à la contrainte `faq_tags_connus` pour que la FAQ de chaque page puisse vivre en base.
+5. **Recuire le filet de secours** des trois pages (`build-cache.js` avec l'instantané vérifié, `docs/07` 2.19) si JB y a saisi des textes.
+6. **Mettre à jour** `docs/01-architecture.md` (l'arbre), `docs/05` et `docs/06`, puis publier sur `main` si Yoan le demande.

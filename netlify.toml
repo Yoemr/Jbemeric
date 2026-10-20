@@ -77,7 +77,11 @@
   [headers.values]
     X-Robots-Tag = "noindex"
 [[headers]]
-  for = "/paddock/*"
+  for = "/paddock/articles.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/paddock/article.html"
   [headers.values]
     X-Robots-Tag = "noindex"
 [[headers]]

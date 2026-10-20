@@ -27,6 +27,7 @@ const PAGES = [
   'admin/legal/mentions-legales.html',
   'admin/legal/confidentialite.html',
   'admin/login.html',
+  'paddock/palmares.html',        // reaffiche le 13 octobre 2026 (D-207)
 ]
 
 // Masquees le 9 octobre 2026 (theme.css section 5), donc sorties du
@@ -36,7 +37,6 @@ const MASQUEES = [
   'coaching.html',
   'evenements.html',
   'paddock.html',
-  'paddock/palmares.html',
   'evenement.html',             // la page d'une date suit les Evenements
 ]
 

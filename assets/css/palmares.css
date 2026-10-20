@@ -87,7 +87,9 @@ a { text-decoration: none; color: inherit; }
 }
 .pal-hero-bottom {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  /* minmax(0, …) : une colonne 1fr ne descend pas sous la largeur de son
+     contenu, et les trois chiffres débordaient de 52 px sur téléphone. */
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   gap: clamp(24px, 4vw, 64px);
   align-items: end;
   padding-top: clamp(20px, 3vh, 32px);
@@ -228,7 +230,7 @@ a { text-decoration: none; color: inherit; }
 /* ── Mobile : hero en colonne simple ─────────────────────── */
 @media (max-width: 900px) {
   .pal-hero-bottom {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 28px;
   }
   .pal-hero-citation {

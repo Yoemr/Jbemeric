@@ -26,6 +26,9 @@
         { href:R.competition,   route:'competition',   label:'Vers la Comp&eacute;tition' },
       ]
     },
+    // Le palmarès vend l'homme : une entrée à lui, hors du Paddock, depuis le
+    // 13 octobre 2026 (D-207). Il restait invisible avec le Paddock masqué.
+    { type:'link', href:R.palmares, key:'palmares', label:'Palmar&egrave;s' },
     { type:'link', href:R.coaching, key:'coaching', label:'Coaching' },
     // Les trois anciennes entrees, « Stages voiture », « Track-Days » et
     // « Nos voitures », visaient des sections retirees le 9 aout 2026 avec le
@@ -38,7 +41,6 @@
         { href:R.paddock + '#forum',  route:'paddock',  label:'Forum pilotes' },
         { href:R.paddock + '#media',  route:'paddock',  label:'Cha&icirc;ne YouTube' },
         { href:R.paddock + '#events', route:'paddock',  label:'Calendrier 2026' },
-        { href:R.palmares,            route:'palmares', label:'Palmar&egrave;s' },
       ]
     },
   ]

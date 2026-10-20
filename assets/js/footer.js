@@ -31,6 +31,7 @@
       '<div class="ft-col-title">Navigation</div>' +
       '<a href="' + R.index + '">Accueil</a>' +
       '<a href="' + R.academie + '">Académie</a>' +
+      '<a href="' + R.palmares + '">Palmarès</a>' +
       '<a data-route="coaching" href="' + R.coaching + '">Coaching</a>' +
       '<a data-route="evenements" href="' + R.evenements + '">Événements</a>' +
       '<a data-route="paddock" href="' + R.paddock + '">Paddock</a>' +

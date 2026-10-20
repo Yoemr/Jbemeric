@@ -26,6 +26,15 @@
         { href:R.competition,   route:'competition',   label:'Vers la Comp&eacute;tition' },
       ]
     },
+    // Les offres de groupe et les courses, 13 octobre 2026 (D-209). Groupes
+    // n'a pas de page à lui : un clic sur ordinateur mène à la première.
+    { type:'sub',  href:R.kartingEntreprise, key:'groupes', label:'Groupes',
+      subs:[
+        { href:R.kartingEntreprise, route:'kartingEntreprise', label:'Entreprises et CE' },
+        { href:R.kartingColonie,    route:'kartingColonie',    label:'Colonies et centres de loisirs' },
+      ]
+    },
+    { type:'link', href:R.courses, key:'courses', label:'Courses' },
     // Le palmarès vend l'homme : une entrée à lui, hors du Paddock, depuis le
     // 13 octobre 2026 (D-207). Il restait invisible avec le Paddock masqué.
     { type:'link', href:R.palmares, key:'palmares', label:'Palmar&egrave;s' },
@@ -54,7 +63,9 @@
   // ── Détecter la page active via ROUTES.matchCurrent ─────────────
   var current = R.matchCurrent && R.matchCurrent()
   // Les sous-pages académie mappent vers la clé parente 'academie'
-  var activeKey = (current === 'kartingEnfant' || current === 'karting' || current === 'competition') ? 'academie' : (current || '')
+  var activeKey = (current === 'kartingEnfant' || current === 'karting' || current === 'competition') ? 'academie'
+                : (current === 'kartingEntreprise' || current === 'kartingColonie') ? 'groupes'
+                : (current || '')
 
   // ── Construire les items desktop ────────────────────────────────
   function buildDesktopItems() {

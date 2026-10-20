@@ -28,6 +28,9 @@ const PAGES = [
   'admin/legal/confidentialite.html',
   'admin/login.html',
   'paddock/palmares.html',        // reaffiche le 13 octobre 2026 (D-207)
+  'groupes/karting-entreprise.html', // offres de groupe et courses (D-209)
+  'groupes/karting-colonie.html',
+  'courses-karting.html',
 ]
 
 // Masquees le 9 octobre 2026 (theme.css section 5), donc sorties du

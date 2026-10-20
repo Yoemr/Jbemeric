@@ -31,6 +31,7 @@
       '<div class="ft-col-title">Navigation</div>' +
       '<a href="' + R.index + '">Accueil</a>' +
       '<a href="' + R.academie + '">Académie</a>' +
+      '<a href="' + R.courses + '">Courses de karting</a>' +
       '<a href="' + R.palmares + '">Palmarès</a>' +
       '<a data-route="coaching" href="' + R.coaching + '">Coaching</a>' +
       '<a data-route="evenements" href="' + R.evenements + '">Événements</a>' +
@@ -39,9 +40,11 @@
 
     // Académie
     '<div class="ft-col">' +
-      '<div class="ft-col-title">Académie</div>' +
+      '<div class="ft-col-title">Karting</div>' +
       '<a href="' + R.kartingEnfant + '">Karting enfant</a>' +
       '<a href="' + R.karting + '">Karting adulte</a>' +
+      '<a href="' + R.kartingEntreprise + '">Entreprises et CE</a>' +
+      '<a href="' + R.kartingColonie + '">Colonies</a>' +
       '<a data-route="competition" href="' + R.competition + '">Vers la Compétition</a>' +
       '<a data-route="coaching" href="' + R.coaching + '">Coaching vidéo</a>' +
     '</div>' +

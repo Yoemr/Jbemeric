@@ -33,6 +33,11 @@
     karting:    '/academie/karting-adulte.html',
     competition:'/academie/competition.html',
 
+    // ── Groupes et courses (13 octobre 2026) ───────────────────────
+    kartingEntreprise: '/groupes/karting-entreprise.html',
+    kartingColonie:    '/groupes/karting-colonie.html',
+    courses:           '/courses-karting.html',
+
     // ── Paddock ────────────────────────────────────────────────────
     palmares:   '/paddock/palmares.html',
     articles:   '/paddock/articles.html',

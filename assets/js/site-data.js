@@ -19,7 +19,7 @@ window.JBEMERIC_DATA = {
     adresse:      '475 Chemin du Bon Civet, 13400 Aubagne',
     tel:          '06 60 18 87 87',
     email:        'jbemeric@jbemeric.com',
-    siret:        '38095916300037',
+    siret:        '39775077900035',
     association:  'Promotion Sport Auto (fondée mars 1987)',
     diplome:      'BPJEPS mention circuit et perfectionnement pilotage',
     debut:        1986,
@@ -102,7 +102,7 @@ window.JBEMERIC_DATA = {
     },
     {
       annee: 1988,
-      titre: 'Champion de France Formule Ford',
+      titre: 'Championnat de France Formule Ford, 9e',
       detail: '9ème au classement général du Championnat de France de Formule Ford. À Paul Ricard : à 4 centièmes de la pôle. Finit meilleur pilote de l\'équipe PALMYR en fin de saison. Diplôme Marlboro. Revue Échappement couvre la saison.',
       categorie: 'monoplace',
       highlight: true,

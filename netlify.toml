@@ -85,6 +85,10 @@
   [headers.values]
     X-Robots-Tag = "noindex"
 [[headers]]
+  for = "/courses-karting.html"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+[[headers]]
   for = "/academie/competition.html"
   [headers.values]
     X-Robots-Tag = "noindex"

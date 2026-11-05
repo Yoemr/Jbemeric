@@ -30,7 +30,6 @@ const PAGES = [
   'paddock/palmares.html',        // reaffiche le 13 octobre 2026 (D-207)
   'groupes/karting-entreprise.html', // offres de groupe et courses (D-209)
   'groupes/karting-colonie.html',
-  'courses-karting.html',
 ]
 
 // Masquees le 9 octobre 2026 (theme.css section 5), donc sorties du
@@ -40,6 +39,7 @@ const MASQUEES = [
   'coaching.html',
   'evenements.html',
   'paddock.html',
+  'courses-karting.html',       // masquee le 5 novembre 2026 : JB ne fait plus de courses
   'evenement.html',             // la page d'une date suit les Evenements
 ]
 

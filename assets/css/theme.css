@@ -218,7 +218,8 @@
 [data-route="paddock"],
 [data-route="articles"],
 [data-route="signup"],
-[data-route="boutique"] {
+[data-route="boutique"],
+[data-route="courses"] {
   display: none !important;
 }
 

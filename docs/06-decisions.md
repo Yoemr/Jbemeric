@@ -6,6 +6,24 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 5 novembre 2026, les réponses de JB
+
+### D-210, Le site s'aligne sur les réponses de JB
+
+Réponses : `docs/chantiers/2026-11-05-reponses-jb.md`.
+- **Le titre** : « Champion de France 1988 » était faux. JB a remporté le Volant Palmyr en 1987 ; en 1988 il finit 9e du championnat de France de Formule Ford. Corrigé partout (pied de page, accueil, Académie, Karting adulte, miroir de l'accueil, palmarès de site-data.js).
+- **Les niveaux C1 à C5** n'existaient pas (« je n'ai pas fait de niveau pour le moment »). Les critères inventés (« chronos stables à ±0,5 s ») sont remplacés par la proposition de JB, une phrase par niveau, à faire évoluer avec lui (carte blanche de Yoan).
+- **Encadrement et piste** : JB est épaulé par l'équipe du circuit, la piste n'est pas forcément privatisée. « C'est JB ou personne » et « le circuit est fermé » sont retirés.
+- **Circuits** : Brignoles en principal, le KIP pour certaines animations. Les « cinq circuits partenaires » sont retirés des pages et de la FAQ ; le chiffre devient « 6 pilotes au maximum ».
+- **Prix et contenu de la journée** : 195 € enfant comme adulte, 10 h à 18 h, kart 4 temps, piste, encadrement, théorie, sept sessions, repas du midi.
+- **Mentions légales** : éditeur et facturation par l'association Promotion Sport Auto, SIRET 397 750 779 00035, APE 9312Z, TVA non applicable.
+- **Courses de karting** : « je ne le fais plus ». Page masquée (clé `courses`, section 5 de `theme.css`), sans suppression.
+- Base : FAQ ordres 60, 120, 150, 210 réécrites, 160 masquée ; `palmares__img-93` et `-98` retirées (D-207).
+
+Restent à reprendre avec JB : les autres réponses (formules entreprises à 390 € l'équipe, références clients, conditions d'annulation, bons cadeaux, kart électrique 4 à 6 ans), l'équipement et l'assurance compris ou non, les photos.
+
+---
+
 ## 13 octobre 2026, le palmarès revient, les vidéos aussi sur téléphone, trois offres de plus
 
 ### D-207, Le palmarès revient, avec une entrée de menu à lui

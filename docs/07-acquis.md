@@ -193,6 +193,11 @@ L'instantané de la base du 9 octobre (`visiteur.js --base`) avait été recopi�
 
 **Faire tourner `build-cache.js` dans ce bac à sable**, où Supabase ne répond pas : précharger un module qui remplace `https.get` et rend les lignes de l'instantané (`node -r <stub> outil-dev/build-cache.js`). Le script tourne alors tel quel, regroupement et alias de pages compris, au lieu d'être réécrit à la main.
 
+
+### 2.20 Un banc qui n'atteint pas la page rend zéro faute
+
+Le 5 novembre 2026, le banc de contraste a rendu zéro défaut sur le palmarès et les pages de groupe : le serveur local s'était arrêté, chaque page affichait « This site can't be reached », et une page d'erreur n'a aucun texte pâle. Le relevé des titres l'a trahi. **Avant de croire un zéro, regarder un champ qui prouve que la page a chargé** (le h1, le nombre d'éléments mesurés), et relancer `node outil-dev/dev-server.js` : il s'arrête entre deux sessions.
+
 ---
 
 ## 3. Ce qui est vérifié, ne pas revérifier

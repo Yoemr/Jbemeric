@@ -10,7 +10,7 @@
   --pal-bg-soft:   #0a1128;
   --pal-ink:       #ffffff;
   --pal-ink-soft:  rgba(255,255,255,.65);
-  --pal-ink-mute:  rgba(255,255,255,.35);
+  --pal-ink-mute:  rgba(255,255,255,.6);   /* plancher du site, D-201 : .35 faisait 3,1 pour 1 */
   --pal-gold:      #FFCF00;
   --pal-gold-d:    #C8A000;
   --pal-gold-soft: rgba(255,207,0,.12);

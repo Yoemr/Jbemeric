@@ -20,7 +20,9 @@ Réponses : `docs/chantiers/2026-11-05-reponses-jb.md`.
 - **Courses de karting** : « je ne le fais plus ». Page masquée (clé `courses`, section 5 de `theme.css`), sans suppression.
 - Base : FAQ ordres 60, 120, 150, 210 réécrites, 160 masquée ; `palmares__img-93` et `-98` retirées (D-207).
 
-Restent à reprendre avec JB : les autres réponses (formules entreprises à 390 € l'équipe, références clients, conditions d'annulation, bons cadeaux, kart électrique 4 à 6 ans), l'équipement et l'assurance compris ou non, les photos.
+Second passage, le même jour : pages Entreprises et Colonies (écrites par ChatGPT le 20 octobre) relues et alignées (circuits, assurance retirée, « circuit fermé » retiré, formules et exemple d'endurance à 390 € par équipe sur la page Entreprises) ; FAQ en base : questions sur C5 et la compétition masquées (ordres 30, 40, 140, 180), trois questions ajoutées (kart électrique de 4 à 6 ans, bon cadeau, pluie et annulation) ; « assurance » retirée de ce qui est fourni, JB ne l'a pas confirmée.
+
+Restent à reprendre avec JB : les références clients (à citer après leur accord), l'équipement et l'assurance compris ou non, le lieu de la photo de kart de 1986, ses photos (sur OneDrive, que Claude ne lit pas).
 
 ---
 

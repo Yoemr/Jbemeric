@@ -703,3 +703,10 @@ a{text-decoration:none;color:inherit}
   .acad-step-sub { display:none }
   .acad-step { padding:10px 8px; gap:8px }
 }
+/* Sur téléphone, les étapes du bandeau tombaient à deux lettres (« KA… ») :
+   les portes juste au-dessus disent déjà la même chose. Le bouton reste. */
+@media(max-width:600px) {
+  .acad-step, .acad-arrow { display:none }
+  .acad-parcours { justify-content:center; padding:12px 16px }
+  .acad-parcours-cta { margin-left:0 }
+}

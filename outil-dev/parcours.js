@@ -245,18 +245,26 @@ const PARCOURS = [
     attendu: `document.querySelectorAll('#nav-root a[href*="karting"]').length >= 2 || 'les entrees karting du menu sont absentes'`,
   },
   {
-    nom: 'videos YouTube, tirage sur grand ecran',
+    // Depuis D-208 : une miniature par video, le lecteur n'est pose qu'au clic.
+    nom: 'videos YouTube, quatre miniatures sur grand ecran',
     page: 'academie.html',
     largeur: 1300,
     action: `null`,
-    attendu: `document.querySelectorAll('[data-videos] iframe').length === 4 || 'attendu 4 videos tirees, trouve ' + document.querySelectorAll('[data-videos] iframe').length`,
+    attendu: `document.querySelectorAll('[data-videos] .yt-lancer').length === 4 || 'attendu 4 miniatures, trouve ' + document.querySelectorAll('[data-videos] .yt-lancer').length`,
   },
   {
-    nom: 'videos YouTube, aucune requete sur telephone',
+    nom: 'videos YouTube, miniatures et aucun lecteur sur telephone',
     page: 'academie.html',
     largeur: 390,
     action: `null`,
-    attendu: `document.querySelectorAll('[data-videos] iframe').length === 0 || 'des videos sont chargees sur telephone'`,
+    attendu: `(document.querySelectorAll('[data-videos] .yt-lancer').length === 4 && document.querySelectorAll('[data-videos] iframe').length === 0) || 'telephone : ' + document.querySelectorAll('[data-videos] .yt-lancer').length + ' miniatures, ' + document.querySelectorAll('[data-videos] iframe').length + ' lecteurs'`,
+  },
+  {
+    nom: 'videos YouTube, le clic pose le lecteur',
+    page: 'academie.html',
+    largeur: 390,
+    action: `document.querySelector('[data-videos] .yt-lancer').click()`,
+    attendu: `document.querySelectorAll('[data-videos] iframe').length === 1 || 'apres un clic : ' + document.querySelectorAll('[data-videos] iframe').length + ' lecteur(s)'`,
   },
   {
     nom: 'carte Coaching de l accueil, vers la bonne offre',

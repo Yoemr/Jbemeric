@@ -903,11 +903,18 @@
     }
     var p = document.getElementById('pal-filtres-panel')
     if (p) p.classList.remove('open')
+    etatFiltres(false)
+  }
+
+  // aria-expanded : le lecteur d'écran dit si le panneau est ouvert.
+  function etatFiltres(ouvert) {
+    var t = document.querySelector('.pal-filtres-toggle')
+    if (t) t.setAttribute('aria-expanded', ouvert ? 'true' : 'false')
   }
 
   function toggleFiltresPanel() {
     var p = document.getElementById('pal-filtres-panel')
-    if (p) p.classList.toggle('open')
+    if (p) etatFiltres(p.classList.toggle('open'))
   }
 
   /* ═══ LIGHTBOX MAGAZINE ════════════════════════════════════ */

@@ -6,6 +6,16 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 5 novembre 2026, la section Académie de l'accueil
+
+### D-211, Trois cartes et le formateur à la place des deux portes
+
+Choisi par Yoan sur le canevas Design (https://claude.ai/artifact/8wfbYs9fzyVpFPHkn9U79A), après les pistes A à E : la section reprend deux blocs de la maquette d'accueil, « Trois façons de rouler » (cartes Karting enfant, Karting adulte, Groupes) puis la bande « Le formateur » (portrait, citation, diplôme, Volant Palmyr, lien vers le palmarès). L'accueil d'origine reste, Coaching, Track-days et Paddock masqués.
+
+Construite par `sync-mirror.js` (`buildAcademieCards`) : enfant et adulte se lisent toujours dans `academie.html#parcours`, la citation dans `#jb-quote-formateur`, donc ce que JB change sur l'Académie se retrouve sur l'accueil ; la carte Groupes est écrite dans le script. Le tout reste dans `#mirror-academie` (`data-jbe-externe`), hors du balayage du live-editor : rien n'est décalé. Styles en fin d'`index.css`. Les règles des anciennes portes et du bandeau restent, mortes, à nettoyer.
+
+---
+
 ## 5 novembre 2026, les réponses de JB
 
 ### D-210, Le site s'aligne sur les réponses de JB

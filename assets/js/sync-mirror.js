@@ -108,9 +108,11 @@ function mirrorAcademie() {
   if (!estAffiche(target)) return
   setLoading(target)
 
-  fetchSection('academie.html', 'parcours')
-    .then(function (parcoursEl) {
-      var html = buildAcademieCards(parcoursEl)
+  // La citation du formateur vient de la même page : JB la modifie là-bas.
+  var citation = fetchSection('academie.html', 'jb-quote-formateur').catch(function () { return null })
+  Promise.all([fetchSection('academie.html', 'parcours'), citation])
+    .then(function (r) {
+      var html = buildAcademieCards(r[0], r[1])
       if (!html) throw new Error('aucune voie dans academie.html#parcours')
       target.innerHTML = html
       notifyMirrorLoaded()
@@ -136,45 +138,68 @@ function texte(el, sel) {
   return x ? x.textContent.trim() : ''
 }
 
-function buildAcademieCards(parcours) {
+// Section Académie de l'accueil (D-211, 5 novembre 2026) : trois cartes,
+// enfant et adulte lues dans academie.html#parcours, groupes écrite ici,
+// puis la bande du formateur. Une voie masquée (data-route) disparaît avec
+// sa page, par la section 5 de theme.css.
+function buildAcademieCards(parcours, citationEl) {
   var steps = parcours.querySelectorAll('.tl-step')
   if (!steps.length) return ''
+  var R = window.ROUTES || {}
 
-  var portes = []
-  for (var i = 0; i < steps.length; i++) {
-    var st   = steps[i]
-    var lien = st.querySelector('.tl-link')
-    portes.push({
-      href:  lien ? lien.getAttribute('href') : 'academie.html',
-      cta:   lien ? lien.textContent.trim() : 'Découvrir',
-      badge: texte(st, '.tl-badge'),
-      nom:   texte(st, '.tl-name'),
-      desc:  texte(st, '.tl-desc'),
-      photo: st.getAttribute('data-photo') || '',
-      porte: st.getAttribute('data-porte') || '',
-      route: attrRoute(st)
-    })
-  }
-
-  function porteHtml(p, cls) {
-    return '<a href="' + ech(p.href) + '" class="' + cls + ' porte ' + ech(p.porte) + '"' + p.route + '>' +
-      (p.photo ? '<div class="porte-bg"><img src="' + ech(p.photo) + '" alt="' + ech(p.badge + ', ' + p.nom) + '" loading="lazy"></div>' : '') +
-      '<div class="porte-overlay"></div>' +
-      '<div class="porte-content">' +
-        '<div class="porte-tag">' + ech(p.nom) + '</div>' +
-        '<div class="porte-title">' + ech(p.badge) + '</div>' +
-        '<p class="porte-body">' + ech(p.desc) + '</p>' +
-        '<span class="porte-cta">' + ech(p.cta) + '</span>' +
+  function carte(c) {
+    return '<a href="' + ech(c.href) + '" class="acad-carte' + (c.sombre ? ' acad-carte--sombre' : '') + '"' + (c.route || '') + '>' +
+      (c.photo ? '<img src="' + ech(c.photo) + '" alt="' + ech(c.alt) + '" loading="lazy">' : '') +
+      '<div class="acad-carte-corps">' +
+        '<span class="acad-carte-tag">' + ech(c.tag) + '</span>' +
+        '<h3 class="acad-carte-titre">' + ech(c.titre) + '</h3>' +
+        '<p class="acad-carte-texte">' + ech(c.texte) + '</p>' +
+        '<span class="acad-carte-cta">' + ech(c.cta) + ' →</span>' +
       '</div>' +
     '</a>'
   }
 
-  // Portes égales, côte à côte : une voie masquée laisse la place aux autres
-  var html = '<div class="acad-layout"><div class="acad-portes">'
-  for (var j = 0; j < portes.length; j++) html += porteHtml(portes[j], 'acad-main')
-  html += '</div>'
-  html += buildParcoursBar(parcours)
-  html += '</div>'
+  var html = '<div class="acad-bloc">' +
+    '<div class="acad-cartes-tete">' +
+      '<p class="acad-kicker">Trois façons de rouler</p>' +
+      '<h2 class="acad-titre">Pour un enfant, pour vous, pour votre équipe.</h2>' +
+    '</div>' +
+    '<div class="acad-cartes">'
+  for (var i = 0; i < steps.length; i++) {
+    var st = steps[i], lien = st.querySelector('.tl-link')
+    html += carte({
+      href:  lien ? lien.getAttribute('href') : 'academie.html',
+      cta:   lien ? lien.textContent.trim() : 'Découvrir',
+      titre: texte(st, '.tl-badge'),
+      tag:   texte(st, '.tl-name'),
+      texte: texte(st, '.tl-desc'),
+      photo: st.getAttribute('data-photo') || '',
+      alt:   texte(st, '.tl-badge') + ', ' + texte(st, '.tl-name'),
+      route: attrRoute(st)
+    })
+  }
+  html += carte({
+    href: R.kartingEntreprise || '/groupes/karting-entreprise.html',
+    cta: 'Demander un devis', titre: 'Groupes', tag: 'Entreprises, CE, colonies',
+    texte: 'Découverte ou endurance par équipes, à la demi-journée ou à la journée. Exemple : 2 heures d\'endurance, 390 € par équipe.',
+    photo: 'assets/images/jb-emeric-briefing-enfants.jpg',
+    alt: 'Jean-Baptiste Emeric montre le plan de piste à deux enfants', sombre: true
+  })
+  html += '</div></div>'
+
+  var citation = citationEl ? citationEl.textContent.trim() : ''
+  html += '<div class="acad-formateur">' +
+    '<img class="acad-formateur-photo" src="assets/images/Jean Baptiste EMERIC.png" alt="Portrait de Jean-Baptiste Emeric" loading="lazy">' +
+    '<div class="acad-formateur-corps">' +
+      '<p class="acad-kicker">Le formateur</p>' +
+      '<h2 class="acad-titre">Jean-Baptiste Emeric</h2>' +
+      (citation ? '<blockquote class="acad-formateur-citation">« ' + ech(citation) + ' »</blockquote>' : '') +
+      '<ul class="acad-formateur-titres">' +
+        '<li>BPJEPS Sport automobile, mention Circuit</li><li>Volant Palmyr 1987</li><li>Formule Ford, F3, Sport Prototype</li>' +
+      '</ul>' +
+      '<a class="acad-formateur-lien" href="' + ech(R.palmares || '/paddock/palmares.html') + '">Voir le palmarès →</a>' +
+    '</div>' +
+  '</div>'
   return html
 }
 

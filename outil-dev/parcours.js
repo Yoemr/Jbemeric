@@ -221,12 +221,12 @@ const PARCOURS = [
     attendu: `!!document.querySelector('.fq.open') || 'aucune question ne s est ouverte'`,
   },
   {
-    nom: 'porte de l Academie, navigation par onclick',
+    nom: 'carte Karting enfant de l accueil, vers sa page',
     page: 'index.html',
     largeur: 1300,
-    // Depuis le 9 octobre 2026, les portes n'existent plus que sur l'accueil,
-    // construites par sync-mirror.js a partir de la frise d'academie.html.
-    action: `document.querySelector('#mirror-academie .porte.enfant').click()`,
+    // Depuis D-211, les cartes de l'accueil sont construites par sync-mirror.js
+    // a partir de la frise d'academie.html ; la premiere est le karting enfant.
+    action: `document.querySelector('#mirror-academie .acad-carte[href*="karting-enfant"]').click()`,
     attente: 1200,
     attendu: `location.pathname.includes('karting-enfant') || 'la porte n a pas navigue, on est reste sur ' + location.pathname`,
   },

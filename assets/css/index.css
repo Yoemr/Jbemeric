@@ -710,3 +710,39 @@ a{text-decoration:none;color:inherit}
   .acad-parcours { justify-content:center; padding:12px 16px }
   .acad-parcours-cta { margin-left:0 }
 }
+
+/* ═══ SECTION ACADÉMIE : trois cartes et le formateur (D-211) ═══
+   Construite par sync-mirror.js (buildAcademieCards). La section grandit
+   avec son contenu, comme la dernière section d'une page aimantée. */
+#section-academie { height:auto; min-height:calc(100svh - 56px); overflow:visible; background:#f0f4ff }
+#section-academie .snap-label { display:none }
+#section-academie .snap-content { height:auto }
+.acad-bloc { max-width:1280px; margin:0 auto; padding:clamp(48px,7vw,96px) clamp(16px,4vw,56px); display:flex; flex-direction:column; gap:36px }
+.acad-cartes-tete { display:flex; flex-direction:column; gap:12px; max-width:720px }
+.acad-kicker { margin:0; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:3px; text-transform:uppercase; color:#0A3D91 }
+.acad-titre { margin:0; font-family:'Bebas Neue',sans-serif; font-weight:400; font-size:clamp(40px,5vw,64px); line-height:.92; color:#040a1e }
+.acad-cartes { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); gap:24px }
+.acad-carte { display:flex; flex-direction:column; background:#fff; border-radius:6px; overflow:hidden; text-decoration:none; color:#0d0d0d; box-shadow:0 1px 0 rgba(10,61,145,.12); transition:transform .2s, box-shadow .2s }
+.acad-carte:hover { transform:translateY(-3px); box-shadow:0 10px 28px rgba(10,61,145,.15) }
+.acad-carte:focus-visible { outline:3px solid #0A3D91; outline-offset:3px }
+.acad-carte img { width:100%; height:220px; object-fit:cover; display:block }
+.acad-carte-corps { padding:24px; display:flex; flex-direction:column; gap:10px; flex:1 }
+.acad-carte-tag { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#0A3D91 }
+.acad-carte-titre { margin:0; font-family:'Bebas Neue',sans-serif; font-weight:400; font-size:36px; line-height:1; color:#040a1e }
+.acad-carte-texte { margin:0; font-size:16px; line-height:1.6; color:rgba(13,13,13,.75) }
+.acad-carte-cta { margin-top:auto; padding-top:8px; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#0A3D91 }
+.acad-carte--sombre { background:#040a1e; color:#fff }
+.acad-carte--sombre .acad-carte-tag, .acad-carte--sombre .acad-carte-cta { color:#FFCF00 }
+.acad-carte--sombre .acad-carte-titre { color:#fff }
+.acad-carte--sombre .acad-carte-texte { color:rgba(255,255,255,.8) }
+.acad-formateur { background:#040a1e; color:#fff; padding:clamp(48px,7vw,96px) clamp(16px,4vw,56px); display:flex; flex-wrap:wrap; gap:40px; align-items:center; justify-content:center }
+.acad-formateur-photo { width:220px; height:220px; object-fit:cover; border-radius:50%; border:3px solid #FFCF00; flex:0 0 auto }
+.acad-formateur-corps { flex:0 1 760px; min-width:0; display:flex; flex-direction:column; gap:16px }
+.acad-formateur .acad-kicker { color:#FFCF00 }
+.acad-formateur .acad-titre { color:#fff }
+.acad-formateur-citation { margin:0; font-size:clamp(18px,2vw,22px); line-height:1.5; font-style:italic; color:rgba(255,255,255,.9) }
+.acad-formateur-titres { margin:0; padding:0; list-style:none; display:flex; flex-wrap:wrap; gap:8px }
+.acad-formateur-titres li { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:1px; text-transform:uppercase; border:1px solid rgba(255,255,255,.3); border-radius:20px; padding:8px 14px }
+.acad-formateur-lien { align-self:flex-start; font-family:'DM Mono',monospace; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:#FFCF00; text-decoration:none; padding:12px 0 }
+.acad-formateur-lien:hover { color:#ffe066 }
+@media (prefers-reduced-motion: reduce) { .acad-carte:hover { transform:none } }

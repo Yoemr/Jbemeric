@@ -41,7 +41,7 @@
     <p class="hero-sub">Karting pour les enfants et les adultes, journées pour les groupes et les entreprises. Vainqueur du Volant Palmyr 1987, JB encadre chaque journée, du briefing au dernier tour.</p>
     <div class="hero-btns">
       <a class="btn btn-y" href="#activites">Voir les activités</a>
-      <a class="btn btn-w" href="#dates" data-si-dates hidden>Prochaines dates</a>
+      <a class="btn btn-w" href="#dates" data-si-dates>Prochaines dates</a>
     </div>
   </div>
 </section>
@@ -104,14 +104,28 @@
 </section>
 
 <!-- ═══ DATES : masquée tant qu'aucune date n'est saisie (dates.js) ═══ -->
-<section class="vit-dates dates-clair" id="dates" data-dates-bloc hidden>
+<section class="vit-dates dates-clair" id="dates" data-dates-bloc>
   <div class="vit-in">
     <div class="vit-tete">
       <div class="vit-kicker">Prochaines dates</div>
       <h2 class="vit-titre">Le <em>calendrier</em></h2>
     </div>
     <!-- karting seul tant que les autres activités sont masquées -->
-    <div class="dates-liste" data-dates="karting" data-dates-max="6"></div>
+    <div class="dates-liste" data-dates="karting" data-dates-max="6">
+      <!-- Exemples affichés tant qu'aucune date n'est saisie, remplacés par dates.js -->
+      <article class="date-carte date-carte--exemple">
+        <div class="date-jour"><span class="date-num">[Date]</span></div>
+        <div class="date-info"><span class="date-quand">Événement à venir</span><span class="date-type">Karting enfant · Brignoles</span><span class="date-detail">[Places restantes] · 195 €</span></div>
+      </article>
+      <article class="date-carte date-carte--exemple">
+        <div class="date-jour"><span class="date-num">[Date]</span></div>
+        <div class="date-info"><span class="date-quand">Événement à venir</span><span class="date-type">Karting adulte · Brignoles</span><span class="date-detail">[Places restantes] · 195 €</span></div>
+      </article>
+      <article class="date-carte date-carte--exemple">
+        <div class="date-jour"><span class="date-num">[Date]</span></div>
+        <div class="date-info"><span class="date-quand">Événement à venir</span><span class="date-type">[Autre activité, le jour où elle revient]</span><span class="date-detail">[Places restantes] · 195 €</span></div>
+      </article>
+    </div>
   </div>
 </section>
 

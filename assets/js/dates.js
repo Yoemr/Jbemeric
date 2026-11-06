@@ -6,7 +6,7 @@
 // aucune ne devient fausse le lendemain.
 //
 // ── Comment une page s'en sert ──────────────────────────────────────────────
-//     <section data-dates-bloc hidden>
+//     <section data-dates-bloc>
 //       ... titre de la section ...
 //       <div class="dates-liste" data-dates="karting" data-dates-max="6"></div>
 //     </section>
@@ -16,10 +16,11 @@
 //                   Vide : toutes les activités.
 //   data-dates-max  nombre de dates au plus. 6 par défaut.
 //
-// Le bloc parent marqué data-dates-bloc reste masqué tant qu'il n'y a pas de
-// date à venir. Tout élément marqué data-si-dates (un bouton « Voir les
-// dates », par exemple) suit le même sort. Une section vide ne s'affiche
-// jamais, et elle apparaît seule le jour où JB ajoute une journée.
+// Sans date à venir, la liste garde ce que le HTML y a mis : des cartes
+// d'exemple « Événement à venir », demande de Yoan du 6 novembre 2026, le
+// site n'étant pas encore ouvert au public. Une liste vide dans le HTML et
+// sans date en base masque son bloc (data-dates-bloc) et les éléments
+// marqués data-si-dates, comme un bouton « Voir les dates ».
 (function () {
   var SB = 'https://fyaybxamuabawerqzuud.supabase.co/rest/v1/'
   var KEY = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
@@ -87,15 +88,21 @@
       var mot = (el.getAttribute('data-dates') || '').toLowerCase()
       var max = parseInt(el.getAttribute('data-dates-max'), 10) || 6
       var pour = events.filter(function (e) { return !mot || (e.type || '').toLowerCase().indexOf(mot) !== -1 }).slice(0, max)
-      if (!pour.length) continue
+      if (!pour.length) {
+        if (!el.children.length) {
+          var vide = el.closest('[data-dates-bloc]')
+          if (vide) vide.hidden = true
+        } else total += 0.5
+        continue
+      }
       el.innerHTML = pour.map(function (e) { return carte(e, circuits) }).join('')
       var bloc = el.closest('[data-dates-bloc]')
       if (bloc) bloc.hidden = false
       total += pour.length
     }
-    if (total) {
+    if (!total) {
       var liens = document.querySelectorAll('[data-si-dates]')
-      for (var j = 0; j < liens.length; j++) liens[j].hidden = false
+      for (var j = 0; j < liens.length; j++) liens[j].hidden = true
     }
   }).catch(function () { /* rien à montrer : les blocs restent masqués */ })
 })()

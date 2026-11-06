@@ -949,7 +949,7 @@ Le reste, trié selon `CLAUDE.md` : les améliorations et les décisions qui rev
 
 ## Mise à jour du 6 novembre 2026, accueil vitrine et Académie (D-212)
 
-- `index.html` : hero, preuves, activités (cartes pilotées par `data-route`), dates (masquées sans date), avis (masqués), FAQ six questions, appel. Plus de `snap.css`.
+- `index.html` : hero, preuves, activités (cartes pilotées par `data-route`), dates (cartes d'exemple tant qu'aucune date), avis (masqués), FAQ six questions, appel. Plus de `snap.css`.
 - `academie.html` : deux journées développées et cinq niveaux nommés, déroulé, dates, palmarès généré (`palmares-une.js`), barre de réservation. Plus de `snap.css`.
 - Nouveaux : `assets/js/dates.js`, `assets/js/palmares-une.js`, `assets/css/dates.css`.
 - Vérifié : audit à 0 faute, parcours tous verts dont trois nouveaux (carte de l'accueil, palmarès égal aux résultats à la une, barre visible sur téléphone), contrôle négatif du palmarès, dates rendues avec une table simulée pleine puis vide. Aucune date karting à venir en base à ce jour.

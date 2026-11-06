@@ -47,7 +47,7 @@
     </div>
     <div class="hero-btns">
       <a class="hero-btn hero-btn--y" href="/admin/legal/contact.html">Réserver une journée · 195 €</a>
-      <a class="hero-btn hero-btn--w" href="#dates" data-si-dates hidden>Voir les dates</a>
+      <a class="hero-btn hero-btn--w" href="#dates" data-si-dates>Voir les dates</a>
     </div>
   </div>
 </section>
@@ -140,12 +140,26 @@
 </section>
 
 <!-- ═══ DATES : masquée tant qu'aucune date karting n'est saisie (dates.js) ═══ -->
-<section class="ac-dates dates-clair" id="dates" data-dates-bloc hidden>
+<section class="ac-dates dates-clair" id="dates" data-dates-bloc>
   <div class="dr-tete">
     <div class="dr-kicker">Prochaines journées</div>
     <h2 class="dr-titre">Choisissez <em>votre date</em></h2>
   </div>
-  <div class="dates-liste" data-dates="karting" data-dates-max="6"></div>
+  <div class="dates-liste" data-dates="karting" data-dates-max="6">
+      <!-- Exemples affichés tant qu'aucune date n'est saisie, remplacés par dates.js -->
+      <article class="date-carte date-carte--exemple">
+        <div class="date-jour"><span class="date-num">[Date]</span></div>
+        <div class="date-info"><span class="date-quand">Événement à venir</span><span class="date-type">Karting enfant · Brignoles</span><span class="date-detail">[Places restantes] · 195 €</span></div>
+      </article>
+      <article class="date-carte date-carte--exemple">
+        <div class="date-jour"><span class="date-num">[Date]</span></div>
+        <div class="date-info"><span class="date-quand">Événement à venir</span><span class="date-type">Karting adulte · Brignoles</span><span class="date-detail">[Places restantes] · 195 €</span></div>
+      </article>
+      <article class="date-carte date-carte--exemple">
+        <div class="date-jour"><span class="date-num">[Date]</span></div>
+        <div class="date-info"><span class="date-quand">Événement à venir</span><span class="date-type">Karting enfant · Brignoles</span><span class="date-detail">[Places restantes] · 195 €</span></div>
+      </article>
+    </div>
 </section>
 
 <!-- ═══ FORMATEUR + PALMARÈS : wrapper full screen ════ -->

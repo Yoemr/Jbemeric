@@ -50,3 +50,7 @@
 }
 .date-cta:hover { filter: brightness(1.06) }
 .date-carte--complet { opacity: .6 }
+
+/* Carte d'exemple, en attendant les vraies dates */
+.date-carte--exemple { border-style: dashed }
+.date-carte--exemple .date-num { font-size: 30px }

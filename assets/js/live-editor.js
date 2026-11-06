@@ -3,11 +3,10 @@
 console.log("live-editor.js charge !");
 console.log("Configuration OK : Utilisation des colonnes id et content uniquement");
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-
-var SB_URL  = 'https://fyaybxamuabawerqzuud.supabase.co'
-var SB_ANON = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
-var sb      = createClient(SB_URL, SB_ANON)
+// Un seul client Supabase par page, celui d'auth.js : la connexion et le
+// mot de passe oublié en créaient deux, qui géraient la même session en
+// parallèle (avertissement « Multiple GoTrueClient instances »).
+import { sb, SB_URL, SB_ANON } from '/assets/js/auth.js'
 
 var PAGE = (location.pathname.split('/').pop().replace('.html','')) || 'index'
 
@@ -209,28 +208,70 @@ var _SANITY_STOP = {
 function _normWord(s) {
   return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 }
+// Les mots significatifs d'un texte, sans doublon : quatre lettres et plus,
+// hors mots vides, accents retirés.
+function _motsSignif(s) {
+  var words = _normWord(s).split(/[^a-z0-9]+/)
+  var vus = {}, out = []
+  for (var i = 0; i < words.length; i++) {
+    var w = words[i]
+    if (w.length >= 4 && !_SANITY_STOP[w] && !vus[w]) { vus[w] = 1; out.push(w) }
+  }
+  return out
+}
+
+// Un ancien contenu, rangé sous un numéro d'ordre (txt-N, jbe-u-N), ne
+// s'affiche que s'il ressemble au texte qu'il remplace. Le numéro d'ordre
+// change dès qu'un élément est ajouté ou retiré avant lui, et le contenu
+// tombe alors sur un autre élément.
+//
+// Jusqu'au 9 octobre 2026, un seul mot commun suffisait, cherché comme
+// morceau de mot, et un texte court passait toujours. Trois dérives en
+// ligne en sont venues, mises au jour en rejouant la base dans un
+// navigateur :
+//   - academie.html, titre du palmarès : « 40 ans de compétition » devenait
+//     « 01 de compétition », le numéro de l'ancien hero ;
+//   - academie.html, voie Karting enfant : la description du parcours
+//     adulte, parce que « enfant » est un morceau de « enfants » ;
+//   - index.html, sous-titre du hero : « Karting, coaching, stages en
+//     voiture de course », un texte d'avant la refonte.
+//
+// La règle maintenant, sur des mots entiers :
+//   - deux textes sans mot significatif (« 40 ans », « 01 ») : longueurs
+//     voisines, au plus du simple au double ;
+//   - un texte court contre un texte long : refusé ;
+//   - sinon, au moins 40 % de mots en commun (indice de Jaccard).
+// Un refus ne perd rien : la page montre son HTML, et la prochaine
+// modification de JB s'enregistre sous l'identifiant stable, qui ne passe
+// pas par ici. Voir docs/07-acquis.md, une étiquette sûre mais fausse cache
+// plus qu'un doute assumé.
 function _legacyTextSanity(el, dbContent) {
   if (!dbContent) return false
-  var orig = el.getAttribute('data-orig') || ''
+  // Le texte d'origine se relit depuis le HTML, balises remplacées par une
+  // espace : data-orig vient de textContent, qui colle les mots de part et
+  // d'autre d'un <br> (« Du volant<br>à la course » y devient « volantà »).
+  var origHtml = el.getAttribute('data-orig-html')
+  var orig = origHtml != null
+    ? origHtml.replace(/<[^>]*>/g, ' ').replace(/&[a-z0-9#]+;/gi, ' ').replace(/\s+/g, ' ').trim()
+    : (el.getAttribute('data-orig') || '')
   if (!orig) return true
   var lo = orig.length, ld = dbContent.length
   if (lo < 1 || ld < 1) return false
   var ratio = Math.max(lo, ld) / Math.min(lo, ld)
   if (ratio > 5) return false
-  // Word overlap : au moins 1 mot signif de data-orig doit apparaître dans dbContent
-  var origNorm = _normWord(orig)
-  var dbNorm   = _normWord(dbContent)
-  var words    = origNorm.split(/[^a-z0-9]+/)
-  var signif   = []
-  for (var i = 0; i < words.length; i++) {
-    var w = words[i]
-    if (w.length >= 4 && !_SANITY_STOP[w]) signif.push(w)
-  }
-  if (!signif.length) return true // pas de mot signif → tolérer
-  for (var j = 0; j < signif.length; j++) {
-    if (dbNorm.indexOf(signif[j]) !== -1) return true
-  }
-  return false
+  // Les nombres doivent être les mêmes : « 40 ans » et « 01 », « C1 » et
+  // « C5 », « 185 € » et « 195 € » ne sont pas le même texte. Sans ce
+  // contrôle, deux gabarits qui ne diffèrent que par un nombre passaient.
+  var nbA = (orig.match(/\d+/g) || []).sort().join(' ')
+  var nbB = (dbContent.match(/\d+/g) || []).sort().join(' ')
+  if (nbA !== nbB) return false
+  var a = _motsSignif(orig), b = _motsSignif(dbContent)
+  if (!a.length && !b.length) return ratio <= 2
+  if (!a.length || !b.length) return false
+  var dansB = {}, communs = 0
+  for (var j = 0; j < b.length; j++) dansB[b[j]] = 1
+  for (var i = 0; i < a.length; i++) if (dansB[a[i]]) communs++
+  return communs / (a.length + b.length - communs) >= 0.4
 }
 
 function _legacyMediaSanity(el, dbContent, dbType) {
@@ -249,7 +290,11 @@ var _migrationsPending = []
 function _scheduleMigration(stableKey, content, mediaType) {
   _migrationsPending.push({ stableKey: stableKey, content: content, mediaType: mediaType })
 }
+// Seul un administrateur écrit : un visiteur anonyme tentait jusqu'à six
+// écritures par page, toutes refusées (erreurs 401 en console).
+var _estAdmin = false
 function _flushMigrations() {
+  if (!_estAdmin) { _migrationsPending = []; return }
   if (!_migrationsPending.length) return
   var batch = _migrationsPending.slice()
   _migrationsPending = []
@@ -268,6 +313,11 @@ function _flushMigrations() {
 var _hs = document.createElement('style')
 _hs.textContent = 'body{opacity:0}'
 document.head.appendChild(_hs)
+// Délai maximal de l'écran blanc. Sans lui, une base lente ou en panne
+// laissait la page vide pendant des secondes, ou indéfiniment si elle ne
+// répondait pas (audit du 9 octobre 2026). Au pire, le visiteur voit le
+// texte du HTML, puis celui de la base le remplacer.
+setTimeout(function () { showPage() }, 1200)
 function showPage() {
   document.body.style.opacity    = '1'
   document.body.style.transition = 'opacity .18s'
@@ -279,17 +329,20 @@ document.addEventListener('DOMContentLoaded', function () {
   scanElements()
   Promise.all([loadTexts(), sb.auth.getSession()])
     .then(function (results) {
+      var sess    = results[1]
+      var session = (sess && sess.data) ? sess.data.session : null
+      var user    = session ? session.user : null
+      // Le rôle se lit dans app_metadata, que seul le serveur écrit.
+      // user_metadata est modifiable par l'utilisateur lui-même : jusqu'au
+      // 9 octobre 2026, n'importe qui pouvait s'y déclarer administrateur.
+      var role    = (user && user.app_metadata && user.app_metadata.role) || null
+      var isAdmin = (role === 'admin' || role === 'moderateur')
+      _estAdmin   = isAdmin
       applyTexts()
       scanImages()
       applyImages()
       injectVideoCSS()
       applyVideoControlsToAll()
-      var sess    = results[1]
-      var session = (sess && sess.data) ? sess.data.session : null
-      var user    = session ? session.user : null
-      var meta    = (user && user.user_metadata) ? user.user_metadata : {}
-      var role    = meta.role || null
-      var isAdmin = (role === 'admin' || role === 'moderateur')
       console.log('[JBE] role:', role, '| isAdmin:', isAdmin)
       updateNav(user, isAdmin)
       if (isAdmin) {
@@ -307,15 +360,33 @@ document.addEventListener('DOMContentLoaded', function () {
 // IDs assignés : stables (basés sur DOM path + anchor explicite).
 // Le legacy ID positionnel ('txt-N' / 'jbe-u-N') est conservé en data-legacy-id
 // pour permettre le fallback DB lors des chargements (migration silencieuse).
+// Les numéros d'ordre (txt-N, jbe-u-N, img-N) ne valent que pour le premier
+// balayage, celui qui a servi à ranger les anciens contenus. Un balayage
+// suivant (passage en mode édition, miroir arrivé après coup) repartait de 1
+// et faisait tomber un ancien contenu sur un tout autre élément, puis
+// l'enregistrait en base : en mode édition, la vidéo du hero de l'accueil se
+// posait sur la porte Karting enfant (audit du 10 octobre 2026). Un élément
+// découvert plus tard reçoit son identifiant stable, sans repli.
+var _premierScanTextes = true
+var _premierScanImages = true
+
+// Un bloc recopié d'une autre page (data-jbe-externe, posé par sync-mirror)
+// se modifie à sa source, pas ici : ce qui y serait saisi ne serait jamais
+// relu par le miroir.
+function _externe(el) { return !!(el.closest && el.closest('[data-jbe-externe]')) }
+
 function scanElements() {
   _els = []
   var n = 1, u = 1
+  var premier = _premierScanTextes
+  _premierScanTextes = false
 
   // ── Phase 1 : sélecteurs connus ──
   var p1 = document.querySelectorAll(SEL)
   for (var i = 0; i < p1.length; i++) {
     var el = p1[i]
     if (el.closest('nav') || el.closest('footer') || el.closest('svg')) continue
+    if (_externe(el)) continue
     if (el.querySelector('a,img,button,input,select,textarea')) continue
     var txt = el.textContent.trim()
     if (!txt || txt.length < 2) continue
@@ -323,8 +394,9 @@ function scanElements() {
     if (el.id) {
       legacyId = el.id
     } else {
-      legacyId = 'txt-' + n; n++
       el.id = _computeStableId(el)
+      legacyId = premier ? 'txt-' + n : el.id
+      n++
     }
     el.setAttribute('data-legacy-id', legacyId)
     el.setAttribute('data-orig-html', el.innerHTML)
@@ -339,6 +411,7 @@ function scanElements() {
     var el2 = p2[j]
     if (_els.indexOf(el2) !== -1) continue
     if (el2.closest('nav') || el2.closest('footer') || el2.closest('svg')) continue
+    if (_externe(el2)) continue
     if (el2.querySelector('a,img,button,input,select,textarea')) continue
     if (el2.querySelector('p,h1,h2,h3,h4,h5,h6,div,section,article,ul,ol,table,form')) continue
     var txt2 = el2.textContent.trim()
@@ -347,8 +420,9 @@ function scanElements() {
     if (el2.id) {
       legacyId2 = el2.id
     } else {
-      legacyId2 = 'jbe-u-' + u; u++
       el2.id = _computeStableId(el2)
+      legacyId2 = premier ? 'jbe-u-' + u : el2.id
+      u++
     }
     el2.setAttribute('data-legacy-id', legacyId2)
     el2.setAttribute('data-orig-html', el2.innerHTML)
@@ -364,10 +438,13 @@ function scanElements() {
 function scanImages() {
   _imgs = []
   var n = 1
+  var premier = _premierScanImages
+  _premierScanImages = false
   var all = document.querySelectorAll('img, video')
   for (var i = 0; i < all.length; i++) {
     var img = all[i]
     if (img.closest('nav') || img.closest('footer') || img.closest('svg')) continue
+    if (_externe(img)) continue
     if (img.id === 'jbe-vid-prev-el') continue
     var elSrc = img.src || (img.querySelector && img.querySelector('source') ? img.querySelector('source').getAttribute('src') : '') || ''
     if (!elSrc) continue
@@ -379,8 +456,9 @@ function scanImages() {
     if (img.id) {
       legacyId = img.id
     } else {
-      legacyId = 'img-' + n; n++
       img.id = _computeStableId(img)
+      legacyId = premier ? 'img-' + n : img.id
+      n++
     }
     img.setAttribute('data-legacy-id', legacyId)
     img.setAttribute('data-orig-src', elSrc)
@@ -501,6 +579,10 @@ function _makeVideoFromImg(img, url) {
   var vid = document.createElement('video')
   vid.id        = img.id
   vid.className = img.className
+  // Garder la trace de l'image remplacée : le banc visiteur.js et les
+  // balayages suivants s'en servent pour savoir ce que la base a substitué.
+  if (img.getAttribute('data-legacy-id')) vid.setAttribute('data-legacy-id', img.getAttribute('data-legacy-id'))
+  if (img.getAttribute('data-orig-src'))  vid.setAttribute('data-orig-src', img.getAttribute('data-orig-src'))
   var cs = window.getComputedStyle(img)
   vid.setAttribute('style', img.getAttribute('style') || '')
   vid.style.position  = cs.position
@@ -512,6 +594,10 @@ function _makeVideoFromImg(img, url) {
   vid.style.right     = cs.right
   vid.style.bottom    = cs.bottom
   vid.src      = url
+  // L'image remplacée devient l'image d'attente : sans elle, le cadre reste
+  // vide (ou noir) jusqu'à la première image de la vidéo.
+  var attente = img.currentSrc || img.getAttribute('src') || ''
+  if (attente) vid.poster = attente
   vid.autoplay = true
   vid.muted    = true
   vid.volume   = 0.1
@@ -523,6 +609,10 @@ function _makeVideoFromImg(img, url) {
 
 function _addVideoControls(vid) {
   if (vid.dataset.jbeCtrl) return
+  // Une vidéo sans source (téléphone : hero-video.js ne la charge pas) n'a
+  // rien à mettre en pause : pas de boutons qui ne feraient rien.
+  var aSource = vid.getAttribute('src') || (vid.querySelector('source[src]'))
+  if (!aSource) return
   vid.dataset.jbeCtrl = '1'
 
   var cs  = window.getComputedStyle(vid)
@@ -539,11 +629,25 @@ function _addVideoControls(vid) {
     wrap.style.bottom   = cs.bottom
     if (cs.zIndex !== 'auto') wrap.style.zIndex = cs.zIndex
   } else {
-    // Vidéo en flux : wrapper relatif avec dimensions computées
+    // Vidéo en flux : wrapper relatif avec dimensions computées.
+    // Une vidéo qui remplit son parent (hero, étape) garde 100 % : en pixels,
+    // elle restait figée à la taille du chargement quand la fenêtre grandit.
+    // La hauteur ne passe à 100 % que si le parent a la sienne propre : si
+    // c'est la vidéo qui fait la hauteur du parent, 100 % s'effondrerait.
+    var par = vid.parentElement
+    var pleineL = par && Math.abs(parseFloat(cs.width) - par.clientWidth) < 2
+    var pleineH = false
+    var hVid = parseFloat(cs.height)   // lu avant de masquer : cs est vivant
+    if (par && par.clientHeight > 0 && Math.abs(hVid - par.clientHeight) < 2) {
+      var avant = vid.style.display
+      vid.style.display = 'none'
+      pleineH = Math.abs(par.clientHeight - hVid) < 2
+      vid.style.display = avant
+    }
     wrap.style.position = 'relative'
     wrap.style.display  = 'block'
-    wrap.style.width    = cs.width
-    wrap.style.height   = cs.height
+    wrap.style.width    = pleineL ? '100%' : cs.width
+    wrap.style.height   = pleineH ? '100%' : cs.height
     // Préserver float + marges de la vidéo (ex: portrait float-left dans article)
     if (cs.cssFloat && cs.cssFloat !== 'none') {
       wrap.style.cssFloat     = cs.cssFloat
@@ -574,6 +678,7 @@ function _addVideoControls(vid) {
   btnPlay.className   = 'jbe-vid-btn jbe-vid-play'
   btnPlay.textContent = '\u23F8'
   btnPlay.title       = 'Pause / Lecture'
+  btnPlay.setAttribute('aria-label', 'Mettre en pause')
 
   var volWrap = document.createElement('div')
   volWrap.className = 'jbe-vid-vol-wrap'
@@ -582,6 +687,7 @@ function _addVideoControls(vid) {
   btnMute.className   = 'jbe-vid-btn jbe-vid-mute'
   btnMute.textContent = '\uD83D\uDD07'
   btnMute.title       = 'Son'
+  btnMute.setAttribute('aria-label', 'Activer le son')
 
   var volSlider = document.createElement('input')
   volSlider.type      = 'range'
@@ -590,6 +696,7 @@ function _addVideoControls(vid) {
   volSlider.max       = '1'
   volSlider.step      = '0.05'
   volSlider.value     = '0.1'
+  volSlider.setAttribute('aria-label', 'Volume')
 
   volWrap.appendChild(btnMute)
   volWrap.appendChild(volSlider)
@@ -601,8 +708,8 @@ function _addVideoControls(vid) {
 
   btnPlay.addEventListener('click', function(e) {
     e.stopPropagation()
-    if (vid.paused) { vid.play();  btnPlay.textContent = '\u23F8' }
-    else            { vid.pause(); btnPlay.textContent = '\u25B6' }
+    if (vid.paused) { vid.play();  btnPlay.textContent = '\u23F8'; btnPlay.setAttribute('aria-label', 'Mettre en pause') }
+    else            { vid.pause(); btnPlay.textContent = '\u25B6'; btnPlay.setAttribute('aria-label', 'Lire la vidéo') }
   })
 
   btnMute.addEventListener('click', function(e) {
@@ -616,6 +723,7 @@ function _addVideoControls(vid) {
       volSlider.value = vid.volume
       btnMute.textContent = '\uD83D\uDD0A'
     }
+    btnMute.setAttribute('aria-label', vid.muted ? 'Activer le son' : 'Couper le son')
   })
 
   volSlider.addEventListener('input', function(e) {
@@ -623,6 +731,7 @@ function _addVideoControls(vid) {
     vid.volume = parseFloat(volSlider.value)
     vid.muted  = (vid.volume === 0)
     btnMute.textContent = vid.muted ? '\uD83D\uDD07' : '\uD83D\uDD0A'
+    btnMute.setAttribute('aria-label', vid.muted ? 'Activer le son' : 'Couper le son')
   })
 }
 
@@ -652,6 +761,13 @@ function _makeImgFromVideo(vid, url) {
   return img
 }
 
+// Même règle que hero-video.js : ROUTES.VIDEO_FOND, grand écran et
+// animations non réduites.
+function _videoFond() {
+  var q = (window.ROUTES && window.ROUTES.VIDEO_FOND) || '(min-width: 700px) and (min-height: 600px) and (prefers-reduced-motion: no-preference)'
+  return !window.matchMedia || window.matchMedia(q).matches
+}
+
 function applyImages() {
   for (var i = 0; i < _imgs.length; i++) {
     var img       = _imgs[i]
@@ -674,6 +790,14 @@ function applyImages() {
       }
     }
     if (!url) continue
+
+    // Une vidéo de la base ne se pose ni sur un téléphone, ni dans une partie
+    // masquée de la page. Décision de Yoan du 6 août 2026, « ne pas mettre ces
+    // vidéos sur la version téléphone », que hero-video.js applique au HTML
+    // mais que la base contournait : le 9 octobre, un téléphone téléchargeait
+    // 26 Mo sur l'Académie et trois vidéos sur Karting adulte, dont une dans
+    // une section masquée. L'image d'origine reste affichée.
+    if (dbType === 'video' && (!_videoFond() || !img.getClientRects().length)) continue
 
     var elIsVideo = (img.tagName === 'VIDEO')
     var finalEl   = img
@@ -1392,11 +1516,10 @@ function activateImages() {
           // Upload XHR direct → progress réel
           var xhr = new XMLHttpRequest()
           var uploadUrl = SB_URL + '/storage/v1/object/media/' + path
-          xhr.open('POST', uploadUrl)
-          xhr.setRequestHeader('Authorization', 'Bearer ' + SB_ANON)
-          xhr.setRequestHeader('apikey', SB_ANON)
-          xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream')
-          xhr.setRequestHeader('x-upsert', 'true')
+          // L'envoi se fait avec le jeton de session de JB, plus avec la clé
+          // publique : jusqu'au 10 octobre 2026, le stockage acceptait
+          // n'importe quel visiteur anonyme, qui pouvait écraser les photos et
+          // vidéos du site. Ouvert et envoyé plus bas, une fois le jeton lu.
 
           xhr.upload.addEventListener('progress', function(e) {
             if (e.lengthComputable) {
@@ -1450,7 +1573,16 @@ function activateImages() {
           }
 
           xhr.onerror = function() { removeOverlay(); setStatus('\u274c Erreur r\u00e9seau') }
-          xhr.send(file)
+          sb.auth.getSession().then(function (r) {
+            var session = r && r.data && r.data.session
+            if (!session) { removeOverlay(); setStatus('\u274c Session expir\u00e9e, reconnectez-vous'); return }
+            xhr.open('POST', uploadUrl)
+            xhr.setRequestHeader('Authorization', 'Bearer ' + session.access_token)
+            xhr.setRequestHeader('apikey', SB_ANON)
+            xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream')
+            xhr.setRequestHeader('x-upsert', 'true')
+            xhr.send(file)
+          })
           return
         }
         var url = (document.getElementById('jbe-img-url') || {}).value || ''
@@ -1959,7 +2091,7 @@ function injectVideoCSS() {
   css += '.jbe-vid-btn{width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;opacity:1;line-height:1;padding:0;flex-shrink:0}'
   css += '.jbe-vid-vol-wrap{display:flex;align-items:center;gap:6px}'
   css += '.jbe-vid-vol{width:0;opacity:0;transition:width .25s,opacity .25s;cursor:pointer;accent-color:#fff;height:4px}'
-  css += '.jbe-vid-vol-wrap:hover .jbe-vid-vol{width:80px;opacity:1}'
+  css += '.jbe-vid-vol-wrap:hover .jbe-vid-vol,.jbe-vid-vol-wrap:focus-within .jbe-vid-vol{width:80px;opacity:1}'
   s.textContent = css
   document.head.appendChild(s)
 }

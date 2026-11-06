@@ -40,6 +40,12 @@ const VARIANTES = [
   { motif: /\bnon pas\s[^.!?]*?\bmais\b[^.!?]*/gi, nom: 'non pas X mais Y' },
   { motif: /\bplus qu'un\b[^.!?]*/gi, nom: 'plus qu\'un X, un Y' },
   { motif: /[.!?]\s+Pas\s+(?:de|d'|dans|un|une|le|la|les|juste|seulement)\b[^.!?]*/g, nom: 'phrase entiere en negation' },
+  // « Le kart cesse d'etre une contrainte. Il devient un outil. » et « Le
+  // passage n'est pas automatique : il se valide... ». Relevees par l'audit
+  // du 11 octobre 2026 sur le karting adulte, que les motifs ci-dessus
+  // laissaient passer.
+  { motif: /\bcesse d'(?:être|etre)\b[^.!?]*(?:[.!?]\s*[^.!?]*?)?\bdevient\b[^.!?]*/gi, nom: 'cesse d\'etre X, devient Y' },
+  { motif: /\bn'est pas\s+[\wàâéèêëîïôûùç]+\s*:\s[^.!?]*/gi, nom: 'n\'est pas X : Y' },
 ]
 
 // Le texte saisi par JB dans le live-editor ne se juge pas, ce n'est pas notre

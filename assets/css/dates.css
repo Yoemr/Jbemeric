@@ -1,0 +1,56 @@
+/* dates.css : les cartes des prochaines dates, remplies par dates.js.
+   Partagé par l'accueil et l'Académie. La couleur suit le fond de la
+   section : sombre par défaut, .dates-clair sur fond clair. */
+
+[data-dates-bloc][hidden], [data-si-dates][hidden] { display: none !important }
+
+.dates-liste {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 14px;
+}
+.date-carte {
+  --dc-fond: rgba(255,255,255,.04);
+  --dc-bord: rgba(255,255,255,.12);
+  --dc-texte: #fff;
+  --dc-doux: rgba(255,255,255,.65);
+  --dc-accent: #FFCF00;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px 18px;
+  padding: 20px;
+  border-radius: 8px;
+  background: var(--dc-fond);
+  border: 1px solid var(--dc-bord);
+  color: var(--dc-texte);
+}
+.dates-clair .date-carte {
+  --dc-fond: #fff;
+  --dc-bord: rgba(10,61,145,.18);
+  --dc-texte: #040a1e;
+  --dc-doux: rgba(13,13,13,.65);
+  --dc-accent: #0A3D91;
+  box-shadow: 0 10px 30px rgba(4,10,30,.08);
+}
+.date-jour { display: flex; flex-direction: column; align-items: center; min-width: 64px }
+.date-num { font-family: 'Bebas Neue', sans-serif; font-size: 48px; line-height: .9; color: var(--dc-accent) }
+.date-mois { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--dc-doux) }
+.date-info { display: flex; flex-direction: column; gap: 3px; min-width: 0 }
+.date-quand { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--dc-doux) }
+.date-type { font-size: 16px; font-weight: 600 }
+.date-detail { font-size: 14px; color: var(--dc-doux) }
+.date-cta {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  text-decoration: none; font-weight: 500;
+  padding: 13px 16px; border-radius: 4px;
+  background: #FFCF00; color: #040a1e;
+}
+.date-cta:hover { filter: brightness(1.06) }
+.date-carte--complet { opacity: .6 }
+
+/* Carte d'exemple, en attendant les vraies dates */
+.date-carte--exemple { border-style: dashed }
+.date-carte--exemple .date-num { font-size: 30px }

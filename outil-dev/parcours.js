@@ -221,14 +221,27 @@ const PARCOURS = [
     attendu: `!!document.querySelector('.fq.open') || 'aucune question ne s est ouverte'`,
   },
   {
-    nom: 'porte de l Academie, navigation par onclick',
+    nom: 'carte Karting de l accueil, vers l Academie',
+    page: 'index.html',
+    largeur: 1300,
+    // Depuis D-212, l'accueil porte une carte par activite (#activites).
+    action: `document.querySelector('#activites .act-carte[href*="academie"]').click()`,
+    attente: 1200,
+    attendu: `location.pathname.includes('academie') || 'la carte n a pas navigue, on est reste sur ' + location.pathname`,
+  },
+  {
+    nom: 'palmares de l Academie, rempli depuis site-data',
     page: 'academie.html',
     largeur: 1300,
-    // Les portes ne sont pas des <a> : elles portent onclick="location.href=...".
-    // Un verificateur de liens ne voit donc rien a verifier ici.
-    action: `document.querySelector('.porte.enfant').click()`,
-    attente: 1200,
-    attendu: `location.pathname.includes('karting-enfant') || 'la porte n a pas navigue, on est reste sur ' + location.pathname`,
+    action: `null`,
+    attendu: `(function(){ var n = document.querySelectorAll('[data-palmares-une] .ac-pal-item').length, a = window.JBEMERIC_DATA.palmares.filter(function(e){return e.highlight}).length; return n === a || ('colonne : ' + n + ' resultats, a la une : ' + a) })()`,
+  },
+  {
+    nom: 'barre de reservation de l Academie, visible en bas',
+    page: 'academie.html',
+    largeur: 390,
+    action: `null`,
+    attendu: `(function(){ var r = document.getElementById('resa-barre').getBoundingClientRect(); return (r.bottom <= innerHeight + 1 && r.top < innerHeight) || ('barre hors ecran, haut a ' + Math.round(r.top)) })()`,
   },
   {
     nom: 'menu burger, telephone',
@@ -245,23 +258,32 @@ const PARCOURS = [
     attendu: `document.querySelectorAll('#nav-root a[href*="karting"]').length >= 2 || 'les entrees karting du menu sont absentes'`,
   },
   {
-    nom: 'videos YouTube, tirage sur grand ecran',
+    // Depuis D-208 : une miniature par video, le lecteur n'est pose qu'au clic.
+    nom: 'videos YouTube, quatre miniatures sur grand ecran',
     page: 'academie.html',
     largeur: 1300,
     action: `null`,
-    attendu: `document.querySelectorAll('[data-videos] iframe').length === 4 || 'attendu 4 videos tirees, trouve ' + document.querySelectorAll('[data-videos] iframe').length`,
+    attendu: `document.querySelectorAll('[data-videos] .yt-lancer').length === 4 || 'attendu 4 miniatures, trouve ' + document.querySelectorAll('[data-videos] .yt-lancer').length`,
   },
   {
-    nom: 'videos YouTube, aucune requete sur telephone',
+    nom: 'videos YouTube, miniatures et aucun lecteur sur telephone',
     page: 'academie.html',
     largeur: 390,
     action: `null`,
-    attendu: `document.querySelectorAll('[data-videos] iframe').length === 0 || 'des videos sont chargees sur telephone'`,
+    attendu: `(document.querySelectorAll('[data-videos] .yt-lancer').length === 4 && document.querySelectorAll('[data-videos] iframe').length === 0) || 'telephone : ' + document.querySelectorAll('[data-videos] .yt-lancer').length + ' miniatures, ' + document.querySelectorAll('[data-videos] iframe').length + ' lecteurs'`,
+  },
+  {
+    nom: 'videos YouTube, le clic pose le lecteur',
+    page: 'academie.html',
+    largeur: 390,
+    action: `document.querySelector('[data-videos] .yt-lancer').click()`,
+    attendu: `document.querySelectorAll('[data-videos] iframe').length === 1 || 'apres un clic : ' + document.querySelectorAll('[data-videos] iframe').length + ' lecteur(s)'`,
   },
   {
     nom: 'carte Coaching de l accueil, vers la bonne offre',
     page: 'index.html',
     largeur: 1300,
+    masqueAvec: 'coaching.html',
     // Les cartes de l'accueil sont aspirees de coaching.html par sync-mirror.js
     // et pointent sur #amateur et #competition. Ces deux ancres ont manque
     // pendant des mois : le visiteur atterrissait en haut de la page au lieu
@@ -1484,7 +1506,17 @@ async function principal() {
     if (!joignable) console.log('  seront declares non concluants, pas en echec.')
     console.log('')
 
+    // Une page masquee (theme.css section 5) ne se teste pas : son parcours
+    // echouerait sans qu'aucun visiteur puisse rencontrer le defaut.
+    const { MASQUEES } = require('./audit/perimetre')
+    let masques = 0
     for (const p of liste) {
+      const fichier = p.page.split('?')[0]
+      if (MASQUEES.includes(fichier) || (p.masqueAvec && MASQUEES.includes(p.masqueAvec))) {
+        masques++
+        console.log(`  MASQUEE  ${p.nom}`)
+        continue
+      }
       if (p.besoinBase && !joignable) {
         sansBase++
         console.log(`  SANS BASE ${p.nom}`)
@@ -1503,6 +1535,7 @@ async function principal() {
     console.log('  ' + '-'.repeat(66))
     console.log(echecs ? `  ${echecs} parcours cassé(s).` : '  Tous les parcours joues passent.')
     if (sansBase) console.log(`  ${sansBase} parcours non joue(s), faute d acces a Supabase. A rejouer sur un poste connecte.`)
+    if (masques) console.log(`  ${masques} parcours non joue(s), leur page est masquee (audit/perimetre.js).`)
     console.log('')
     console.log('  L inscription est testee sans rien ecrire : fetch est remplace le temps')
     console.log('  du clic, la requete est capturee et la reponse simulee. Restent hors de')

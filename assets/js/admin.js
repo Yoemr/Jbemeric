@@ -69,7 +69,8 @@ let currentRole = null
   const user = await getUser()
   if (!user) return redirect('login.html')
 
-  const role = user.user_metadata?.role ?? 'client'
+  // app_metadata, écrit par le serveur seul (audit du 9 octobre 2026)
+  const role = user.app_metadata?.role ?? 'client'
   if (!ALLOWED_ROLES.includes(role)) return redirect('index.html')
 
   currentUser = user

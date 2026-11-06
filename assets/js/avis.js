@@ -70,7 +70,10 @@
 
   // Le contrat est l'attribut, pas la classe : une page recopiée porterait le
   // même nom de conteneur sans que personne ait à tenir une liste de noms.
-  var blocs = document.querySelectorAll('[data-avis]')
+  // Un bloc masqué (data-route, section 5 de theme.css) ne demande rien à la
+  // base : même garde que sync-mirror.js.
+  var blocs = Array.prototype.filter.call(document.querySelectorAll('[data-avis]'),
+    function (el) { return el.getClientRects().length })
   if (!blocs.length) return
 
   var tags = []
@@ -101,8 +104,14 @@
           var ses = a.tags || []
           return !ses.length || ses.indexOf(t) !== -1
         })
-        if (!pour.length) continue                   // idem, bloc par bloc
-        for (var k = 0; k < parTag[t].length; k++) remplir(parTag[t][k], pour)
+        // data-avis-tague : le bloc ne prend que les avis qui portent son tag.
+        // L'Académie et l'accueil attendent des avis karting ; les avis sans
+        // tag en base racontent des journées en voiture (6 novembre 2026).
+        var tagues = lignes.filter(function (a) { return (a.tags || []).indexOf(t) !== -1 })
+        for (var k = 0; k < parTag[t].length; k++) {
+          var lot = parTag[t][k].hasAttribute('data-avis-tague') ? tagues : pour
+          if (lot.length) remplir(parTag[t][k], lot)   // sinon le filet reste
+        }
       }
     })
     .catch(function () { /* le HTML de la page fait office de filet */ })

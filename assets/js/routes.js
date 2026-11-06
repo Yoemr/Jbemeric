@@ -33,6 +33,11 @@
     karting:    '/academie/karting-adulte.html',
     competition:'/academie/competition.html',
 
+    // ── Groupes et courses (13 octobre 2026) ───────────────────────
+    kartingEntreprise: '/groupes/karting-entreprise.html',
+    kartingColonie:    '/groupes/karting-colonie.html',
+    courses:           '/courses-karting.html',
+
     // ── Paddock ────────────────────────────────────────────────────
     palmares:   '/paddock/palmares.html',
     articles:   '/paddock/articles.html',
@@ -86,6 +91,19 @@
     return internes(function(k) { return ROUTES[k].split('/').pop() === file ? k : null })
   }
 
+  // ── Grand écran : le seul endroit où il est défini ──────────────
+  // Décision de Yoan du 6 août 2026 : pas de vidéo sur téléphone. La largeur
+  // seule ne suffit pas : un téléphone tenu à l'horizontale fait 844 px de
+  // large et chargeait les 45 Mo de l'accueil. La hauteur l'exclut.
+  // Les vidéos YouTube n'en dépendent plus depuis le 13 octobre 2026 :
+  // videos.js montre une miniature partout et ne pose le lecteur qu'au clic.
+  ROUTES.GRAND_ECRAN = '(min-width: 700px) and (min-height: 600px)'
+  // Vidéos de fond : le grand écran, sauf pour un visiteur qui a demandé à
+  // son système de réduire les animations. Il garde l'image d'attente, comme
+  // un téléphone. Lu par hero-video.js et live-editor.js.
+  ROUTES.VIDEO_FOND = ROUTES.GRAND_ECRAN + ' and (prefers-reduced-motion: no-preference)'
+  ROUTES.MOUVEMENT_REDUIT = '(prefers-reduced-motion: reduce)'
+
   window.ROUTES = ROUTES
 
   // ── Favicon centralisée (déclarée une seule fois) ───────────────
@@ -109,8 +127,11 @@
     var el = document.getElementById(href.slice(1))
     if (el) {
       e.preventDefault()
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      history.replaceState(null, '', href)
+      var reduit = window.matchMedia && window.matchMedia(ROUTES.MOUVEMENT_REDUIT).matches
+      el.scrollIntoView({ behavior: reduit ? 'auto' : 'smooth', block: 'start' })
+      // Chemin complet : avec <base href="/">, un « #journee » seul devenait
+      // « /#journee », et un rechargement ou un lien partagé menait à l'accueil.
+      history.replaceState(null, '', location.pathname + location.search + href)
     }
   })
 })()

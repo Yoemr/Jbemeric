@@ -67,7 +67,8 @@
 
   const { data: { session } } = await sb.auth.getSession()
   const utilisateur = session && session.user
-  const role = utilisateur && utilisateur.user_metadata && utilisateur.user_metadata.role
+  // app_metadata, écrit par le serveur seul (audit du 9 octobre 2026)
+  const role = utilisateur && utilisateur.app_metadata && utilisateur.app_metadata.role
 
   if (!utilisateur) {
     try { sessionStorage.setItem('jbe_return_url', location.href) } catch (e) {}

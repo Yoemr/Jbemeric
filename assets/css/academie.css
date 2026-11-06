@@ -12,43 +12,8 @@ body { font-family: 'Outfit', sans-serif; font-weight: 300; -webkit-font-smoothi
 a { text-decoration: none; color: inherit }
 img { display: block; max-width: 100% }
 
-/* ═══════════════════════════════════════════════════════
-   SCROLL SNAP : ajustements spécifiques à academie.html
-   (règles de base dans assets/css/snap.css)
-   ═══════════════════════════════════════════════════════ */
-
-/* Frise et palmarès : au moins un écran, plus si le contenu l'exige.
-   À hauteur fixe, un portable de 768 px de haut coupait les cartes des
-   voies et leurs liens « Voir la journée » (snap.css masque ce qui déborde). */
-.parcours.snap-section, .jb-pal-wrap.snap-section { height: auto; min-height: calc(100svh - 56px) }
-
-/* Parcours : timeline étire pour remplir l'écran */
-.parcours.snap-section { display: flex; flex-direction: column }
-.parcours.snap-section .timeline { flex: 1; min-height: 0 }
-.parcours.snap-section .tl-step { min-height: 0 }
-
-/* Formateur : jb-split remplit la hauteur du wrapper (desktop uniquement) */
-@media(min-width:1100px) {
-  .jb-pal-wrap.snap-section .jb-split { min-height: 0; flex: 0 0 65% }
-}
-
-/* Mobile / tablette : laisser respirer la section formateur+palmarès
-   (override de la contrainte universelle .snap-section { height: ...; overflow: hidden }) */
-@media(max-width:1099px) {
-  .jb-pal-wrap.snap-section {
-    height: auto;
-    min-height: calc(100svh - 56px);
-    overflow: visible;
-  }
-}
-
-/* Portes+citation : override min-height pour que les cartes se contractent */
-.portes-citation-wrap.snap-section .porte { min-height: 0 }
-
-/* Dernière section : FAQ, elle grandit avec son contenu (snap.css) */
-
-/* Footer : point d'ancrage terminal comme sur index */
-#footer-root { scroll-snap-align: start }
+/* Le défilement aimanté a été retiré le 6 novembre 2026 (D-212) : les
+   sections de la page sont plus hautes que l'écran. */
 
 /* ═══════════════════════════════════════════════════════
    THÈME : Variables page Académie
@@ -571,3 +536,108 @@ body { background: var(--bg-base) }
 .ac-vid-chan:hover { opacity: .65 }
 
 /* Grille YouTube : assets/css/videos.css, commune à toutes les pages. */
+
+/* ════ ACADÉMIE DE VENTE (D-212, 6 novembre 2026) ═════════════════════════
+   Ordre : haut de page, les deux journées, le déroulé, les dates, le
+   formateur et son palmarès, les vidéos, la FAQ. Défilement libre : le
+   défilement aimanté sautait les sections plus hautes que l'écran. */
+
+/* Hero : deux boutons */
+.hero-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px }
+.hero-btn {
+  font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+  text-decoration: none; font-weight: 500; padding: 17px 26px; border-radius: 4px;
+  transition: transform .2s;
+}
+.hero-btn:hover { transform: translateY(-2px) }
+.hero-btn--y { background: #FFCF00; color: #040a1e }
+.hero-btn--w { background: #fff; color: #040a1e; box-shadow: 0 8px 24px rgba(0,0,0,.35) }
+.hero-btn[hidden] { display: none }
+
+/* Les deux journées */
+.parcours { background: #f0f4ff }
+.parcours .pc-title { font-size: clamp(44px,5.5vw,72px) }
+.parcours .pc-lead { font-size: clamp(16px,1.4vw,18px) }
+.voies { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 24px }
+.voies .tl-step.voie {
+  padding: 0; min-height: 0; gap: 0; border-top: 0; border-radius: 10px;
+  background: #0a1a4a; box-shadow: 0 24px 60px rgba(4,10,30,.25);
+}
+.voies .tl-step.voie::before { content: none }
+.voies .tl-step.voie:hover { transform: none; background: #0a1a4a }
+.voie-photo { width: 100%; height: clamp(220px, 24vw, 300px); object-fit: cover; display: block }
+.voie-corps { padding: clamp(22px,3vw,36px); display: flex; flex-direction: column; gap: 16px; color: #fff }
+.voie .tl-badge { align-self: flex-start }
+.voie .tl-name { margin: 0; font-size: clamp(40px,4vw,56px); line-height: .9; font-weight: 400 }
+.voie .tl-desc { margin: 0; font-size: 17px; line-height: 1.6; color: rgba(255,255,255,.85); flex: none }
+.voie-points { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px }
+.voie-points li { display: flex; gap: 10px; font-size: 16px; line-height: 1.5; color: rgba(255,255,255,.9) }
+.voie-points li::before { content: '✓'; color: #FFCF00; flex-shrink: 0 }
+.voie-prix { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.12) }
+.voie-montant { font-family: 'Bebas Neue', sans-serif; font-size: 48px; line-height: 1; color: #FFCF00 }
+.voie-note { font-size: 15px; color: rgba(255,255,255,.7) }
+.voie-btns { display: flex; flex-wrap: wrap; gap: 12px }
+.voie-btn {
+  font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  text-decoration: none; padding: 15px 20px; border-radius: 4px; font-weight: 500;
+}
+.voie-btn--y { background: #FFCF00; color: #040a1e }
+.voie-btn--contour { border: 1px solid rgba(255,255,255,.5); color: #fff }
+.voie-btn.tl-link::after { content: none }
+.voie-btn.tl-link:hover { gap: 0 }
+
+/* Les cinq niveaux */
+.niveaux {
+  list-style: none; margin: 32px 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  background: #fff; border: 1px solid rgba(10,61,145,.2); border-radius: 8px; overflow: hidden;
+}
+.niveaux li { padding: 20px; display: flex; flex-direction: column; gap: 6px; border-left: 1px solid rgba(10,61,145,.15) }
+.niveaux li:first-child { border-left: 0 }
+.niv-nom { font-family: 'Bebas Neue', sans-serif; font-size: 30px; line-height: 1; color: #0A3D91 }
+.niv-etape { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(13,13,13,.5) }
+.niv-txt { font-size: 14px; line-height: 1.5; color: rgba(13,13,13,.72) }
+
+/* Le déroulé et les dates : même en-tête */
+.deroule, .ac-dates { padding: clamp(64px,8vw,96px) clamp(20px,5vw,72px); display: flex; flex-direction: column; gap: 36px }
+.deroule { background: #040a1e; color: #fff }
+.ac-dates { background: #fff }
+.dr-tete { display: flex; flex-direction: column; gap: 12px }
+.dr-kicker { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #FFCF00 }
+.dr-titre { margin: 0; font-family: 'Bebas Neue', sans-serif; font-weight: 400; font-size: clamp(44px,5.5vw,72px); line-height: .9 }
+.dr-titre em { font-style: normal; color: #FFCF00 }
+.ac-dates .dr-kicker { color: #0A3D91 }
+.ac-dates .dr-titre { color: #040a1e }
+.ac-dates .dr-titre em { color: #0A3D91 }
+.dr-etapes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 24px 16px }
+.dr-etapes li { border-top: 3px solid #FFCF00; padding-top: 18px; display: flex; flex-direction: column; gap: 8px }
+.dr-heure { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; color: #FFCF00 }
+.dr-nom { font-size: 17px; font-weight: 600 }
+.dr-txt { font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.75) }
+.dr-inclus { margin: 0; font-size: 15px; color: rgba(255,255,255,.6) }
+
+/* Le formateur et les vidéos : hauteur libre */
+.jb-pal-wrap { height: auto }
+.ac-videos { height: auto }
+
+/* Barre de réservation, collée en bas de l'écran */
+.resa-barre {
+  position: sticky; bottom: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px clamp(16px,4vw,72px);
+  background: rgba(4,10,30,.96); border-top: 2px solid #FFCF00; color: #fff;
+}
+.resa-txt { font-size: 15px; color: rgba(255,255,255,.85) }
+.resa-txt strong { color: #FFCF00; font-weight: 600 }
+.resa-btns { display: flex; gap: 8px; flex-shrink: 0 }
+.resa-btn {
+  font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  text-decoration: none; padding: 13px 20px; border-radius: 4px; font-weight: 500;
+}
+.resa-btn--y { background: #FFCF00; color: #040a1e }
+.resa-btn--contour { border: 1px solid rgba(255,255,255,.5); color: #fff }
+@media(max-width:560px) {
+  .resa-txt { display: none }
+  .resa-btns { flex: 1 }
+  .resa-btn { flex: 1; text-align: center }
+}

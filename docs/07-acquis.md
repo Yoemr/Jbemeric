@@ -215,6 +215,8 @@ Le 5 novembre 2026, le banc de contraste a rendu zéro défaut sur le palmarès 
 
 ---
 
+- **Une image ajoutée à une page se pose avec un id.** Le live-editor numérote les images sans id dans l'ordre de la page (`img-1`, `img-2`), et la base range encore des photos de JB sous ces numéros. Une image sans id insérée avant les autres décale tout, et le contrôle des images est large : la photo de JB tombe sur la nouvelle. Avec un id, l'image ne compte pas dans la numérotation (`scanImages`, live-editor.js). Les textes sans id décalent aussi les `txt-N`, mais leur contrôle de ressemblance refuse le mauvais texte. Constaté le 6 novembre 2026 (D-212).
+
 ## 4. Ce que l'outillage ne voit pas
 
 **À connaître avant d'annoncer « zéro faute ».**

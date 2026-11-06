@@ -6,8 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="assets/css/theme.css">
   <link rel="stylesheet" href="assets/css/nav.css">
-  <link rel="stylesheet" href="assets/css/snap.css">
   <link rel="stylesheet" href="assets/css/index.css">
+  <link rel="stylesheet" href="assets/css/dates.css">
+  <link rel="stylesheet" href="assets/css/faq.css">
 <title>JB EMERIC · École de karting enfant et adulte · Depuis 1989</title>
   <meta name="description" content="Karting enfant dès 7 ans et karting adulte, du premier tour au niveau compétition. Encadré par Jean-Baptiste Emeric, vainqueur du Volant Palmyr 1987, au circuit de Brignoles.">
   <meta property="og:title" content="JB EMERIC · École de karting enfant et adulte · Depuis 1989">
@@ -28,52 +29,132 @@
 <body>
 <div id="nav-root"></div>
 
-<section class="hero snap-section">
+<section class="hero" id="hero-accueil">
   <video class="hero-video" autoplay muted loop playsinline poster="assets/images/podium-paul-ricard-1994.jpg">
     <source data-src="assets/images/Presentation%20Jbemeric.mp4" type="video/mp4">
   </video>
   <div class="hero-overlay"></div>
   <div class="hero-top-line"></div>
   <div class="hero-content">
-    <div class="hero-kicker">École de pilotage sur circuit · Fondée en 1989</div>
-    <h1 class="hero-title">JB <em>EMERIC</em></h1>
-    <p class="hero-sub">De 7 ans à la compétition officielle. 40 ans de circuits. C'est Jean-Baptiste Emeric qui encadre, du briefing au dernier tour.</p>
+    <div class="hero-kicker">École de pilotage · Diplômé d'État · Depuis 1989</div>
+    <h1 class="hero-title">Jean-Baptiste Emeric <em>Apprendre à piloter, à tout âge</em></h1>
+    <p class="hero-sub">Karting pour les enfants et les adultes, journées pour les groupes et les entreprises. Vainqueur du Volant Palmyr 1987, JB encadre chaque journée, du briefing au dernier tour.</p>
     <div class="hero-btns">
-      <a class="btn btn-y" href="academie.html">Découvrir l'Académie</a>
-      <a class="btn btn-g" data-route="evenements" href="evenements.html">Stages &amp; Track-Days</a>
-    </div>
-  </div>
-  <div class="hero-stats-bar">
-    <div class="hsb-stat">
-      <div class="hsb-val">1987</div>
-      <div class="hsb-key">Volant Palmyr</div>
-      <div class="hsb-desc">Formule Ford · Van Diemen</div>
-    </div>
-    <div class="hsb-divider"></div>
-    <div class="hsb-stat">
-      <div class="hsb-val">40<span class="hsb-unit">+</span></div>
-      <div class="hsb-key">Ans d'expérience</div>
-      <div class="hsb-desc">Pilote depuis 1986 · Formateur depuis 1989</div>
-    </div>
-    <div class="hsb-divider"></div>
-    <div class="hsb-stat">
-      <div class="hsb-val">6</div>
-      <div class="hsb-key">Pilotes au maximum</div>
-      <div class="hsb-desc">Par journée · Circuit de Brignoles</div>
+      <a class="btn btn-y" href="#activites">Voir les activités</a>
+      <a class="btn btn-w" href="#dates" data-si-dates hidden>Prochaines dates</a>
     </div>
   </div>
 </section>
 
-<!-- ═══ 01 · ACADÉMIE ════════════════════════ -->
-<div class="snap-section" id="section-academie" data-section="academie">
-  <div class="snap-label">
-    <span class="snap-num">01</span>
-    <span class="snap-name">Académie</span>
+<!-- ═══ PREUVES : une ligne, sous le hero ════════════════ -->
+<section class="preuves" id="preuves" aria-label="En bref">
+  <ul class="preuves-liste">
+    <li><span class="preuve-val">Diplômé d'État</span><span class="preuve-txt">BPJEPS mention Circuit</span></li>
+    <li><span class="preuve-val">1987</span><span class="preuve-txt">Vainqueur du Volant Palmyr</span></li>
+    <li><span class="preuve-val">37 saisons</span><span class="preuve-txt">d'enseignement</span></li>
+    <li><span class="preuve-val">195 €</span><span class="preuve-txt">la journée, repas compris</span></li>
+  </ul>
+</section>
+
+<!-- ═══ ACTIVITÉS ══════════════════════════════════════════
+     Une carte par activité. Une carte portant data-route disparaît avec sa
+     page (theme.css, section 5) et revient avec elle : réafficher le
+     coaching ou les stages ne demande aucune retouche ici. -->
+<section class="activites" id="activites">
+  <div class="vit-in">
+    <div class="vit-tete">
+      <div class="vit-kicker">Ce que propose JB</div>
+      <h2 class="vit-titre">Nos <em>activités</em></h2>
+    </div>
+    <div class="act-grille">
+      <a class="act-carte" href="academie.html">
+        <img class="act-photo" id="act-photo-karting" src="assets/images/karting-enfant-circuit.jpg" alt="Jeunes pilotes en kart sur le circuit de Brignoles" loading="lazy">
+        <div class="act-corps">
+          <h3 class="act-nom">Karting</h3>
+          <p class="act-texte">Enfants dès 7 ans et adultes. Une journée à Brignoles, 195 €.</p>
+          <span class="act-bouton">Réserver une journée</span>
+        </div>
+      </a>
+      <a class="act-carte" href="groupes/karting-entreprise.html">
+        <img class="act-photo" id="act-photo-groupes" src="assets/images/karting-adulte-depart.jpg" alt="Départ d'une course de karting entre adultes" loading="lazy">
+        <div class="act-corps">
+          <h3 class="act-nom">Groupes</h3>
+          <p class="act-texte">Entreprises, CE, colonies. Endurance de 2 heures, 390 € par équipe.</p>
+          <span class="act-bouton act-bouton--blanc">Demander un devis</span>
+        </div>
+      </a>
+      <a class="act-carte" href="coaching.html" data-route="coaching">
+        <img class="act-photo" id="act-photo-coaching" src="assets/images/Jb emeric Coaching.png" alt="Jean-Baptiste Emeric en séance de coaching" loading="lazy">
+        <div class="act-corps">
+          <h3 class="act-nom">Coaching</h3>
+          <p class="act-texte">Sur votre voiture, sur circuit ou en vidéo.</p>
+          <span class="act-bouton act-bouton--blanc">Découvrir le coaching</span>
+        </div>
+      </a>
+      <a class="act-carte" href="evenements.html" data-route="evenements">
+        <img class="act-photo" id="act-photo-stages" src="assets/images/porsche-gt3-circuit-albi.jpg" alt="Porsche GT3 au circuit d'Albi" loading="lazy">
+        <div class="act-corps">
+          <h3 class="act-nom">Stages et track-days</h3>
+          <p class="act-texte">Les journées sur circuit de la saison.</p>
+          <span class="act-bouton act-bouton--blanc">Voir les événements</span>
+        </div>
+      </a>
+    </div>
   </div>
-  <div class="snap-content" id="mirror-academie" data-jbe-externe>
-    <!-- Chargé par sync-mirror.js -->
+</section>
+
+<!-- ═══ DATES : masquée tant qu'aucune date n'est saisie (dates.js) ═══ -->
+<section class="vit-dates dates-clair" id="dates" data-dates-bloc hidden>
+  <div class="vit-in">
+    <div class="vit-tete">
+      <div class="vit-kicker">Prochaines dates</div>
+      <h2 class="vit-titre">Le <em>calendrier</em></h2>
+    </div>
+    <!-- karting seul tant que les autres activités sont masquées -->
+    <div class="dates-liste" data-dates="karting" data-dates-max="6"></div>
   </div>
-</div>
+</section>
+
+<!-- ═══ AVIS : masqués avec les Événements, comme sur l'Académie. Les trois
+     avis en base racontent des journées en voiture. À réafficher avec les
+     avis karting de Google et Trustpilot. -->
+<section class="vit-avis jbe-avis" id="avis-accueil" data-avis="accueil" data-route="evenements">
+  <div class="vit-in jbe-avis-in">
+    <div class="vit-tete">
+      <div class="vit-kicker">Avis vérifiés</div>
+      <h2 class="vit-titre">Ils sont venus <em>rouler</em></h2>
+    </div>
+    <div class="avis-list"></div>
+  </div>
+</section>
+
+<!-- ═══ FAQ : les premières questions de l'Académie (faq.js) ═══ -->
+<section class="vit-faq jbe-faq" id="faq-accueil" data-faq="academie" data-faq-max="6">
+  <div class="vit-in">
+    <div class="faq-tete">
+      <div class="faq-kicker">Questions fréquentes</div>
+      <h2 class="faq-titre">Avant de <em>réserver</em></h2>
+    </div>
+    <div class="faq-list">
+      <div class="fq">
+        <div class="fq-q">Combien ça coûte et où ça se passe ?</div>
+        <div class="fq-a">195 € la journée, de 10 h à 18 h : kart 4 temps, piste, encadrement, théorie, sept sessions de roulage et repas du midi. Les journées ont lieu principalement au circuit de Brignoles, le lieu est confirmé à la réservation.</div>
+      </div>
+    </div>
+    <a class="vit-lien" href="academie.html#faq">Toutes les questions →</a>
+  </div>
+</section>
+
+<!-- ═══ APPEL ═══════════════════════════════════════════════ -->
+<section class="vit-appel" id="appel">
+  <div class="vit-in vit-appel-in">
+    <h2 class="vit-appel-titre">Une question, une date, un devis ?</h2>
+    <div class="vit-appel-btns">
+      <a class="btn btn-noir" href="tel:+33660188787">Appeler JB · 06 60 18 87 87</a>
+      <a class="btn btn-contour" href="admin/legal/contact.html">Écrire un message</a>
+    </div>
+  </div>
+</section>
 
 <!-- ═══ 02 · COACHING ════════════════════════ -->
 <div class="snap-section" id="section-coaching" data-section="coaching" data-route="coaching">
@@ -239,6 +320,9 @@
 <script src="assets/js/footer.js"></script>
 <script src="assets/js/hero-video.js"></script>
 <script src="assets/js/sync-mirror.js" defer></script>
+<script src="assets/js/dates.js"></script>
+<script src="assets/js/avis.js"></script>
+<script src="assets/js/faq.js"></script>
 <script type="module" src="assets/js/live-editor.js"></script>
 
 <script type="module" src="assets/js/index-sb.js"></script>

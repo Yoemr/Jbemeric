@@ -146,3 +146,5 @@ Mot de Yoan, 11 août 2026 : « reste à réfléchir à la partie business plan,
 - Automatisation des réseaux sociaux depuis le dashboard, idée de Yoan dans `docs/99`.
 
 - **Palmarès de l Académie automatique** (demande de Yoan, 6 novembre). La colonne « 40 ans de compétition » de `academie.html#palmares-academie` est une copie à la main de 7 résultats. La générer depuis `JBEMERIC_DATA.palmares` filtré sur `highlight:true` (10 aujourd hui), comme la page Palmarès. Avant : vérifier que retirer les 7 blocs écrits ne décale pas les identifiants positionnels `txt-N` du live-editor sur le reste de la page.
+
+- **Après D-212.** (1) Les sections 02 à 04 de l'accueil, masquées, gardent leurs classes `snap-*` : à revoir le jour où l'une revient, `snap.css` n'est plus chargé. (2) `buildAcademieCards` et les règles `.acad-*`, `.timeline`, `.tl-dot` sont mortes. (3) L'accueil ne montre que les dates karting (`data-dates="karting"`) : élargir quand une autre activité revient. (4) Onglets par playlist YouTube sur l'Académie, quand on aura les liens des playlists de JB. (5) Avis karting de Google et Trustpilot à importer, puis réafficher les blocs avis.

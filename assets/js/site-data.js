@@ -60,6 +60,21 @@ window.JBEMERIC_DATA = {
        + voiture, coequipiers[], circuits[], resultats[],
          images[], presse[], citations[], anecdote
   ─────────────────────────────────────────────────────────────── */
+  // Les noms affichés des disciplines du palmarès. Lus par palmares.js
+  // (page Palmarès) et palmares-une.js (colonne de l'Académie).
+  palmaresCategories: {
+    karting:    'Karting',
+    monoplace:  'Monoplace',
+    gt:         'GT',
+    prototype:  'Sport Proto',
+    tourisme:   'Tourisme',
+    montagne:   'Course de côte',
+    rallye:     'Rallye',
+    endurance:  'Endurance',
+    historique: 'Historique',
+    multi:      'Multi-disciplines'
+  },
+
   palmares: [
     {
       annee: 1986,

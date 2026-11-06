@@ -221,14 +221,27 @@ const PARCOURS = [
     attendu: `!!document.querySelector('.fq.open') || 'aucune question ne s est ouverte'`,
   },
   {
-    nom: 'carte Karting enfant de l accueil, vers sa page',
+    nom: 'carte Karting de l accueil, vers l Academie',
     page: 'index.html',
     largeur: 1300,
-    // Depuis D-211, les cartes de l'accueil sont construites par sync-mirror.js
-    // a partir de la frise d'academie.html ; la premiere est le karting enfant.
-    action: `document.querySelector('#mirror-academie .acad-carte[href*="karting-enfant"]').click()`,
+    // Depuis D-212, l'accueil porte une carte par activite (#activites).
+    action: `document.querySelector('#activites .act-carte[href*="academie"]').click()`,
     attente: 1200,
-    attendu: `location.pathname.includes('karting-enfant') || 'la porte n a pas navigue, on est reste sur ' + location.pathname`,
+    attendu: `location.pathname.includes('academie') || 'la carte n a pas navigue, on est reste sur ' + location.pathname`,
+  },
+  {
+    nom: 'palmares de l Academie, rempli depuis site-data',
+    page: 'academie.html',
+    largeur: 1300,
+    action: `null`,
+    attendu: `(function(){ var n = document.querySelectorAll('[data-palmares-une] .ac-pal-item').length, a = window.JBEMERIC_DATA.palmares.filter(function(e){return e.highlight}).length; return n === a || ('colonne : ' + n + ' resultats, a la une : ' + a) })()`,
+  },
+  {
+    nom: 'barre de reservation de l Academie, visible en bas',
+    page: 'academie.html',
+    largeur: 390,
+    action: `null`,
+    attendu: `(function(){ var r = document.getElementById('resa-barre').getBoundingClientRect(); return (r.bottom <= innerHeight + 1 && r.top < innerHeight) || ('barre hors ecran, haut a ' + Math.round(r.top)) })()`,
   },
   {
     nom: 'menu burger, telephone',

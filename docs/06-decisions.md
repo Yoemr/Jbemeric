@@ -6,6 +6,22 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 6 novembre 2026, l'accueil vitrine et l'Académie de vente
+
+### D-212, Les maquettes du canevas codées dans le site
+
+Demande de Yoan : « tu codes les modifications du canevas ». Maquettes : planches « Accueil » et « Académie » du canevas Design (https://claude.ai/artifact/8wfbYs9fzyVpFPHkn9U79A), page « Accueil et Académie ».
+- **L'accueil présente JB et ses activités.** Hero réécrit (vidéo éclaircie, « Jean-Baptiste Emeric, Apprendre à piloter, à tout âge »), bande de preuves sur une ligne, « Nos activités » en grandes cartes photo, calendrier, FAQ réduite à six questions (`data-faq-max`), bandeau d'appel jaune. Remplace la section Académie de D-211 (`#mirror-academie` retiré de l'accueil, `buildAcademieCards` ne sert plus).
+- **Une carte par activité, pilotée par data-route.** Coaching et Stages ont déjà leur carte, masquée avec leur page (section 5 de `theme.css`) : les réafficher ne demande aucune retouche de l'accueil.
+- **L'Académie vend le karting.** Ordre : hero (bouton Réserver), les deux journées développées (photo, quatre points, 195 €, deux boutons) et les cinq niveaux, le déroulé de 10 h à 18 h, les dates, le formateur et son palmarès, les vidéos, la FAQ, une barre de réservation collée en bas de l'écran.
+- **Les dates viennent de la table events** (`dates.js`, nouveau). La section reste masquée tant qu'aucune date karting n'est à venir, et apparaît seule quand JB en saisit une. Le bouton « Prochaines dates » suit.
+- **Le palmarès de l'Académie suit la page Palmarès** (`palmares-une.js`, nouveau) : les résultats `highlight: true` de `site-data.js`. Les libellés des disciplines passent dans `site-data.js` (`palmaresCategories`), lus par les deux scripts.
+- **Les niveaux portent un nom** : Débutant, Amateur, Confirmé, Avancé, Compétiteur. Les codes C1 à C5 sont retirés de l'Académie, des pages karting et de trois réponses de la FAQ en base (« ça fait très IA », Yoan).
+- **Défilement libre** sur l'accueil et l'Académie : `snap.css` n'y est plus chargé, les sections sont plus hautes que l'écran.
+- **Avis** : toujours masqués avec les Événements, sur les deux pages. Les trois avis en base racontent des journées en voiture.
+
+---
+
 ## 5 novembre 2026, la section Académie de l'accueil
 
 ### D-211, Trois cartes et le formateur à la place des deux portes

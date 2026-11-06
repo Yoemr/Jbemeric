@@ -746,3 +746,75 @@ a{text-decoration:none;color:inherit}
 .acad-formateur-lien { align-self:flex-start; font-family:'DM Mono',monospace; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:#FFCF00; text-decoration:none; padding:12px 0 }
 .acad-formateur-lien:hover { color:#ffe066 }
 @media (prefers-reduced-motion: reduce) { .acad-carte:hover { transform:none } }
+
+/* ════ ACCUEIL VITRINE (D-212, 6 novembre 2026) ═══════════════════════════
+   L'accueil présente JB et ses activités, l'Académie vend le karting.
+   Page à défilement libre : le défilement aimanté (snap.css) sautait les
+   blocs plus hauts que l'écran. Les anciennes sections 02 à 04, masquées,
+   gardent leurs classes snap-* sans effet tant qu'elles restent masquées. */
+
+/* Hero : la vidéo se voit, le texte reste lisible */
+.hero{min-height:calc(100svh - 56px);display:block}
+.hero-video{filter:brightness(.62) saturate(.95)}
+.hero-overlay{background:linear-gradient(90deg,rgba(4,10,30,.88) 0%,rgba(4,10,30,.55) 45%,rgba(4,10,30,.1) 100%),linear-gradient(to top,rgba(4,10,30,.85) 0%,rgba(4,10,30,0) 45%)}
+.hero-content{padding:clamp(20px,4vw,48px) clamp(16px,4vw,56px) clamp(48px,8vw,96px);max-width:1100px}
+@media(max-width:600px){.hero-content{padding-bottom:48px}}
+@media(max-width:380px){.hero-content{padding-bottom:40px}}
+.hero-kicker{color:var(--Y)}
+.hero-title{font-size:clamp(54px,8.5vw,116px)}
+.hero-title em{display:block}
+.hero-sub{font-size:clamp(15px,1.6vw,19px);color:rgba(255,255,255,.88);max-width:580px}
+.hero .btn{font-size:13px;padding:16px 26px;border-radius:4px}
+.btn-w{background:#fff;color:#040a1e;box-shadow:0 8px 24px rgba(0,0,0,.35)}.btn-w:hover{transform:translateY(-2px)}
+.btn-noir{background:#040a1e;color:#fff}.btn-noir:hover{background:#0A3D91}
+.btn-contour{border:1px solid rgba(4,10,30,.6);color:#040a1e}.btn-contour:hover{background:rgba(4,10,30,.08)}
+
+/* Bande des preuves : une ligne, discrète */
+.preuves{background:#0a1a4a;border-top:2px solid var(--Y)}
+.preuves-liste{list-style:none;margin:0 auto;max-width:1280px;padding:16px clamp(16px,4vw,56px);box-sizing:border-box;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px}
+.preuves-liste li{display:flex;align-items:baseline;gap:10px;white-space:nowrap}
+.preuve-val{font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1;color:var(--Y)}
+.preuve-txt{font-size:14px;color:rgba(255,255,255,.75)}
+
+/* Gabarit commun des sections */
+.vit-in{max-width:1280px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(16px,4vw,56px);box-sizing:border-box;display:flex;flex-direction:column;gap:28px}
+.vit-tete{display:flex;flex-direction:column;gap:10px}
+.vit-kicker{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--Y)}
+.vit-titre{margin:0;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(44px,6vw,80px);line-height:.9;color:#fff;text-wrap:balance}
+.vit-titre em{font-style:normal;color:var(--Y)}
+.vit-lien{align-self:flex-start;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#0A3D91;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:4px}
+
+/* Activités : grandes cartes photo, sur fond sombre éclairé */
+.activites{background-color:#040a1e;background-image:radial-gradient(ellipse 70% 60% at 15% 0%,rgba(18,82,192,.45) 0%,rgba(4,10,30,0) 70%),radial-gradient(ellipse 50% 50% at 90% 100%,rgba(255,207,0,.12) 0%,rgba(4,10,30,0) 70%)}
+.act-grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+.act-carte{position:relative;min-height:clamp(340px,40vw,460px);border-radius:10px;overflow:hidden;display:flex;align-items:flex-end;text-decoration:none;color:#fff;box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08)}
+.act-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.act-carte::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,10,30,0) 30%,rgba(4,10,30,.92) 100%)}
+.act-carte:hover .act-photo{transform:scale(1.04)}
+.act-corps{position:relative;z-index:1;padding:clamp(22px,3vw,36px);display:flex;flex-direction:column;gap:10px}
+.act-nom{margin:0;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(48px,5vw,72px);line-height:.9}
+.act-texte{margin:0;font-size:17px;line-height:1.5;color:rgba(255,255,255,.9);max-width:420px}
+.act-bouton{align-self:flex-start;margin-top:6px;font-size:15px;font-weight:500;color:#040a1e;background:var(--Y);padding:12px 20px;border-radius:999px}
+.act-bouton--blanc{background:#fff}
+.act-carte:focus-visible{outline:3px solid var(--Y);outline-offset:3px}
+
+/* Dates : fond clair, cartes de dates.css */
+.vit-dates{background:#f0f4ff}
+.vit-dates .vit-kicker{color:#0A3D91}
+.vit-dates .vit-titre{color:#040a1e}
+.vit-dates .vit-titre em{color:#0A3D91}
+
+/* Avis : fond bleu nuit */
+.vit-avis{background:#0a1a4a}
+
+/* FAQ : faq.css, fond blanc. Le gabarit .vit-in porte déjà les marges. */
+.vit-faq.jbe-faq{padding:0}
+.vit-faq .faq-tete{margin-bottom:0}
+
+/* Appel : bandeau jaune */
+.vit-appel{background:var(--Y);color:#040a1e}
+.vit-appel-in{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;padding-top:clamp(40px,6vw,72px);padding-bottom:clamp(40px,6vw,72px)}
+.vit-appel-titre{margin:0;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(36px,4.5vw,56px);line-height:.95}
+.vit-appel-btns{display:flex;flex-wrap:wrap;gap:12px}
+.vit-appel .btn{font-size:13px;padding:16px 24px;border-radius:4px}
+.hero-title em{font-size:.72em;line-height:.95;margin-top:6px}

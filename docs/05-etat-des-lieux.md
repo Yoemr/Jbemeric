@@ -946,3 +946,10 @@ Le reste, trié selon `CLAUDE.md` : les améliorations et les décisions qui rev
 - **JB doit se déconnecter puis se reconnecter une fois**, pour que son jeton porte le rôle lu dans `app_metadata` (D-193).
 - **Un envoi de photo par JB échoue tant que le code n'est pas publié** : l'ancien code envoie avec la clé publique, que le stockage refuse désormais (D-197).
 - La connexion et la sauvegarde d'un texte par JB restent hors de portée des outils de ce bac à sable (`docs/08`, A).
+
+## Mise à jour du 6 novembre 2026, accueil vitrine et Académie (D-212)
+
+- `index.html` : hero, preuves, activités (cartes pilotées par `data-route`), dates (masquées sans date), avis (masqués), FAQ six questions, appel. Plus de `snap.css`.
+- `academie.html` : deux journées développées et cinq niveaux nommés, déroulé, dates, palmarès généré (`palmares-une.js`), barre de réservation. Plus de `snap.css`.
+- Nouveaux : `assets/js/dates.js`, `assets/js/palmares-une.js`, `assets/css/dates.css`.
+- Vérifié : audit à 0 faute, parcours tous verts dont trois nouveaux (carte de l'accueil, palmarès égal aux résultats à la une, barre visible sur téléphone), contrôle négatif du palmarès, dates rendues avec une table simulée pleine puis vide. Aucune date karting à venir en base à ce jour.

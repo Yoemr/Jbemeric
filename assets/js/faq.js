@@ -141,7 +141,13 @@
       for (var t in parTag) {
         var pour = lignes.filter(function (q) { return (q.tags || []).indexOf(t) !== -1 })
         if (!pour.length) continue                   // idem, bloc par bloc
-        for (var k = 0; k < parTag[t].length; k++) remplir(parTag[t][k], pour)
+        // data-faq-max : un bloc peut n'afficher que les premières questions,
+        // dans l'ordre de la base. L'accueil en montre quelques-unes, la page
+        // de l'activité les montre toutes.
+        for (var k = 0; k < parTag[t].length; k++) {
+          var max = parseInt(parTag[t][k].getAttribute('data-faq-max'), 10)
+          remplir(parTag[t][k], max > 0 ? pour.slice(0, max) : pour)
+        }
       }
     })
     .catch(function () { /* le HTML de la page fait office de filet */ })

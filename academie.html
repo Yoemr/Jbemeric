@@ -6,22 +6,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="assets/css/theme.css">
   <link rel="stylesheet" href="assets/css/nav.css">
-  <link rel="stylesheet" href="assets/css/snap.css">
   <link rel="stylesheet" href="assets/css/academie.css">
   <link rel="stylesheet" href="assets/css/videos.css">
   <link rel="stylesheet" href="assets/css/avis.css">
   <link rel="stylesheet" href="assets/css/faq.css">
+  <link rel="stylesheet" href="assets/css/dates.css">
 <title>Académie JB EMERIC · Karting enfant et adulte</title>
-  <meta name="description" content="Karting enfant dès 7 ans et karting adulte en cinq niveaux, de C1 à C5. Formation encadrée par Jean-Baptiste Emeric, vainqueur du Volant Palmyr 1987. Circuit de Brignoles.">
+  <meta name="description" content="Karting enfant dès 7 ans et karting adulte en cinq niveaux, du débutant au compétiteur. Formation encadrée par Jean-Baptiste Emeric, vainqueur du Volant Palmyr 1987. Circuit de Brignoles.">
   <meta property="og:title" content="Académie JB EMERIC · Karting enfant et adulte">
-  <meta property="og:description" content="Karting enfant dès 7 ans et karting adulte en cinq niveaux, de C1 à C5. Formation encadrée par Jean-Baptiste Emeric, vainqueur du Volant Palmyr 1987. Circuit de Brignoles.">
+  <meta property="og:description" content="Karting enfant dès 7 ans et karting adulte en cinq niveaux, du débutant au compétiteur. Formation encadrée par Jean-Baptiste Emeric, vainqueur du Volant Palmyr 1987. Circuit de Brignoles.">
   <meta property="og:image" content="https://jbemeric.netlify.app/assets/images/karting-adulte-circuit.jpg">
   <meta property="og:url" content="https://jbemeric.netlify.app/academie.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="JB EMERIC École de Pilotage">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Académie JB EMERIC · Karting enfant et adulte">
-  <meta name="twitter:description" content="Karting enfant dès 7 ans et karting adulte en cinq niveaux, de C1 à C5. Formation encadrée par Jean-Baptiste Emeric, vainqueur du Volant Palmyr 1987. Circuit de Brignoles.">
+  <meta name="twitter:description" content="Karting enfant dès 7 ans et karting adulte en cinq niveaux, du débutant au compétiteur. Formation encadrée par Jean-Baptiste Emeric, vainqueur du Volant Palmyr 1987. Circuit de Brignoles.">
   <meta name="twitter:image" content="https://jbemeric.netlify.app/assets/images/karting-adulte-circuit.jpg">
   <link rel="canonical" href="https://jbemeric.netlify.app/academie.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +30,7 @@
 <body>
 <div id="nav-root"></div>
 
-<section class="hero snap-section" id="hero-academie">
+<section class="hero" id="hero-academie">
   <div class="hero-bg" style="background:linear-gradient(135deg,#040a1e 0%,#0A3D91 60%,#1252C0 100%)">
     <img src="assets/images/karting-adulte-circuit.jpg" alt="Jeunes pilotes casqués alignés en kart dans la voie des stands, prêts à partir" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 50%;z-index:1">
   </div>
@@ -43,52 +43,113 @@
     <div class="hero-chips">
       <span class="chip chip-solid">Depuis 1989</span>
       <span class="chip">Volant Palmyr 1987</span>
-      <span class="chip">Plusieurs voies · Tous profils</span>
+      <span class="chip">Enfants et adultes</span>
+    </div>
+    <div class="hero-btns">
+      <a class="hero-btn hero-btn--y" href="/admin/legal/contact.html">Réserver une journée · 195 €</a>
+      <a class="hero-btn hero-btn--w" href="#dates" data-si-dates hidden>Voir les dates</a>
     </div>
   </div>
 </section>
 
 
-<!-- ═══ VOIES : 2 entrées dans l'Académie ══════════════ -->
-<section class="parcours snap-section" id="parcours" data-mirror="academie-voies">
+<!-- ═══ VOIES : les deux journées ═════════════════════════ -->
+<section class="parcours" id="parcours" data-mirror="academie-voies">
   <div class="parcours-head">
-    <div class="pc-kicker">Les voies de l'Académie</div>
-    <h2 class="pc-title">Deux âges,<em>une seule méthode.</em></h2>
-    <p class="pc-lead">Un enfant de sept ans et un adulte qui n'a jamais tenu un volant n'ont ni les mêmes questions, ni le même rythme. Chacun a sa journée, et JB vous aide à choisir par où commencer.</p>
+    <div class="pc-kicker">Les deux journées</div>
+    <h2 class="pc-title">Deux âges,<em>une seule méthode</em></h2>
+    <p class="pc-lead">Un enfant de sept ans et un adulte qui n'a jamais tenu un volant n'ont ni les mêmes questions ni le même rythme. Chacun a sa journée, au même tarif, sur le même circuit.</p>
   </div>
-  <div class="timeline" style="grid-template-columns:1fr;gap:2px">
-    <!-- auto-fit : une voie masquée (theme.css section 5) ne laisse pas de colonne vide -->
-    <style>@media(min-width:700px){.parcours .timeline{grid-template-columns:repeat(auto-fit,minmax(260px,1fr)) !important}}</style>
+  <div class="voies">
 
-    <div class="tl-step" data-porte="enfant" data-photo="assets/images/karting-enfant-circuit.jpg">
-      <div class="tl-dot"><div class="tl-num">1</div></div>
-      <span class="tl-badge">Karting enfant</span>
-      <div class="tl-name">Dès 7 ans</div>
-      <div class="tl-desc">Un moniteur diplômé d'État, des sessions courtes, un debrief après chacune. L'enfant apprend à lire un circuit avant d'apprendre à aller vite.</div>
-      <a class="tl-link" href="/academie/karting-enfant.html">Voir la journée enfant</a>
-    </div>
+    <article class="tl-step voie" data-porte="enfant" data-photo="assets/images/karting-enfant-circuit.jpg">
+      <img class="voie-photo" id="voie-photo-enfant" src="assets/images/karting-enfant-circuit.jpg" alt="Jeunes pilotes en kart sur le circuit" loading="lazy">
+      <div class="voie-corps">
+        <span class="tl-badge">Karting enfant</span>
+        <h3 class="tl-name">Dès 7 ans</h3>
+        <p class="tl-desc">Un moniteur diplômé d'État, des sessions courtes et un retour après chacune. L'enfant apprend à lire un circuit avant d'apprendre à aller vite.</p>
+        <ul class="voie-points">
+          <li>À partir de 7 ans et 1,30 m</li>
+          <li>Avant 7 ans : kart électrique, de 4 à 6 ans</li>
+          <li>Sécurité et commandes du kart dès le premier tour</li>
+          <li>Les parents suivent la journée depuis le bord de piste</li>
+        </ul>
+        <div class="voie-prix"><span class="voie-montant">195 €</span><span class="voie-note">la journée, repas du midi compris</span></div>
+        <div class="voie-btns">
+          <a class="voie-btn voie-btn--y" href="/admin/legal/contact.html?sujet=karting">Réserver pour mon enfant</a>
+          <a class="tl-link voie-btn voie-btn--contour" href="/academie/karting-enfant.html">Voir la journée enfant</a>
+        </div>
+      </div>
+    </article>
 
-    <div class="tl-step" data-porte="adulte" data-photo="assets/images/karting-adulte-depart.jpg">
-      <div class="tl-dot"><div class="tl-num">2</div></div>
-      <span class="tl-badge">Karting adulte</span>
-      <div class="tl-name">Débutant ou déjà pilote</div>
-      <div class="tl-desc">Sept sessions par journée, la théorie et un retour après chaque roulage. Une progression en cinq niveaux, de la sécurité à l'autonomie.</div>
-      <a class="tl-link" href="/academie/karting-adulte.html">Découvrir le cursus</a>
-    </div>
+    <article class="tl-step voie" data-porte="adulte" data-photo="assets/images/karting-adulte-depart.jpg">
+      <img class="voie-photo" id="voie-photo-adulte" src="assets/images/karting-adulte-depart.jpg" alt="Départ d'une session de karting entre adultes" loading="lazy">
+      <div class="voie-corps">
+        <span class="tl-badge">Karting adulte</span>
+        <h3 class="tl-name">Débutant ou déjà pilote</h3>
+        <p class="tl-desc">Sept sessions par journée, la théorie et un retour après chaque roulage. JB évalue votre niveau sur les premiers tours et adapte le programme.</p>
+        <ul class="voie-points">
+          <li>Cinq niveaux, du débutant au compétiteur</li>
+          <li>Freinage, regard, trajectoires, régularité</li>
+          <li>Chaque journée est indépendante, sans engagement</li>
+          <li>Le niveau Compétiteur ouvre la porte de la compétition</li>
+        </ul>
+        <div class="voie-prix"><span class="voie-montant">195 €</span><span class="voie-note">la journée, repas du midi compris</span></div>
+        <div class="voie-btns">
+          <a class="voie-btn voie-btn--y" href="/admin/legal/contact.html?sujet=karting-adulte">Réserver ma journée</a>
+          <a class="tl-link voie-btn voie-btn--contour" href="/academie/karting-adulte.html#niveaux">Voir les cinq niveaux</a>
+        </div>
+      </div>
+    </article>
 
-    <div class="tl-step tl-step--finale" data-route="competition" data-porte="competition" data-photo="assets/images/peugeot-206-s16-ricard.jpg">
-      <div class="tl-dot"><div class="tl-num">3</div></div>
-      <span class="tl-badge">Vers la Compétition</span>
-      <div class="tl-name">Quand le chrono devient un objectif</div>
-      <div class="tl-desc">Kart 125cc à boîte, 206 S16, monoplace. JB choisit la discipline avec vous et vous accompagne jusqu'à la piste, le jour de la course.</div>
-      <a class="tl-link" href="/academie/competition.html">Voir les voies d'accès</a>
-    </div>
+    <article class="tl-step voie" data-route="competition" data-porte="competition" data-photo="assets/images/peugeot-206-s16-ricard.jpg">
+      <img class="voie-photo" id="voie-photo-competition" src="assets/images/peugeot-206-s16-ricard.jpg" alt="Peugeot 206 S16 sur le circuit Paul Ricard" loading="lazy">
+      <div class="voie-corps">
+        <span class="tl-badge">Vers la Compétition</span>
+        <h3 class="tl-name">Quand le chrono devient un objectif</h3>
+        <p class="tl-desc">Kart 125cc à boîte, 206 S16, monoplace. JB choisit la discipline avec vous et vous accompagne jusqu'à la piste, le jour de la course.</p>
+        <div class="voie-btns"><a class="tl-link voie-btn voie-btn--contour" href="/academie/competition.html">Voir les voies d'accès</a></div>
+      </div>
+    </article>
 
   </div>
+
+  <ol class="niveaux" id="niveaux" aria-label="Les cinq niveaux">
+    <li><span class="niv-nom">Débutant</span><span class="niv-etape">Étape 1 sur 5</span><span class="niv-txt">Sécurité, commandes du kart et trajectoire simple</span></li>
+    <li><span class="niv-nom">Amateur</span><span class="niv-etape">Étape 2 sur 5</span><span class="niv-txt">Freinage, regard et régularité</span></li>
+    <li><span class="niv-nom">Confirmé</span><span class="niv-etape">Étape 3 sur 5</span><span class="niv-txt">Enchaînement des virages et maîtrise du kart</span></li>
+    <li><span class="niv-nom">Avancé</span><span class="niv-etape">Étape 4 sur 5</span><span class="niv-txt">Recherche de performance, dépassements et constance</span></li>
+    <li><span class="niv-nom">Compétiteur</span><span class="niv-etape">Étape 5 sur 5</span><span class="niv-txt">Autonomie, analyse de ses chronos, niveau compétition</span></li>
+  </ol>
+</section>
+
+<!-- ═══ DÉROULÉ D'UNE JOURNÉE ═══════════════════════════════ -->
+<section class="deroule" id="deroule">
+  <div class="dr-tete">
+    <div class="dr-kicker">Le déroulé</div>
+    <h2 class="dr-titre">Une journée <em>à Brignoles</em></h2>
+  </div>
+  <ol class="dr-etapes">
+    <li><span class="dr-heure">10 h</span><span class="dr-nom">Accueil et lecture du circuit</span><span class="dr-txt">On découvre la piste ensemble, à pied : points de corde, freinages, pièges.</span></li>
+    <li><span class="dr-heure">Matin</span><span class="dr-nom">Théorie et premières sessions</span><span class="dr-txt">Les commandes, la sécurité, puis les premiers roulages en kart 4 temps.</span></li>
+    <li><span class="dr-heure">Midi</span><span class="dr-nom">Repas du midi</span><span class="dr-txt">Compris dans la journée, avec le groupe et JB.</span></li>
+    <li><span class="dr-heure">Après-midi</span><span class="dr-nom">Sessions et retours</span><span class="dr-txt">Jusqu'à sept sessions au total, un retour de JB après chacune.</span></li>
+    <li><span class="dr-heure">18 h</span><span class="dr-nom">Bilan de la journée</span><span class="dr-txt">Ce qui a progressé, ce qu'il reste à travailler, et le niveau atteint.</span></li>
+  </ol>
+  <p class="dr-inclus">Inclus : kart 4 temps, piste, encadrement, théorie et repas. À prévoir : boissons et goûter.</p>
+</section>
+
+<!-- ═══ DATES : masquée tant qu'aucune date karting n'est saisie (dates.js) ═══ -->
+<section class="ac-dates dates-clair" id="dates" data-dates-bloc hidden>
+  <div class="dr-tete">
+    <div class="dr-kicker">Prochaines journées</div>
+    <h2 class="dr-titre">Choisissez <em>votre date</em></h2>
+  </div>
+  <div class="dates-liste" data-dates="karting" data-dates-max="6"></div>
 </section>
 
 <!-- ═══ FORMATEUR + PALMARÈS : wrapper full screen ════ -->
-<div class="jb-pal-wrap snap-section">
+<div class="jb-pal-wrap">
 
   <!-- Section formateur -->
   <div class="jb-split">
@@ -110,7 +171,7 @@
       <h2 class="sh"><em>40 ans</em> de compétition</h2>
       <p class="sb">Les victoires et titres qui ont forgé la méthode.</p>
     </div>
-    <div class="ac-pal-list">
+    <div class="ac-pal-list" data-palmares-une data-jbe-externe>
       <div class="ac-pal-item">
         <div class="ac-pal-yr">1988</div>
         <div class="ac-pal-body">
@@ -173,26 +234,6 @@
 
 </div>
 
-<!-- ═══ VIDÉOS YOUTUBE ══════════════════════════════════ -->
-<section class="ac-videos snap-section" id="videos">
-  <div class="ac-vid-head">
-    <div class="rubrik">Chaîne YouTube · JB EMERIC</div>
-    <h2 class="sh">Voir avant <em>de s'inscrire.</em></h2>
-    <p class="sb">Journées karting et trajectoires circuit, en caméra embarquée.</p>
-    <a class="ac-vid-chan" href="https://www.youtube.com/@jbemeric" target="_blank" rel="noopener">Voir la chaîne complète →</a>
-  </div>
-  <!-- Rempli par videos.js, tirage au sort dans site-data.js : une miniature
-       par vidéo, le lecteur n'est posé qu'au clic. Voir videos.js. -->
-  <div class="yt-grid yt-grid--4" data-videos data-videos-n="4"></div>
-</section>
-
-
-<!-- ═══ AVIS + FAQ : dernière snap section ═══════════════ -->
-<!-- Le bloc avis est DANS .snap-fin, pas avant elle. snap.css declare
-     scroll-snap-type: y mandatory, donc un bloc pose entre deux points
-     d'ancrage est saute au defilement : il serait invisible. -->
-<div class="snap-section snap-fin">
-
 <!-- Masqué avec les Événements : les trois avis en base racontent des journées
      en voiture (Le Luc, Paul Ricard). À réafficher avec des avis karting. -->
 <div class="jbe-avis" id="avis" data-avis="academie" data-route="evenements">
@@ -229,7 +270,21 @@
   </div>
 </div>
 
-<section class="jbe-faq" data-faq="academie">
+<!-- ═══ VIDÉOS YOUTUBE ══════════════════════════════════ -->
+<section class="ac-videos" id="videos">
+  <div class="ac-vid-head">
+    <div class="rubrik">Chaîne YouTube · JB EMERIC</div>
+    <h2 class="sh">Voir avant <em>de s'inscrire</em></h2>
+    <p class="sb">Journées karting et trajectoires circuit, en caméra embarquée.</p>
+    <a class="ac-vid-chan" href="https://www.youtube.com/@jbemeric" target="_blank" rel="noopener">Voir la chaîne complète →</a>
+  </div>
+  <!-- Rempli par videos.js, tirage au sort dans site-data.js : une miniature
+       par vidéo, le lecteur n'est posé qu'au clic. Voir videos.js. -->
+  <div class="yt-grid yt-grid--4" data-videos data-videos-n="4"></div>
+</section>
+
+
+<section class="jbe-faq" id="faq" data-faq="academie">
   <div class="faq-tete">
     <div class="faq-kicker">Questions fréquentes</div>
     <h2 class="faq-titre"><em>L'Académie</em> JB EMERIC</h2>
@@ -237,7 +292,7 @@
   <div class="faq-list">
     <div class="fq">
       <div class="fq-q">Par où commencer si je n'ai jamais fait de karting ?</div>
-      <div class="fq-a">Par le karting adulte niveau C1. JB vous observe sur les premiers tours et calibre le programme en temps réel. Pas besoin de déclaration de niveau. C'est lui qui évalue.</div>
+      <div class="fq-a">Par le karting adulte, niveau Débutant. JB vous observe sur les premiers tours et calibre le programme en temps réel. Pas besoin de déclaration de niveau. C'est lui qui évalue.</div>
     </div>
     <div class="fq">
       <div class="fq-q">L'Académie est-elle ouverte aux enfants ?</div>
@@ -245,21 +300,27 @@
     </div>
     <div class="fq">
       <div class="fq-q">Combien de temps pour passer du karting à la compétition ?</div>
-      <div class="fq-a">Ça dépend de la régularité et du niveau de départ. En pratiquant 6 à 10 journées par an, certains pilotes atteignent le niveau C5 en 2 à 3 saisons. JB valide chaque étape.</div>
+      <div class="fq-a">Ça dépend de la régularité et du niveau de départ. En pratiquant 6 à 10 journées par an, certains pilotes atteignent le niveau Compétiteur en 2 à 3 saisons. JB valide chaque étape.</div>
     </div>
     <div class="fq">
       <div class="fq-q">Le passage à la compétition est-il accessible à tous ?</div>
-      <div class="fq-a">Il est ouvert aux pilotes ayant validé le niveau C5. JB évalue chaque candidat sur ses qualités de pilotage, sa régularité et son comportement en piste. Le budget dépend ensuite de la discipline visée, et il est annoncé sans arrondir vers le haut.</div>
+      <div class="fq-a">Il est ouvert aux pilotes ayant validé le niveau Compétiteur. JB évalue chaque candidat sur ses qualités de pilotage, sa régularité et son comportement en piste. Le budget dépend ensuite de la discipline visée, et il est annoncé sans arrondir vers le haut.</div>
     </div>
     <div class="fq">
       <div class="fq-q">Peut-on faire une journée sans engagement sur le cursus complet ?</div>
-      <div class="fq-a">Oui. Chaque journée est indépendante et vaut 195€ tout compris. Il n'y a aucun engagement de parcours. Le cursus C1→C5 existe pour ceux qui souhaitent progresser structurellement.</div>
+      <div class="fq-a">Oui. Chaque journée est indépendante et vaut 195€ tout compris. Il n'y a aucun engagement de parcours. Les cinq niveaux existent pour ceux qui souhaitent progresser structurellement.</div>
     </div>
   </div>
 </section>
 
-
-</div><!-- /.snap-fin -->
+<!-- ═══ BARRE DE RÉSERVATION : toujours visible ═══════════ -->
+<div class="resa-barre" id="resa-barre">
+  <span class="resa-txt">Une journée de karting · <strong>195 €</strong> repas compris</span>
+  <span class="resa-btns">
+    <a class="resa-btn resa-btn--y" href="/admin/legal/contact.html">Réserver</a>
+    <a class="resa-btn resa-btn--contour" href="tel:+33660188787">Appeler</a>
+  </span>
+</div>
 
 <div id="footer-root"></div>
 
@@ -267,6 +328,8 @@
 <script src="assets/js/faq.js"></script>
 <script src="assets/js/site-data.js"></script>
 <script src="assets/js/videos.js"></script>
+<script src="assets/js/palmares-une.js"></script>
+<script src="assets/js/dates.js"></script>
 <script type="module" src="assets/js/live-editor.js"></script>
 <script src="assets/js/routes.js"></script>
 <script src="assets/js/nav.js"></script>

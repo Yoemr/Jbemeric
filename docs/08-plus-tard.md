@@ -144,3 +144,5 @@ Mot de Yoan, 11 août 2026 : « reste à réfléchir à la partie business plan,
 - `robots.txt` bloque quatre anciennes URL qui n'existent plus, et ne couvre pas les vraies sous `admin/`.
 - `admin/login.html` et `admin/signup.html` embarquent un pied de page recopié en dur, tronqué au milieu d'un mot sur l'un des deux.
 - Automatisation des réseaux sociaux depuis le dashboard, idée de Yoan dans `docs/99`.
+
+- **Palmarès de l Académie automatique** (demande de Yoan, 6 novembre). La colonne « 40 ans de compétition » de `academie.html#palmares-academie` est une copie à la main de 7 résultats. La générer depuis `JBEMERIC_DATA.palmares` filtré sur `highlight:true` (10 aujourd hui), comme la page Palmarès. Avant : vérifier que retirer les 7 blocs écrits ne décale pas les identifiants positionnels `txt-N` du live-editor sur le reste de la page.

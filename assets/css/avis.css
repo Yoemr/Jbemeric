@@ -117,3 +117,6 @@
 }
 
 .avis-lien a:hover { opacity: 1 }
+
+/* Carte d'exemple, en attendant les vrais avis (6 novembre 2026) */
+.av--exemple { border: 1px dashed var(--avis-filet) }

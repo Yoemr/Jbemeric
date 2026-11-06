@@ -818,3 +818,6 @@ a{text-decoration:none;color:inherit}
 .vit-appel-btns{display:flex;flex-wrap:wrap;gap:12px}
 .vit-appel .btn{font-size:13px;padding:16px 24px;border-radius:4px}
 .hero-title em{font-size:.72em;line-height:.95;margin-top:6px}
+.vit-avis.jbe-avis{padding:0;--avis-fond:#0a1a4a}
+.vit-avis .jbe-avis-in{max-width:1280px}
+.vit-avis .avis-list{margin-top:0}

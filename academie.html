@@ -248,31 +248,29 @@
 
 </div>
 
-<!-- Masqué avec les Événements : les trois avis en base racontent des journées
-     en voiture (Le Luc, Paul Ricard). À réafficher avec des avis karting. -->
-<div class="jbe-avis" id="avis" data-avis="academie" data-route="evenements">
+<!-- Avis karting tagués « academie » (avis.js, data-avis-tague). Cartes
+     d'exemple en attendant l'import de Google et Trustpilot. -->
+<div class="jbe-avis" id="avis" data-avis="academie" data-avis-tague>
   <div class="jbe-avis-in">
     <div class="rubrik">Ce qu'ils disent</div>
     <h2 class="sh">Avis <em>pilotes</em></h2>
 
     <div class="avis-list">
-
-      <div class="av">
+      <div class="av av--exemple">
         <div class="av-note">★★★★★</div>
-        <p class="av-texte">"Juste un message pour dire merci pour la journée au Luc. Première journée pour moi et c'était vraiment super, autant niveau organisation que niveau ambiance. Je reviendrai. Merci à JB EMERIC."</p>
-        <div class="av-source">Basquin Yoann · Circuit du Luc</div>
+        <p class="av-texte">[Vrai avis Google d'un parent, karting enfant]</p>
+        <div class="av-source">[Prénom] · Google</div>
       </div>
-      <div class="av">
+      <div class="av av--exemple">
         <div class="av-note">★★★★★</div>
-        <p class="av-texte">"J'ai passé une super journée inoubliable avec Jean-Baptiste Emeric qui est très sympathique et très compétent pour vous faire progresser dans le pilotage automobile en toute sécurité."</p>
-        <div class="av-source">Christian J. · Voiture personnelle · Paul Ricard</div>
+        <p class="av-texte">[Vrai avis Trustpilot d'un pilote adulte]</p>
+        <div class="av-source">[Prénom] · Trustpilot</div>
       </div>
-      <div class="av">
+      <div class="av av--exemple">
         <div class="av-note">★★★★★</div>
-        <p class="av-texte">"Super journée. Le circuit du Luc était top et le personnel à notre écoute !"</p>
-        <div class="av-source">Montaner · Voiture personnelle · Paul Ricard</div>
+        <p class="av-texte">[Vrai avis d'un groupe ou d'une entreprise]</p>
+        <div class="av-source">[Nom] · Google</div>
       </div>
-
     </div>
 
     <div class="avis-lien">
@@ -291,6 +289,13 @@
     <h2 class="sh">Voir avant <em>de s'inscrire</em></h2>
     <p class="sb">Journées karting et trajectoires circuit, en caméra embarquée.</p>
     <a class="ac-vid-chan" href="https://www.youtube.com/@jbemeric" target="_blank" rel="noopener">Voir la chaîne complète →</a>
+    <!-- Une playlist par onglet. Seule la première est connue ; les autres
+         attendent les liens des playlists de JB. -->
+    <div class="yt-playlists">
+      <a class="yt-pl" href="https://www.youtube.com/playlist?list=PLP9M5a4kLIYGCbEbfB0JYE6-FULezpzq6" target="_blank" rel="noopener">Trajectoires circuits · Caméras embarquées</a>
+      <span class="yt-pl yt-pl--exemple">[Playlist karting de JB]</span>
+      <span class="yt-pl yt-pl--exemple">[Autre playlist de JB]</span>
+    </div>
   </div>
   <!-- Rempli par videos.js, tirage au sort dans site-data.js : une miniature
        par vidéo, le lecteur n'est posé qu'au clic. Voir videos.js. -->

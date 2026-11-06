@@ -18,7 +18,7 @@ Demande de Yoan : « tu codes les modifications du canevas ». Maquettes : planc
 - **Le palmarès de l'Académie suit la page Palmarès** (`palmares-une.js`, nouveau) : les résultats `highlight: true` de `site-data.js`. Les libellés des disciplines passent dans `site-data.js` (`palmaresCategories`), lus par les deux scripts.
 - **Les niveaux portent un nom** : Débutant, Amateur, Confirmé, Avancé, Compétiteur. Les codes C1 à C5 sont retirés de l'Académie, des pages karting et de trois réponses de la FAQ en base (« ça fait très IA », Yoan).
 - **Défilement libre** sur l'accueil et l'Académie : `snap.css` n'y est plus chargé, les sections sont plus hautes que l'écran.
-- **Avis** : toujours masqués avec les Événements, sur les deux pages. Les trois avis en base racontent des journées en voiture.
+- **Ce qui ne fonctionne pas encore s'affiche comme sur la maquette** (Yoan : « c'est pour qu'il ait un visu clair », le site n'est pas ouvert au public). Avis : trois cartes d'exemple sur l'accueil et l'Académie ; les blocs portent `data-avis-tague` et ne prennent que les avis tagués `academie`, les trois avis en voiture de la base n'y sortent pas. Playlists : un onglet réel, deux d'exemple.
 
 ---
 

@@ -386,6 +386,8 @@ function scanElements() {
   for (var i = 0; i < p1.length; i++) {
     var el = p1[i]
     if (el.closest('nav') || el.closest('footer') || el.closest('svg')) continue
+    // La barre d'édition elle-même n'est pas un texte du site (7 novembre 2026).
+    if (el.closest('#jbe-bar')) continue
     if (_externe(el)) continue
     if (el.querySelector('a,img,button,input,select,textarea')) continue
     var txt = el.textContent.trim()
@@ -411,6 +413,7 @@ function scanElements() {
     var el2 = p2[j]
     if (_els.indexOf(el2) !== -1) continue
     if (el2.closest('nav') || el2.closest('footer') || el2.closest('svg')) continue
+    if (el2.closest('#jbe-bar')) continue
     if (_externe(el2)) continue
     if (el2.querySelector('a,img,button,input,select,textarea')) continue
     if (el2.querySelector('p,h1,h2,h3,h4,h5,h6,div,section,article,ul,ol,table,form')) continue
@@ -448,7 +451,8 @@ function scanImages() {
     if (img.id === 'jbe-vid-prev-el') continue
     var elSrc = img.src || (img.querySelector && img.querySelector('source') ? img.querySelector('source').getAttribute('src') : '') || ''
     if (!elSrc) continue
-    if (img.tagName === 'IMG' && (elSrc.indexOf('youtube.com') !== -1 || elSrc.indexOf('youtu.be') !== -1)) continue
+    // Les miniatures YouTube (i.ytimg.com) se règlent sur la chaîne, pas ici.
+    if (img.tagName === 'IMG' && (elSrc.indexOf('youtube.com') !== -1 || elSrc.indexOf('youtu.be') !== -1 || elSrc.indexOf('ytimg.com') !== -1)) continue
     if (img.closest('.ov-card-img')) continue
     if (img.closest('.sr-card'))     continue
     if (img.closest('[data-dashboard]')) continue
@@ -1985,7 +1989,7 @@ function buildBar(user) {
     + '<div class="jbe-bar-right">'
     +   '<span class="jbe-bar-cnt" id="jbe-cnt"></span>'
     +   '<button class="jbe-btn-save" onclick="window.__jbeSaveAll()">\u2713 Sauvegarder</button>'
-    +   '<a class="jbe-btn-dash" href="admin.html">Dashboard \u2192</a>'
+    +   '<a class="jbe-btn-dash" href="' + ((window.ROUTES && window.ROUTES.gestion) || '/admin/gestion.html') + '">Dashboard \u2192</a>'
     + '</div>'
     + '</div>'
   var nav = document.querySelector('nav.nav')

@@ -35,7 +35,11 @@ const fs = require('fs')
 const os = require('os')
 const path = require('path')
 
-const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
+// Le lien stable /opt/pw-browsers/chromium suit la version installée : le
+// chemin numéroté (chromium-1194) a disparu avec une mise à jour du conteneur.
+const CHROME = require('fs').existsSync('/opt/pw-browsers/chromium')
+  ? '/opt/pw-browsers/chromium'
+  : '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
 const BASE = process.env.JBE_BASE || 'http://localhost:3000'
 const PORT = 9334
 
@@ -173,6 +177,10 @@ const PRELUDE_GESTION = `(function () {
       circuit_nom:'Circuit de Lédenon', pays:'France', region:'Gard (30)',
       veille_sources:{ nom:'Circuit de Lédenon, agenda' } }
   ]
+  var FORMULES = [
+    { id:101, cle:'karting-enfant-journee', libelle:'Karting enfant, la journée', nature:'karting', unite:'journee',
+      prix_conseille:195, places_defaut:6, bon_cadeau:true, actif:true, ordre:100 }
+  ]
   var REGLAGES = [{ horizon_mois: 3 }]
   var SOURCES = [
     { id:1, nom:'Circuit du Var, agenda', url:'https://exemple.test/agenda',
@@ -197,6 +205,7 @@ const PRELUDE_GESTION = `(function () {
             : u.indexOf('/veille_candidats?') !== -1 ? VEILLE
             : u.indexOf('/veille_sources?') !== -1 ? SOURCES
             : u.indexOf('/veille_reglages?') !== -1 ? REGLAGES
+            : u.indexOf('/formules?') !== -1 ? FORMULES
             : CIRCUITS
     return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve(jeu) } })
   }
@@ -646,6 +655,7 @@ const PARCOURS = [
   {
     nom: 'veille, chaque ligne porte les verbes de son etat',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // La veille depose des candidats, JB tranche. Une ligne jamais jugee doit
     // pouvoir etre retenue ou ecartee ; une ligne deja retenue ne doit plus
@@ -730,6 +740,7 @@ const PARCOURS = [
   {
     nom: 'veille, l horizon se regle et part vers la base',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Mot de Yoan : « mon pere n'a pas vraiment besoin d'une vue sur l'annee
     // entiere, en general 3 mois suffit, mais je veux qu'il ait la liberte de
@@ -760,6 +771,7 @@ const PARCOURS = [
   {
     nom: 'veille, le pied de page dit ce qui est lu',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Demande de Yoan : « peut-etre interessant de mettre le lien des sites
     // qu'on scanne quelque part discretement sur la page, pour qu'on puisse
@@ -788,6 +800,7 @@ const PARCOURS = [
   {
     nom: 'veille, les cases filtrent ce qu on voit',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Demande de Yoan du 10 aout : « des cases qu'on coche ou decoche pour
     // afficher ce qu'on veut ». Rien de coche affiche tout, et un filtre qui
@@ -828,6 +841,7 @@ const PARCOURS = [
   {
     nom: 'veille, l onglet s ouvre sur les trackdays et rien d autre',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Mot de Yoan, 10 aout : « meme en dehors des filtres, bapteme et stage
     // n'ont rien a faire ici ». Ce sont les journees du circuit, avec ses
@@ -864,6 +878,7 @@ const PARCOURS = [
   {
     nom: 'veille, le filtre isole les journees en voiture perso',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Reproche de Yoan, 10 aout : « ce que je veux savoir c'est les journees ou
     // on peut venir avec une voiture personnelle. On appelle ca un trackday
@@ -908,6 +923,7 @@ const PARCOURS = [
   {
     nom: 'veille, decocher tout remet la liste entiere',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -931,6 +947,7 @@ const PARCOURS = [
   {
     nom: 'veille, retenir ouvre le formulaire prerempli',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Retenir ne fabrique plus un brouillon nu : il ouvre la creation de
     // l'evenement, avec ce que la veille sait deja rappele en tete.
@@ -971,6 +988,7 @@ const PARCOURS = [
   {
     nom: 'veille, le tarif publie par le circuit arrive prerempli',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Le Circuit du Var ne publie aucun tarif, Ledenon publie le sien et son
     // texte. Ce qui est connu ne doit pas etre resaisi, ce qui est inconnu
@@ -1001,6 +1019,7 @@ const PARCOURS = [
   {
     nom: 'veille, une date sans tarif publie laisse la case vide',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1025,6 +1044,7 @@ const PARCOURS = [
   {
     nom: 'veille, creer envoie le bon corps et ne publie rien de lui-meme',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1068,6 +1088,7 @@ const PARCOURS = [
   {
     nom: 'barre, une recherche et une liste par categorie',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1097,6 +1118,7 @@ const PARCOURS = [
   {
     nom: 'barre, deplier une liste puis cliquer ailleurs la referme',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1120,6 +1142,7 @@ const PARCOURS = [
   {
     nom: 'barre, cocher dans une liste ne la referme pas',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Le piege du redessin : cocher une case reconstruit tout le tableau, donc
     // le panneau ouvert disparait avec. Sans rappel de l'etat, on ne peut
@@ -1150,6 +1173,7 @@ const PARCOURS = [
   {
     nom: 'barre, la recherche filtre le tableau et garde le curseur',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1182,6 +1206,7 @@ const PARCOURS = [
   {
     nom: 'barre, tout afficher efface la recherche et les cases',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1374,6 +1399,79 @@ const PARCOURS = [
       return true
     })()`,
   },
+  {
+    nom: 'gestion, une date karting reprend le nom, le prix et les places de sa formule',
+    page: 'admin/gestion.html',
+    onglet: 'dates-karting',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      return new Promise(function (fini) {
+        setTimeout(function () {
+          document.querySelector('[data-onglet="dates-karting"]').click()
+          setTimeout(function () {
+            document.getElementById('g-nouveau').click()
+            setTimeout(function () {
+              document.getElementById('ch-formule_id').value = '101'
+              document.getElementById('ch-date_event').value = '2099-12-12'
+              document.querySelector('[data-enregistrer]').click()
+              setTimeout(fini, 600)
+            }, 500)
+          }, 700)
+        }, 900)
+      })
+    })()`,
+    attente: 400,
+    attendu: `(function () {
+      var e = (window.__envois || []).filter(function (x) { return x.methode === 'POST' })
+      if (e.length !== 1) return 'attendu une creation, trouve ' + e.length
+      if (e[0].url.indexOf('events') !== 0) return 'mauvaise table : ' + e[0].url
+      var c = JSON.parse(e[0].corps)
+      if (c.formule_id !== 101) return 'formule_id non numerique ou absent : ' + JSON.stringify(c.formule_id)
+      if (c.type !== 'Karting enfant, la journée') return 'le nom de la formule n est pas repris : ' + c.type
+      if (c.prix !== 195) return 'le prix de la formule n est pas repris : ' + c.prix
+      if (c.nb_places !== 6) return 'les places de la formule ne sont pas reprises : ' + c.nb_places
+      if (c.visible_site !== true) return 'une date neuve devrait etre en ligne par defaut'
+      return true
+    })()`,
+  },
+  {
+    nom: 'gestion, une formule creee recoit sa cle et sa nature karting',
+    page: 'admin/gestion.html',
+    onglet: 'formules',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      return new Promise(function (fini) {
+        setTimeout(function () {
+          document.querySelector('[data-onglet="formules"]').click()
+          setTimeout(function () {
+            document.getElementById('g-nouveau').click()
+            setTimeout(function () {
+              document.getElementById('ch-libelle').value = 'Karting adulte, la demi-journée'
+              document.getElementById('ch-prix_conseille').value = '120'
+              document.querySelector('[data-enregistrer]').click()
+              setTimeout(fini, 600)
+            }, 500)
+          }, 700)
+        }, 900)
+      })
+    })()`,
+    attente: 400,
+    attendu: `(function () {
+      var e = (window.__envois || []).filter(function (x) { return x.methode === 'POST' })
+      if (e.length !== 1) return 'attendu une creation, trouve ' + e.length
+      if (e[0].url.indexOf('formules') !== 0) return 'mauvaise table : ' + e[0].url
+      var c = JSON.parse(e[0].corps)
+      if (!/^karting-adulte-la-demi-journee-/.test(c.cle || '')) return 'cle mal formee : ' + c.cle
+      if (c.nature !== 'karting') return 'nature inattendue : ' + c.nature
+      if (c.prix_conseille !== 120) return 'prix non transmis : ' + c.prix_conseille
+      if (c.actif !== true) return 'une formule neuve devrait etre proposee'
+      return true
+    })()`,
+  },
 ]
 
 // ── Pourquoi ce preambule existe ────────────────────────────────────────────
@@ -1509,10 +1607,14 @@ async function principal() {
     // Une page masquee (theme.css section 5) ne se teste pas : son parcours
     // echouerait sans qu'aucun visiteur puisse rencontrer le defaut.
     const { MASQUEES } = require('./audit/perimetre')
+    // Un onglet de la gestion retiré de la barre (sa balise script mise en
+    // commentaire dans admin/gestion.html) compte comme une page masquée.
+    const gestionHtml = require('fs').readFileSync(require('path').join(__dirname, '..', 'admin/gestion.html'), 'utf8').replace(/<!--[\s\S]*?-->/g, '')
+    const ongletRetire = cle => !!cle && gestionHtml.indexOf('assets/js/gestion-' + cle + '.js') === -1
     let masques = 0
     for (const p of liste) {
       const fichier = p.page.split('?')[0]
-      if (MASQUEES.includes(fichier) || (p.masqueAvec && MASQUEES.includes(p.masqueAvec))) {
+      if (MASQUEES.includes(fichier) || (p.masqueAvec && MASQUEES.includes(p.masqueAvec)) || ongletRetire(p.onglet)) {
         masques++
         console.log(`  MASQUEE  ${p.nom}`)
         continue

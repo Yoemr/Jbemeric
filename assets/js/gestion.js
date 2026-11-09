@@ -364,7 +364,11 @@ window.JBE = (function () {
     var zone = document.getElementById('g-contenu')
     zone.innerHTML = '<div class="g-attente">Chargement…</div>'
 
-    requete((def.vue || def.table) + '?select=' + (def.select || '*') + '&order=' + (def.tri || 'created_at.desc'))
+    // restreindre : un filtre fixe, au format de Supabase, que l'onglet ne
+    // montre jamais à JB. Par exemple « formule_id=not.is.null » pour ne
+    // garder que les dates karting d'une table qui en contient d'autres.
+    requete((def.vue || def.table) + '?select=' + (def.select || '*') + '&order=' + (def.tri || 'created_at.desc') +
+            (def.restreindre ? '&' + def.restreindre : ''))
       .then(function (toutes) {
         zone.__toutes = toutes
         dessiner(def, toutes)
@@ -527,6 +531,9 @@ window.JBE = (function () {
     if (manquants.length) { dire('Il manque : ' + manquants.join(', '), 'err'); return }
 
     var id = m.dataset.id
+    // completer : l'onglet remplit ce qui se déduit du reste avant l'envoi,
+    // le nom d'une date d'après sa formule par exemple. JB n'a pas à le saisir.
+    if (def.completer) corps = def.completer(corps, id) || corps
     var p = id
       ? requete(def.table + '?id=eq.' + encodeURIComponent(id), { methode: 'PATCH', corps: corps })
       : requete(def.table, { methode: 'POST', corps: corps })

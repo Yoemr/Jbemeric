@@ -32,7 +32,11 @@ const os = require('os')
 const path = require('path')
 const PERIMETRE = require('./audit/perimetre')
 
-const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
+// Le lien stable /opt/pw-browsers/chromium suit la version installée : le
+// chemin numéroté (chromium-1194) a disparu avec une mise à jour du conteneur.
+const CHROME = require('fs').existsSync('/opt/pw-browsers/chromium')
+  ? '/opt/pw-browsers/chromium'
+  : '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
 const BASE = process.env.JBE_BASE || 'http://localhost:3000'
 const PORT = 9333
 const ATTENTE = 5000   // laisser le temps aux appels reseau de repondre

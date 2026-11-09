@@ -47,6 +47,7 @@
     login:      '/admin/login.html',
     signup:     '/admin/signup.html',
     dashboard:  '/admin/dashboard.html',
+    gestion:    '/admin/gestion.html',
     motDePasse: '/admin/mot-de-passe-oublie.html',
 
     // ── Légal ──────────────────────────────────────────────────────

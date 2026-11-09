@@ -137,7 +137,7 @@ function mediaLocal(url) {
 
 ;(async () => {
   const userDir = fs.mkdtempSync(path.join(os.tmpdir(), 'visiteur-'))
-  const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+  const browser = await chromium.launch({ executablePath: fs.existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
     args: proxy ? ['--proxy-server=' + proxy, '--proxy-bypass-list=localhost;127.0.0.1'] : ['--no-proxy-server'] })
   const report = {}
   const vps = [{ n: 'desk', w: 1440, h: 900 }, { n: 'tab', w: 768, h: 1024, mobile: true }, { n: 'mob', w: 390, h: 844, mobile: true }].filter(v => VP === 'all' || (VP === 'both' && v.n !== 'tab') || VP === v.n)

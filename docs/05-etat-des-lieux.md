@@ -953,3 +953,9 @@ Le reste, trié selon `CLAUDE.md` : les améliorations et les décisions qui rev
 - `academie.html` : deux journées développées et cinq niveaux nommés, déroulé, dates, palmarès généré (`palmares-une.js`), barre de réservation. Plus de `snap.css`.
 - Nouveaux : `assets/js/dates.js`, `assets/js/palmares-une.js`, `assets/css/dates.css`.
 - Vérifié : audit à 0 faute, parcours tous verts dont trois nouveaux (carte de l'accueil, palmarès égal aux résultats à la une, barre visible sur téléphone), contrôle négatif du palmarès, dates rendues avec une table simulée pleine puis vide. Aucune date karting à venir en base à ce jour.
+
+## Mise à jour du 9 novembre 2026, dashboard karting (D-213, D-214)
+
+- `admin/gestion.html` : onglets Formules, Dates karting, FAQ, Avis, ouverts par le bouton « Dashboard » de la barre d'édition.
+- Base : 4 formules karting, `events.formule_id`. Aucune date karting saisie à ce jour.
+- Pas encore faits : protection d'écriture (majuscules, collage), réservation et paiement, bons cadeaux, emails automatiques, import des vrais avis.

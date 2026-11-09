@@ -586,17 +586,47 @@ body { background: var(--bg-base) }
 .voie-btn.tl-link::after { content: none }
 .voie-btn.tl-link:hover { gap: 0 }
 
-/* Les cinq niveaux */
-.niveaux {
-  list-style: none; margin: 32px 0 0; padding: 0;
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-  background: #fff; border: 1px solid rgba(10,61,145,.2); border-radius: 8px; overflow: hidden;
+/* Les cinq niveaux : un escalier de progression, le dernier en jaune */
+.progression {
+  margin-top: 32px; background: #040a1e; color: #fff; border-radius: 10px;
+  padding: clamp(24px,3vw,36px); display: flex; flex-direction: column; gap: 24px;
+  box-shadow: 0 24px 60px rgba(4,10,30,.25);
 }
-.niveaux li { padding: 20px; display: flex; flex-direction: column; gap: 6px; border-left: 1px solid rgba(10,61,145,.15) }
-.niveaux li:first-child { border-left: 0 }
-.niv-nom { font-family: 'Bebas Neue', sans-serif; font-size: 30px; line-height: 1; color: #0A3D91 }
-.niv-etape { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: rgba(13,13,13,.5) }
-.niv-txt { font-size: 14px; line-height: 1.5; color: rgba(13,13,13,.72) }
+.prog-tete { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px }
+.prog-kicker { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #FFCF00 }
+.prog-titre { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px,3vw,36px); line-height: 1 }
+.prog-titre em { font-style: normal; color: #FFCF00 }
+.niveaux { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px }
+.niv { display: flex; flex-direction: column; gap: 14px }
+.niv-barre {
+  height: calc(10px + var(--n) * 26px); margin-top: calc(140px - (10px + var(--n) * 26px));
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, rgba(18,82,192,.95), rgba(10,61,145,.6));
+}
+.niv-ligne { display: flex; align-items: center; gap: 10px }
+.niv-ligne::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.18) }
+.niv-num {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #040a1e; background: #fff;
+}
+.niv-nom { font-family: 'Bebas Neue', sans-serif; font-size: 30px; line-height: 1 }
+.niv-txt { font-size: 14px; line-height: 1.5; color: rgba(255,255,255,.72) }
+.niv--final .niv-barre, .niv--final .niv-num { background: #FFCF00 }
+.niv--final .niv-nom { color: #FFCF00 }
+.niv-porte {
+  align-self: flex-start; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: #040a1e; background: #FFCF00; padding: 5px 9px; border-radius: 3px;
+}
+/* Téléphone : l'escalier se couche, la barre grandit vers la droite */
+@media(max-width:760px) {
+  .niveaux { grid-template-columns: 1fr; gap: 20px }
+  .niv { display: grid; grid-template-columns: 34px 1fr; gap: 6px 14px; align-items: center }
+  .niv-barre { grid-column: 1 / -1; margin-top: 0; height: 8px; width: calc(var(--n) * 20%); border-radius: 0 4px 4px 0;
+               background: linear-gradient(90deg, rgba(10,61,145,.6), rgba(18,82,192,.95)) }
+  .niv-ligne::after { content: none }
+  .niv-txt, .niv-porte { grid-column: 2 }
+}
 
 /* Le déroulé et les dates : même en-tête */
 .deroule, .ac-dates { padding: clamp(64px,8vw,96px) clamp(20px,5vw,72px); display: flex; flex-direction: column; gap: 36px }
@@ -640,4 +670,26 @@ body { background: var(--bg-base) }
   .resa-txt { display: none }
   .resa-btns { flex: 1 }
   .resa-btn { flex: 1; text-align: center }
+}
+
+/* Vidéos : salle sombre, une grande vidéo et trois à côté (7 novembre 2026) */
+.ac-videos { background: #040a1e; color: #fff }
+.ac-videos .rubrik { color: #FFCF00 }
+.ac-videos .sh { color: #fff }
+.ac-videos .sh em { color: #FFCF00 }
+.ac-videos .sb { color: rgba(255,255,255,.7) }
+.ac-videos .ac-vid-chan { color: #FFCF00; border-color: #FFCF00 }
+.ac-videos .yt-pl { background: #FFCF00; color: #040a1e }
+.ac-videos .yt-pl--exemple { background: transparent; color: #FFCF00; border-color: rgba(255,207,0,.6) }
+.ac-videos .yt-card { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.1) }
+.ac-videos .yt-card:hover { border-color: #FFCF00; box-shadow: 0 16px 40px rgba(0,0,0,.45) }
+.ac-videos .yt-title { color: #fff }
+.ac-videos .yt-meta { color: rgba(255,255,255,.55) }
+.ac-videos .yt-grid--une { grid-template-columns: 1fr }
+@media(min-width:960px) {
+  .ac-videos .yt-grid--une { grid-template-columns: 1.7fr 1fr; grid-auto-rows: auto; gap: 14px }
+  .ac-videos .yt-grid--une .yt-card:first-child { grid-row: 1 / span 3 }
+  .ac-videos .yt-grid--une .yt-card:first-child .yt-title { font-size: 18px }
+  .ac-videos .yt-grid--une .yt-card:not(:first-child) { flex-direction: row; align-items: center }
+  .ac-videos .yt-grid--une .yt-card:not(:first-child) .yt-thumb { width: 48%; flex-shrink: 0; padding-bottom: 0; height: auto; aspect-ratio: 16 / 9 }
 }

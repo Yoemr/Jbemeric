@@ -6,6 +6,21 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 7 au 9 novembre 2026, le dashboard karting et les retouches de l'Académie
+
+### D-213, Formules et dates karting dans la fenêtre de gestion
+
+Fiche : `docs/chantiers/2026-11-07-dashboard-karting.md`. JB crée, modifie et supprime ses formules (nom, prix, unité, places par date, ce qui est compris, vendable en bon cadeau) et ses dates karting (une formule, une date, un circuit ; nom, prix et places repris de la formule quand ils sont laissés vides). Une date en ligne remplace seule les cartes d'exemple de l'accueil et de l'Académie.
+- **Base** (`outil-dev/migrations/2026-11-07-formules-karting.sql`) : natures `karting` et `groupe`, colonnes `description`, `places_defaut`, `bon_cadeau`, lecture publique des formules actives, `events.formule_id`, quatre formules de départ.
+- **Coquille** : options `restreindre` et `completer` pour tous les onglets. Veille et Track-days retirés de la barre, fichiers conservés ; leurs parcours sont rangés comme masqués (`onglet:` dans parcours.js).
+- **Mode admin vérifié** sur les sept pages du périmètre, session admin simulée : textes et images s'éditent et s'enregistrent. Corrigé : le bouton « Dashboard » menait à `admin.html`, qui n'existe pas ; la barre d'édition se proposait elle-même à l'édition ; les miniatures YouTube se proposaient au remplacement.
+
+### D-214, Retouches de l'Académie demandées sur la planche
+
+Titre des journées « Enfant ou adulte, choisissez votre journée » (JB n'aimait pas « Deux âges, une seule méthode ») ; la découverte électrique de 4 à 6 ans présentée comme une option ; les cinq niveaux en escalier de progression ; les dates en cartes de billet (case de calendrier, jauge des places, prix, bouton), partagées par l'accueil ; les vidéos en salle sombre, une grande et trois à côté.
+
+---
+
 ## 6 novembre 2026, l'accueil vitrine et l'Académie de vente
 
 ### D-212, Les maquettes du canevas codées dans le site

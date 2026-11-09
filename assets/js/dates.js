@@ -48,18 +48,25 @@
     var places = (e.nb_places > 0) ? Math.max(0, e.nb_places - (e.nb_inscrits || 0)) : null
     var complet = places === 0
     var contact = (window.ROUTES && window.ROUTES.contact) || '/admin/legal/contact.html'
+    var jauge = (e.nb_places > 0) ? Math.round(100 * Math.min(e.nb_places, e.nb_inscrits || 0) / e.nb_places) : null
     return '<article class="date-carte' + (complet ? ' date-carte--complet' : '') + '">' +
-      '<div class="date-jour"><span class="date-num">' + d.getDate() + '</span>' +
-        '<span class="date-mois">' + MOIS[d.getMonth()] + ' ' + d.getFullYear() + '</span></div>' +
-      '<div class="date-info">' +
-        '<span class="date-quand">' + JOURS[d.getDay()] + '</span>' +
-        '<span class="date-type">' + ech(e.type) + (lieu ? ' · ' + ech(lieu) : '') + '</span>' +
-        '<span class="date-detail">' +
-          (places !== null ? (complet ? 'Complet' : places + (places > 1 ? ' places restantes' : ' place restante')) : '') +
-          (e.prix ? (places !== null ? ' · ' : '') + Math.round(e.prix) + ' €' : '') +
-        '</span>' +
+      '<div class="date-jour">' +
+        '<span class="date-semaine">' + JOURS[d.getDay()] + '</span>' +
+        '<span class="date-num">' + d.getDate() + '</span>' +
+        '<span class="date-mois">' + MOIS[d.getMonth()] + ' ' + d.getFullYear() + '</span>' +
       '</div>' +
-      (complet ? '' : '<a class="date-cta" href="' + contact + '?sujet=' + sujet(e.type) + '">Réserver</a>') +
+      '<div class="date-info">' +
+        '<span class="date-type">' + ech(e.type) + '</span>' +
+        (lieu ? '<span class="date-lieu">' + ech(lieu) + '</span>' : '') +
+        (places !== null
+          ? '<span class="date-places"><span class="date-jauge"><span style="width:' + jauge + '%"></span></span>' +
+            '<span class="date-reste">' + (complet ? 'Complet' : places + (places > 1 ? ' places restantes' : ' place restante')) + '</span></span>'
+          : '') +
+      '</div>' +
+      '<div class="date-action">' +
+        (e.prix ? '<span class="date-prix">' + Math.round(e.prix) + ' €</span>' : '') +
+        (complet ? '' : '<a class="date-cta" href="' + contact + '?sujet=' + sujet(e.type) + '">Réserver</a>') +
+      '</div>' +
     '</article>'
   }
 

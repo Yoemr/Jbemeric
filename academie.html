@@ -114,13 +114,45 @@
 
   </div>
 
-  <ol class="niveaux" id="niveaux" aria-label="Les cinq niveaux">
-    <li><span class="niv-nom">Débutant</span><span class="niv-etape">Étape 1 sur 5</span><span class="niv-txt">Sécurité, commandes du kart et trajectoire simple</span></li>
-    <li><span class="niv-nom">Amateur</span><span class="niv-etape">Étape 2 sur 5</span><span class="niv-txt">Freinage, regard et régularité</span></li>
-    <li><span class="niv-nom">Confirmé</span><span class="niv-etape">Étape 3 sur 5</span><span class="niv-txt">Enchaînement des virages et maîtrise du kart</span></li>
-    <li><span class="niv-nom">Avancé</span><span class="niv-etape">Étape 4 sur 5</span><span class="niv-txt">Recherche de performance, dépassements et constance</span></li>
-    <li><span class="niv-nom">Compétiteur</span><span class="niv-etape">Étape 5 sur 5</span><span class="niv-txt">Autonomie, analyse de ses chronos, niveau compétition</span></li>
-  </ol>
+  <div class="progression" id="niveaux">
+    <div class="prog-tete">
+      <span class="prog-kicker">La progression</span>
+      <span class="prog-titre">Cinq niveaux, <em>du premier tour à la course</em></span>
+    </div>
+    <ol class="niveaux" aria-label="Les cinq niveaux">
+      <li class="niv" style="--n:1">
+        <span class="niv-barre" aria-hidden="true"></span>
+        <span class="niv-ligne"><span class="niv-num">1</span></span>
+        <span class="niv-nom">Débutant</span>
+        <span class="niv-txt">Sécurité, commandes du kart et trajectoire simple</span>
+      </li>
+      <li class="niv" style="--n:2">
+        <span class="niv-barre" aria-hidden="true"></span>
+        <span class="niv-ligne"><span class="niv-num">2</span></span>
+        <span class="niv-nom">Amateur</span>
+        <span class="niv-txt">Freinage, regard et régularité</span>
+      </li>
+      <li class="niv" style="--n:3">
+        <span class="niv-barre" aria-hidden="true"></span>
+        <span class="niv-ligne"><span class="niv-num">3</span></span>
+        <span class="niv-nom">Confirmé</span>
+        <span class="niv-txt">Enchaînement des virages et maîtrise du kart</span>
+      </li>
+      <li class="niv" style="--n:4">
+        <span class="niv-barre" aria-hidden="true"></span>
+        <span class="niv-ligne"><span class="niv-num">4</span></span>
+        <span class="niv-nom">Avancé</span>
+        <span class="niv-txt">Recherche de performance, dépassements et constance</span>
+      </li>
+      <li class="niv niv--final" style="--n:5">
+        <span class="niv-barre" aria-hidden="true"></span>
+        <span class="niv-ligne"><span class="niv-num">5</span></span>
+        <span class="niv-nom">Compétiteur</span>
+        <span class="niv-txt">Autonomie, analyse de ses chronos, niveau compétition</span>
+        <span class="niv-porte">Porte de la compétition</span>
+      </li>
+    </ol>
+  </div>
 </section>
 
 <!-- ═══ DÉROULÉ D'UNE JOURNÉE ═══════════════════════════════ -->
@@ -148,16 +180,19 @@
   <div class="dates-liste" data-dates="karting" data-dates-max="6">
       <!-- Exemples affichés tant qu'aucune date n'est saisie, remplacés par dates.js -->
       <article class="date-carte date-carte--exemple">
-        <div class="date-jour"><span class="date-num">[Date]</span></div>
-        <div class="date-info"><span class="date-quand">Événement à venir</span><span class="date-type">Karting enfant · Brignoles</span><span class="date-detail">[Places restantes] · 195 €</span></div>
+        <div class="date-jour"><span class="date-semaine">[Jour]</span><span class="date-num">[Date]</span><span class="date-mois">[Mois]</span></div>
+        <div class="date-info"><span class="date-type">Karting enfant, la journée</span><span class="date-lieu">Circuit de Brignoles</span><span class="date-places"><span class="date-jauge"><span style="width:33%"></span></span><span class="date-reste">[Places restantes]</span></span></div>
+        <div class="date-action"><span class="date-prix">195 €</span><span class="date-cta">Réserver</span></div>
       </article>
       <article class="date-carte date-carte--exemple">
-        <div class="date-jour"><span class="date-num">[Date]</span></div>
-        <div class="date-info"><span class="date-quand">Événement à venir</span><span class="date-type">Karting adulte · Brignoles</span><span class="date-detail">[Places restantes] · 195 €</span></div>
+        <div class="date-jour"><span class="date-semaine">[Jour]</span><span class="date-num">[Date]</span><span class="date-mois">[Mois]</span></div>
+        <div class="date-info"><span class="date-type">Karting adulte, la journée</span><span class="date-lieu">Circuit de Brignoles</span><span class="date-places"><span class="date-jauge"><span style="width:33%"></span></span><span class="date-reste">[Places restantes]</span></span></div>
+        <div class="date-action"><span class="date-prix">195 €</span><span class="date-cta">Réserver</span></div>
       </article>
       <article class="date-carte date-carte--exemple">
-        <div class="date-jour"><span class="date-num">[Date]</span></div>
-        <div class="date-info"><span class="date-quand">Événement à venir</span><span class="date-type">Karting enfant · Brignoles</span><span class="date-detail">[Places restantes] · 195 €</span></div>
+        <div class="date-jour"><span class="date-semaine">[Jour]</span><span class="date-num">[Date]</span><span class="date-mois">[Mois]</span></div>
+        <div class="date-info"><span class="date-type">Karting enfant, la journée</span><span class="date-lieu">Circuit de Brignoles</span><span class="date-places"><span class="date-jauge"><span style="width:33%"></span></span><span class="date-reste">[Places restantes]</span></span></div>
+        <div class="date-action"><span class="date-prix">195 €</span><span class="date-cta">Réserver</span></div>
       </article>
     </div>
 </section>
@@ -299,7 +334,7 @@
   </div>
   <!-- Rempli par videos.js, tirage au sort dans site-data.js : une miniature
        par vidéo, le lecteur n'est posé qu'au clic. Voir videos.js. -->
-  <div class="yt-grid yt-grid--4" data-videos data-videos-n="4"></div>
+  <div class="yt-grid yt-grid--une" data-videos data-videos-n="4"></div>
 </section>
 
 

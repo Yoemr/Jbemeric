@@ -959,3 +959,8 @@ Le reste, trié selon `CLAUDE.md` : les améliorations et les décisions qui rev
 - `admin/gestion.html` : onglets Formules, Dates karting, FAQ, Avis, ouverts par le bouton « Dashboard » de la barre d'édition.
 - Base : 4 formules karting, `events.formule_id`. Aucune date karting saisie à ce jour.
 - Pas encore faits : protection d'écriture (majuscules, collage), réservation et paiement, bons cadeaux, emails automatiques, import des vrais avis.
+
+## Mise à jour du 10 novembre 2026, protection d'écriture (D-215)
+
+- `assets/js/texte-propre.js` : majuscules oubliées, ponctuation, espaces, à l'enregistrement, dans les pages et le dashboard.
+- Restent : réservation et paiement, bons cadeaux, emails automatiques, import des vrais avis.

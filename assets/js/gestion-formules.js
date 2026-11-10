@@ -61,7 +61,7 @@
     ],
 
     champs: [
-      { cle: 'libelle', titre: 'Nom de la formule', obligatoire: true,
+      { cle: 'libelle', titre: 'Nom de la formule', obligatoire: true, propre: true,
         aide: 'Tel que le client le lira. Par exemple « Karting adulte, la journée ».' },
       { cle: 'nature', titre: 'Pour qui', type: 'choix', options: NATURES, defaut: 'karting' },
       { cle: 'prix_conseille', titre: 'Prix en euros', type: 'number', pas: '5',
@@ -69,7 +69,7 @@
       { cle: 'unite', titre: 'Le prix est pour', type: 'choix', options: UNITES, defaut: 'journee' },
       { cle: 'places_defaut', titre: 'Places par date', type: 'number',
         aide: 'Reprises quand on crée une date avec cette formule. Modifiables date par date.' },
-      { cle: 'description', titre: 'Ce qui est compris', type: 'texte-long', lignes: 4,
+      { cle: 'description', titre: 'Ce qui est compris', type: 'texte-long', lignes: 4, propre: true,
         aide: 'Deux ou trois phrases : l\'âge, les horaires, ce qui est inclus.' },
       { cle: 'bon_cadeau', titre: 'Vendable en bon cadeau', type: 'bascule', oui: 'oui' },
       { cle: 'actif', titre: 'Proposée aux clients', type: 'bascule', defaut: true, oui: 'proposée' },

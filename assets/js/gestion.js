@@ -503,6 +503,8 @@ window.JBE = (function () {
       var groupe = m.querySelector('[data-champ="' + c.cle + '"]')
       if (!groupe) return
       var v = lireChamp(groupe, c)
+      // propre : la protection d'écriture de texte-propre.js, champ par champ.
+      if (c.propre && typeof v === 'string' && window.JBE_TEXTE) v = window.JBE_TEXTE.proteger(v)
       if (c.obligatoire && (v == null || v === '' || (Array.isArray(v) && !v.length))) manquants.push(c.titre)
       valeurs[c.cle] = v
     })
@@ -525,6 +527,8 @@ window.JBE = (function () {
       var groupe = m.querySelector('[data-champ="' + c.cle + '"]')
       if (!groupe) return
       var v = lireChamp(groupe, c)
+      // propre : la protection d'écriture de texte-propre.js, champ par champ.
+      if (c.propre && typeof v === 'string' && window.JBE_TEXTE) v = window.JBE_TEXTE.proteger(v)
       if (c.obligatoire && (v == null || v === '' || (Array.isArray(v) && !v.length))) manquants.push(c.titre)
       corps[c.cle] = v
     })

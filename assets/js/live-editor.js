@@ -7,6 +7,8 @@ console.log("Configuration OK : Utilisation des colonnes id et content uniquemen
 // mot de passe oublié en créaient deux, qui géraient la même session en
 // parallèle (avertissement « Multiple GoTrueClient instances »).
 import { sb, SB_URL, SB_ANON } from '/assets/js/auth.js'
+// La protection « papa proof » de l'écriture (window.JBE_TEXTE), partagée avec le dashboard.
+import '/assets/js/texte-propre.js'
 
 var PAGE = (location.pathname.split('/').pop().replace('.html','')) || 'index'
 
@@ -521,6 +523,11 @@ function loadTexts() {
 // Auto-capitalisation : majuscule en début de phrase (règle française)
 // Appliquée au load et au save pour assainir le contenu DB (et éviter
 // que de futures éditions perdent les majuscules après ". ", "! ", "? ").
+// Majuscules oubliées, « !!! », espaces, ponctuation française : texte-propre.js.
+function proprifier(text) {
+  return (window.JBE_TEXTE && typeof text === 'string') ? window.JBE_TEXTE.proteger(text) : text
+}
+
 function autoCapitalizeSentences(text) {
   if (!text || typeof text !== 'string') return text
   // 1. Première lettre du texte
@@ -1126,7 +1133,7 @@ function startEditOverlay(el) {
 
 function saveElWithText(el, content) {
   var key = PAGE + '__' + el.id
-  content = autoCapitalizeSentences(content)
+  content = autoCapitalizeSentences(proprifier(content))
   // Remplacer les sauts de ligne par un marqueur temporaire avant rebuildHTML
   // puis les restituer en <br> après reconstruction
   var BR_MARKER = '\u0001BR\u0001'
@@ -1906,7 +1913,7 @@ function rebuildHTML(el, newText) {
 // ─── SAUVEGARDE TEXTE ────────────────────────
 function saveEl(el) {
   var key     = PAGE + '__' + el.id
-  var content = autoCapitalizeSentences(getPlainText(el))
+  var content = autoCapitalizeSentences(proprifier(getPlainText(el)))
   if (!key || !content) return
   var rebuilt = rebuildHTML(el, content)
   el.innerHTML = rebuilt

@@ -6,6 +6,20 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 novembre 2026, la protection d'écriture
+
+### D-215, La fonction « papa proof » refaite
+
+Demande de Yoan : le HTML et le CSS protègent déjà la structure, la police et les couleurs ; la fonction doit protéger l'écriture. L'ancienne `applyCasePattern` (avant avril) n'a jamais été dans le dépôt : seule la note de décision d'avril reste (`old/MEMOIRE-avril-2026.md`), qui l'avait réduite à la majuscule de début de phrase parce qu'elle cassait « KARTING ENFANT ».
+
+`assets/js/texte-propre.js`, une seule fonction pour les textes des pages (live-editor.js l'importe) et les champs du dashboard marqués `propre: true` (formules, FAQ). À l'enregistrement : une phrase d'au moins cinq mots presque entièrement en capitales repasse en casse normale, sigles (JB, EMERIC, BPJEPS, CE…) et noms propres du métier (Brignoles, Paul Ricard…) gardés ; « !!! » devient « ! », trois points des points de suspension ; espaces doublées retirées ; espace insécable avant « ; : ! ? » sauf heures et adresses. Un titre court en capitales reste tel quel. Les avis clients ne passent pas par là : ils restent tels que leurs auteurs les ont écrits.
+
+Vérifié dans le navigateur (session admin simulée) et par un parcours permanent, contrôle négatif fait.
+
+**Publication** : Yoan autorise les publications sans demander la semaine du 10 novembre (« on est large »), dans la porte des trois par jour.
+
+---
+
 ## 7 au 9 novembre 2026, le dashboard karting et les retouches de l'Académie
 
 ### D-213, Formules et dates karting dans la fenêtre de gestion

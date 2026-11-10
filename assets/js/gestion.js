@@ -397,6 +397,9 @@ window.JBE = (function () {
             // La Veille y met jusqu'où elle regarde.
             (def.entete ? '<div class="g-tete-reglage" id="g-tete-reglage"></div>' : '') +
             '<div class="g-tete-boutons">' +
+              // voir : la page où ce contenu s'affiche. L'inverse du bouton
+              // « Modifier dans le dashboard » que le live-editor pose sur la page.
+              (def.voir ? '<a class="g-btn" href="' + ech(def.voir) + '" target="_blank" rel="noopener">Voir sur le site ↗</a>' : '') +
               (def.boutonsTete || []).map(function (b) {
                 return '<button class="g-btn ' + ech(b.classe || '') + '" data-tete="' + ech(b.cle) + '">'
                      + ech(b.titre) + '</button>'

@@ -28,6 +28,7 @@
     cle:   'faq',
     titre: 'FAQ',
     table: 'faq',
+    voir:  '/academie.html#faq',
     tri:   'ordre.asc',
 
     nommer: function (l) { return l.question },

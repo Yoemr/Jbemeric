@@ -34,6 +34,7 @@
     cle:   'formules',
     titre: 'Formules',
     table: 'formules',
+    voir:  '/academie.html#parcours',
     tri:   'ordre.asc',
     restreindre: 'nature=in.(karting,groupe)',
 

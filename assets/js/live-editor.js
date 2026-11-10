@@ -352,6 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
         buildBar(user)
         activateEditing()
         activateImages()
+        poserBoutonsGestion()
       }
       showPage()
     })
@@ -375,7 +376,26 @@ var _premierScanImages = true
 // Un bloc recopié d'une autre page (data-jbe-externe, posé par sync-mirror)
 // se modifie à sa source, pas ici : ce qui y serait saisi ne serait jamais
 // relu par le miroir.
-function _externe(el) { return !!(el.closest && el.closest('[data-jbe-externe]')) }
+// Un bloc rempli depuis le dashboard (data-gestion="<onglet>") ne se modifie
+// pas au crayon : deux endroits pour un même contenu, et l'un écrase l'autre
+// (Yoan, 10 novembre 2026). En mode édition, il porte un bouton vers son onglet.
+function _externe(el) { return !!(el.closest && el.closest('[data-jbe-externe], [data-gestion]')) }
+
+function poserBoutonsGestion() {
+  var base = (window.ROUTES && window.ROUTES.gestion) || '/admin/gestion.html'
+  var blocs = document.querySelectorAll('[data-gestion]')
+  for (var i = 0; i < blocs.length; i++) {
+    var b = blocs[i]
+    if (b.querySelector(':scope > .jbe-gerer')) continue
+    if (getComputedStyle(b).position === 'static') b.style.position = 'relative'
+    var a = document.createElement('a')
+    a.className = 'jbe-gerer'
+    a.href = base + '#' + b.getAttribute('data-gestion')
+    a.textContent = 'Modifier dans le dashboard \u2197'
+    a.title = 'Ce bloc se modifie dans le dashboard'
+    b.insertBefore(a, b.firstChild)
+  }
+}
 
 function scanElements() {
   _els = []
@@ -2131,6 +2151,9 @@ function injectCSS() {
   var s = document.createElement('style')
   s.id  = 'jbe-css'
   var css = ''
+  // Bouton « Modifier dans le dashboard » des blocs gérés (data-gestion)
+  css += '.jbe-gerer{position:absolute;top:12px;right:12px;z-index:20;font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;font-size:12px;font-weight:600;color:#040a1e;background:#FFCF00;padding:8px 12px;border-radius:6px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25)}'
+  css += '.jbe-gerer:hover{filter:brightness(1.05)}'
   // Barre admin
   css += '#jbe-bar{position:fixed;top:56px;left:0;right:0;z-index:999;background:#fff;border-bottom:1px solid rgba(0,0,0,.1);font-family:-apple-system,BlinkMacSystemFont,Helvetica,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.08)}'
   css += 'html{scroll-padding-top:98px!important}'

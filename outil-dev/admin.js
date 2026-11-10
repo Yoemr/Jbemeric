@@ -116,6 +116,22 @@ const SCENARIOS = [
     attendu: r => (r && r.content === "L'ACADÉMIE JB EMERIC") || ('ecriture : ' + JSON.stringify(r)),
   },
   {
+    // Dates, FAQ et avis viennent du dashboard : pas de crayon, un bouton
+    // vers le bon onglet (Yoan, 10 novembre 2026).
+    nom: 'les blocs geres par le dashboard n ont pas de crayon et menent a leur onglet',
+    page: 'academie.html',
+    jouer: async p => p.evaluate(() => [...document.querySelectorAll('[data-gestion]')].map(b => ({
+      onglet: b.getAttribute('data-gestion'),
+      lien: (b.querySelector(':scope > .jbe-gerer') || {}).getAttribute ? b.querySelector(':scope > .jbe-gerer').getAttribute('href') : null,
+      editables: b.querySelectorAll('[data-legacy-id]').length,
+    }))),
+    attendu: r => {
+      if (r.length < 3) return 'attendu au moins trois blocs geres, trouve ' + r.length
+      const faux = r.filter(b => b.lien !== '/admin/gestion.html#' + b.onglet || b.editables)
+      return !faux.length || ('blocs fautifs : ' + JSON.stringify(faux))
+    },
+  },
+  {
     nom: 'la fenetre de remplacement d une photo s ouvre',
     page: 'academie.html',
     jouer: async p => {

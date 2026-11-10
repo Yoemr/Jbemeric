@@ -45,6 +45,7 @@
     cle:   'dates-karting',
     titre: 'Dates karting',
     table: 'events',
+    voir:  '/academie.html#dates',
     tri:   'date_event.desc',
     restreindre: 'formule_id=not.is.null',
 

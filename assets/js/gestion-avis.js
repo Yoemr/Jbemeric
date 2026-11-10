@@ -16,6 +16,7 @@
     cle:   'avis',
     titre: 'Avis',
     table: 'avis',
+    voir:  '/academie.html#avis',
     tri:   'ordre.asc',
 
     nommer: function (l) { return l.auteur },

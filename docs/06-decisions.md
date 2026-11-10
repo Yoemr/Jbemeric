@@ -12,6 +12,8 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 Signalé par Yoan : impossible d'effacer « 32 » ajouté au titre de l'Académie. Cause : au passage en mode édition, le live-editor balayait la page une seconde fois et prenait le texte déjà venu de la base (« L'ACADÉMIE JB EMERIC 32 », reconstruit avec deux balises <em>) pour l'original. Le garde-fou qui empêche de casser la mise en forme comparait ensuite à ce faux original, et remettait le texte à chaque effacement. Correctif : `data-orig-html`, `data-orig` et `data-orig-style` ne s'écrivent qu'au premier balayage. Le titre a été remis à « L'ACADÉMIE JB EMERIC » en base.
 
+**Blocs gérés par le dashboard** (demande de Yoan, même jour) : dates, FAQ et avis portent `data-gestion="<onglet>"`. Le crayon ne les propose plus (deux endroits pour un même contenu, l'un écrasait l'autre) ; en mode édition, un bouton « Modifier dans le dashboard » ouvre le bon onglet, et chaque onglet du dashboard a un bouton « Voir sur le site » (option `voir`).
+
 Nouveau banc `outil-dev/admin.js` : le mode édition joué dans un navigateur avec une session administrateur simulée (barre et lien Dashboard, enregistrement d'un texte, majuscules, effacement dans un titre mis en forme, fenêtre photo). Contrôle négatif fait sur le défaut du « 32 ».
 
 ---

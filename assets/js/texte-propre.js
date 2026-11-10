@@ -6,50 +6,59 @@
 // au moment de l'enregistrement : la touche de verrouillage des majuscules
 // oubliée, les « !!! », les espaces en trop, la ponctuation à la française.
 //
-// ── Le piège déjà payé, avril 2026 ──────────────────────────────────────────
-// L'ancienne `applyCasePattern` passait tout en minuscules sauf la première
-// lettre, et « KARTING ENFANT » devenait « Karting Enfant » contre la volonté
-// de JB. Elle a été réduite à la majuscule de début de phrase. Ici, un texte
-// n'est remis en casse normale que s'il est long et presque entièrement en
-// capitales : c'est le signe du verrouillage oublié. Un titre court en
-// capitales reste tel quel, et les titres du site sont de toute façon mis en
-// capitales par le CSS, JB n'a jamais à les taper ainsi.
+// ── La règle, sans seuil ni liste écrite en dur ─────────────────────────────
+// Yoan, 10 novembre : un seuil (« quatre mots, vingt lettres ») est du
+// bricolage, il cassera au premier cas imprévu. La règle tient dans le nom de
+// l'ancienne fonction d'avril, `applyCasePattern` : un texte garde le modèle
+// de casse de ce qu'il remplace.
+//
+//   - Le modèle est écrit en capitales (aucune minuscule, comme le titre
+//     « L'ACADÉMIE JB EMERIC ») : ce que JB tape est gardé tel quel.
+//   - Sinon, une phrase tapée sans aucune minuscule est un verrouillage
+//     oublié : elle repasse en casse normale.
+//
+// Les sigles et les noms propres (JB, BPJEPS, Brignoles) ne viennent pas d'une
+// liste : ils sont appris dans les textes existants, le modèle et le lexique
+// que l'appelant fournit (les textes de la page, les lignes de la table). Un
+// mot écrit avec une capitale ailleurs qu'en début de phrase y est retenu
+// avec sa graphie.
 //
 // ── Où elle sert ────────────────────────────────────────────────────────────
 // live-editor.js (les textes des pages) l'importe, gestion.js (les champs du
-// dashboard qui portent `propre: true`) la lit sur window.JBE_TEXTE. Un seul
-// code pour les deux.
+// dashboard qui portent `propre: true`) la lit sur window.JBE_TEXTE.
 ;(function () {
-  // Les mots qui gardent leurs capitales quand un bloc est remis en casse
-  // normale. Ajouter un sigle ici suffit.
-  var SIGLES = ['JB', 'EMERIC', 'BPJEPS', 'FFSA', 'CE', 'CSE', 'KIP', 'GT', 'TTC', 'HT', 'PACA', 'FR2000', 'BMW']
-  // Les noms propres du métier, remis avec leur majuscule.
-  var NOMS = ['Jean-Baptiste', 'Emeric', 'Brignoles', 'Trets', 'Hyères', 'Cuges', 'Gémenos', 'Marseille',
-              'Paul Ricard', 'Lédenon', 'Magny-Cours', 'Nogaro', 'Dijon', 'Spa', 'Le Luc', 'France', 'Var',
-              'Palmyr', 'Formule Ford', 'Formule Renault', 'Académie', 'YouTube', 'Instagram', 'Facebook', 'Google', 'Trustpilot']
+  var LETTRE = /[A-Za-zÀ-ÖØ-öø-ÿ]/
+  var MOT = /[A-Za-zÀ-ÖØ-öø-ÿ0-9][A-Za-zÀ-ÖØ-öø-ÿ0-9'’-]*/g
 
-  // Seuils : au moins quatre mots et vingt lettres, dont 80 % en capitales.
-  // « KARTING ENFANT » ou « PORTE DE LA COMPÉTITION » restent tels quels :
-  // c'est l'erreur d'avril qu'il ne faut pas refaire.
-  function enMajuscules(t) {
-    var lettres = t.match(/[A-Za-zÀ-ÖØ-öø-ÿ]/g) || []
-    var mots = t.split(/\s+/).filter(function (m) { return /[A-Za-zÀ-ÿ]/.test(m) })
-    if (lettres.length < 20 || mots.length < 5) return false
-    var maj = lettres.filter(function (c) { return c !== c.toLowerCase() && c === c.toUpperCase() }).length
-    return maj / lettres.length >= 0.8
+  function aMinuscule(t) { return /[a-zß-öø-ÿ]/.test(t) }
+  function aLettre(t) { return LETTRE.test(t) }
+  // Écrit en capitales : des lettres, et aucune minuscule.
+  function enCapitales(t) { return !!t && aLettre(t) && !aMinuscule(t) }
+
+  // Les graphies à respecter : chaque mot portant une capitale ailleurs qu'en
+  // tête de phrase, dans les textes fournis. Clé : le mot en minuscules.
+  function lexiqueDe(textes) {
+    var lex = {}
+    ;(textes || []).forEach(function (t) {
+      if (typeof t !== 'string') return
+      var re = new RegExp(MOT.source, 'g'), m
+      while ((m = re.exec(t))) {
+        var mot = m[0]
+        if (mot === mot.toLowerCase()) continue
+        var avant = t.slice(0, m.index).replace(/[\s"«“(]+$/, '')
+        var enTete = avant === '' || /[.!?…:\n]$/.test(avant)
+        if (enTete && !enCapitales(mot)) continue        // « Une » en tête de phrase n'apprend rien
+        if (enCapitales(mot) && mot.length > 1 && !enCapitales(t)) { lex[mot.toLowerCase()] = mot; continue }
+        if (!enCapitales(mot)) lex[mot.toLowerCase()] = mot
+      }
+    })
+    return lex
   }
 
-  function echapperRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') }
-
-  function casseNormale(t) {
-    var r = t.toLowerCase()
-    SIGLES.forEach(function (s) {
-      r = r.replace(new RegExp('(^|[^A-Za-zÀ-ÿ0-9])' + echapperRegex(s.toLowerCase()) + '(?![A-Za-zÀ-ÿ0-9])', 'g'), function (m, avant) { return avant + s })
+  function casseNormale(t, lex) {
+    return t.toLowerCase().replace(new RegExp(MOT.source, 'g'), function (mot) {
+      return lex[mot] || mot
     })
-    NOMS.forEach(function (n) {
-      r = r.replace(new RegExp('(^|[^A-Za-zÀ-ÿ])' + echapperRegex(n.toLowerCase()) + '(?![A-Za-zÀ-ÿ])', 'g'), function (m, avant) { return avant + n })
-    })
-    return r
   }
 
   function majusculeDePhrase(t) {
@@ -57,18 +66,22 @@
     return t.replace(/([.!?…])(\s+["«“(]?\s*)([a-zà-ÿ])/g, function (m, p, sp, c) { return p + sp + c.toUpperCase() })
   }
 
-  function proteger(texte) {
+  // proteger(texte, { modele, lexique })
+  //   modele  : le texte que celui-ci remplace (son modèle de casse).
+  //   lexique : d'autres textes du même endroit, pour apprendre les graphies.
+  function proteger(texte, options) {
     if (texte == null || typeof texte !== 'string') return texte
+    options = options || {}
     var t = texte.replace(/\r\n?/g, '\n')
 
-    // Le verrouillage des majuscules oublié : tout le bloc, ligne par ligne.
-    // Le calcul se fait phrase par phrase : « UNE JOURNÉE À BRIGNOLES AVEC JB !
-    // venez nombreux » mélange les deux, et la ligne entière passait sous le seuil.
-    t = t.split('\n').map(function (ligne) {
-      return ligne.split(/([.!?…]+\s*)/).map(function (bout) {
-        return enMajuscules(bout) ? casseNormale(bout) : bout
-      }).join('')
-    }).join('\n')
+    if (!enCapitales(options.modele || '')) {
+      var lex = lexiqueDe([options.modele].concat(options.lexique || []))
+      t = t.split('\n').map(function (ligne) {
+        return ligne.split(/([.!?…]+\s*)/).map(function (bout) {
+          return enCapitales(bout) ? casseNormale(bout, lex) : bout
+        }).join('')
+      }).join('\n')
+    }
 
     // Ponctuation répétée : « !!! » devient « ! », « ?? » devient « ? »,
     // trois points ou plus deviennent des points de suspension.
@@ -76,7 +89,7 @@
     t = t.replace(/\.{3,}/g, '…')
 
     // Espaces : un seul entre deux mots, aucun avant une virgule ou un point,
-    // une espace insécable avant « : ; ! ? » à la française. Les heures
+    // une espace insécable avant « ; ! ? : » à la française. Les heures
     // (10:30) et les adresses (https://) ne sont pas touchées.
     t = t.replace(/[ \t ]{2,}/g, ' ')
     t = t.replace(/[ \t ]+([,.])/g, '$1')
@@ -87,7 +100,7 @@
     return majusculeDePhrase(t)
   }
 
-  var api = { proteger: proteger, enMajuscules: enMajuscules }
+  var api = { proteger: proteger, enCapitales: enCapitales, lexiqueDe: lexiqueDe }
   if (typeof window !== 'undefined') window.JBE_TEXTE = api
   if (typeof module !== 'undefined' && module.exports) module.exports = api
 })()

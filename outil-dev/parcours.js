@@ -1488,7 +1488,7 @@ const PARCOURS = [
             document.getElementById('g-nouveau').click()
             setTimeout(function () {
               document.getElementById('ch-question').value = 'QUEL EST LE PRIX D UNE JOURNEE DE KARTING ???'
-              document.getElementById('ch-reponse').value = 'KARTING ENFANT'
+              document.getElementById('ch-reponse').value = 'Diplômé BPJEPS, JB vous attend.'
               document.querySelector('.g-case input').checked = true
               document.querySelector('[data-enregistrer]').click()
               setTimeout(fini, 600)
@@ -1503,7 +1503,7 @@ const PARCOURS = [
       if (e.length !== 1) return 'attendu une creation, trouve ' + e.length
       var c = JSON.parse(e[0].corps)
       if (c.question !== 'Quel est le prix d une journee de karting\u00a0?') return 'question non corrigee : ' + JSON.stringify(c.question)
-      if (c.reponse !== 'KARTING ENFANT') return 'un titre court en capitales a ete touche : ' + c.reponse
+      if (c.reponse !== 'Diplômé BPJEPS, JB vous attend.') return 'une phrase normale avec des sigles a ete touchee : ' + c.reponse
       return true
     })()`,
   },

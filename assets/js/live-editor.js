@@ -524,8 +524,12 @@ function loadTexts() {
 // Appliquée au load et au save pour assainir le contenu DB (et éviter
 // que de futures éditions perdent les majuscules après ". ", "! ", "? ").
 // Majuscules oubliées, « !!! », espaces, ponctuation française : texte-propre.js.
-function proprifier(text) {
-  return (window.JBE_TEXTE && typeof text === 'string') ? window.JBE_TEXTE.proteger(text) : text
+// Le modèle de casse est le texte d'origine de l'élément ; les graphies
+// (sigles, noms propres) s'apprennent dans les textes de la page.
+function proprifier(text, el) {
+  if (!window.JBE_TEXTE || typeof text !== 'string') return text
+  var lexique = _els.map(function (e) { return e.getAttribute('data-orig') || '' })
+  return window.JBE_TEXTE.proteger(text, { modele: el ? el.getAttribute('data-orig') : '', lexique: lexique })
 }
 
 function autoCapitalizeSentences(text) {
@@ -1133,7 +1137,7 @@ function startEditOverlay(el) {
 
 function saveElWithText(el, content) {
   var key = PAGE + '__' + el.id
-  content = autoCapitalizeSentences(proprifier(content))
+  content = autoCapitalizeSentences(proprifier(content, el))
   // Remplacer les sauts de ligne par un marqueur temporaire avant rebuildHTML
   // puis les restituer en <br> après reconstruction
   var BR_MARKER = '\u0001BR\u0001'
@@ -1913,7 +1917,7 @@ function rebuildHTML(el, newText) {
 // ─── SAUVEGARDE TEXTE ────────────────────────
 function saveEl(el) {
   var key     = PAGE + '__' + el.id
-  var content = autoCapitalizeSentences(proprifier(getPlainText(el)))
+  var content = autoCapitalizeSentences(proprifier(getPlainText(el), el))
   if (!key || !content) return
   var rebuilt = rebuildHTML(el, content)
   el.innerHTML = rebuilt

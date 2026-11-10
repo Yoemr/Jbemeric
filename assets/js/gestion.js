@@ -504,7 +504,7 @@ window.JBE = (function () {
       if (!groupe) return
       var v = lireChamp(groupe, c)
       // propre : la protection d'écriture de texte-propre.js, champ par champ.
-      if (c.propre && typeof v === 'string' && window.JBE_TEXTE) v = window.JBE_TEXTE.proteger(v)
+      if (c.propre && typeof v === 'string' && window.JBE_TEXTE) v = proprifier(c, v, m.dataset.id)
       if (c.obligatoire && (v == null || v === '' || (Array.isArray(v) && !v.length))) manquants.push(c.titre)
       valeurs[c.cle] = v
     })
@@ -519,6 +519,16 @@ window.JBE = (function () {
     formulaireCourant = null
   }
 
+  // Le modèle de casse d'un champ : sa valeur avant modification. Les
+  // graphies (sigles, noms propres) s'apprennent dans les autres lignes de
+  // la table. Voir texte-propre.js.
+  function proprifier(champ, valeur, id) {
+    var toutes = document.getElementById('g-contenu').__toutes || []
+    var avant = toutes.filter(function (l) { return String(l.id) === String(id) })[0]
+    var lexique = toutes.map(function (l) { return l[champ.cle] }).filter(function (x) { return typeof x === 'string' })
+    return window.JBE_TEXTE.proteger(valeur, { modele: avant ? avant[champ.cle] : '', lexique: lexique })
+  }
+
   function enregistrer(def) {
     var m = document.getElementById('g-modale')
     var corps = {}
@@ -528,7 +538,7 @@ window.JBE = (function () {
       if (!groupe) return
       var v = lireChamp(groupe, c)
       // propre : la protection d'écriture de texte-propre.js, champ par champ.
-      if (c.propre && typeof v === 'string' && window.JBE_TEXTE) v = window.JBE_TEXTE.proteger(v)
+      if (c.propre && typeof v === 'string' && window.JBE_TEXTE) v = proprifier(c, v, m.dataset.id)
       if (c.obligatoire && (v == null || v === '' || (Array.isArray(v) && !v.length))) manquants.push(c.titre)
       corps[c.cle] = v
     })

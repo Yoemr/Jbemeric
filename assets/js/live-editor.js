@@ -403,9 +403,16 @@ function scanElements() {
       n++
     }
     el.setAttribute('data-legacy-id', legacyId)
-    el.setAttribute('data-orig-html', el.innerHTML)
-    el.setAttribute('data-orig', txt)
-    if (el.getAttribute('style')) el.setAttribute('data-orig-style', el.getAttribute('style'))
+    // Le texte d'origine ne se relève qu'une fois, au premier balayage. Un
+    // second balayage (passage en mode édition) voyait déjà le texte de la
+    // base et le prenait pour l'original : le garde-fou des balises remettait
+    // alors ce texte à chaque effacement (le « 32 » du titre de l'Académie,
+    // 10 novembre 2026).
+    if (!el.hasAttribute('data-orig-html')) {
+      el.setAttribute('data-orig-html', el.innerHTML)
+      el.setAttribute('data-orig', txt)
+      if (el.getAttribute('style')) el.setAttribute('data-orig-style', el.getAttribute('style'))
+    }
     _els.push(el)
   }
 
@@ -430,9 +437,16 @@ function scanElements() {
       u++
     }
     el2.setAttribute('data-legacy-id', legacyId2)
-    el2.setAttribute('data-orig-html', el2.innerHTML)
-    el2.setAttribute('data-orig', txt2)
-    if (el2.getAttribute('style')) el2.setAttribute('data-orig-style', el2.getAttribute('style'))
+    // Le texte d'origine ne se relève qu'une fois, au premier balayage. Un
+    // second balayage (passage en mode édition) voyait déjà le texte de la
+    // base et le prenait pour l'original : le garde-fou des balises remettait
+    // alors ce texte à chaque effacement (le « 32 » du titre de l'Académie,
+    // 10 novembre 2026).
+    if (!el2.hasAttribute('data-orig-html')) {
+      el2.setAttribute('data-orig-html', el2.innerHTML)
+      el2.setAttribute('data-orig', txt2)
+      if (el2.getAttribute('style')) el2.setAttribute('data-orig-style', el2.getAttribute('style'))
+    }
     _els.push(el2)
   }
 

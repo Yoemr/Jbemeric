@@ -220,6 +220,8 @@ Le 5 novembre 2026, le banc de contraste a rendu zéro défaut sur le palmarès 
 - **Un commit non poussé meurt avec le conteneur.** Le 7 novembre, cinq commits (dashboard karting, retouches de l'Académie) attendaient l'accord de publication ; le conteneur a redémarré, le dépôt a été recloné depuis GitHub, et ils ont disparu. La base Supabase, elle, avait gardé la migration. Tout a été refait le 9 novembre. Parade : ne pas laisser un travail important des heures en local, demander la publication en fin de bloc.
 - **Le chemin numéroté du navigateur change avec le conteneur** (`chromium-1194` devenu `chromium-1243`). Les bancs (`parcours.js`, `fumee.js`, `visiteur.js`) passent par le lien stable `/opt/pw-browsers/chromium`.
 
+- **Le mode édition se teste avec `node outil-dev/admin.js`** (serveur local requis). Aucun autre banc n'ouvre le live-editor en administrateur : ses défauts n'apparaissaient que quand Yoan ou JB tombaient dessus.
+
 ## 4. Ce que l'outillage ne voit pas
 
 **À connaître avant d'annoncer « zéro faute ».**

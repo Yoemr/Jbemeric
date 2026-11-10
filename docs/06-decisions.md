@@ -6,6 +6,16 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 10 novembre 2026, le « 32 » du titre de l'Académie
+
+### D-216, Le texte d'origine d'un élément ne se relève qu'une fois
+
+Signalé par Yoan : impossible d'effacer « 32 » ajouté au titre de l'Académie. Cause : au passage en mode édition, le live-editor balayait la page une seconde fois et prenait le texte déjà venu de la base (« L'ACADÉMIE JB EMERIC 32 », reconstruit avec deux balises <em>) pour l'original. Le garde-fou qui empêche de casser la mise en forme comparait ensuite à ce faux original, et remettait le texte à chaque effacement. Correctif : `data-orig-html`, `data-orig` et `data-orig-style` ne s'écrivent qu'au premier balayage. Le titre a été remis à « L'ACADÉMIE JB EMERIC » en base.
+
+Nouveau banc `outil-dev/admin.js` : le mode édition joué dans un navigateur avec une session administrateur simulée (barre et lien Dashboard, enregistrement d'un texte, majuscules, effacement dans un titre mis en forme, fenêtre photo). Contrôle négatif fait sur le défaut du « 32 ».
+
+---
+
 ## 10 novembre 2026, la protection d'écriture
 
 ### D-215, La fonction « papa proof » refaite

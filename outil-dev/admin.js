@@ -11,7 +11,15 @@
 // capturées (window.__ecr), rien ne part vers la base. Chaque scénario dit ce
 // qu'un humain ferait, et ce que la base devrait recevoir.
 //
-// Usage : node outil-dev/admin.js   (serveur local sur le port 3000)
+// Usage : node outil-dev/admin.js [--base=<instantane.json>]   (serveur local requis)
+//
+// --base : les vrais textes de la base, une liste [{id, content}] tirée de
+// site_content par l'outil MCP (même instantané que visiteur.js, ou la seule
+// table site_content). Le banc charge alors les pages du périmètre avec ces
+// textes et signale chaque élément mis en forme (em, span, br) dont la
+// reconstruction ne garde pas la structure d'origine : le défaut du titre de
+// l'accueil coupé mot par mot (12 novembre 2026) se voyait ainsi sur trois
+// éléments du site avant correction, et sur aucun après.
 const { chromium } = require('playwright')
 const fs = require('fs')
 const CHROME = fs.existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : undefined
@@ -148,6 +156,20 @@ const SCENARIOS = [
     attendu: r => r === '0px' || ('marge droite de la barre : ' + r),
   },
   {
+    // Un texte collé en deux paragraphes garde son retour à la ligne, en base
+    // et à l'écran (page Entreprises, 12 novembre 2026).
+    nom: 'un texte colle en deux paragraphes garde son retour a la ligne',
+    page: 'academie.html',
+    jouer: async p => {
+      await editer(p, '.pc-lead')
+      await p.evaluate(() => { document.execCommand('selectAll'); document.execCommand('insertText', false, 'Premier paragraphe.\n\nSecond paragraphe.') })
+      await valider(p)
+      return { ecrit: await derniere(p), html: await p.evaluate(() => document.querySelector('.pc-lead').innerHTML) }
+    },
+    attendu: r => (r.ecrit && /Premier paragraphe\.\n+Second paragraphe\./.test(r.ecrit.content) && /<br>/.test(r.html))
+      || ('ecrit ' + JSON.stringify(r.ecrit && r.ecrit.content) + ', affiche ' + r.html),
+  },
+  {
     nom: 'la fenetre de remplacement d une photo s ouvre',
     page: 'academie.html',
     jouer: async p => {
@@ -162,7 +184,9 @@ const SCENARIOS = [
   },
 ]
 
-;(async () => {
+module.exports = { stub }
+
+if (require.main === module) (async () => {
   try { const r = await fetch('http://localhost:3000/'); if (!r.ok) throw 0 }
   catch (e) { console.error('Serveur local injoignable : node outil-dev/dev-server.js'); process.exit(2) }
   const navigateur = await chromium.launch(CHROME ? { executablePath: CHROME } : {})
@@ -176,6 +200,27 @@ const SCENARIOS = [
     if (verdict === true) console.log('  OK       ' + s.nom)
     else { echecs++; console.log('  ECHEC    ' + s.nom + '\n             ' + verdict) }
     await p.close()
+  }
+  const optBase = process.argv.find(a => a.startsWith('--base='))
+  if (optBase) {
+    let lignes = JSON.parse(fs.readFileSync(optBase.slice(7), 'utf8'))
+    if (!Array.isArray(lignes)) lignes = lignes.site_content || []
+    lignes = lignes.filter(l => typeof l.content === 'string' && !/^https?:/.test(l.content))
+    console.log('\n  MISE EN FORME, ' + lignes.length + ' textes de la base\n')
+    for (const pg of require('./audit/perimetre').PAGES) {
+      const p = await ouvrir(navigateur, pg, lignes)
+      const casses = await p.evaluate(() => {
+        const runs = h => (h.match(/<(em|span|strong|b|i)\b/gi) || []).length
+        const brs = h => (h.match(/<br/gi) || []).length
+        return [...document.querySelectorAll('[data-orig-html]')].filter(e => {
+          const o = e.getAttribute('data-orig-html'), n = e.innerHTML
+          return /<(em|span|strong|b|i|br)\b/i.test(o) && o !== n && (runs(o) !== runs(n) || brs(o) !== brs(n))
+        }).map(e => e.id + ' : ' + e.innerHTML.slice(0, 100))
+      })
+      await p.close()
+      if (casses.length) { echecs += casses.length; console.log('  ECHEC    ' + pg + '\n             ' + casses.join('\n             ')) }
+      else console.log('  OK       ' + pg)
+    }
   }
   await navigateur.close()
   console.log('\n  ' + (echecs ? echecs + ' scenario(s) en echec.' : 'Tous les scenarios passent.') + '\n')

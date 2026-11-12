@@ -1301,8 +1301,16 @@ function onInput(el) {
   }
 }
 
+// Le texte saisi, retours à la ligne compris. textContent ignore les <br> et
+// les blocs que le navigateur crée au collage : un texte collé en plusieurs
+// paragraphes s'enregistrait d'un seul tenant (« dès l'inscription !Dès
+// réception », page Entreprises, relevé du 12 novembre 2026).
 function getPlainText(el) {
   var clone = el.cloneNode(true)
+  var brs = clone.querySelectorAll('br')
+  for (var i = 0; i < brs.length; i++) brs[i].parentNode.replaceChild(document.createTextNode('\n'), brs[i])
+  var blocs = clone.querySelectorAll('div, p')
+  for (var j = 0; j < blocs.length; j++) blocs[j].insertBefore(document.createTextNode('\n'), blocs[j].firstChild)
   return purify(clone.textContent || '')
 }
 
@@ -1847,7 +1855,15 @@ function rebuildHTML(el, newText) {
   var origHtml = el.getAttribute('data-orig-html') || el.innerHTML
   var origText = el.getAttribute('data-orig') || el.textContent
   newText = newText.trim()
-  if (!/<(em|span|b|strong|i|br)\b/i.test(origHtml)) { return newText }
+  // Sans mise en forme d'origine, les retours à la ligne saisis deviennent
+  // des <br> : sans eux, le HTML les écrase en espaces.
+  // Les retours à la ligne saisis l'emportent sur ceux du HTML d'origine,
+  // tant qu'aucune mise en forme (em, span…) n'est en jeu. Sans retour saisi,
+  // ceux d'origine sont replacés plus bas.
+  var avecStyle = /<(em|span|b|strong|i)\b/i.test(origHtml)
+  if (!avecStyle && (newText.indexOf('\n') !== -1 || !/<br\b/i.test(origHtml))) {
+    return newText.replace(/\n/g, '<br>')
+  }
 
   var tokens = []
   var i = 0; var buf = ''

@@ -12,6 +12,8 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 Signalés par Yoan sur une capture. **Le titre** : JB a changé le nom (« JB Emeric Apprendre à piloter, à tout âge »). Le live-editor reconstruit la mise en forme mot par mot et sautait les petits mots : chaque mot de l'accroche recevait sa propre balise <em>, que le CSS de l'accueil met à la ligne. `rebuildHTML` traite maintenant le cas courant d'un seul passage mis en forme collé au début ou à la fin : la partie en clair garde son nombre de mots, le passage prend le reste ; et deux mots voisins de même style sont fusionnés. **La barre** : décalée de la largeur de la barre de défilement, une mesure héritée du temps où body défilait ; elle va maintenant jusqu'au bord. Deux scénarios ajoutés à `outil-dev/admin.js`, contrôle négatif fait.
 
+**Le défaut était fréquent** (Yoan). Relevé sur les vrais textes de la base, page par page : l'ancien éditeur cassait la mise en forme de trois éléments (titres de l'accueil et de l'Académie, introduction du palmarès), le nouveau d'aucun. `node outil-dev/admin.js --base=<site_content.json>` refait ce relevé à chaque session. **Les retours à la ligne collés se perdaient** aussi : l'enregistrement lisait textContent, qui ignore les <br> et les blocs créés au collage (« dès l'inscription !Dès réception », page Entreprises). `getPlainText` les garde, `rebuildHTML` les affiche en <br> quand aucune mise en forme n'est en jeu, et les retours d'origine du HTML restent quand JB n'en tape aucun. Le seul texte abîmé en base a retrouvé ses trois paragraphes.
+
 ---
 
 ## 10 novembre 2026, le « 32 » du titre de l'Académie

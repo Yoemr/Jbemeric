@@ -1,0 +1,9 @@
+<!-- Logo du site en novembre 2026 (nav.js), gardé à la demande de Yoan le
+     12 novembre au moment d'essayer le logo officiel de JB. Trois barres
+     obliques bleues et « JB EMERIC » en jaune, police Russo One. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 38" width="270" height="38">
+  <polygon points="14,0 25,0 11,38 0,38" fill="#0A3D91"/>
+  <polygon points="32,0 43,0 29,38 18,38" fill="#0A3D91"/>
+  <polygon points="50,0 61,0 47,38 36,38" fill="#0A3D91"/>
+  <text x="72" y="29" font-family="'Russo One',sans-serif" font-size="28" fill="#FFCF00" letter-spacing="2">JB EMERIC</text>
+</svg>

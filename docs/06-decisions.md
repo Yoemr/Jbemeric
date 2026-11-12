@@ -6,6 +6,274 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 12 novembre 2026, la boutique PayPal
+
+### D-218, Réserver et payer une journée, offrir un bon cadeau
+
+Fiche : `docs/chantiers/2026-11-10-boutique.md`. PayPal au lieu de Stripe, choix de JB (compte de l'association déjà ouvert). Le paiement en 4 fois sans frais est annoncé à côté des prix par le module officiel de PayPal, qui ne l'affiche que si le compte y a droit.
+
+- **Serveur** : trois fonctions Netlify (`netlify/functions/`). `paiement-config` dit si la boutique est ouverte ; `paiement-creer` relit le prix en base, vérifie les places, enregistre la réservation ou le bon en attente, crée la commande PayPal ; `paiement-valider` encaisse côté serveur, compare le montant, passe la réservation « payee » (la jauge suit par le déclencheur) ou le bon « paye ». Clés dans les variables d'environnement de Netlify uniquement.
+- **Navigateur** : `boutique.js` ouvre la fenêtre de réservation sur les cartes de dates (data-reserver, posé par dates.js) et celle du bon cadeau (data-offrir, bouton « Offrir une journée » de l'Académie). Conditions d'annulation reprises mot pour mot de la FAQ de JB, à cocher avant de payer. Un code de bon cadeau règle une date sans PayPal.
+- **Bons cadeaux sans durée de validité**, comme le dit la FAQ de JB.
+- **Boutique éteinte tant que les clés manquent** : « Réserver » mène au formulaire de contact, comme avant.
+- **Dashboard** : onglets Réservations et Bons cadeaux.
+- **Banc** `outil-dev/boutique.js` : neuf scénarios contre une fausse base et un faux PayPal (prix relu en base, date complète, montant encaissé différent, double validation, bon à usage unique), deux dans le navigateur. Contrôles négatifs faits sur le prix, le montant et la case des conditions.
+- **Reste pour ouvrir** : appliquer la migration `2026-11-10-boutique.sql` (validation de Yoan dans Supabase) ; ranger dans Netlify `SUPABASE_SERVICE_ROLE_KEY`, `PAYPAL_CLIENT_ID`, `PAYPAL_SECRET`, `PAYPAL_ENV=sandbox` ; un essai complet dans le bac à sable ; puis le passage en `live`.
+
+---
+
+### D-219, Les vrais avis Google, lus en direct
+
+Demande de Yoan : « les vrais, pas de copier-coller ». Fonction `avis-google` : l'API officielle de Google (Places API, New) donne la note moyenne, le nombre d'avis, le lien de la fiche et les avis que Google publie (cinq au plus) ; réponse gardée six heures par Netlify. `avis.js` les affiche dans les blocs `data-avis-direct="google"`, filtrés par `data-avis-filtre="kart"` sur l'accueil et l'Académie, avec un lien vers chaque avis d'origine. Sans clé ou sans avis karting, le bloc garde ses cartes d'exemple. À fournir : `GOOGLE_PLACES_KEY` et `GOOGLE_PLACE_ID` dans Netlify. Trustpilot et TripAdvisor suivront, par leurs modules officiels, quand JB aura donné ses accès entreprise. Parcours permanent, contrôle négatif fait sur le filtre.
+
+---
+
+## 12 novembre 2026, deux défauts du mode édition
+
+### D-217, Le titre de l'accueil un mot par ligne, la barre d'édition trop courte
+
+Signalés par Yoan sur une capture. **Le titre** : JB a changé le nom (« JB Emeric Apprendre à piloter, à tout âge »). Le live-editor reconstruit la mise en forme mot par mot et sautait les petits mots : chaque mot de l'accroche recevait sa propre balise <em>, que le CSS de l'accueil met à la ligne. `rebuildHTML` traite maintenant le cas courant d'un seul passage mis en forme collé au début ou à la fin : la partie en clair garde son nombre de mots, le passage prend le reste ; et deux mots voisins de même style sont fusionnés. **La barre** : décalée de la largeur de la barre de défilement, une mesure héritée du temps où body défilait ; elle va maintenant jusqu'au bord. Deux scénarios ajoutés à `outil-dev/admin.js`, contrôle négatif fait.
+
+**Le défaut était fréquent** (Yoan). Relevé sur les vrais textes de la base, page par page : l'ancien éditeur cassait la mise en forme de trois éléments (titres de l'accueil et de l'Académie, introduction du palmarès), le nouveau d'aucun. `node outil-dev/admin.js --base=<site_content.json>` refait ce relevé à chaque session. **Les retours à la ligne collés se perdaient** aussi : l'enregistrement lisait textContent, qui ignore les <br> et les blocs créés au collage (« dès l'inscription !Dès réception », page Entreprises). `getPlainText` les garde, `rebuildHTML` les affiche en <br> quand aucune mise en forme n'est en jeu, et les retours d'origine du HTML restent quand JB n'en tape aucun. Le seul texte abîmé en base a retrouvé ses trois paragraphes.
+
+---
+
+## 10 novembre 2026, le « 32 » du titre de l'Académie
+
+### D-216, Le texte d'origine d'un élément ne se relève qu'une fois
+
+Signalé par Yoan : impossible d'effacer « 32 » ajouté au titre de l'Académie. Cause : au passage en mode édition, le live-editor balayait la page une seconde fois et prenait le texte déjà venu de la base (« L'ACADÉMIE JB EMERIC 32 », reconstruit avec deux balises <em>) pour l'original. Le garde-fou qui empêche de casser la mise en forme comparait ensuite à ce faux original, et remettait le texte à chaque effacement. Correctif : `data-orig-html`, `data-orig` et `data-orig-style` ne s'écrivent qu'au premier balayage. Le titre a été remis à « L'ACADÉMIE JB EMERIC » en base.
+
+**Blocs gérés par le dashboard** (demande de Yoan, même jour) : dates, FAQ et avis portent `data-gestion="<onglet>"`. Le crayon ne les propose plus (deux endroits pour un même contenu, l'un écrasait l'autre) ; en mode édition, un bouton « Modifier dans le dashboard » ouvre le bon onglet, et chaque onglet du dashboard a un bouton « Voir sur le site » (option `voir`).
+
+Nouveau banc `outil-dev/admin.js` : le mode édition joué dans un navigateur avec une session administrateur simulée (barre et lien Dashboard, enregistrement d'un texte, majuscules, effacement dans un titre mis en forme, fenêtre photo). Contrôle négatif fait sur le défaut du « 32 ».
+
+---
+
+## 10 novembre 2026, la protection d'écriture
+
+### D-215, La fonction « papa proof » refaite
+
+Demande de Yoan : le HTML et le CSS protègent déjà la structure, la police et les couleurs ; la fonction doit protéger l'écriture. L'ancienne `applyCasePattern` (avant avril) n'a jamais été dans le dépôt : seule la note de décision d'avril reste (`old/MEMOIRE-avril-2026.md`), qui l'avait réduite à la majuscule de début de phrase parce qu'elle cassait « KARTING ENFANT ».
+
+`assets/js/texte-propre.js`, une seule fonction pour les textes des pages (live-editor.js l'importe) et les champs du dashboard marqués `propre: true` (formules, FAQ).
+
+**La règle, sans seuil ni liste en dur** (Yoan, 10 novembre : un premier jet à « quatre mots, vingt lettres » était du bricolage). Un texte garde le modèle de casse de ce qu'il remplace, comme le disait le nom `applyCasePattern` : si le texte d'origine de l'élément est en capitales (« L'ACADÉMIE JB EMERIC »), ce que JB tape reste tel quel ; sinon, une phrase tapée sans aucune minuscule est un verrouillage oublié et repasse en casse normale. Les sigles et noms propres (JB, BPJEPS, Brignoles) s'apprennent dans les textes existants : ceux de la page pour l'éditeur, les lignes de la table pour le dashboard. Ensuite, pour tous : « !!! » devient « ! », trois points des points de suspension, espaces doublées retirées, espace insécable avant « ; : ! ? » sauf heures et adresses. Les avis clients ne passent pas par là.
+
+Vérifié dans le navigateur (session admin simulée) et par un parcours permanent, contrôle négatif fait.
+
+**Publication** : Yoan autorise les publications sans demander la semaine du 10 novembre (« on est large »), dans la porte des trois par jour.
+
+---
+
+## 7 au 9 novembre 2026, le dashboard karting et les retouches de l'Académie
+
+### D-213, Formules et dates karting dans la fenêtre de gestion
+
+Fiche : `docs/chantiers/2026-11-07-dashboard-karting.md`. JB crée, modifie et supprime ses formules (nom, prix, unité, places par date, ce qui est compris, vendable en bon cadeau) et ses dates karting (une formule, une date, un circuit ; nom, prix et places repris de la formule quand ils sont laissés vides). Une date en ligne remplace seule les cartes d'exemple de l'accueil et de l'Académie.
+- **Base** (`outil-dev/migrations/2026-11-07-formules-karting.sql`) : natures `karting` et `groupe`, colonnes `description`, `places_defaut`, `bon_cadeau`, lecture publique des formules actives, `events.formule_id`, quatre formules de départ.
+- **Coquille** : options `restreindre` et `completer` pour tous les onglets. Veille et Track-days retirés de la barre, fichiers conservés ; leurs parcours sont rangés comme masqués (`onglet:` dans parcours.js).
+- **Mode admin vérifié** sur les sept pages du périmètre, session admin simulée : textes et images s'éditent et s'enregistrent. Corrigé : le bouton « Dashboard » menait à `admin.html`, qui n'existe pas ; la barre d'édition se proposait elle-même à l'édition ; les miniatures YouTube se proposaient au remplacement.
+
+### D-214, Retouches de l'Académie demandées sur la planche
+
+Titre des journées « Enfant ou adulte, choisissez votre journée » (JB n'aimait pas « Deux âges, une seule méthode ») ; la découverte électrique de 4 à 6 ans présentée comme une option ; les cinq niveaux en escalier de progression ; les dates en cartes de billet (case de calendrier, jauge des places, prix, bouton), partagées par l'accueil ; les vidéos en salle sombre, une grande et trois à côté.
+
+---
+
+## 6 novembre 2026, l'accueil vitrine et l'Académie de vente
+
+### D-212, Les maquettes du canevas codées dans le site
+
+Demande de Yoan : « tu codes les modifications du canevas ». Maquettes : planches « Accueil » et « Académie » du canevas Design (https://claude.ai/artifact/8wfbYs9fzyVpFPHkn9U79A), page « Accueil et Académie ».
+- **L'accueil présente JB et ses activités.** Hero réécrit (vidéo éclaircie, « Jean-Baptiste Emeric, Apprendre à piloter, à tout âge »), bande de preuves sur une ligne, « Nos activités » en grandes cartes photo, calendrier, FAQ réduite à six questions (`data-faq-max`), bandeau d'appel jaune. Remplace la section Académie de D-211 (`#mirror-academie` retiré de l'accueil, `buildAcademieCards` ne sert plus).
+- **Une carte par activité, pilotée par data-route.** Coaching et Stages ont déjà leur carte, masquée avec leur page (section 5 de `theme.css`) : les réafficher ne demande aucune retouche de l'accueil.
+- **L'Académie vend le karting.** Ordre : hero (bouton Réserver), les deux journées développées (photo, quatre points, 195 €, deux boutons) et les cinq niveaux, le déroulé de 10 h à 18 h, les dates, le formateur et son palmarès, les vidéos, la FAQ, une barre de réservation collée en bas de l'écran.
+- **Les dates viennent de la table events** (`dates.js`, nouveau). Tant qu'aucune date karting n'est à venir, la section montre trois cartes d'exemple « Événement à venir » (demande de Yoan, le site n'est pas ouvert au public) ; les vraies dates les remplacent dès que JB en saisit une.
+- **Le palmarès de l'Académie suit la page Palmarès** (`palmares-une.js`, nouveau) : les résultats `highlight: true` de `site-data.js`. Les libellés des disciplines passent dans `site-data.js` (`palmaresCategories`), lus par les deux scripts.
+- **Les niveaux portent un nom** : Débutant, Amateur, Confirmé, Avancé, Compétiteur. Les codes C1 à C5 sont retirés de l'Académie, des pages karting et de trois réponses de la FAQ en base (« ça fait très IA », Yoan).
+- **Défilement libre** sur l'accueil et l'Académie : `snap.css` n'y est plus chargé, les sections sont plus hautes que l'écran.
+- **Ce qui ne fonctionne pas encore s'affiche comme sur la maquette** (Yoan : « c'est pour qu'il ait un visu clair », le site n'est pas ouvert au public). Avis : trois cartes d'exemple sur l'accueil et l'Académie ; les blocs portent `data-avis-tague` et ne prennent que les avis tagués `academie`, les trois avis en voiture de la base n'y sortent pas. Playlists : un onglet réel, deux d'exemple.
+
+---
+
+## 5 novembre 2026, la section Académie de l'accueil
+
+### D-211, Trois cartes et le formateur à la place des deux portes
+
+Choisi par Yoan sur le canevas Design (https://claude.ai/artifact/8wfbYs9fzyVpFPHkn9U79A), après les pistes A à E : la section reprend deux blocs de la maquette d'accueil, « Trois façons de rouler » (cartes Karting enfant, Karting adulte, Groupes) puis la bande « Le formateur » (portrait, citation, diplôme, Volant Palmyr, lien vers le palmarès). L'accueil d'origine reste, Coaching, Track-days et Paddock masqués.
+
+Construite par `sync-mirror.js` (`buildAcademieCards`) : enfant et adulte se lisent toujours dans `academie.html#parcours`, la citation dans `#jb-quote-formateur`, donc ce que JB change sur l'Académie se retrouve sur l'accueil ; la carte Groupes est écrite dans le script. Le tout reste dans `#mirror-academie` (`data-jbe-externe`), hors du balayage du live-editor : rien n'est décalé. Styles en fin d'`index.css`. Les règles des anciennes portes et du bandeau restent, mortes, à nettoyer.
+
+---
+
+## 5 novembre 2026, les réponses de JB
+
+### D-210, Le site s'aligne sur les réponses de JB
+
+Réponses : `docs/chantiers/2026-11-05-reponses-jb.md`.
+- **Le titre** : « Champion de France 1988 » était faux. JB a remporté le Volant Palmyr en 1987 ; en 1988 il finit 9e du championnat de France de Formule Ford. Corrigé partout (pied de page, accueil, Académie, Karting adulte, miroir de l'accueil, palmarès de site-data.js).
+- **Les niveaux C1 à C5** n'existaient pas (« je n'ai pas fait de niveau pour le moment »). Les critères inventés (« chronos stables à ±0,5 s ») sont remplacés par la proposition de JB, une phrase par niveau, à faire évoluer avec lui (carte blanche de Yoan).
+- **Encadrement et piste** : JB est épaulé par l'équipe du circuit, la piste n'est pas forcément privatisée. « C'est JB ou personne » et « le circuit est fermé » sont retirés.
+- **Circuits** : Brignoles en principal, le KIP pour certaines animations. Les « cinq circuits partenaires » sont retirés des pages et de la FAQ ; le chiffre devient « 6 pilotes au maximum ».
+- **Prix et contenu de la journée** : 195 € enfant comme adulte, 10 h à 18 h, kart 4 temps, piste, encadrement, théorie, sept sessions, repas du midi.
+- **Mentions légales** : éditeur et facturation par l'association Promotion Sport Auto, SIRET 397 750 779 00035, APE 9312Z, TVA non applicable.
+- **Courses de karting** : « je ne le fais plus ». Page masquée (clé `courses`, section 5 de `theme.css`), sans suppression.
+- Base : FAQ ordres 60, 120, 150, 210 réécrites, 160 masquée ; `palmares__img-93` et `-98` retirées (D-207).
+
+Second passage, le même jour : pages Entreprises et Colonies (écrites par ChatGPT le 20 octobre) relues et alignées (circuits, assurance retirée, « circuit fermé » retiré, formules et exemple d'endurance à 390 € par équipe sur la page Entreprises) ; FAQ en base : questions sur C5 et la compétition masquées (ordres 30, 40, 140, 180), trois questions ajoutées (kart électrique de 4 à 6 ans, bon cadeau, pluie et annulation) ; « assurance » retirée de ce qui est fourni, JB ne l'a pas confirmée.
+
+Restent à reprendre avec JB : les références clients (à citer après leur accord), l'équipement et l'assurance compris ou non, le lieu de la photo de kart de 1986, ses photos (sur OneDrive, que Claude ne lit pas).
+
+---
+
+## 13 octobre 2026, le palmarès revient, les vidéos aussi sur téléphone, trois offres de plus
+
+### D-207, Le palmarès revient, avec une entrée de menu à lui
+
+Mot de Yoan : « Il manque énormément de trucs, y a plus la page palmarès. » Masqué le 9 octobre avec le Paddock, dont il était un sous-menu. Le palmarès vend l'homme : il sort du Paddock et devient une entrée du menu, après Académie, et un lien du pied de page. Retiré de la section 5 de `theme.css` et du noindex (les articles du Paddock y restent), remis au sitemap et au périmètre de l'audit.
+
+Sur téléphone, les trois chiffres et la citation du haut débordaient de 52 px : colonne de grille en `1fr`, qui ne descend pas sous la largeur de son contenu. Même remède qu'à l'Académie, `minmax(0, …)`.
+
+Deux anciens envois de JB posaient une photo de kart de 1986 sur les années 2022 et 1987 (`palmares__img-93` et `palmares__img-98`, description « Karting National 1 », envoyés les 22 et 23 avril pendant que la numérotation des anciens contenus dérivait, D-198). Yoan a décidé de les retirer. Sauvegarde des deux lignes :
+
+```
+palmares__img-93 | .../uploads/1776845885301-1986-karting-nice.jpg | alt « Karting National 1 » | file_name voitures-course-1986-karting-jb-emeric.jpg | 2026-04-22T08:18:07Z
+palmares__img-98 | .../uploads/1776924402394-1986-karting-nice.jpg | alt « Karting National 1 » | file_name voitures-course-1986-karting-jb-emeric.jpg | 2026-04-23T06:06:44Z
+```
+
+**Pas encore appliqué** : le 20 octobre, toute écriture par le connecteur Supabase expire avant d'atteindre la base (lecture normale, aucune requête bloquée, aucun déclencheur). Deux essais, puis arrêt (`CLAUDE.md`, deux tentatives). À refaire dès que le connecteur écrit de nouveau : `delete from site_content where id in ('palmares__img-93','palmares__img-98');`
+
+### D-208, Les vidéos YouTube se voient sur téléphone, le lecteur ne se charge qu'au clic
+
+Mot de Yoan : « Il n'y a plus les vidéos YouTube de sa chaîne. » Sur téléphone, la section était cachée (règle du 6 août : quatre lecteurs YouTube à télécharger pour rien). Chaque carte montre maintenant la miniature et un bouton de lecture ; le lecteur est posé au toucher ou au clic, sur tous les écrans. La section revient sur téléphone sans aucun poids à l'ouverture. Les styles de la grille passent dans `videos.css`, commune à toutes les pages.
+
+### D-209, Trois offres de plus : entreprises et CE, colonies, courses
+
+Mot de Yoan : « Le karting n'est pas fini. Il propose des comités d'entreprise, aucune page n'y figure. Il organise des événements karting comme des courses. Il fait des stages pour des colonies de vacances aussi. » Fiche : `docs/chantiers/2026-10-13-offres-karting.md`. Choix de Yoan : trois pages à leur adresse (`/groupes/karting-entreprise.html`, `/groupes/karting-colonie.html`, `/courses-karting.html`), menu Groupes (Entreprises et CE, Colonies et centres de loisirs) puis Courses, construction tout de suite avec les seuls faits sûrs, page Courses sans dates pour commencer. Les prix, tailles de groupe, âges, formats et références attendent les réponses de JB (questionnaire, section « Entreprises, colonies, courses »). Le formulaire de contact présélectionne le sujet par `?sujet=`.
+
+---
+
+## 9 octobre 2026, le site se limite au karting, et l'audit qui a suivi
+
+### D-186, Tout ce qui n'est pas karting est masqué, rien n'est supprimé
+
+Mot de Yoan : « Je voudrais qu'on se focus uniquement sur tout ce qui concerne le karting et rien d'autre pour l'instant. On va cacher le reste. C'est-à-dire que ça existe et ne le supprime pas, mais on ne le fait plus apparaître nulle part sur le site. Pour une raison simple : c'est qu'on va pas tarder à le déployer. »
+
+Restent visibles l'accueil, l'Académie, le karting enfant et le karting adulte, plus le contact, la connexion et les pages légales. Masqués : Compétition, Coaching, Événements, Paddock, Palmarès, Bibliothèque, création de compte.
+
+**Un seul réglage pour ce qui se voit**, la section 5 de `theme.css` : tout ce qui mène à une page porte `data-route`, une clé listée là-bas disparaît du menu, du pied de page, des pages et du miroir de l'accueil. Un attribut et pas une classe, parce que le live-editor calcule l'adresse des textes de JB à partir des classes. Rien n'est retiré de la page, pour ne pas décaler la numérotation des anciens contenus.
+
+Ce que le réglage ne couvre pas, et comment le défaire, est dans `docs/chantiers/2026-10-09-site-karting-seul.md` : en-têtes `noindex` dans `netlify.toml`, `sitemap.xml`, sujets du formulaire de contact, deux réponses de FAQ sur la voiture passées à `visible = false` (le mécanisme prévu par D-117).
+
+Le périmètre de l'audit suit ce qui se voit : `outil-dev/audit/perimetre.js`.
+
+### D-187, Un ancien texte de base ne s'affiche que s'il ressemble au texte qu'il remplace
+
+Trois textes de la base étaient affichés au mauvais endroit, en ligne : « 01 de compétition » dans le titre du palmarès de l'Académie, la description du parcours adulte sur la voie Karting enfant, « Karting, coaching, stages en voiture » sous le titre de l'accueil. Cause : `_legacyTextSanity` acceptait un seul mot commun, cherché comme morceau de mot, et tout texte court.
+
+Règle : mots entiers, 40 % de mots communs, textes courts de longueur voisine. Les textes que JB a vraiment saisis restent appliqués, les trois dérives sont refusées. Un refus ne perd rien : la page montre son HTML, et la prochaine modification de JB s'enregistre sous l'identifiant stable.
+
+### D-188, Rejouer la base pour voir ce que voit le visiteur
+
+`outil-dev/visiteur.js`, cinquième outil. Dans le bac à sable cloud, jsdelivr et Supabase sont bloqués et le live-editor ne tourne jamais : un rendu local montrait le HTML, jamais la base. Le banc remplace le module supabase-js par un faux client qui rend un instantané, répond aux requêtes REST, et liste ce que la base remplace. C'est lui qui a montré D-187.
+
+### D-189, Pas de vidéo sur téléphone, y compris celles posées par la base
+
+Décision de Yoan du 6 août : « ne pas mettre ces vidéos sur la version téléphone ». `hero-video.js` l'appliquait au HTML, mais une vidéo posée par JB à la place d'une image passait outre. Un téléphone téléchargeait 45 Mo sur l'accueil, deux fois, 26 Mo sur l'Académie, trois vidéos sur Karting adulte dont une dans une section masquée. Le live-editor ne pose plus de vidéo de base sous 700 px de large, ni dans une partie masquée. L'accueil passe par `hero-video.js` comme les pages karting.
+
+### D-190, Le document défile, plus body
+
+`snap.css` posait `overflow-y: scroll` et `height: 100%` sur html et body. body devenait la zone qui défile : le clavier ne faisait rien tant qu'on n'avait pas cliqué, deux barres de défilement sous Windows, et `window.scrollY` restait à 0, ce qui décalait la barre d'outils du live-editor. Le snap est maintenant porté par html seul.
+
+La dernière section ne défile plus en interne (D-028) : elle grandit avec son contenu. La moitié de la FAQ de l'Académie était invisible sans rien l'indiquer. Une zone aimantée plus haute que l'écran se parcourt librement.
+
+### D-191, L'Académie de l'accueil lit la frise des voies
+
+`sync-mirror.js` cherchait la section `#portes` d'`academie.html`, retirée le 14 août : depuis, l'accueil affichait un message d'erreur à 40 % d'opacité à la place de l'Académie. Il lit maintenant la frise, chaque voie porte sa photo (`data-photo`) et sa couleur (`data-porte`). Les portes se partagent la largeur à parts égales, une voie masquée laisse la place aux autres.
+
+### D-192, La connexion existe sur téléphone et tablette
+
+Le bouton « Se connecter » n'apparaissait qu'à partir de 1040 px, et le menu mobile n'en avait pas. JB ne pouvait pas se connecter depuis son téléphone. Il est dans la barre dès 700 px et dans le menu mobile en dessous, et le live-editor le remplace par « Déconnexion » une fois connecté.
+
+### D-193, Le rôle d'administrateur se lit dans app_metadata
+
+Trouvé par l'audit d'exécution. `est_admin()`, la policy de `site_content`, le live-editor, la fenêtre de gestion et le tableau de bord lisaient le rôle dans `user_metadata`. Supabase laisse l'utilisateur écrire lui-même ces métadonnées, à l'inscription comme après. N'importe qui pouvait donc se créer un compte avec `role: admin` et réécrire les textes du site, la FAQ, les avis et les événements, script compris, puisque le live-editor injecte `site_content` en HTML. L'avis de sécurité de Supabase le signalait en erreur. Un seul compte existait, rien n'a été abusé.
+
+**Appliqué en base le 10 octobre, dans cet ordre, pour ne pas enfermer JB dehors** : son rôle recopié dans `app_metadata`, que seul le serveur écrit ; `est_admin()` lit `app_metadata` ; la policy de `site_content` passe par `est_admin()` comme toutes les autres tables ; `handle_new_user()` donne `client` à toute inscription. Contrôle négatif dans une transaction annulée : un jeton `user_metadata.role = admin` est refusé (42501), un jeton `app_metadata.role = admin` écrit.
+
+**Conséquence pour JB** : une déconnexion puis une reconnexion, une seule fois, pour que son jeton porte le nouveau rôle. La règle de `docs/07` section 4, qui recommandait `user_metadata`, est corrigée.
+
+### D-194, L'écran blanc du live-editor a un délai maximal
+
+Le live-editor cache la page le temps de charger les textes de la base. Sans réponse de Supabase, la page restait blanche indéfiniment, et 7,5 secondes si la base répondait en erreur. Elle s'affiche maintenant au plus tard à 1,2 seconde. Au pire, le visiteur voit le texte du HTML puis celui de la base le remplacer.
+
+### D-195, Le lien « mot de passe oublié » demande enfin un nouveau mot de passe
+
+Le parcours s'arrêtait à l'envoi du courriel. Le lien reçu connectait JB en silence sur la page de connexion, sans rien changer à son mot de passe. La page de connexion affiche maintenant un champ « Nouveau mot de passe » quand on y arrive par ce lien, et l'enregistre. Ce n'est pas une section nouvelle : c'est la fin d'un parcours qui existait à moitié.
+
+### D-196, Ce qui reste à Yoan dans l'audit d'exécution
+
+- **Le formulaire de contact n'envoie rien lui-même** : il ouvre la messagerie du visiteur (D-082). C'est désormais le seul chemin de réservation du site karting. Netlify Forms le ferait sans serveur, cent messages par mois gratuits. À trancher.
+- **Aucune page 404 propre au site.** Une adresse fausse affiche la page anglaise de Netlify. La créer demande son accord, c'est une page.
+- **Les inscriptions de compte restent ouvertes côté Supabase**, même si la page est masquée. Elles ne donnent plus aucun droit (D-193). Les fermer se fait dans le tableau de bord Supabase, Authentication.
+
+### D-197, Le stockage, trois vues et les brouillons fermés aux anonymes
+
+Trouvé par l'audit de la base, appliqué le 11 octobre avec contrôle négatif dans une transaction annulée.
+
+- **Stockage `media`** : un visiteur anonyme pouvait déposer et remplacer n'importe quel fichier, dont la vidéo du hero. Le live-editor envoyait avec la clé publique, les règles avaient dû suivre. Dépôt et remplacement passent par `est_admin()`, le live-editor envoie avec le jeton de session de JB. **Jusqu'à la publication du code, un envoi de photo par JB échoue**, l'ancien code utilisant encore la clé publique.
+- **Vues `inscriptions_view`, `event_chiffres`, `veille_file_utile`** : créées par postgres, elles ignoraient les règles des tables qu'elles lisent. Données personnelles des inscrits et marges des événements lisibles par l'API publique. Passées en `security_invoker`. `offres_publiques` reste publique, c'est voulu.
+- **`events_public_read`** ne laisse plus lire les dates en préparation.
+
+### D-198, Le live-editor ne renumérote plus à chaque balayage
+
+Les anciens contenus sont rangés sous un numéro d'ordre attribué au premier balayage de la page. Un second balayage (passage en mode édition, miroir arrivé après coup) repartait de 1 : en mode édition, la vidéo du hero de l'accueil se posait sur la porte Karting enfant, puis s'enregistrait en base. Les numéros ne valent plus qu'au premier balayage ; un élément découvert plus tard reçoit son identifiant stable. Le contenu recopié par le miroir (`data-jbe-externe`) n'est plus éditable sur l'accueil, il se modifie à sa source. Un ancien texte dont les nombres diffèrent du texte qu'il remplace est refusé.
+
+### D-199, Le grand écran est défini une seule fois, avec une hauteur
+
+Un téléphone tenu à l'horizontale fait 844 px de large : il passait le seuil de 700 px et chargeait les 45 Mo de l'accueil. `ROUTES.GRAND_ECRAN` dans `routes.js` exige aussi 600 px de haut, et `hero-video.js`, `videos.js`, le live-editor et `academie.css` lisent cette même définition. Une tablette reçoit toujours les vidéos : à trancher par Yoan.
+
+### D-200, Les vidéos de fond suivent la préférence « réduire les animations »
+
+Un visiteur qui l'a demandé à son système recevait quand même les vidéos en boucle, le halo qui pulse sur l'accueil et le défilement animé. `ROUTES.VIDEO_FOND` (grand écran, animations non réduites) remplace `GRAND_ECRAN` dans `hero-video.js` et le live-editor : ce visiteur suit le chemin du téléphone, image d'attente comprise. `videos.js` garde `GRAND_ECRAN`, une vidéo YouTube ne démarre qu'au clic. Section 6 de `theme.css` : animations d'un instant, défilement sans animation. Vérifié dans Chromium : aucune requête vidéo avec la préférence, la vidéo de l'accueil sans elle.
+
+### D-201, Un plancher de contraste pour les petits libellés
+
+Sept textes étaient sous 3 pour 1 (le sur-titre de la FAQ claire à 2,2), une vingtaine entre 3 et 4,5. Plancher appliqué règle par règle, couleurs seulement : blanc à 60 % et jaune à 70 % sur fond sombre, noir à 60 % sur fond clair, or `#946200` sous 24 px et `#A86F00` au-dessus sur fond clair (bloc formateur de l'Académie). `--ink-mute` de `karting.css` passe à 60 %, une ligne pour six règles. Les tailles de 7 et 8 px restent, notées dans `docs/08`.
+
+### D-202, Le voile du hero de l'Académie passe du côté du texte
+
+Sur ordinateur, le dégradé était opaque à droite, où il n'y a rien, et transparent à gauche, sous le titre et l'accroche : des mots disparaissaient sur les casques blancs. `--hero-overlay` va maintenant de la gauche vers la droite.
+
+### D-203, La description d'image enregistrée en base n'est pas branchée
+
+L'audit proposait que le live-editor applique `alt_text` aux photos remplacées par JB. Relevé en base : sur 11 descriptions du périmètre, la plupart sont le titre de la section suivi de « JB EMERIC », ou la description de l'ancienne photo recopiée par la fenêtre d'envoi. Les appliquer dégraderait l'affichage. Trois photos remplacées gardent donc une description fausse (podium de 1991 décrit comme une salle de briefing). Décision à Yoan : écrire les vraies descriptions, puis brancher la lecture.
+
+### D-204, Contact, confidentialité, référencement
+
+- Le bloc « Boutique en ligne · Paiement 4× sans frais » de la page Contact menait à un domaine mort. Il porte la clé `boutique`, ajoutée à la section 5 de `theme.css`.
+- La politique de confidentialité ne parle plus de stages, de track-days ni d'inscription. Les vidéos YouTube passent par `youtube-nocookie.com`, ce qui rend vraie la phrase sur les cookies.
+- Titre de Karting adulte : « Karting adulte · Formation C1 à C5 · JB EMERIC ». La page vers laquelle mènent `/karting` et `/karting-adulte` ne contenait pas le mot.
+- Contact ajouté au sitemap ; `og:url` des deux pages légales alignés sur leur adresse réelle ; `og:url` posé sur les deux pages karting.
+- Karting adulte : trois tournures antithétiques réécrites, « sud de la France » remplacé (docs/04, la géographie passe par les circuits), le renvoi à une « étape 01 » qui n'existe plus remplacé par la journée Découverte. Les anciens textes de base de ces zones restent refusés, vérifié au banc visiteur.
+- La règle `ton-ia` reconnaît « cesse d'être X, devient Y » et « n'est pas X : Y », contrôle négatif fait.
+
+### D-205, Clavier et lecteur d'écran
+
+Le menu et les questions de FAQ disent s'ils sont ouverts (`aria-expanded`), Échap ferme le menu et rend le focus au bouton. Les commandes vidéo ont un nom (« Mettre en pause », « Activer le son », « Volume ») et le curseur de volume s'ouvre au clavier. Le champ actif du formulaire de contact a un filet jaune plein. Les liens vers les réseaux portent `rel="noopener"`. Le lien d'évitement et la balise `<main>` sont repoussés : envelopper les sections changerait l'adresse de tous les textes de JB.
+
+### D-206, Ce qui est masqué ne se télécharge plus, et le filet de secours colle à la base
+
+- **Filet de secours recuit.** Les blocs `jbe-content-cache` de l'Académie et de Karting adulte dataient d'avant le nettoyage du 8 août : si Supabase tombait, Karting adulte reprenait « une voiture de course à la clé », et le source portait encore la BMW du Challenge et un tiret cadratin. Recuits par `build-cache.js` lui-même, nourri d'un instantané de la base vérifié au caractère près (empreinte md5 identique à celle calculée par Supabase). Netlify continue de les recuire à chaque publication.
+- **Images masquées en `loading="lazy"`** : une image en `display:none` se télécharge quand même, sauf en chargement différé. L'accueil ne demande plus la Porsche, la BMW ni deux miniatures à YouTube ; Karting adulte ne demande plus la BMW du pont. Un attribut, sans effet sur la numérotation du live-editor.
+- **`avis.js` ne lit plus la base pour un bloc masqué**, même garde que `sync-mirror.js`.
+- **Vidéos YouTube en `rel=0`** : les suggestions de fin de lecture restent sur la chaîne de JB.
+
+Chaque point vérifié dans Chromium avec son contrôle négatif : l'attribut retiré, la requête revient ; l'ancien `avis.js` remis, la requête à la table revient.
+
+---
+
 ## 11 août 2026, la barre de filtres, et de vraies dates sur le site
 
 ### D-183, Les cases en vrac deviennent des listes déroulantes

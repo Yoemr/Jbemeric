@@ -70,8 +70,50 @@
 
   // Le contrat est l'attribut, pas la classe : une page recopiée porterait le
   // même nom de conteneur sans que personne ait à tenir une liste de noms.
-  var blocs = document.querySelectorAll('[data-avis]')
+  // Un bloc masqué (data-route, section 5 de theme.css) ne demande rien à la
+  // base : même garde que sync-mirror.js.
+  var blocs = Array.prototype.filter.call(document.querySelectorAll('[data-avis]'),
+    function (el) { return el.getClientRects().length })
   if (!blocs.length) return
+
+  // ── Les vrais avis, en direct des plateformes ─────────────────────────────
+  // Demande de Yoan, 12 novembre 2026 : « les vrais, pas de copier-coller ».
+  // Un bloc qui porte data-avis-direct="google" affiche les avis que la
+  // fonction avis-google lit chez Google, avec la note moyenne et un lien vers
+  // chaque avis d'origine. data-avis-filtre="kart" ne garde que ceux qui
+  // parlent de karting. Sans réponse, ou sans avis qui passe le filtre, le
+  // bloc garde ce qu'il avait (avis de la base, ou cartes d'exemple).
+  var SOURCES = { google: { nom: 'Google', fonction: 'avis-google' } }
+  function etoilesNote(n) { var k = Math.round(n || 0); return new Array(k + 1).join('★') + new Array(6 - k).join('☆') }
+  Array.prototype.forEach.call(blocs, function (bloc) {
+    var src = SOURCES[bloc.getAttribute('data-avis-direct')]
+    if (!src) return
+    fetch('/.netlify/functions/' + src.fonction)
+      .then(function (r) { return r.ok ? r.json() : null })
+      .then(function (d) {
+        if (!d || !d.active || !d.avis) return
+        var filtre = bloc.getAttribute('data-avis-filtre')
+        var lot = filtre ? d.avis.filter(function (a) { return new RegExp(filtre, 'i').test(a.texte) }) : d.avis
+        if (!lot.length) return
+        var liste = bloc.querySelector('.avis-list')
+        if (!liste) return
+        bloc.dataset.avisDirect = 'charge'
+        liste.innerHTML = lot.map(function (a) {
+          return '<div class="av av--direct">' +
+            '<div class="av-note" aria-label="' + ech(a.note) + ' sur 5">' + etoiles(a.note) + '</div>' +
+            '<p class="av-texte">"' + ech(a.texte) + '"</p>' +
+            '<div class="av-source">' + ech(a.auteur) + ' · ' + ech(a.quand) +
+              (a.lien ? ' · <a href="' + ech(a.lien) + '" target="_blank" rel="noopener">voir sur ' + src.nom + '</a>' : '') +
+            '</div></div>'
+        }).join('')
+        var resume = bloc.querySelector('.avis-resume')
+        if (!resume) { resume = document.createElement('p'); resume.className = 'avis-resume'; liste.parentNode.insertBefore(resume, liste) }
+        resume.innerHTML = '<strong>' + String(d.note).replace('.', ',') + '</strong> ' + etoilesNote(d.note) +
+          ' · ' + d.nombre + ' avis ' + src.nom +
+          (d.lien ? ' · <a href="' + ech(d.lien) + '" target="_blank" rel="noopener">tous les avis</a>' : '')
+      })
+      .catch(function () { /* Google injoignable : le bloc garde ses avis */ })
+  })
 
   var tags = []
   var parTag = {}
@@ -101,8 +143,15 @@
           var ses = a.tags || []
           return !ses.length || ses.indexOf(t) !== -1
         })
-        if (!pour.length) continue                   // idem, bloc par bloc
-        for (var k = 0; k < parTag[t].length; k++) remplir(parTag[t][k], pour)
+        // data-avis-tague : le bloc ne prend que les avis qui portent son tag.
+        // L'Académie et l'accueil attendent des avis karting ; les avis sans
+        // tag en base racontent des journées en voiture (6 novembre 2026).
+        var tagues = lignes.filter(function (a) { return (a.tags || []).indexOf(t) !== -1 })
+        for (var k = 0; k < parTag[t].length; k++) {
+          var lot = parTag[t][k].hasAttribute('data-avis-tague') ? tagues : pour
+          if (parTag[t][k].dataset.avisDirect === 'charge') continue   // les vrais avis en direct priment
+          if (lot.length) remplir(parTag[t][k], lot)   // sinon le filet reste
+        }
       }
     })
     .catch(function () { /* le HTML de la page fait office de filet */ })

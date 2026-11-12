@@ -12,40 +12,8 @@ body { font-family: 'Outfit', sans-serif; font-weight: 300; -webkit-font-smoothi
 a { text-decoration: none; color: inherit }
 img { display: block; max-width: 100% }
 
-/* ═══════════════════════════════════════════════════════
-   SCROLL SNAP : ajustements spécifiques à academie.html
-   (règles de base dans assets/css/snap.css)
-   ═══════════════════════════════════════════════════════ */
-
-/* Parcours : timeline étire pour remplir l'écran */
-.parcours.snap-section { display: flex; flex-direction: column }
-.parcours.snap-section .timeline { flex: 1; min-height: 0 }
-.parcours.snap-section .tl-step { min-height: 0 }
-
-/* Formateur : jb-split remplit la hauteur du wrapper (desktop uniquement) */
-@media(min-width:1100px) {
-  .jb-pal-wrap.snap-section { min-height: unset }
-  .jb-pal-wrap.snap-section .jb-split { min-height: 0; flex: 0 0 65% }
-}
-
-/* Mobile / tablette : laisser respirer la section formateur+palmarès
-   (override de la contrainte universelle .snap-section { height: ...; overflow: hidden }) */
-@media(max-width:1099px) {
-  .jb-pal-wrap.snap-section {
-    height: auto;
-    min-height: calc(100svh - 56px);
-    overflow: visible;
-  }
-}
-
-/* Portes+citation : override min-height pour que les cartes se contractent */
-.portes-citation-wrap.snap-section .porte { min-height: 0 }
-
-/* Dernière section : FAQ + boutique, scrollable en interne */
-.snap-fin { overflow-y: auto; display: flex; flex-direction: column }
-
-/* Footer : point d'ancrage terminal comme sur index */
-#footer-root { scroll-snap-align: start }
+/* Le défilement aimanté a été retiré le 6 novembre 2026 (D-212) : les
+   sections de la page sont plus hautes que l'écran. */
 
 /* ═══════════════════════════════════════════════════════
    THÈME : Variables page Académie
@@ -59,7 +27,7 @@ img { display: block; max-width: 100% }
   --ink:         #0d0d0d;
   --ink-soft:    rgba(13,13,13,.5);
   --sep:         rgba(10,61,145,.09);
-  --hero-overlay: linear-gradient(110deg, rgba(7,31,92,0) 20%, rgba(7,31,92,.55) 52%, rgba(7,31,92,.97) 100%);
+  --hero-overlay: linear-gradient(90deg, rgba(7,31,92,.92) 0%, rgba(7,31,92,.7) 45%, rgba(7,31,92,.15) 80%, rgba(7,31,92,0) 100%);
 }
 body { background: var(--bg-base) }
 
@@ -68,7 +36,7 @@ body { background: var(--bg-base) }
    ═══════════════════════════════════════════════════════ */
 .rubrik {
   font-family: 'DM Mono'; font-size: 9px; letter-spacing: 3.5px;
-  text-transform: uppercase; opacity: .4;
+  text-transform: uppercase; opacity: .65;
   display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
 }
 .rubrik::after { content: ''; flex: 1; height: 1px; background: currentColor; opacity: .2; max-width: 80px }
@@ -129,7 +97,7 @@ body { background: var(--bg-base) }
 .chip {
   font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
   text-transform: uppercase; padding: 6px 14px; border-radius: 20px;
-  border: 1px solid rgba(255,255,255,.22); color: rgba(255,255,255,.65); opacity: .7;
+  border: 1px solid rgba(255,255,255,.22); color: rgba(255,255,255,.85);
 }
 .chip-solid { background: #FFCF00; border-color: #FFCF00; color: #000; opacity: 1; font-weight: 500 }
 
@@ -220,18 +188,18 @@ body { background: var(--bg-base) }
 
 .jb-kicker {
   font-family: 'DM Mono'; font-size: 9px; letter-spacing: 3px;
-  text-transform: uppercase; color: #C8860A;
+  text-transform: uppercase; color: #946200;
   border: 1px solid rgba(245,208,97,.5);
   display: inline-block; padding: 5px 14px;
   border-radius: 2px; margin-bottom: 16px; align-self: flex-start;
 }
 .jb-name {
   font-family: 'Bebas Neue'; font-size: clamp(32px,3.5vw,52px);
-  color: #C8860A; line-height: .88; margin-bottom: 8px;
+  color: #A86F00; line-height: .88; margin-bottom: 8px;
 }
 .jb-sub {
   font-family: 'DM Mono'; font-size: 9px; letter-spacing: 2px;
-  text-transform: uppercase; color: rgba(4,10,30,.45); margin-bottom: 18px;
+  text-transform: uppercase; color: rgba(4,10,30,.6); margin-bottom: 18px;
 }
 .jb-quote {
   font-size: clamp(13px,1.3vw,15px); color: rgba(4,10,30,.78);
@@ -278,7 +246,7 @@ body { background: var(--bg-base) }
 .pc-kicker::before { content: ''; width: 20px; height: 2px; background: #040a1e }
 .pc-title { font-family: 'Bebas Neue'; font-size: clamp(36px,3.5vw,52px); color: #040a1e; line-height: .9; margin-bottom: 14px }
 .pc-title em { font-style: normal; color: var(--accent); display: block }
-.pc-lead { font-size: 13px; color: rgba(4,10,30,.55); line-height: 1.70; max-width: 100% }
+.pc-lead { font-size: 13px; color: rgba(4,10,30,.6); line-height: 1.70; max-width: 100% }
 
 /* ─── Grille des 5 étapes ─── */
 .timeline { display: grid; grid-template-columns: 1fr; gap: 2px; counter-reset: step }
@@ -503,7 +471,7 @@ body { background: var(--bg-base) }
 .ac-pal .rubrik::after { background: rgba(255,207,0,.4); opacity: 1 }
 .ac-pal .sh { color: #fff }
 .ac-pal .sh em { color: #FFCF00 }
-.ac-pal .sb { color: rgba(255,255,255,.45) }
+.ac-pal .sb { color: rgba(255,255,255,.7); opacity: 1 }
 .ac-pal-head { margin-bottom: clamp(36px,5vw,56px) }
 .ac-pal-list { display: flex; flex-direction: column; max-width: 760px }
 .ac-pal-item {
@@ -521,10 +489,10 @@ body { background: var(--bg-base) }
 .ac-pal-body { display: flex; flex-direction: column; gap: 4px }
 .ac-pal-cat {
   font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1.5px;
-  text-transform: uppercase; color: rgba(255,207,0,.5); margin-bottom: 2px;
+  text-transform: uppercase; color: rgba(255,207,0,.7); margin-bottom: 2px;
 }
 .ac-pal-titre { font-family: 'Bebas Neue'; font-size: clamp(18px,2.5vw,26px); color: #fff; line-height: .92 }
-.ac-pal-detail { font-size: 13px; color: rgba(255,255,255,.45); line-height: 1.7; margin-top: 4px }
+.ac-pal-detail { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.7; margin-top: 4px }
 .ac-pal-cta {
   display: inline-flex; align-items: center; gap: 10px;
   margin-top: clamp(32px,4vw,48px);
@@ -567,44 +535,167 @@ body { background: var(--bg-base) }
 }
 .ac-vid-chan:hover { opacity: .65 }
 
-/* Grid YouTube */
-.yt-grid { display: grid; grid-template-columns: 1fr; gap: 16px }
-@media(min-width:640px) { .yt-grid { grid-template-columns: 1fr 1fr } }
-@media(min-width:960px) { .yt-grid { grid-template-columns: repeat(3,1fr) } }
+/* Grille YouTube : assets/css/videos.css, commune à toutes les pages. */
 
-.yt-card {
-  background: var(--bg-white); border: 1px solid var(--sep);
-  border-radius: 6px; overflow: hidden;
-  display: flex; flex-direction: column;
-  transition: all .22s; text-decoration: none;
-}
-.yt-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 8px 28px rgba(10,61,145,.12);
-  transform: translateY(-3px);
-}
-.yt-thumb {
-  position: relative; padding-bottom: 56.25%; height: 0;
-  overflow: hidden; background: #000;
-}
-.yt-thumb iframe {
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 100%; border: none;
-}
-.yt-info { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; gap: 5px }
-.yt-title { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.35 }
-.yt-meta {
-  font-family: 'DM Mono'; font-size: 8px; letter-spacing: 1px;
-  text-transform: uppercase; color: var(--ink-soft);
-  display: flex; gap: 10px; margin-top: auto;
-  padding-top: 8px; border-top: 1px solid var(--sep); flex-wrap: wrap;
-}
-/* Sous le seuil, videos.js ne construit rien : la section resterait un cadre
-   vide sous son titre. On la retire donc du flux. Masquer ne suffirait pas a
-   economiser les requetes, c'est le script qui s'en charge, et le script ne
-   suffirait pas a eviter le cadre vide. Les deux vont ensemble.
-   Meme seuil que nav.css, hero-video.js et videos.js. */
-@media(max-width:699px) { .ac-videos { display: none } }
+/* ════ ACADÉMIE DE VENTE (D-212, 6 novembre 2026) ═════════════════════════
+   Ordre : haut de page, les deux journées, le déroulé, les dates, le
+   formateur et son palmarès, les vidéos, la FAQ. Défilement libre : le
+   défilement aimanté sautait les sections plus hautes que l'écran. */
 
-.yt-grid--4 { grid-template-columns: 1fr 1fr }
-@media(min-width:960px) { .yt-grid--4 { grid-template-columns: repeat(4,1fr) } }
+/* Hero : deux boutons */
+.hero-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px }
+.hero-btn {
+  font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+  text-decoration: none; font-weight: 500; padding: 17px 26px; border-radius: 4px;
+  transition: transform .2s;
+}
+.hero-btn:hover { transform: translateY(-2px) }
+.hero-btn--y { background: #FFCF00; color: #040a1e }
+.hero-btn--w { background: #fff; color: #040a1e; box-shadow: 0 8px 24px rgba(0,0,0,.35) }
+.hero-btn[hidden] { display: none }
+
+/* Les deux journées */
+.parcours { background: #f0f4ff }
+.parcours .pc-title { font-size: clamp(44px,5.5vw,72px) }
+.parcours .pc-lead { font-size: clamp(16px,1.4vw,18px) }
+.voies { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 24px }
+.voies .tl-step.voie {
+  padding: 0; min-height: 0; gap: 0; border-top: 0; border-radius: 10px;
+  background: #0a1a4a; box-shadow: 0 24px 60px rgba(4,10,30,.25);
+}
+.voies .tl-step.voie::before { content: none }
+.voies .tl-step.voie:hover { transform: none; background: #0a1a4a }
+.voie-photo { width: 100%; height: clamp(220px, 24vw, 300px); object-fit: cover; display: block }
+.voie-corps { padding: clamp(22px,3vw,36px); display: flex; flex-direction: column; gap: 16px; color: #fff }
+.voie .tl-badge { align-self: flex-start }
+.voie .tl-name { margin: 0; font-size: clamp(40px,4vw,56px); line-height: .9; font-weight: 400 }
+.voie .tl-desc { margin: 0; font-size: 17px; line-height: 1.6; color: rgba(255,255,255,.85); flex: none }
+.voie-points { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px }
+.voie-points li { display: flex; gap: 10px; font-size: 16px; line-height: 1.5; color: rgba(255,255,255,.9) }
+.voie-points li::before { content: '✓'; color: #FFCF00; flex-shrink: 0 }
+.voie-prix { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.12) }
+.voie-montant { font-family: 'Bebas Neue', sans-serif; font-size: 48px; line-height: 1; color: #FFCF00 }
+.voie-note { font-size: 15px; color: rgba(255,255,255,.7) }
+.voie-btns { display: flex; flex-wrap: wrap; gap: 12px }
+.voie-btn {
+  font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  text-decoration: none; padding: 15px 20px; border-radius: 4px; font-weight: 500;
+}
+.voie-btn--y { background: #FFCF00; color: #040a1e }
+.voie-btn--contour { border: 1px solid rgba(255,255,255,.5); color: #fff }
+.voie-btn.tl-link::after { content: none }
+.voie-btn.tl-link:hover { gap: 0 }
+
+/* Les cinq niveaux : un escalier de progression, le dernier en jaune */
+.progression {
+  margin-top: 32px; background: #040a1e; color: #fff; border-radius: 10px;
+  padding: clamp(24px,3vw,36px); display: flex; flex-direction: column; gap: 24px;
+  box-shadow: 0 24px 60px rgba(4,10,30,.25);
+}
+.prog-tete { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px }
+.prog-kicker { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #FFCF00 }
+.prog-titre { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px,3vw,36px); line-height: 1 }
+.prog-titre em { font-style: normal; color: #FFCF00 }
+.niveaux { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px }
+.niv { display: flex; flex-direction: column; gap: 14px }
+.niv-barre {
+  height: calc(10px + var(--n) * 26px); margin-top: calc(140px - (10px + var(--n) * 26px));
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(180deg, rgba(18,82,192,.95), rgba(10,61,145,.6));
+}
+.niv-ligne { display: flex; align-items: center; gap: 10px }
+.niv-ligne::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.18) }
+.niv-num {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #040a1e; background: #fff;
+}
+.niv-nom { font-family: 'Bebas Neue', sans-serif; font-size: 30px; line-height: 1 }
+.niv-txt { font-size: 14px; line-height: 1.5; color: rgba(255,255,255,.72) }
+.niv--final .niv-barre, .niv--final .niv-num { background: #FFCF00 }
+.niv--final .niv-nom { color: #FFCF00 }
+.niv-porte {
+  align-self: flex-start; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: #040a1e; background: #FFCF00; padding: 5px 9px; border-radius: 3px;
+}
+/* Téléphone : l'escalier se couche, la barre grandit vers la droite */
+@media(max-width:760px) {
+  .niveaux { grid-template-columns: 1fr; gap: 20px }
+  .niv { display: grid; grid-template-columns: 34px 1fr; gap: 6px 14px; align-items: center }
+  .niv-barre { grid-column: 1 / -1; margin-top: 0; height: 8px; width: calc(var(--n) * 20%); border-radius: 0 4px 4px 0;
+               background: linear-gradient(90deg, rgba(10,61,145,.6), rgba(18,82,192,.95)) }
+  .niv-ligne::after { content: none }
+  .niv-txt, .niv-porte { grid-column: 2 }
+}
+
+/* Le déroulé et les dates : même en-tête */
+.deroule, .ac-dates { padding: clamp(64px,8vw,96px) clamp(20px,5vw,72px); display: flex; flex-direction: column; gap: 36px }
+.deroule { background: #040a1e; color: #fff }
+.ac-dates { background: #fff }
+.dr-tete { display: flex; flex-direction: column; gap: 12px }
+.dr-kicker { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #FFCF00 }
+.dr-titre { margin: 0; font-family: 'Bebas Neue', sans-serif; font-weight: 400; font-size: clamp(44px,5.5vw,72px); line-height: .9 }
+.dr-titre em { font-style: normal; color: #FFCF00 }
+.ac-dates .dr-kicker { color: #0A3D91 }
+.ac-dates .dr-titre { color: #040a1e }
+.ac-dates .dr-titre em { color: #0A3D91 }
+.dr-etapes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 24px 16px }
+.dr-etapes li { border-top: 3px solid #FFCF00; padding-top: 18px; display: flex; flex-direction: column; gap: 8px }
+.dr-heure { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; color: #FFCF00 }
+.dr-nom { font-size: 17px; font-weight: 600 }
+.dr-txt { font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.75) }
+.dr-inclus { margin: 0; font-size: 15px; color: rgba(255,255,255,.6) }
+
+/* Le formateur et les vidéos : hauteur libre */
+.jb-pal-wrap { height: auto }
+.ac-videos { height: auto }
+
+/* Barre de réservation, collée en bas de l'écran */
+.resa-barre {
+  position: sticky; bottom: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px clamp(16px,4vw,72px);
+  background: rgba(4,10,30,.96); border-top: 2px solid #FFCF00; color: #fff;
+}
+.resa-txt { font-size: 15px; color: rgba(255,255,255,.85) }
+.resa-txt strong { color: #FFCF00; font-weight: 600 }
+.resa-btns { display: flex; gap: 8px; flex-shrink: 0 }
+.resa-btn {
+  font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  text-decoration: none; padding: 13px 20px; border-radius: 4px; font-weight: 500;
+}
+.resa-btn--y { background: #FFCF00; color: #040a1e }
+.resa-btn--contour { border: 1px solid rgba(255,255,255,.5); color: #fff }
+@media(max-width:560px) {
+  .resa-txt { display: none }
+  .resa-btns { flex: 1 }
+  .resa-btn { flex: 1; text-align: center }
+}
+
+/* Vidéos : salle sombre, une grande vidéo et trois à côté (7 novembre 2026) */
+.ac-videos { background: #040a1e; color: #fff }
+.ac-videos .rubrik { color: #FFCF00 }
+.ac-videos .sh { color: #fff }
+.ac-videos .sh em { color: #FFCF00 }
+.ac-videos .sb { color: rgba(255,255,255,.7) }
+.ac-videos .ac-vid-chan { color: #FFCF00; border-color: #FFCF00 }
+.ac-videos .yt-pl { background: #FFCF00; color: #040a1e }
+.ac-videos .yt-pl--exemple { background: transparent; color: #FFCF00; border-color: rgba(255,207,0,.6) }
+.ac-videos .yt-card { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.1) }
+.ac-videos .yt-card:hover { border-color: #FFCF00; box-shadow: 0 16px 40px rgba(0,0,0,.45) }
+.ac-videos .yt-title { color: #fff }
+.ac-videos .yt-meta { color: rgba(255,255,255,.55) }
+.ac-videos .yt-grid--une { grid-template-columns: 1fr }
+@media(min-width:960px) {
+  .ac-videos .yt-grid--une { grid-template-columns: 1.7fr 1fr; grid-auto-rows: auto; gap: 14px }
+  .ac-videos .yt-grid--une .yt-card:first-child { grid-row: 1 / span 3 }
+  .ac-videos .yt-grid--une .yt-card:first-child .yt-title { font-size: 18px }
+  .ac-videos .yt-grid--une .yt-card:not(:first-child) { flex-direction: row; align-items: center }
+  .ac-videos .yt-grid--une .yt-card:not(:first-child) .yt-thumb { width: 48%; flex-shrink: 0; padding-bottom: 0; height: auto; aspect-ratio: 16 / 9 }
+}
+
+/* Boutique : bouton « Offrir une journée » et paiement en 4 fois (boutique.js) */
+.hero-btn--contour { border: 1px solid rgba(255,255,255,.6); color: #fff }
+.hero-btn[hidden] { display: none }
+.voie-4x:empty { display: none }
+.voie-4x { margin-top: -8px; background: #fff; border-radius: 4px; padding: 6px 10px; align-self: flex-start }

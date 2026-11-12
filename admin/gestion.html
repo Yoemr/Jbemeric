@@ -42,14 +42,22 @@
 <div class="g-modale" id="g-modale"></div>
 <div class="g-message" id="g-message"></div>
 
+<script src="assets/js/texte-propre.js"></script>
 <script src="assets/js/gestion.js"></script>
 
 <!-- Les listes du metier, partagees par plusieurs onglets. Avant eux. -->
 <script src="assets/js/gestion-vocabulaire.js"></script>
 
 <!-- Un onglet par fonction. L'ordre ici est l'ordre à l'écran. -->
+<script src="assets/js/gestion-formules.js"></script>
+<script src="assets/js/gestion-dates-karting.js"></script>
+<script src="assets/js/gestion-reservations.js"></script>
+<script src="assets/js/gestion-bons.js"></script>
+<!-- Veille et Track-days : hors du site karting (9 octobre 2026). Fichiers
+     conservés, à remettre le jour où les track-days reviennent.
 <script src="assets/js/gestion-veille.js"></script>
 <script src="assets/js/gestion-evenements.js"></script>
+-->
 <script src="assets/js/gestion-faq.js"></script>
 <script src="assets/js/gestion-avis.js"></script>
 
@@ -67,7 +75,8 @@
 
   const { data: { session } } = await sb.auth.getSession()
   const utilisateur = session && session.user
-  const role = utilisateur && utilisateur.user_metadata && utilisateur.user_metadata.role
+  // app_metadata, écrit par le serveur seul (audit du 9 octobre 2026)
+  const role = utilisateur && utilisateur.app_metadata && utilisateur.app_metadata.role
 
   if (!utilisateur) {
     try { sessionStorage.setItem('jbe_return_url', location.href) } catch (e) {}

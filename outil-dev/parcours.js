@@ -35,7 +35,11 @@ const fs = require('fs')
 const os = require('os')
 const path = require('path')
 
-const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
+// Le lien stable /opt/pw-browsers/chromium suit la version installée : le
+// chemin numéroté (chromium-1194) a disparu avec une mise à jour du conteneur.
+const CHROME = require('fs').existsSync('/opt/pw-browsers/chromium')
+  ? '/opt/pw-browsers/chromium'
+  : '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
 const BASE = process.env.JBE_BASE || 'http://localhost:3000'
 const PORT = 9334
 
@@ -173,6 +177,10 @@ const PRELUDE_GESTION = `(function () {
       circuit_nom:'Circuit de Lédenon', pays:'France', region:'Gard (30)',
       veille_sources:{ nom:'Circuit de Lédenon, agenda' } }
   ]
+  var FORMULES = [
+    { id:101, cle:'karting-enfant-journee', libelle:'Karting enfant, la journée', nature:'karting', unite:'journee',
+      prix_conseille:195, places_defaut:6, bon_cadeau:true, actif:true, ordre:100 }
+  ]
   var REGLAGES = [{ horizon_mois: 3 }]
   var SOURCES = [
     { id:1, nom:'Circuit du Var, agenda', url:'https://exemple.test/agenda',
@@ -197,6 +205,7 @@ const PRELUDE_GESTION = `(function () {
             : u.indexOf('/veille_candidats?') !== -1 ? VEILLE
             : u.indexOf('/veille_sources?') !== -1 ? SOURCES
             : u.indexOf('/veille_reglages?') !== -1 ? REGLAGES
+            : u.indexOf('/formules?') !== -1 ? FORMULES
             : CIRCUITS
     return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve(jeu) } })
   }
@@ -221,14 +230,27 @@ const PARCOURS = [
     attendu: `!!document.querySelector('.fq.open') || 'aucune question ne s est ouverte'`,
   },
   {
-    nom: 'porte de l Academie, navigation par onclick',
+    nom: 'carte Karting de l accueil, vers l Academie',
+    page: 'index.html',
+    largeur: 1300,
+    // Depuis D-212, l'accueil porte une carte par activite (#activites).
+    action: `document.querySelector('#activites .act-carte[href*="academie"]').click()`,
+    attente: 1200,
+    attendu: `location.pathname.includes('academie') || 'la carte n a pas navigue, on est reste sur ' + location.pathname`,
+  },
+  {
+    nom: 'palmares de l Academie, rempli depuis site-data',
     page: 'academie.html',
     largeur: 1300,
-    // Les portes ne sont pas des <a> : elles portent onclick="location.href=...".
-    // Un verificateur de liens ne voit donc rien a verifier ici.
-    action: `document.querySelector('.porte.enfant').click()`,
-    attente: 1200,
-    attendu: `location.pathname.includes('karting-enfant') || 'la porte n a pas navigue, on est reste sur ' + location.pathname`,
+    action: `null`,
+    attendu: `(function(){ var n = document.querySelectorAll('[data-palmares-une] .ac-pal-item').length, a = window.JBEMERIC_DATA.palmares.filter(function(e){return e.highlight}).length; return n === a || ('colonne : ' + n + ' resultats, a la une : ' + a) })()`,
+  },
+  {
+    nom: 'barre de reservation de l Academie, visible en bas',
+    page: 'academie.html',
+    largeur: 390,
+    action: `null`,
+    attendu: `(function(){ var r = document.getElementById('resa-barre').getBoundingClientRect(); return (r.bottom <= innerHeight + 1 && r.top < innerHeight) || ('barre hors ecran, haut a ' + Math.round(r.top)) })()`,
   },
   {
     nom: 'menu burger, telephone',
@@ -245,23 +267,32 @@ const PARCOURS = [
     attendu: `document.querySelectorAll('#nav-root a[href*="karting"]').length >= 2 || 'les entrees karting du menu sont absentes'`,
   },
   {
-    nom: 'videos YouTube, tirage sur grand ecran',
+    // Depuis D-208 : une miniature par video, le lecteur n'est pose qu'au clic.
+    nom: 'videos YouTube, quatre miniatures sur grand ecran',
     page: 'academie.html',
     largeur: 1300,
     action: `null`,
-    attendu: `document.querySelectorAll('[data-videos] iframe').length === 4 || 'attendu 4 videos tirees, trouve ' + document.querySelectorAll('[data-videos] iframe').length`,
+    attendu: `document.querySelectorAll('[data-videos] .yt-lancer').length === 4 || 'attendu 4 miniatures, trouve ' + document.querySelectorAll('[data-videos] .yt-lancer').length`,
   },
   {
-    nom: 'videos YouTube, aucune requete sur telephone',
+    nom: 'videos YouTube, miniatures et aucun lecteur sur telephone',
     page: 'academie.html',
     largeur: 390,
     action: `null`,
-    attendu: `document.querySelectorAll('[data-videos] iframe').length === 0 || 'des videos sont chargees sur telephone'`,
+    attendu: `(document.querySelectorAll('[data-videos] .yt-lancer').length === 4 && document.querySelectorAll('[data-videos] iframe').length === 0) || 'telephone : ' + document.querySelectorAll('[data-videos] .yt-lancer').length + ' miniatures, ' + document.querySelectorAll('[data-videos] iframe').length + ' lecteurs'`,
+  },
+  {
+    nom: 'videos YouTube, le clic pose le lecteur',
+    page: 'academie.html',
+    largeur: 390,
+    action: `document.querySelector('[data-videos] .yt-lancer').click()`,
+    attendu: `document.querySelectorAll('[data-videos] iframe').length === 1 || 'apres un clic : ' + document.querySelectorAll('[data-videos] iframe').length + ' lecteur(s)'`,
   },
   {
     nom: 'carte Coaching de l accueil, vers la bonne offre',
     page: 'index.html',
     largeur: 1300,
+    masqueAvec: 'coaching.html',
     // Les cartes de l'accueil sont aspirees de coaching.html par sync-mirror.js
     // et pointent sur #amateur et #competition. Ces deux ancres ont manque
     // pendant des mois : le visiteur atterrissait en haut de la page au lieu
@@ -624,6 +655,7 @@ const PARCOURS = [
   {
     nom: 'veille, chaque ligne porte les verbes de son etat',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // La veille depose des candidats, JB tranche. Une ligne jamais jugee doit
     // pouvoir etre retenue ou ecartee ; une ligne deja retenue ne doit plus
@@ -708,6 +740,7 @@ const PARCOURS = [
   {
     nom: 'veille, l horizon se regle et part vers la base',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Mot de Yoan : « mon pere n'a pas vraiment besoin d'une vue sur l'annee
     // entiere, en general 3 mois suffit, mais je veux qu'il ait la liberte de
@@ -738,6 +771,7 @@ const PARCOURS = [
   {
     nom: 'veille, le pied de page dit ce qui est lu',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Demande de Yoan : « peut-etre interessant de mettre le lien des sites
     // qu'on scanne quelque part discretement sur la page, pour qu'on puisse
@@ -766,6 +800,7 @@ const PARCOURS = [
   {
     nom: 'veille, les cases filtrent ce qu on voit',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Demande de Yoan du 10 aout : « des cases qu'on coche ou decoche pour
     // afficher ce qu'on veut ». Rien de coche affiche tout, et un filtre qui
@@ -806,6 +841,7 @@ const PARCOURS = [
   {
     nom: 'veille, l onglet s ouvre sur les trackdays et rien d autre',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Mot de Yoan, 10 aout : « meme en dehors des filtres, bapteme et stage
     // n'ont rien a faire ici ». Ce sont les journees du circuit, avec ses
@@ -842,6 +878,7 @@ const PARCOURS = [
   {
     nom: 'veille, le filtre isole les journees en voiture perso',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Reproche de Yoan, 10 aout : « ce que je veux savoir c'est les journees ou
     // on peut venir avec une voiture personnelle. On appelle ca un trackday
@@ -886,6 +923,7 @@ const PARCOURS = [
   {
     nom: 'veille, decocher tout remet la liste entiere',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -909,6 +947,7 @@ const PARCOURS = [
   {
     nom: 'veille, retenir ouvre le formulaire prerempli',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Retenir ne fabrique plus un brouillon nu : il ouvre la creation de
     // l'evenement, avec ce que la veille sait deja rappele en tete.
@@ -949,6 +988,7 @@ const PARCOURS = [
   {
     nom: 'veille, le tarif publie par le circuit arrive prerempli',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Le Circuit du Var ne publie aucun tarif, Ledenon publie le sien et son
     // texte. Ce qui est connu ne doit pas etre resaisi, ce qui est inconnu
@@ -979,6 +1019,7 @@ const PARCOURS = [
   {
     nom: 'veille, une date sans tarif publie laisse la case vide',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1003,6 +1044,7 @@ const PARCOURS = [
   {
     nom: 'veille, creer envoie le bon corps et ne publie rien de lui-meme',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1046,6 +1088,7 @@ const PARCOURS = [
   {
     nom: 'barre, une recherche et une liste par categorie',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1075,6 +1118,7 @@ const PARCOURS = [
   {
     nom: 'barre, deplier une liste puis cliquer ailleurs la referme',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1098,6 +1142,7 @@ const PARCOURS = [
   {
     nom: 'barre, cocher dans une liste ne la referme pas',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     // Le piege du redessin : cocher une case reconstruit tout le tableau, donc
     // le panneau ouvert disparait avec. Sans rappel de l'etat, on ne peut
@@ -1128,6 +1173,7 @@ const PARCOURS = [
   {
     nom: 'barre, la recherche filtre le tableau et garde le curseur',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1160,6 +1206,7 @@ const PARCOURS = [
   {
     nom: 'barre, tout afficher efface la recherche et les cases',
     page: 'admin/gestion.html',
+    onglet: 'veille',
     largeur: 1400,
     prelude: PRELUDE_GESTION,
     action: `(function () {
@@ -1352,6 +1399,141 @@ const PARCOURS = [
       return true
     })()`,
   },
+  {
+    nom: 'gestion, une date karting reprend le nom, le prix et les places de sa formule',
+    page: 'admin/gestion.html',
+    onglet: 'dates-karting',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      return new Promise(function (fini) {
+        setTimeout(function () {
+          document.querySelector('[data-onglet="dates-karting"]').click()
+          setTimeout(function () {
+            document.getElementById('g-nouveau').click()
+            setTimeout(function () {
+              document.getElementById('ch-formule_id').value = '101'
+              document.getElementById('ch-date_event').value = '2099-12-12'
+              document.querySelector('[data-enregistrer]').click()
+              setTimeout(fini, 600)
+            }, 500)
+          }, 700)
+        }, 900)
+      })
+    })()`,
+    attente: 400,
+    attendu: `(function () {
+      var e = (window.__envois || []).filter(function (x) { return x.methode === 'POST' })
+      if (e.length !== 1) return 'attendu une creation, trouve ' + e.length
+      if (e[0].url.indexOf('events') !== 0) return 'mauvaise table : ' + e[0].url
+      var c = JSON.parse(e[0].corps)
+      if (c.formule_id !== 101) return 'formule_id non numerique ou absent : ' + JSON.stringify(c.formule_id)
+      if (c.type !== 'Karting enfant, la journée') return 'le nom de la formule n est pas repris : ' + c.type
+      if (c.prix !== 195) return 'le prix de la formule n est pas repris : ' + c.prix
+      if (c.nb_places !== 6) return 'les places de la formule ne sont pas reprises : ' + c.nb_places
+      if (c.visible_site !== true) return 'une date neuve devrait etre en ligne par defaut'
+      return true
+    })()`,
+  },
+  {
+    nom: 'gestion, une formule creee recoit sa cle et sa nature karting',
+    page: 'admin/gestion.html',
+    onglet: 'formules',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      return new Promise(function (fini) {
+        setTimeout(function () {
+          document.querySelector('[data-onglet="formules"]').click()
+          setTimeout(function () {
+            document.getElementById('g-nouveau').click()
+            setTimeout(function () {
+              document.getElementById('ch-libelle').value = 'Karting adulte, la demi-journée'
+              document.getElementById('ch-prix_conseille').value = '120'
+              document.querySelector('[data-enregistrer]').click()
+              setTimeout(fini, 600)
+            }, 500)
+          }, 700)
+        }, 900)
+      })
+    })()`,
+    attente: 400,
+    attendu: `(function () {
+      var e = (window.__envois || []).filter(function (x) { return x.methode === 'POST' })
+      if (e.length !== 1) return 'attendu une creation, trouve ' + e.length
+      if (e[0].url.indexOf('formules') !== 0) return 'mauvaise table : ' + e[0].url
+      var c = JSON.parse(e[0].corps)
+      if (!/^karting-adulte-la-demi-journee-/.test(c.cle || '')) return 'cle mal formee : ' + c.cle
+      if (c.nature !== 'karting') return 'nature inattendue : ' + c.nature
+      if (c.prix_conseille !== 120) return 'prix non transmis : ' + c.prix_conseille
+      if (c.actif !== true) return 'une formule neuve devrait etre proposee'
+      return true
+    })()`,
+  },
+  {
+    nom: 'gestion, une question tapee en majuscules est remise en casse normale',
+    page: 'admin/gestion.html',
+    largeur: 1400,
+    prelude: PRELUDE_GESTION,
+    // La protection « papa proof » (texte-propre.js) : verrouillage des
+    // majuscules oublie et ponctuation repetee, corriges a l'enregistrement.
+    action: `(function () {
+      JBE.demarrer('jeton-d-essai')
+      return new Promise(function (fini) {
+        setTimeout(function () {
+          document.querySelector('[data-onglet="faq"]').click()
+          setTimeout(function () {
+            document.getElementById('g-nouveau').click()
+            setTimeout(function () {
+              document.getElementById('ch-question').value = 'QUEL EST LE PRIX D UNE JOURNEE DE KARTING ???'
+              document.getElementById('ch-reponse').value = 'Diplômé BPJEPS, JB vous attend.'
+              document.querySelector('.g-case input').checked = true
+              document.querySelector('[data-enregistrer]').click()
+              setTimeout(fini, 600)
+            }, 500)
+          }, 700)
+        }, 900)
+      })
+    })()`,
+    attente: 400,
+    attendu: `(function () {
+      var e = (window.__envois || []).filter(function (x) { return x.methode === 'POST' })
+      if (e.length !== 1) return 'attendu une creation, trouve ' + e.length
+      var c = JSON.parse(e[0].corps)
+      if (c.question !== 'Quel est le prix d une journee de karting\u00a0?') return 'question non corrigee : ' + JSON.stringify(c.question)
+      if (c.reponse !== 'Diplômé BPJEPS, JB vous attend.') return 'une phrase normale avec des sigles a ete touchee : ' + c.reponse
+      return true
+    })()`,
+  },
+  {
+    nom: 'avis, les vrais avis Google en direct, filtres sur le karting',
+    page: 'academie.html',
+    largeur: 1300,
+    // La fonction avis-google est simulee : deux avis, dont un seul parle de
+    // karting. Le bloc de l'Academie ne garde que celui-la, avec la note
+    // moyenne et le lien vers Google.
+    prelude: `(function () {
+      var vrai = window.fetch
+      window.fetch = function (u, o) {
+        if (String(u).indexOf('/.netlify/functions/avis-google') !== -1) return Promise.resolve({ ok: true, json: function () { return Promise.resolve({
+          active: true, note: 4.9, nombre: 37, lien: 'https://maps.google.com/?cid=1',
+          avis: [{ auteur: 'Marie D.', note: 5, texte: 'Mon fils a adore sa journee de karting.', quand: 'il y a 2 mois', lien: 'https://maps.google.com/?cid=1' },
+                 { auteur: 'Paul', note: 5, texte: 'Super journee sur circuit avec ma voiture.', quand: 'il y a 1 an' }] }) } })
+        return vrai.apply(this, arguments)
+      }
+    })()`,
+    action: `null`,
+    attente: 1500,
+    attendu: `(function () {
+      var cartes = document.querySelectorAll('#avis .av--direct')
+      var resume = (document.querySelector('#avis .avis-resume') || {}).textContent || ''
+      if (cartes.length !== 1) return 'attendu un avis karting, trouve ' + cartes.length
+      if (!/4,9/.test(resume) || !/37 avis Google/.test(resume)) return 'resume : ' + resume
+      return !!document.querySelector('#avis .av--direct a[href*="maps.google"]') || 'pas de lien vers l avis d origine'
+    })()`,
+  },
 ]
 
 // ── Pourquoi ce preambule existe ────────────────────────────────────────────
@@ -1484,7 +1666,21 @@ async function principal() {
     if (!joignable) console.log('  seront declares non concluants, pas en echec.')
     console.log('')
 
+    // Une page masquee (theme.css section 5) ne se teste pas : son parcours
+    // echouerait sans qu'aucun visiteur puisse rencontrer le defaut.
+    const { MASQUEES } = require('./audit/perimetre')
+    // Un onglet de la gestion retiré de la barre (sa balise script mise en
+    // commentaire dans admin/gestion.html) compte comme une page masquée.
+    const gestionHtml = require('fs').readFileSync(require('path').join(__dirname, '..', 'admin/gestion.html'), 'utf8').replace(/<!--[\s\S]*?-->/g, '')
+    const ongletRetire = cle => !!cle && gestionHtml.indexOf('assets/js/gestion-' + cle + '.js') === -1
+    let masques = 0
     for (const p of liste) {
+      const fichier = p.page.split('?')[0]
+      if (MASQUEES.includes(fichier) || (p.masqueAvec && MASQUEES.includes(p.masqueAvec)) || ongletRetire(p.onglet)) {
+        masques++
+        console.log(`  MASQUEE  ${p.nom}`)
+        continue
+      }
       if (p.besoinBase && !joignable) {
         sansBase++
         console.log(`  SANS BASE ${p.nom}`)
@@ -1503,6 +1699,7 @@ async function principal() {
     console.log('  ' + '-'.repeat(66))
     console.log(echecs ? `  ${echecs} parcours cassé(s).` : '  Tous les parcours joues passent.')
     if (sansBase) console.log(`  ${sansBase} parcours non joue(s), faute d acces a Supabase. A rejouer sur un poste connecte.`)
+    if (masques) console.log(`  ${masques} parcours non joue(s), leur page est masquee (audit/perimetre.js).`)
     console.log('')
     console.log('  L inscription est testee sans rien ecrire : fetch est remplace le temps')
     console.log('  du clic, la requete est capturee et la reponse simulee. Restent hors de')

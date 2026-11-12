@@ -3,7 +3,8 @@
 // L'encaissement se fait ici, côté serveur : le navigateur ne peut pas se
 // déclarer payé. La somme encaissée est comparée à celle enregistrée ; la
 // réservation passe « payee » (la jauge de la date baisse seule, par le
-// déclencheur de la base) ou le bon cadeau passe « paye », valable un an.
+// déclencheur de la base) ou le bon cadeau passe « paye ». Un bon n'expire
+// pas : « sans durée de validité », règle de JB dans la FAQ.
 // Appeler deux fois pour la même commande ne fait rien de plus.
 const B = require('./_boutique')
 
@@ -38,8 +39,7 @@ exports.handler = async (event) => {
       await B.sb('inscriptions?id=eq.' + ins.id, { methode: 'PATCH', corps: { statut: 'payee', paye_le: maintenant } })
       return B.reponse(200, { ok: true, quoi: 'journee' })
     }
-    const unAn = new Date(); unAn.setFullYear(unAn.getFullYear() + 1)
-    await B.sb('bons_cadeaux?id=eq.' + bon.id, { methode: 'PATCH', corps: { statut: 'paye', paye_le: maintenant, valable_jusqu: unAn.toISOString().slice(0, 10) } })
+    await B.sb('bons_cadeaux?id=eq.' + bon.id, { methode: 'PATCH', corps: { statut: 'paye', paye_le: maintenant } })
     return B.reponse(200, { ok: true, quoi: 'cadeau', code: bon.code, libelle: bon.libelle })
   } catch (e) {
     console.error('[paiement-valider]', e.message)

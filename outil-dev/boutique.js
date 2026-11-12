@@ -13,6 +13,7 @@
 const path = require('path')
 const F = path.join(__dirname, '..', 'netlify', 'functions')
 
+const vraiFetch = global.fetch
 let BASE, COMMANDES, MONTANT_ENCAISSE
 function remettre() {
   const demain = new Date(Date.now() + 86400e3).toISOString().slice(0, 10)
@@ -71,6 +72,62 @@ function cles(sur) {
   if (sur) Object.assign(process.env, { SUPABASE_SERVICE_ROLE_KEY: 'svc', PAYPAL_CLIENT_ID: 'client-public', PAYPAL_SECRET: 'secret', PAYPAL_ENV: 'sandbox' })
   else ['SUPABASE_SERVICE_ROLE_KEY', 'PAYPAL_CLIENT_ID', 'PAYPAL_SECRET', 'PAYPAL_ENV'].forEach(k => delete process.env[k])
 }
+// Un faux PayPal : un bouton qui appelle createOrder puis onApprove, et un
+// message de paiement en 4 fois.
+const FAUX_PAYPAL = `window.paypal = {
+  Buttons: function (o) { return { render: function (zone) {
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'faux-paypal'; b.textContent = 'Payer avec PayPal'
+    b.onclick = function () { o.onClick({}, { resolve: function () { return true }, reject: function () { window.__refuse = true; return false } })
+      if (window.__refuse) { window.__refuse = false; return }
+      o.createOrder().then(function (id) { window.__commande = id; return o.onApprove({ orderID: id }) }) }
+    zone.appendChild(b) } } },
+  Messages: function (o) { return { render: function (z) { z.textContent = 'ou 4 x ' + (o.amount / 4).toFixed(2) + ' € sans frais' } } },
+}`
+async function page(actif) {
+  const { chromium } = require('playwright')
+  const fs = require('fs')
+  const nav = await chromium.launch(fs.existsSync('/opt/pw-browsers/chromium') ? { executablePath: '/opt/pw-browsers/chromium' } : {})
+  const p = await nav.newPage({ viewport: { width: 1280, height: 900 } })
+  p.__envois = []
+  const demain = new Date(Date.now() + 86400e3).toISOString().slice(0, 10)
+  await p.route('**/.netlify/functions/paiement-config', r => r.fulfill({ contentType: 'application/json', body: JSON.stringify(actif ? { active: true, clientId: 'test', env: 'sandbox' } : { active: false }) }))
+  await p.route('**/.netlify/functions/paiement-creer', r => { p.__envois.push(JSON.parse(r.request().postData())); r.fulfill({ contentType: 'application/json', body: '{"orderID":"PP1"}' }) })
+  await p.route('**/.netlify/functions/paiement-valider', r => { p.__envois.push(JSON.parse(r.request().postData())); r.fulfill({ contentType: 'application/json', body: '{"ok":true,"quoi":"journee"}' }) })
+  await p.route('https://www.paypal.com/sdk/js**', r => r.fulfill({ contentType: 'application/javascript', body: FAUX_PAYPAL }))
+  await p.route(/supabase\.co\/rest\/v1\/events/, r => r.fulfill({ contentType: 'application/json', body: JSON.stringify([{ id: 'ev1', date_event: demain, type: 'Karting enfant, la journée', status: 'Open', prix: 195, nb_places: 6, nb_inscrits: 2, circuit_id: 1 }]) }))
+  await p.route(/supabase\.co\/rest\/v1\/circuits/, r => r.fulfill({ contentType: 'application/json', body: '[{"id":1,"nom":"Circuit de Brignoles"}]' }))
+  await p.goto('http://localhost:3000/academie.html'); await p.waitForTimeout(1500)
+  p.__fermer = () => nav.close()
+  return p
+}
+const NAVIGATEUR = [
+  ['boutique fermee : Reserver mene au formulaire de contact', async () => {
+    const p = await page(false)
+    const href = await p.getAttribute('#dates [data-reserver]', 'href')
+    await p.click('#dates [data-reserver]'); await p.waitForTimeout(800)
+    const r = (/contact\.html/.test(p.url()) && !(await p.$('.btq-fenetre'))) || ('reste sur ' + p.url() + ', lien ' + href)
+    await p.__fermer(); return r
+  }],
+  ['boutique ouverte : la fenetre s ouvre, le paiement part avec la bonne date', async () => {
+    const p = await page(true)
+    await p.click('#dates [data-reserver]'); await p.waitForSelector('.btq-fenetre')
+    const quatre = await p.textContent('.btq-4x')
+    await p.fill('[name=prenom]', 'Léa'); await p.fill('[name=nom]', 'Martin'); await p.fill('[name=age]', '9'); await p.fill('[name=email]', 'lea@exemple.fr')
+    await p.click('.faux-paypal'); await p.waitForTimeout(300)
+    const avantConditions = p.__envois.length
+    await p.check('[name=conditions]')
+    await p.click('.faux-paypal'); await p.waitForTimeout(800)
+    const confirme = await p.textContent('.btq-fenetre')
+    const e = p.__envois[0] || {}
+    await p.__fermer()
+    if (avantConditions) return 'le paiement est parti sans les conditions cochees'
+    if (!/4 x 48\.75/.test(quatre)) return 'pas de message 4x : ' + quatre
+    if (e.event_id !== 'ev1' || e.quoi !== 'journee' || e.prenom !== 'Léa' || e.age !== '9') return 'demande envoyee : ' + JSON.stringify(e)
+    if ('prix' in e || 'montant' in e) return 'le navigateur envoie un prix'
+    return /Réservation confirmée/.test(confirme) || 'pas de confirmation : ' + confirme
+  }],
+]
+
 const pilote = { quoi: 'journee', event_id: 'ev1', prenom: 'Léa', nom: 'Martin', email: 'lea@exemple.fr', age: 9 }
 
 const SCENARIOS = [
@@ -125,7 +182,7 @@ const SCENARIOS = [
     if (c.statut !== 200) return 'achat : ' + JSON.stringify(c)
     const v = await appel('paiement-valider', { orderID: c.corps.orderID })
     const bon = BASE.bons_cadeaux[0]
-    if (!(v.statut === 200 && bon.statut === 'paye' && /^JB-[A-Z2-9]{4}-[A-Z2-9]{4}$/.test(v.corps.code) && bon.valable_jusqu)) return 'bon : ' + JSON.stringify(v) + ' ' + JSON.stringify(bon)
+    if (!(v.statut === 200 && bon.statut === 'paye' && /^JB-[A-Z2-9]{4}-[A-Z2-9]{4}$/.test(v.corps.code) && !bon.valable_jusqu)) return 'bon : ' + JSON.stringify(v) + ' ' + JSON.stringify(bon)
     const r1 = await appel('paiement-creer', Object.assign({}, pilote, { bon_code: v.corps.code.toLowerCase() }))
     if (!(r1.statut === 200 && r1.corps.confirme && bon.statut === 'utilise' && BASE.inscriptions[0].statut === 'confirmee')) return 'utilisation : ' + JSON.stringify(r1) + ' ' + bon.statut
     const r2 = await appel('paiement-creer', Object.assign({}, pilote, { bon_code: v.corps.code }))
@@ -142,6 +199,19 @@ const SCENARIOS = [
     try { v = await jouer() } catch (e) { v = 'plantage : ' + e.message }
     if (v === true) console.log('  OK       ' + nom)
     else { echecs++; console.log('  ECHEC    ' + nom + '\n             ' + v) }
+  }
+  // ── La fenêtre, dans un navigateur (serveur local requis) ──────────────────
+  let serveur = false
+  try { serveur = (await vraiFetch('http://localhost:3000/')).ok } catch (e) {}
+  if (!serveur) console.log('\n  Serveur local absent : la fenetre de reservation n est pas jouee.')
+  else {
+    console.log('\n  LA FENETRE, PayPal et les fonctions simules\n')
+    for (const [nom, jouer] of NAVIGATEUR) {
+      let v
+      try { v = await jouer() } catch (e) { v = 'plantage : ' + e.message }
+      if (v === true) console.log('  OK       ' + nom)
+      else { echecs++; console.log('  ECHEC    ' + nom + '\n             ' + v) }
+    }
   }
   console.log('\n  ' + (echecs ? echecs + ' scenario(s) en echec.' : 'Tous les scenarios passent.') + '\n')
   process.exit(echecs ? 1 : 0)

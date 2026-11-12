@@ -222,6 +222,8 @@ Le 5 novembre 2026, le banc de contraste a rendu zéro défaut sur le palmarès 
 
 - **Le mode édition se teste avec `node outil-dev/admin.js`**, et avec `--base=<fichier>` (la table site_content tirée par l'outil MCP en JSON) sur les vrais textes de la base. Aucun autre banc n'ouvre le live-editor en administrateur : ses défauts n'apparaissaient que quand Yoan ou JB tombaient dessus.
 
+- **La boutique se teste avec `node outil-dev/boutique.js`** : les fonctions de paiement contre une fausse base et un faux PayPal, puis la fenêtre dans le navigateur si le serveur local tourne. Les fonctions ne tournent pour de vrai que chez Netlify, avec les clés.
+
 ## 4. Ce que l'outillage ne voit pas
 
 **À connaître avant d'annoncer « zéro faute ».**

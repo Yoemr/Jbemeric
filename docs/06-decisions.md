@@ -6,6 +6,22 @@ Du plus récent au plus ancien. Une décision par entrée, avec sa raison.
 
 ---
 
+## 12 novembre 2026, la boutique PayPal
+
+### D-218, Réserver et payer une journée, offrir un bon cadeau
+
+Fiche : `docs/chantiers/2026-11-10-boutique.md`. PayPal au lieu de Stripe, choix de JB (compte de l'association déjà ouvert). Le paiement en 4 fois sans frais est annoncé à côté des prix par le module officiel de PayPal, qui ne l'affiche que si le compte y a droit.
+
+- **Serveur** : trois fonctions Netlify (`netlify/functions/`). `paiement-config` dit si la boutique est ouverte ; `paiement-creer` relit le prix en base, vérifie les places, enregistre la réservation ou le bon en attente, crée la commande PayPal ; `paiement-valider` encaisse côté serveur, compare le montant, passe la réservation « payee » (la jauge suit par le déclencheur) ou le bon « paye ». Clés dans les variables d'environnement de Netlify uniquement.
+- **Navigateur** : `boutique.js` ouvre la fenêtre de réservation sur les cartes de dates (data-reserver, posé par dates.js) et celle du bon cadeau (data-offrir, bouton « Offrir une journée » de l'Académie). Conditions d'annulation reprises mot pour mot de la FAQ de JB, à cocher avant de payer. Un code de bon cadeau règle une date sans PayPal.
+- **Bons cadeaux sans durée de validité**, comme le dit la FAQ de JB.
+- **Boutique éteinte tant que les clés manquent** : « Réserver » mène au formulaire de contact, comme avant.
+- **Dashboard** : onglets Réservations et Bons cadeaux.
+- **Banc** `outil-dev/boutique.js` : neuf scénarios contre une fausse base et un faux PayPal (prix relu en base, date complète, montant encaissé différent, double validation, bon à usage unique), deux dans le navigateur. Contrôles négatifs faits sur le prix, le montant et la case des conditions.
+- **Reste pour ouvrir** : appliquer la migration `2026-11-10-boutique.sql` (validation de Yoan dans Supabase) ; ranger dans Netlify `SUPABASE_SERVICE_ROLE_KEY`, `PAYPAL_CLIENT_ID`, `PAYPAL_SECRET`, `PAYPAL_ENV=sandbox` ; un essai complet dans le bac à sable ; puis le passage en `live`.
+
+---
+
 ## 12 novembre 2026, deux défauts du mode édition
 
 ### D-217, Le titre de l'accueil un mot par ligne, la barre d'édition trop courte

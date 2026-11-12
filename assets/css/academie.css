@@ -693,3 +693,9 @@ body { background: var(--bg-base) }
   .ac-videos .yt-grid--une .yt-card:not(:first-child) { flex-direction: row; align-items: center }
   .ac-videos .yt-grid--une .yt-card:not(:first-child) .yt-thumb { width: 48%; flex-shrink: 0; padding-bottom: 0; height: auto; aspect-ratio: 16 / 9 }
 }
+
+/* Boutique : bouton « Offrir une journée » et paiement en 4 fois (boutique.js) */
+.hero-btn--contour { border: 1px solid rgba(255,255,255,.6); color: #fff }
+.hero-btn[hidden] { display: none }
+.voie-4x:empty { display: none }
+.voie-4x { margin-top: -8px; background: #fff; border-radius: 4px; padding: 6px 10px; align-self: flex-start }

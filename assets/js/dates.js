@@ -65,7 +65,12 @@
       '</div>' +
       '<div class="date-action">' +
         (e.prix ? '<span class="date-prix">' + Math.round(e.prix) + ' €</span>' : '') +
-        (complet ? '' : '<a class="date-cta" href="' + contact + '?sujet=' + sujet(e.type) + '">Réserver</a>') +
+        // data-reserver : boutique.js ouvre la fenêtre de paiement quand la
+        // boutique est ouverte ; sinon le lien mène au formulaire de contact.
+        (complet ? '' : '<a class="date-cta" href="' + contact + '?sujet=' + sujet(e.type) + '"' +
+          ' data-reserver="' + ech(e.id) + '" data-libelle="' + ech(e.type) + '" data-prix="' + Math.round(e.prix || 0) + '"' +
+          ' data-quand="' + ech(JOURS[d.getDay()] + ' ' + d.getDate() + ' ' + MOIS[d.getMonth()] + ' ' + d.getFullYear()) + '"' +
+          ' data-lieu="' + ech(lieu) + '">Réserver</a>') +
       '</div>' +
     '</article>'
   }
@@ -77,7 +82,7 @@
 
   Promise.all([
     fetch(SB + 'events?visible_site=eq.true&date_event=gte.' + iso +
-          '&order=date_event.asc&limit=60&select=date_event,type,status,prix,nb_places,nb_inscrits,circuit_id', H)
+          '&order=date_event.asc&limit=60&select=id,date_event,type,status,prix,nb_places,nb_inscrits,circuit_id', H)
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json() }),
     // Les circuits à part : une jointure renvoyait une erreur 400 (index-sb.js).
     fetch(SB + 'circuits?select=id,nom', H)
@@ -106,6 +111,7 @@
       var bloc = el.closest('[data-dates-bloc]')
       if (bloc) bloc.hidden = false
       total += pour.length
+      document.dispatchEvent(new CustomEvent('jbe-dates-chargees'))
     }
     if (!total) {
       var liens = document.querySelectorAll('[data-si-dates]')

@@ -22,6 +22,12 @@ Fiche : `docs/chantiers/2026-11-10-boutique.md`. PayPal au lieu de Stripe, choix
 
 ---
 
+### D-219, Les vrais avis Google, lus en direct
+
+Demande de Yoan : « les vrais, pas de copier-coller ». Fonction `avis-google` : l'API officielle de Google (Places API, New) donne la note moyenne, le nombre d'avis, le lien de la fiche et les avis que Google publie (cinq au plus) ; réponse gardée six heures par Netlify. `avis.js` les affiche dans les blocs `data-avis-direct="google"`, filtrés par `data-avis-filtre="kart"` sur l'accueil et l'Académie, avec un lien vers chaque avis d'origine. Sans clé ou sans avis karting, le bloc garde ses cartes d'exemple. À fournir : `GOOGLE_PLACES_KEY` et `GOOGLE_PLACE_ID` dans Netlify. Trustpilot et TripAdvisor suivront, par leurs modules officiels, quand JB aura donné ses accès entreprise. Parcours permanent, contrôle négatif fait sur le filtre.
+
+---
+
 ## 12 novembre 2026, deux défauts du mode édition
 
 ### D-217, Le titre de l'accueil un mot par ligne, la barre d'édition trop courte

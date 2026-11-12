@@ -1507,6 +1507,33 @@ const PARCOURS = [
       return true
     })()`,
   },
+  {
+    nom: 'avis, les vrais avis Google en direct, filtres sur le karting',
+    page: 'academie.html',
+    largeur: 1300,
+    // La fonction avis-google est simulee : deux avis, dont un seul parle de
+    // karting. Le bloc de l'Academie ne garde que celui-la, avec la note
+    // moyenne et le lien vers Google.
+    prelude: `(function () {
+      var vrai = window.fetch
+      window.fetch = function (u, o) {
+        if (String(u).indexOf('/.netlify/functions/avis-google') !== -1) return Promise.resolve({ ok: true, json: function () { return Promise.resolve({
+          active: true, note: 4.9, nombre: 37, lien: 'https://maps.google.com/?cid=1',
+          avis: [{ auteur: 'Marie D.', note: 5, texte: 'Mon fils a adore sa journee de karting.', quand: 'il y a 2 mois', lien: 'https://maps.google.com/?cid=1' },
+                 { auteur: 'Paul', note: 5, texte: 'Super journee sur circuit avec ma voiture.', quand: 'il y a 1 an' }] }) } })
+        return vrai.apply(this, arguments)
+      }
+    })()`,
+    action: `null`,
+    attente: 1500,
+    attendu: `(function () {
+      var cartes = document.querySelectorAll('#avis .av--direct')
+      var resume = (document.querySelector('#avis .avis-resume') || {}).textContent || ''
+      if (cartes.length !== 1) return 'attendu un avis karting, trouve ' + cartes.length
+      if (!/4,9/.test(resume) || !/37 avis Google/.test(resume)) return 'resume : ' + resume
+      return !!document.querySelector('#avis .av--direct a[href*="maps.google"]') || 'pas de lien vers l avis d origine'
+    })()`,
+  },
 ]
 
 // ── Pourquoi ce preambule existe ────────────────────────────────────────────

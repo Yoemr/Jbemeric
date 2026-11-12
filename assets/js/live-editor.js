@@ -1934,6 +1934,30 @@ function rebuildHTML(el, newText) {
     if (bestBNi >= 0) brAfterNewWord[bestBNi] = true
   }
 
+  // Un seul passage mis en forme, collé au début ou à la fin du texte
+  // d'origine (« Jean-Baptiste Emeric <em>Apprendre à piloter</em> ») :
+  // la partie en clair garde son nombre de mots, la mise en forme prend le
+  // reste. Le placement mot par mot ci-dessus coupait le passage sur les
+  // petits mots (« à ») et le titre de l'accueil finissait un mot par ligne
+  // (12 novembre 2026).
+  var stylesSeuls = origWords.map(function (w) { return w.styled })
+  var debut = stylesSeuls.indexOf(true), fin = stylesSeuls.lastIndexOf(true)
+  var unSeul = debut >= 0 && stylesSeuls.slice(debut, fin + 1).every(Boolean)
+  if (unSeul && !brAfterWord.length && newWords.length > 1 && (fin === origWords.length - 1 || debut === 0)) {
+    var modele = origWords[debut]
+    var ouvre = '<' + modele.tag + modele.attrs + '>', ferme = '</' + modele.tag + '>'
+    var nb, avant, styles
+    if (fin === origWords.length - 1 && debut > 0) {
+      nb = Math.min(debut, newWords.length - 1)
+      avant = newWords.slice(0, nb); styles = newWords.slice(nb)
+      return avant.join(' ') + ' ' + ouvre + styles.join(' ') + ferme
+    }
+    if (debut === 0 && fin < origWords.length - 1) {
+      nb = Math.min(fin + 1, newWords.length - 1)
+      return ouvre + newWords.slice(0, nb).join(' ') + ferme + ' ' + newWords.slice(nb).join(' ')
+    }
+  }
+
   var result = ''
   for (var ri = 0; ri < newWords.length; ri++) {
     if (ri > 0) result += ' '
@@ -1945,7 +1969,8 @@ function rebuildHTML(el, newText) {
     }
     if (brAfterNewWord[ri]) result += '<br>'
   }
-  return result
+  // Deux mots voisins de même style forment un seul passage.
+  return result.replace(/<\/(em|span|strong|b|i)>(\s+)<\1>/g, '$2')
 }
 
 // ─── SAUVEGARDE TEXTE ────────────────────────
@@ -2044,12 +2069,11 @@ function buildBar(user) {
     document.body.insertBefore(bar, document.body.firstChild)
   }
   bar.style.top   = '56px'
-  var _swEl = document.createElement('div')
-  _swEl.style.cssText = 'position:absolute;top:-9999px;left:-9999px;width:50px;height:50px;overflow:scroll'
-  document.body.appendChild(_swEl)
-  var _sw = _swEl.offsetWidth - _swEl.clientWidth
-  document.body.removeChild(_swEl)
-  bar.style.right = _sw + 'px'
+  // Le document défile (snap.css depuis le 9 octobre, plus de défilement
+  // aimanté sur l'accueil depuis le 6 novembre) : une barre fixe s'arrête
+  // d'elle-même avant la barre de défilement. Le décalage mesuré qui la
+  // raccourcissait laissait un vide à droite (12 novembre 2026).
+  bar.style.right = '0'
   document.documentElement.style.scrollPaddingTop = '98px' // 56px nav + 42px barre édition
   document.body.classList.add('jbe-admin-mode')
   _bar = document.getElementById('jbe-msg')

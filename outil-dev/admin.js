@@ -132,6 +132,22 @@ const SCENARIOS = [
     },
   },
   {
+    // Le titre de l'accueil : un nom en clair, une accroche en <em>. JB a
+    // changé le nom ; l'accroche ne doit pas se couper mot par mot
+    // (12 novembre 2026, un mot par ligne).
+    nom: 'un titre nom plus accroche garde l accroche en un seul passage',
+    page: 'index.html',
+    lignes: [{ id: 'index__s_hero-accueil__div_hero-content__h1_hero-title', content: 'JB Emeric Apprendre à piloter, à tout âge' }],
+    jouer: async p => p.evaluate(() => document.querySelector('.hero-title').innerHTML),
+    attendu: r => r === 'JB Emeric <em>Apprendre à piloter, à tout âge</em>' || ('titre reconstruit : ' + r),
+  },
+  {
+    nom: 'la barre d edition occupe toute la largeur',
+    page: 'academie.html',
+    jouer: async p => p.evaluate(() => getComputedStyle(document.getElementById('jbe-bar')).right),
+    attendu: r => r === '0px' || ('marge droite de la barre : ' + r),
+  },
+  {
     nom: 'la fenetre de remplacement d une photo s ouvre',
     page: 'academie.html',
     jouer: async p => {

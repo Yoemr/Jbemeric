@@ -6,12 +6,11 @@
 (function() {
 
   // ── Logo SVG ────────────────────────────────────────────────────
-  var LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 38" width="200" height="28">' +
-    '<polygon points="14,0 25,0 11,38 0,38" fill="#0A3D91"/>' +
-    '<polygon points="32,0 43,0 29,38 18,38" fill="#0A3D91"/>' +
-    '<polygon points="50,0 61,0 47,38 36,38" fill="#0A3D91"/>' +
-    '<text x="72" y="29" font-family="\'Russo One\',sans-serif" font-size="28" fill="#FFCF00" letter-spacing="2">JB EMERIC</text>' +
-    '</svg>'
+  // Le logo officiel de JB (bandeau jaune de 2015), demandé par JB le
+  // 12 novembre 2026. Version web allégée : 720 px, 10 Ko, depuis l'original
+  // haute définition rangé à côté. L'ancien logo à trois barres est gardé
+  // dans assets/images/LOGO/logo-trois-barres.svg.
+  var LOGO_SVG = '<img class="nav-logo-img" src="/assets/images/LOGO/logo-jb-emeric-web.png" alt="JB EMERIC" width="219" height="28">'
 
   // ── Routes (source unique : routes.js) ──────────────────────────
   var R = window.ROUTES || {}

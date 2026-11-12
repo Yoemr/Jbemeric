@@ -278,3 +278,7 @@
 }
 
 /* Mobile */
+
+/* Le logo officiel, bandeau jaune (12 novembre 2026) */
+.nav-logo-img { display: block; height: 28px; width: auto; border-radius: 2px }
+@media(max-width:400px) { .nav-logo-img { height: 24px } }

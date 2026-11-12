@@ -6,13 +6,13 @@
 -- ── Réservations ────────────────────────────────────────────────────────────
 alter table inscriptions add column if not exists age integer;
 alter table inscriptions add column if not exists montant numeric;
-alter table inscriptions add column if not exists stripe_session text;
+alter table inscriptions add column if not exists paiement_ref text;
 alter table inscriptions add column if not exists bon_code text;
 alter table inscriptions add column if not exists paye_le timestamptz;
-create unique index if not exists inscriptions_stripe_session_unique on inscriptions (stripe_session) where stripe_session is not null;
+create unique index if not exists inscriptions_paiement_ref_unique on inscriptions (paiement_ref) where paiement_ref is not null;
 
--- Statuts : en_attente (ancien formulaire), attente_paiement (session Stripe
--- ouverte), payee, confirmee (bon cadeau ou validée par JB), annulee.
+-- Statuts : en_attente (ancien formulaire), attente_paiement (commande PayPal
+-- créée), payee, confirmee (bon cadeau ou validée par JB), annulee.
 alter table inscriptions drop constraint if exists inscriptions_statut_connu;
 alter table inscriptions add constraint inscriptions_statut_connu
   check (statut in ('en_attente','attente_paiement','payee','confirmee','annulee'));
@@ -58,7 +58,7 @@ create table if not exists bons_cadeaux (
   acheteur_email text,
   beneficiaire text,
   message text,
-  stripe_session text unique,
+  paiement_ref text unique,
   statut text not null default 'attente_paiement'
     check (statut in ('attente_paiement','paye','utilise','annule')),
   cree_le timestamptz not null default now(),

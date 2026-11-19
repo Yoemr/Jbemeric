@@ -82,7 +82,14 @@ function codeCadeau() {
   return 'JB-' + s.slice(0, 4) + '-' + s.slice(4)
 }
 
+// La date (avec ses places à jour) et le nom de son circuit, pour les emails.
+async function dateEtLieu(eventId) {
+  const ev = (await sb('events?id=eq.' + encodeURIComponent(eventId) + '&select=date_event,type,nb_places,nb_inscrits,circuit_id'))[0] || {}
+  const c = ev.circuit_id ? (await sb('circuits?id=eq.' + ev.circuit_id + '&select=nom'))[0] : null
+  return { ev, lieu: c ? c.nom : '' }
+}
+
 function texte(v, max) { return String(v == null ? '' : v).trim().slice(0, max || 200) }
 function emailValide(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || '')) }
 
-module.exports = { config, active, reponse, sb, paypal, euros, codeCadeau, texte, emailValide }
+module.exports = { config, active, reponse, sb, paypal, euros, codeCadeau, texte, emailValide, dateEtLieu }

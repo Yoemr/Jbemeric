@@ -14,7 +14,7 @@ const path = require('path')
 const F = path.join(__dirname, '..', 'netlify', 'functions')
 
 const vraiFetch = global.fetch
-let BASE, COMMANDES, MONTANT_ENCAISSE
+let BASE, COMMANDES, MONTANT_ENCAISSE, EMAILS = [], BREVO_EN_PANNE = false
 function remettre() {
   const demain = new Date(Date.now() + 86400e3).toISOString().slice(0, 10)
   BASE = {
@@ -24,7 +24,10 @@ function remettre() {
     ],
     formules: [{ id: 101, libelle: 'Karting enfant, la journée', prix_conseille: 195, actif: true, bon_cadeau: true }],
     inscriptions: [], bons_cadeaux: [],
+    circuits: [{ id: 1, nom: 'Circuit de Brignoles' }],
   }
+  BASE.events.forEach(e => { e.circuit_id = 1 })
+  EMAILS = []; BREVO_EN_PANNE = false
   COMMANDES = {}
   MONTANT_ENCAISSE = null
 }
@@ -52,6 +55,10 @@ global.fetch = async (url, opt) => {
     if (opt.method === 'POST') { const r = Object.assign({ id: uid() }, JSON.parse(opt.body)); rows.push(r); return ok([r], 201) }
     if (opt.method === 'PATCH') { const c = JSON.parse(opt.body); const t = filtrer(rows, u.searchParams); t.forEach(r => Object.assign(r, c)); return ok(t) }
   }
+  if (url === 'https://api.brevo.com/v3/smtp/email') {
+    if (BREVO_EN_PANNE) return ok({ message: 'panne' }, 500)
+    EMAILS.push(JSON.parse(opt.body)); return ok({ messageId: 'm' + uid() }, 201)
+  }
   if (url.endsWith('/v1/oauth2/token')) return ok({ access_token: 'jeton' })
   if (url.endsWith('/v2/checkout/orders')) {
     const c = JSON.parse(opt.body); const id = 'PP' + uid().toUpperCase()
@@ -66,7 +73,7 @@ global.fetch = async (url, opt) => {
   throw new Error('appel inattendu ' + url)
 }
 
-function charger(nom) { delete require.cache[require.resolve(path.join(F, nom))]; delete require.cache[require.resolve(path.join(F, '_boutique'))]; return require(path.join(F, nom)) }
+function charger(nom) { delete require.cache[require.resolve(path.join(F, nom))]; delete require.cache[require.resolve(path.join(F, '_boutique'))]; delete require.cache[require.resolve(path.join(F, '_emails'))]; return require(path.join(F, nom)) }
 const appel = async (nom, corps) => { const r = await charger(nom).handler({ httpMethod: 'POST', body: JSON.stringify(corps) }); return { statut: r.statusCode, corps: JSON.parse(r.body) } }
 function cles(sur) {
   if (sur) Object.assign(process.env, { SUPABASE_SERVICE_ROLE_KEY: 'svc', PAYPAL_CLIENT_ID: 'client-public', PAYPAL_SECRET: 'secret', PAYPAL_ENV: 'sandbox' })
@@ -176,6 +183,38 @@ const SCENARIOS = [
     const v2 = await appel('paiement-valider', { orderID: c.corps.orderID })
     global.fetch = f
     return (captures === 1 && v2.statut === 200) || 'encaissements : ' + captures
+  }],
+  ['sans cle Brevo, aucun email, le paiement passe', async () => {
+    delete process.env.BREVO_API_KEY
+    const c = await appel('paiement-creer', pilote)
+    const v = await appel('paiement-valider', { orderID: c.corps.orderID })
+    return (v.statut === 200 && EMAILS.length === 0) || 'emails : ' + EMAILS.length + ', ' + JSON.stringify(v)
+  }],
+  ['avec Brevo : un avis pour JB, une confirmation pour le client', async () => {
+    process.env.BREVO_API_KEY = 'brevo'
+    const c = await appel('paiement-creer', pilote)
+    await appel('paiement-valider', { orderID: c.corps.orderID })
+    delete process.env.BREVO_API_KEY
+    const jb = EMAILS.find(m => m.to[0].email === 'emeric.jb@gmail.com'), client = EMAILS.find(m => m.to[0].email === 'lea@exemple.fr')
+    if (EMAILS.length !== 2 || !jb || !client) return 'destinataires : ' + EMAILS.map(m => m.to[0].email).join(', ')
+    if (jb.sender.email !== 'jbemeric@jbemeric.com' || client.replyTo.email !== 'emeric.jb@gmail.com') return 'expediteur ou reponse : ' + JSON.stringify([jb.sender, client.replyTo])
+    if (!/Léa Martin, 9 ans/.test(jb.htmlContent) || !/Circuit de Brignoles/.test(jb.htmlContent)) return 'avis de JB incomplet'
+    return /C'est réservé/.test(client.htmlContent) || 'confirmation client incomplete'
+  }],
+  ['Brevo en panne : le paiement reste enregistre', async () => {
+    process.env.BREVO_API_KEY = 'brevo'; BREVO_EN_PANNE = true
+    const c = await appel('paiement-creer', pilote)
+    const v = await appel('paiement-valider', { orderID: c.corps.orderID })
+    delete process.env.BREVO_API_KEY
+    return (v.statut === 200 && BASE.inscriptions[0].statut === 'payee') || JSON.stringify(v) + ' ' + BASE.inscriptions[0].statut
+  }],
+  ['un bon cadeau achete envoie son code par email', async () => {
+    process.env.BREVO_API_KEY = 'brevo'
+    const c = await appel('paiement-creer', { quoi: 'cadeau', formule_id: 101, acheteur_nom: 'Paul Martin', acheteur_email: 'paul@exemple.fr', beneficiaire: 'Léa' })
+    const v = await appel('paiement-valider', { orderID: c.corps.orderID })
+    delete process.env.BREVO_API_KEY
+    const a = EMAILS.find(m => m.to[0].email === 'paul@exemple.fr')
+    return (a && a.htmlContent.includes(v.corps.code) && EMAILS.length === 2) || 'emails : ' + EMAILS.map(m => m.to[0].email).join(', ')
   }],
   ['un bon cadeau achete, puis utilise une seule fois', async () => {
     const c = await appel('paiement-creer', { quoi: 'cadeau', formule_id: 101, acheteur_nom: 'Paul Martin', acheteur_email: 'paul@exemple.fr', beneficiaire: 'Léa' })

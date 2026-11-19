@@ -9,6 +9,7 @@
 //   { quoi: 'journee', event_id, prenom, nom, age?, email, telephone?, bon_code? }
 //   { quoi: 'cadeau', formule_id, acheteur_nom, acheteur_email, beneficiaire?, message? }
 const B = require('./_boutique')
+const E = require('./_emails')
 
 async function journee(d) {
   const ev = (await B.sb('events?id=eq.' + encodeURIComponent(d.event_id) +
@@ -35,6 +36,7 @@ async function journee(d) {
     if (bon.valable_jusqu && bon.valable_jusqu < aujourdhui) return B.reponse(409, { erreur: 'Ce code cadeau a expiré.' })
     const ins = (await B.sb('inscriptions', { methode: 'POST', corps: Object.assign(fiche, { statut: 'confirmee', bon_code: code, paye_le: new Date().toISOString() }) }))[0]
     await B.sb('bons_cadeaux?id=eq.' + bon.id + '&statut=eq.paye', { methode: 'PATCH', corps: { statut: 'utilise', utilise_le: new Date().toISOString(), inscription_id: ins.id } })
+    await E.sansRisque(async () => { const d = await B.dateEtLieu(ev.id); return E.reservation(Object.assign({}, fiche, { bon_code: code }), d.ev, d.lieu) })
     return B.reponse(200, { confirme: true, date: ev.date_event, type: ev.type })
   }
 

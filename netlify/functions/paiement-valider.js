@@ -7,6 +7,7 @@
 // pas : « sans durée de validité », règle de JB dans la FAQ.
 // Appeler deux fois pour la même commande ne fait rien de plus.
 const B = require('./_boutique')
+const E = require('./_emails')
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return B.reponse(405, { erreur: 'POST seulement' })
@@ -17,8 +18,8 @@ exports.handler = async (event) => {
   if (!/^[A-Z0-9-]+$/i.test(id)) return B.reponse(400, { erreur: 'Commande inconnue.' })
 
   try {
-    const ins = (await B.sb('inscriptions?paiement_ref=eq.' + encodeURIComponent(id) + '&select=id,statut,montant,event_id'))[0]
-    const bon = ins ? null : (await B.sb('bons_cadeaux?paiement_ref=eq.' + encodeURIComponent(id) + '&select=id,statut,montant,code,libelle'))[0]
+    const ins = (await B.sb('inscriptions?paiement_ref=eq.' + encodeURIComponent(id) + '&select=id,statut,montant,event_id,prenom,nom,age,email,telephone,bon_code'))[0]
+    const bon = ins ? null : (await B.sb('bons_cadeaux?paiement_ref=eq.' + encodeURIComponent(id) + '&select=id,statut,montant,code,libelle,acheteur_nom,acheteur_email,beneficiaire,message'))[0]
     const ligne = ins || bon
     if (!ligne) return B.reponse(404, { erreur: 'Commande inconnue.' })
 
@@ -37,9 +38,13 @@ exports.handler = async (event) => {
     const maintenant = new Date().toISOString()
     if (ins) {
       await B.sb('inscriptions?id=eq.' + ins.id, { methode: 'PATCH', corps: { statut: 'payee', paye_le: maintenant } })
+      // Les emails partent après l'enregistrement du paiement, et un échec
+      // d'envoi ne change rien à la réponse : la place est payée.
+      await E.sansRisque(async () => { const d = await B.dateEtLieu(ins.event_id); return E.reservation(ins, d.ev, d.lieu) })
       return B.reponse(200, { ok: true, quoi: 'journee' })
     }
     await B.sb('bons_cadeaux?id=eq.' + bon.id, { methode: 'PATCH', corps: { statut: 'paye', paye_le: maintenant } })
+    await E.sansRisque(() => E.cadeau(bon))
     return B.reponse(200, { ok: true, quoi: 'cadeau', code: bon.code, libelle: bon.libelle })
   } catch (e) {
     console.error('[paiement-valider]', e.message)

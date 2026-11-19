@@ -28,6 +28,14 @@ Demande de Yoan : « les vrais, pas de copier-coller ». Fonction `avis-google` 
 
 ---
 
+### D-220, Les emails de la boutique, par Brevo
+
+Aperçu validé par Yoan le 19 novembre. `netlify/functions/_emails.js` : à chaque réservation payée (ou réglée par bon cadeau), un avis pour JB et une confirmation pour le client ; à chaque bon cadeau, un avis pour JB et le code pour l'acheteur. Envoi depuis jbemeric@jbemeric.com, réponses des clients vers emeric.jb@gmail.com, avis de JB vers emeric.jb@gmail.com (variables `EMAIL_EXPEDITEUR`, `EMAIL_REPONSE`, `EMAIL_JB` pour changer). Éteint sans `BREVO_API_KEY`. Un email qui échoue ne bloque jamais un paiement (contrôle négatif fait : sans cette protection, une panne de Brevo renvoyait une erreur au client alors que sa place était payée). Reste : compte Brevo, validation de l'expéditeur jbemeric@jbemeric.com, authentification du domaine (DKIM, DMARC) chez l'hébergeur de jbemeric.com, clé dans Netlify.
+
+Essai PayPal Sandbox réussi le 19 novembre : réservation payée, place décomptée, visible dans l'onglet Réservations. Corrigé au passage : le dashboard affichait « Refusé par la base » après une création réussie (réponse 201 sans corps), ce qui faisait créer des doublons.
+
+---
+
 ## 12 novembre 2026, deux défauts du mode édition
 
 ### D-217, Le titre de l'accueil un mot par ligne, la barre d'édition trop courte

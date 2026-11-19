@@ -94,6 +94,31 @@
         return
       }
 
+      // ── L'envoi direct, depuis le site (19 novembre 2026) ─────────────────
+      // La fonction contact-envoyer range le message dans le dashboard de JB
+      // et le lui envoie par email. Si elle ne répond pas, on retombe sur la
+      // messagerie du visiteur, comme avant : le message n'est jamais perdu.
+      var bouton = form.querySelector('[type=submit]')
+      if (bouton) { bouton.disabled = true; bouton.dataset.texte = bouton.textContent; bouton.textContent = 'Envoi…' }
+      fetch('/.netlify/functions/contact-envoyer', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prenom: prenom, nom: nom, email: email, telephone: tel, sujet: sujet, message: message, site_web: valeur(form, 'site_web') }),
+      }).then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status)
+        afficher(zone, '<strong>Message envoyé.</strong><br>JB vous répond rapidement, par email ou par téléphone. '
+          + 'Pour une date proche, appelez-le au <a href="tel:' + TEL_JB + '" style="color:inherit">' + TEL_LU + '</a>.', 'ok')
+        form.reset()
+      }).catch(function () {
+        secours()
+      }).then(function () {
+        if (bouton) { bouton.disabled = false; bouton.textContent = bouton.dataset.texte || 'Envoyer' }
+        var reduit2 = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        if (zone) zone.scrollIntoView({ behavior: reduit2 ? 'auto' : 'smooth', block: 'center' })
+      })
+      return
+
+      function secours() {
+
       var objet = (SUJETS[sujet] || 'Message depuis le site') + ', ' + prenom + ' ' + nom
       var corps = 'Prénom : ' + prenom + '\n'
                 + 'Nom : ' + nom + '\n'
@@ -123,8 +148,7 @@
       + 'font-family:\'DM Mono\';font-size:10px;letter-spacing:1.5px">' + TEL_LU + '</a>',
         'ok')
 
-      var reduit = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      zone.scrollIntoView({ behavior: reduit ? 'auto' : 'smooth', block: 'center' })
+      }
     })
   }
 

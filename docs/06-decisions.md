@@ -36,6 +36,12 @@ Essai PayPal Sandbox réussi le 19 novembre : réservation payée, place décomp
 
 ---
 
+### D-221, Le formulaire de contact envoie depuis le site
+
+Demande de Yoan du 10 novembre. Fonction `contact-envoyer` : le message est rangé dans la table `messages` (migration `2026-11-19-messages.sql`, appliquée) et envoyé à JB par Brevo, avec le visiteur en adresse de réponse. Un champ piège invisible écarte les robots. Si ni la base ni Brevo ne répondent, le formulaire retombe sur la messagerie du visiteur et le téléphone, comme avant. Onglet Messages dans le dashboard. Tests : trois scénarios dans `boutique.js`, un parcours dans le navigateur, contrôle négatif fait. Sans clé Brevo, les messages sont déjà rangés dans le dashboard ; l'email à JB part dès que la clé est dans Netlify.
+
+---
+
 ## 12 novembre 2026, deux défauts du mode édition
 
 ### D-217, Le titre de l'accueil un mot par ligne, la barre d'édition trop courte

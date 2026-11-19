@@ -110,9 +110,32 @@ async function cadeau(bon) {
   return 'envoye'
 }
 
+// Un message du formulaire de contact, pour JB. Répondre écrit au visiteur.
+// m : prenom, nom, email, telephone, sujet, message
+async function message(m) {
+  const r = reglages()
+  if (!r.cle) return 'eteint'
+  const html = gabarit('Nouveau message du site', tableau([
+    ['De', ech(m.prenom + ' ' + m.nom)],
+    ['Email', '<a href="mailto:' + ech(m.email) + '">' + ech(m.email) + '</a>'],
+    ['Téléphone', m.telephone ? '<a href="tel:' + ech(m.telephone) + '">' + ech(m.telephone) + '</a>' : ''],
+    ['Sujet', ech(m.sujet)],
+  ]) + '<p style="font-size:15px;line-height:1.6;white-space:pre-wrap;background:#f4f6fb;padding:14px;border-radius:6px">' + ech(m.message) + '</p>' +
+    p('Pour répondre, répondez simplement à cet email : la réponse part chez ' + ech(m.prenom) + '.') +
+    p('<a href="' + r.site + '/admin/gestion.html#messages" style="color:#0A3D91">Tous les messages dans le dashboard</a>'), r.site)
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': r.cle, 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ sender: { name: 'Site JB EMERIC', email: r.de }, to: [{ email: r.jb }], replyTo: { email: m.email, name: m.prenom + ' ' + m.nom },
+      subject: 'Message du site : ' + (m.sujet || 'demande') + ', ' + m.prenom + ' ' + m.nom, htmlContent: html }),
+  })
+  if (!res.ok) throw new Error('Brevo ' + res.status + ' ' + (await res.text()).slice(0, 200))
+  return 'envoye'
+}
+
 // Jamais d'exception vers l'appelant : le paiement est déjà fait.
 async function sansRisque(fn) {
   try { return await fn() } catch (e) { console.error('[emails]', e.message); return 'echec' }
 }
 
-module.exports = { reservation, cadeau, sansRisque }
+module.exports = { reservation, cadeau, message, sansRisque }

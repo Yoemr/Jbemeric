@@ -216,6 +216,24 @@ const SCENARIOS = [
     const a = EMAILS.find(m => m.to[0].email === 'paul@exemple.fr')
     return (a && a.htmlContent.includes(v.corps.code) && EMAILS.length === 2) || 'emails : ' + EMAILS.map(m => m.to[0].email).join(', ')
   }],
+  ['contact : le message est range et envoye a JB, reponse vers le visiteur', async () => {
+    process.env.BREVO_API_KEY = 'brevo'; BASE.messages = []
+    const r = await appel('contact-envoyer', { prenom: 'Marc', nom: 'Durand', email: 'marc@exemple.fr', sujet: 'entreprise', message: 'Bonjour, une journee pour 12 personnes ?' })
+    delete process.env.BREVO_API_KEY
+    const m = EMAILS[0]
+    if (r.statut !== 200 || BASE.messages.length !== 1) return 'rangement : ' + JSON.stringify(r) + ' ' + BASE.messages.length
+    return (m && m.to[0].email === 'emeric.jb@gmail.com' && m.replyTo.email === 'marc@exemple.fr') || 'email : ' + JSON.stringify(m && [m.to, m.replyTo])
+  }],
+  ['contact : un robot qui remplit le champ piege est ignore', async () => {
+    BASE.messages = []
+    const r = await appel('contact-envoyer', { prenom: 'Bot', nom: 'Bot', email: 'bot@exemple.fr', message: 'spam', site_web: 'http://spam' })
+    return (r.statut === 200 && BASE.messages.length === 0 && EMAILS.length === 0) || 'robot accepte'
+  }],
+  ['contact : ni base ni Brevo, la fonction le dit', async () => {
+    cles(false); BASE.messages = []
+    const r = await appel('contact-envoyer', { prenom: 'Marc', nom: 'Durand', email: 'marc@exemple.fr', message: 'Bonjour' })
+    return r.statut === 503 || 'statut : ' + r.statut
+  }],
   ['un bon cadeau achete, puis utilise une seule fois', async () => {
     const c = await appel('paiement-creer', { quoi: 'cadeau', formule_id: 101, acheteur_nom: 'Paul Martin', acheteur_email: 'paul@exemple.fr', beneficiaire: 'Léa' })
     if (c.statut !== 200) return 'achat : ' + JSON.stringify(c)

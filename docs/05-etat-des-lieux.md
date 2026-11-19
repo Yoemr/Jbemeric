@@ -964,3 +964,10 @@ Le reste, trié selon `CLAUDE.md` : les améliorations et les décisions qui rev
 
 - `assets/js/texte-propre.js` : majuscules oubliées, ponctuation, espaces, à l'enregistrement, dans les pages et le dashboard.
 - Restent : réservation et paiement, bons cadeaux, emails automatiques, import des vrais avis.
+
+## Mise à jour du 19 novembre 2026, boutique, emails, contact (D-218 à D-221)
+
+- Boutique PayPal en Sandbox, active : essai de paiement réussi le 19 novembre. Variables Netlify posées sur le compte yoan.emeric@gmail.com (le site n'est pas sur l'autre compte Netlify).
+- Emails Brevo (réservation, bon cadeau, message de contact) : code prêt, éteint jusqu'à `BREVO_API_KEY`. JB a déjà un compte Brevo ; domaine jbemeric.com chez OVH, DNS à régler.
+- Formulaire de contact : envoi direct, messages rangés dans le dashboard.
+- Restent : avis Google (clé), Trustpilot et TripAdvisor, passage PayPal en réel, réunir les deux comptes Netlify.

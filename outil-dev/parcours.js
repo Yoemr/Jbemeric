@@ -1537,6 +1537,33 @@ const PARCOURS = [
       return !!document.querySelector('#avis .av--direct a[href*="maps.google"]') || 'pas de lien vers l avis d origine'
     })()`,
   },
+  {
+    nom: 'formulaire de contact, l envoi direct depuis le site',
+    page: 'admin/legal/contact.html',
+    largeur: 1300,
+    // La fonction contact-envoyer est simulee : elle repond 200.
+    prelude: `(function () {
+      window.__contact = null
+      var vrai = window.fetch
+      window.fetch = function (u, o) {
+        if (String(u).indexOf('/.netlify/functions/contact-envoyer') !== -1) { window.__contact = JSON.parse(o.body); return Promise.resolve({ ok: true, status: 200, json: function () { return Promise.resolve({ ok: true }) } }) }
+        return vrai.apply(this, arguments)
+      }
+    })()`,
+    action: `(function () {
+      var f = document.querySelector('form[data-contact]')
+      f.elements.prenom.value = 'Marc'; f.elements.nom.value = 'Durand'; f.elements.email.value = 'marc@exemple.fr'
+      f.elements.message.value = 'Bonjour JB'
+      f.querySelector('[type=submit]').click()
+    })()`,
+    attente: 800,
+    attendu: `(function () {
+      var z = document.getElementById('contact-alert')
+      if (!window.__contact || window.__contact.prenom !== 'Marc') return 'rien n est parti vers contact-envoyer'
+      if ('site_web' in window.__contact && window.__contact.site_web) return 'le champ piege est rempli par un humain'
+      return /Message envoyé/.test(z.textContent) || ('message affiche : ' + z.textContent.slice(0, 120))
+    })()`,
+  },
 ]
 
 // ── Pourquoi ce preambule existe ────────────────────────────────────────────

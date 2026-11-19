@@ -18,7 +18,7 @@ Fiche : `docs/chantiers/2026-11-10-boutique.md`. PayPal au lieu de Stripe, choix
 - **Boutique éteinte tant que les clés manquent** : « Réserver » mène au formulaire de contact, comme avant.
 - **Dashboard** : onglets Réservations et Bons cadeaux.
 - **Banc** `outil-dev/boutique.js` : neuf scénarios contre une fausse base et un faux PayPal (prix relu en base, date complète, montant encaissé différent, double validation, bon à usage unique), deux dans le navigateur. Contrôles négatifs faits sur le prix, le montant et la case des conditions.
-- **Reste pour ouvrir** : appliquer la migration `2026-11-10-boutique.sql` (validation de Yoan dans Supabase) ; ranger dans Netlify `SUPABASE_SERVICE_ROLE_KEY`, `PAYPAL_CLIENT_ID`, `PAYPAL_SECRET`, `PAYPAL_ENV=sandbox` ; un essai complet dans le bac à sable ; puis le passage en `live`.
+- **Reste pour ouvrir** : migration appliquée le 19 novembre ; application PayPal Sandbox créée le même jour (compte de test Business). Ranger dans Netlify `SUPABASE_SERVICE_ROLE_KEY`, `PAYPAL_CLIENT_ID`, `PAYPAL_SECRET`, `PAYPAL_ENV=sandbox` ; un essai complet dans le bac à sable ; puis le passage en `live`.
 
 ---
 

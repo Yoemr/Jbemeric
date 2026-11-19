@@ -53,7 +53,10 @@ window.JBE = (function () {
       body: options.corps ? JSON.stringify(options.corps) : undefined,
     }).then(function (r) {
       if (!r.ok) return r.text().then(function (t) { throw new Error(t || ('HTTP ' + r.status)) })
-      return r.status === 204 ? null : r.json()
+      // Une création répond 201 sans corps : lire du JSON là-dessus levait
+      // « Unexpected end of JSON input » alors que la ligne était bien créée,
+      // et JB recliquait, d'où des doublons (19 novembre 2026).
+      return r.text().then(function (t) { return t ? JSON.parse(t) : null })
     })
   }
 

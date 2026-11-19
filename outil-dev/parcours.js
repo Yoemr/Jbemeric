@@ -198,7 +198,9 @@ const PRELUDE_GESTION = `(function () {
       var rep = u.indexOf('rpc/veille_passer') !== -1
         ? [{ source:'Circuit du Var, agenda', statut:200, trouves:18, nouveaux:2, message:null }]
         : [{}]
-      return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve(rep) } })
+      // Comme la vraie base : une creation repond 201 sans corps.
+      if (opt.method === 'POST' && u.indexOf('rpc/') === -1) return Promise.resolve({ ok:true, status:201, text:function(){ return Promise.resolve('') }, json:function(){ return Promise.reject(new SyntaxError('Unexpected end of JSON input')) } })
+      return Promise.resolve({ ok:true, status:200, text:function(){ return Promise.resolve(JSON.stringify(rep)) }, json:function(){ return Promise.resolve(rep) } })
     }
     var jeu = u.indexOf('/faq?') !== -1 ? FAQ
             : u.indexOf('/events?') !== -1 ? EV
@@ -207,7 +209,7 @@ const PRELUDE_GESTION = `(function () {
             : u.indexOf('/veille_reglages?') !== -1 ? REGLAGES
             : u.indexOf('/formules?') !== -1 ? FORMULES
             : CIRCUITS
-    return Promise.resolve({ ok:true, status:200, json:function(){ return Promise.resolve(jeu) } })
+    return Promise.resolve({ ok:true, status:200, text:function(){ return Promise.resolve(JSON.stringify(jeu)) }, json:function(){ return Promise.resolve(jeu) } })
   }
 })()`
 
@@ -1427,6 +1429,7 @@ const PARCOURS = [
       var e = (window.__envois || []).filter(function (x) { return x.methode === 'POST' })
       if (e.length !== 1) return 'attendu une creation, trouve ' + e.length
       if (e[0].url.indexOf('events') !== 0) return 'mauvaise table : ' + e[0].url
+      if (/Refus/.test(document.getElementById('g-message').textContent)) return 'message d erreur apres une creation reussie : ' + document.getElementById('g-message').textContent
       var c = JSON.parse(e[0].corps)
       if (c.formule_id !== 101) return 'formule_id non numerique ou absent : ' + JSON.stringify(c.formule_id)
       if (c.type !== 'Karting enfant, la journée') return 'le nom de la formule n est pas repris : ' + c.type

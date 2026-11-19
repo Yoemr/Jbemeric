@@ -135,7 +135,7 @@ const SCENARIOS = [
     cles(false)
     const r = await charger('paiement-config').handler({})
     const c = JSON.parse(r.body)
-    return c.active === false || 'config : ' + r.body
+    return (c.active === false && c.manque.length === 3) || 'config : ' + r.body
   }],
   ['avec les cles, seul l identifiant public sort', async () => {
     const r = await charger('paiement-config').handler({}); const t = r.body

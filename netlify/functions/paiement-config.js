@@ -4,7 +4,12 @@
 const { config, active, reponse } = require('./_boutique')
 
 exports.handler = async () => {
-  if (!active()) return reponse(200, { active: false })
+  // Les noms des variables absentes, jamais leurs valeurs : de quoi savoir
+  // ce qu'il reste à ranger dans Netlify sans rien dévoiler.
+  if (!active()) {
+    const manque = ['SUPABASE_SERVICE_ROLE_KEY', 'PAYPAL_CLIENT_ID', 'PAYPAL_SECRET'].filter(k => !process.env[k])
+    return reponse(200, { active: false, manque: manque, contexte: process.env.CONTEXT || null })
+  }
   const c = config()
   return reponse(200, { active: true, clientId: c.ppId, env: c.ppEnv })
 }

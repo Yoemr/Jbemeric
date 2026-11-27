@@ -7,10 +7,12 @@
 //     est stockée dans sessionStorage ('jbe_return_url').
 //   - Après login/signup réussi, on y redirige ; fallback = '/'.
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+// Version figée : @2 servait la dernière 2.x à chaque visite, et le
+// comportement en panne en dépend. Monter la version exprès, après essai.
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/+esm'
 
-var SB_URL  = 'https://fyaybxamuabawerqzuud.supabase.co'
-var SB_ANON = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
+export var SB_URL  = 'https://fyaybxamuabawerqzuud.supabase.co'
+export var SB_ANON = 'sb_publishable_9XPoYkZmVACEtI6UfPRhYg_3RAfWXFD'
 
 export var sb = createClient(SB_URL, SB_ANON)
 
@@ -31,6 +33,13 @@ export function consumeReturnUrl() {
     if (/\/admin\/(login|signup|mot-de-passe-oublie)\.html/.test(v)) return fallback
     return v
   } catch (e) { return fallback }
+}
+
+// ── Nouveau mot de passe, après le lien « mot de passe oublié » ──
+export async function updatePassword(password) {
+  var res = await sb.auth.updateUser({ password: password })
+  if (res.error) throw res.error
+  return res.data
 }
 
 // ── Login email/password ──────────────────────────────────────────
@@ -74,5 +83,8 @@ export function humanError(err) {
   if (/User already registered/i.test(msg))  return 'Un compte existe déjà avec cet email.'
   if (/Password should be/i.test(msg))       return 'Mot de passe trop court (8 caractères minimum).'
   if (/rate limit/i.test(msg))               return 'Trop de tentatives. Réessayez dans quelques minutes.'
+  if (/Failed to fetch|NetworkError|Load failed|timeout/i.test(msg))
+    return 'Connexion impossible pour le moment. Réessayez dans quelques minutes ou appelez JB au 06 60 18 87 87.'
+  if (/same.*password|different from the old/i.test(msg)) return 'Choisissez un mot de passe différent de l\'ancien.'
   return msg
 }

@@ -41,6 +41,10 @@
     trackday:  'Track-Day en voiture personnelle',
     coaching:  'Coaching vidéo',
     karting:   'Karting enfant',
+    'karting-adulte': 'Karting adulte',
+    entreprise: 'Karting pour une entreprise ou un CE',
+    colonie:   'Karting pour une colonie ou un centre de loisirs',
+    course:    'Course de karting',
     challenge: 'Vers la compétition',
     autre:     'Demande de renseignements',
   }
@@ -63,6 +67,17 @@
   function brancher(form) {
     var zone = document.getElementById(form.getAttribute('data-contact-alert') || 'contact-alert')
 
+    // ?sujet=entreprise dans l'adresse : le bouton « Demander un devis » d'une
+    // page d'offre arrive avec le bon sujet déjà choisi. Une valeur inconnue
+    // laisse le choix vide.
+    var demande = window.URLSearchParams ? new URLSearchParams(location.search).get('sujet') : null
+    var choix = form.elements['sujet']
+    if (demande && choix && choix.options) {
+      for (var o = 0; o < choix.options.length; o++) {
+        if (choix.options[o].value === demande) { choix.value = demande; break }
+      }
+    }
+
     form.addEventListener('submit', function (ev) {
       // Sans ceci, le navigateur recharge la page et le message est perdu.
       ev.preventDefault()
@@ -78,6 +93,31 @@
         afficher(zone, 'Il manque votre prénom, votre nom, votre email ou votre message.', 'err')
         return
       }
+
+      // ── L'envoi direct, depuis le site (19 novembre 2026) ─────────────────
+      // La fonction contact-envoyer range le message dans le dashboard de JB
+      // et le lui envoie par email. Si elle ne répond pas, on retombe sur la
+      // messagerie du visiteur, comme avant : le message n'est jamais perdu.
+      var bouton = form.querySelector('[type=submit]')
+      if (bouton) { bouton.disabled = true; bouton.dataset.texte = bouton.textContent; bouton.textContent = 'Envoi…' }
+      fetch('/.netlify/functions/contact-envoyer', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prenom: prenom, nom: nom, email: email, telephone: tel, sujet: sujet, message: message, site_web: valeur(form, 'site_web') }),
+      }).then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status)
+        afficher(zone, '<strong>Message envoyé.</strong><br>JB vous répond rapidement, par email ou par téléphone. '
+          + 'Pour une date proche, appelez-le au <a href="tel:' + TEL_JB + '" style="color:inherit">' + TEL_LU + '</a>.', 'ok')
+        form.reset()
+      }).catch(function () {
+        secours()
+      }).then(function () {
+        if (bouton) { bouton.disabled = false; bouton.textContent = bouton.dataset.texte || 'Envoyer' }
+        var reduit2 = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        if (zone) zone.scrollIntoView({ behavior: reduit2 ? 'auto' : 'smooth', block: 'center' })
+      })
+      return
+
+      function secours() {
 
       var objet = (SUJETS[sujet] || 'Message depuis le site') + ', ' + prenom + ' ' + nom
       var corps = 'Prénom : ' + prenom + '\n'
@@ -108,7 +148,7 @@
       + 'font-family:\'DM Mono\';font-size:10px;letter-spacing:1.5px">' + TEL_LU + '</a>',
         'ok')
 
-      zone.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
     })
   }
 

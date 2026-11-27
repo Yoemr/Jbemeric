@@ -21,6 +21,28 @@
 
 ## 2. L'arbre actuel
 
+### Ce qui se voit, au 5 novembre 2026
+
+Décisions D-186 (karting seul), D-207 (palmarès), D-209 (groupes), D-210 (courses masquées). Liste qui fait foi : `outil-dev/audit/perimetre.js`.
+
+```
+Accueil                 index.html
+Académie ▾              academie.html
+  Karting enfant        academie/karting-enfant.html
+  Karting adulte        academie/karting-adulte.html
+Groupes ▾               (pas de page à lui)
+  Entreprises et CE     groupes/karting-entreprise.html
+  Colonies et centres   groupes/karting-colonie.html
+Palmarès                paddock/palmares.html
+Hors menu               contact, mentions légales, confidentialité, connexion
+
+Masquées, sans suppression (section 5 de theme.css) :
+  Compétition, Coaching, Événements, Paddock, Bibliothèque, création de compte,
+  Courses de karting (courses-karting.html), boutique
+```
+
+### L'arbre d'août 2026, gardé pour mémoire
+
 Établi d'après `assets/js/nav.js`, qui fabrique le menu réel.
 
 ```

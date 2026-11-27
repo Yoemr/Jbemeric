@@ -28,6 +28,7 @@
     cle:   'faq',
     titre: 'FAQ',
     table: 'faq',
+    voir:  '/academie.html#faq',
     tri:   'ordre.asc',
 
     nommer: function (l) { return l.question },
@@ -58,9 +59,9 @@
     ],
 
     champs: [
-      { cle: 'question', titre: 'La question', obligatoire: true,
+      { cle: 'question', titre: 'La question', obligatoire: true, propre: true,
         aide: 'Telle qu\'un visiteur se la poserait, avec le point d\'interrogation.' },
-      { cle: 'reponse', titre: 'La réponse', type: 'texte-long', lignes: 7, obligatoire: true,
+      { cle: 'reponse', titre: 'La réponse', type: 'texte-long', lignes: 7, obligatoire: true, propre: true,
         aide: 'Du texte simple. Une ligne vide fait un nouveau paragraphe.' },
       { cle: 'tags', titre: 'Sur quelles pages ?', type: 'cases', options: PAGES, obligatoire: true,
         aide: 'La question apparaît sur toutes les pages cochées. Académie couvre aussi karting enfant, karting adulte et compétition.' },

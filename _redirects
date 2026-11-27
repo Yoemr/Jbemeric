@@ -27,6 +27,10 @@
 /coaching        /coaching.html                       301
 /palmares        /paddock/palmares.html               301
 /contact         /admin/legal/contact.html            301
+/entreprises     /groupes/karting-entreprise.html     301
+/ce              /groupes/karting-entreprise.html     301
+/colonies        /groupes/karting-colonie.html        301
+/courses         /courses-karting.html                301
 /inscription     /admin/signup.html                   301
 /connexion       /admin/login.html                    301
 /academie-pilotage /academie.html                     301
@@ -62,3 +66,9 @@
 /docs/*          /404-atelier    404!
 /outil-dev/*     /404-atelier    404!
 /.claude/*       /404-atelier    404!
+# Audit du 9 octobre 2026 : les fichiers de la racine et l'archive suivent
+# la meme regle. CLAUDE.md raconte la faillite de l'entreprise, old/ garde
+# l'ancienne strategie commerciale.
+/CLAUDE.md       /404-atelier    404!
+/old/*           /404-atelier    404!
+/serveur.bat     /404-atelier    404!

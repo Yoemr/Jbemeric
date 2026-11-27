@@ -18,12 +18,21 @@ function notifyMirrorLoaded() {
 // ─────────────────────────────────────────────────────────────
 //  INIT
 // ─────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function () {
+// Un module en attente retarde DOMContentLoaded : live-editor.js importe
+// supabase-js depuis jsdelivr, et jsdelivr lent laissait les portes de
+// l'accueil vides, indéfiniment s'il ne répondait pas. Passé 2,5 s, elles
+// se posent quand même. Le script est en defer : le DOM est déjà prêt.
+var _demarre = false
+function demarrer() {
+  if (_demarre) return
+  _demarre = true
   mirrorAcademie()
   mirrorCoaching()
   mirrorTrack()
   mirrorPaddock()
-})
+}
+document.addEventListener('DOMContentLoaded', demarrer)
+setTimeout(demarrer, 2500)
 
 // ─────────────────────────────────────────────────────────────
 //  HELPERS
@@ -52,6 +61,13 @@ function getTarget(id) {
   return document.getElementById(id)
 }
 
+// Une cible masquée (section d'une page cachée, theme.css section 5) ne
+// déclenche aucun chargement : inutile d'aller chercher coaching.html ou les
+// événements pour remplir un bloc que personne ne voit.
+function estAffiche(el) {
+  return !!(el && el.getClientRects().length)
+}
+
 function setLoading(target) {
   if (!target) return
   target.innerHTML = ''
@@ -77,25 +93,28 @@ function injectSkeletonCSS() {
 }
 
 // ─────────────────────────────────────────────────────────────
-//  ACADÉMIE : extrait les 3 portes + le parcours de academie.html
+//  ACADÉMIE : les voies de academie.html#parcours, en portes
 // ─────────────────────────────────────────────────────────────
+// La source était la section #portes, retirée de academie.html le 14 août
+// 2026 comme doublon. Depuis ce jour, l'accueil affichait « Contenu non
+// disponible » en lieu et place de l'Académie, à 40 % d'opacité, donc
+// invisible. La source est maintenant la frise des voies, qui existe pour
+// de bon : une voie = une .tl-step, qui porte sa photo (data-photo), sa
+// couleur (data-porte) et, si sa page est masquée, son data-route.
+// Le data-route est recopié sur la porte et sur sa place dans le bandeau :
+// la règle de theme.css section 5 les masque ici comme là-bas.
 function mirrorAcademie() {
   var target = getTarget('mirror-academie')
-  if (!target) return
+  if (!estAffiche(target)) return
   setLoading(target)
 
-  fetch('academie.html', { cache: 'no-store' })
-    .then(function(res) {
-      if (!res.ok) throw new Error('academie.html -> ' + res.status)
-      return res.text()
-    })
-    .then(function(html) {
-      var parser = new DOMParser()
-      var doc = parser.parseFromString(html, 'text/html')
-      var portesEl   = doc.getElementById('portes')
-      var parcoursEl = doc.getElementById('parcours')
-      if (!portesEl) throw new Error('#portes introuvable dans academie.html')
-      target.innerHTML = buildAcademieCards(portesEl, parcoursEl)
+  // La citation du formateur vient de la même page : JB la modifie là-bas.
+  var citation = fetchSection('academie.html', 'jb-quote-formateur').catch(function () { return null })
+  Promise.all([fetchSection('academie.html', 'parcours'), citation])
+    .then(function (r) {
+      var html = buildAcademieCards(r[0], r[1])
+      if (!html) throw new Error('aucune voie dans academie.html#parcours')
+      target.innerHTML = html
       notifyMirrorLoaded()
     })
     .catch(function (err) {
@@ -104,47 +123,83 @@ function mirrorAcademie() {
     })
 }
 
-function buildAcademieCards(section, parcours) {
-  var portes = section.querySelectorAll('.porte')
-  if (!portes.length) return ''
+function attrRoute(el) {
+  var r = el && el.getAttribute('data-route')
+  return r ? ' data-route="' + ech(r) + '"' : ''
+}
 
-  // Extraire données des 3 portes
-  var data = []
-  var hrefs = [R.karting || 'academie-karting.html', R.competition || 'academie-competition.html']
-  for (var i = 0; i < portes.length; i++) {
-    var p = portes[i]
-    var onclick = p.getAttribute('onclick') || ''
-    var hrefMatch = onclick.match(/'([^']+)'/)
-    data.push({
-      href:  hrefMatch ? hrefMatch[1] : hrefs[i] || 'academie.html',
-      cls:   p.className,
-      inner: p.innerHTML
+function ech(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
+function texte(el, sel) {
+  var x = el.querySelector(sel)
+  return x ? x.textContent.trim() : ''
+}
+
+// Section Académie de l'accueil (D-211, 5 novembre 2026) : trois cartes,
+// enfant et adulte lues dans academie.html#parcours, groupes écrite ici,
+// puis la bande du formateur. Une voie masquée (data-route) disparaît avec
+// sa page, par la section 5 de theme.css.
+function buildAcademieCards(parcours, citationEl) {
+  var steps = parcours.querySelectorAll('.tl-step')
+  if (!steps.length) return ''
+  var R = window.ROUTES || {}
+
+  function carte(c) {
+    return '<a href="' + ech(c.href) + '" class="acad-carte' + (c.sombre ? ' acad-carte--sombre' : '') + '"' + (c.route || '') + '>' +
+      (c.photo ? '<img src="' + ech(c.photo) + '" alt="' + ech(c.alt) + '" loading="lazy">' : '') +
+      '<div class="acad-carte-corps">' +
+        '<span class="acad-carte-tag">' + ech(c.tag) + '</span>' +
+        '<h3 class="acad-carte-titre">' + ech(c.titre) + '</h3>' +
+        '<p class="acad-carte-texte">' + ech(c.texte) + '</p>' +
+        '<span class="acad-carte-cta">' + ech(c.cta) + ' →</span>' +
+      '</div>' +
+    '</a>'
+  }
+
+  var html = '<div class="acad-bloc">' +
+    '<div class="acad-cartes-tete">' +
+      '<p class="acad-kicker">Trois façons de rouler</p>' +
+      '<h2 class="acad-titre">Pour un enfant, pour vous, pour votre équipe.</h2>' +
+    '</div>' +
+    '<div class="acad-cartes">'
+  for (var i = 0; i < steps.length; i++) {
+    var st = steps[i], lien = st.querySelector('.tl-link')
+    html += carte({
+      href:  lien ? lien.getAttribute('href') : 'academie.html',
+      cta:   lien ? lien.textContent.trim() : 'Découvrir',
+      titre: texte(st, '.tl-badge'),
+      tag:   texte(st, '.tl-name'),
+      texte: texte(st, '.tl-desc'),
+      photo: st.getAttribute('data-photo') || '',
+      alt:   texte(st, '.tl-badge') + ', ' + texte(st, '.tl-name'),
+      route: attrRoute(st)
     })
   }
+  html += carte({
+    href: R.kartingEntreprise || '/groupes/karting-entreprise.html',
+    cta: 'Demander un devis', titre: 'Groupes', tag: 'Entreprises, CE, colonies',
+    texte: 'Découverte ou endurance par équipes, à la demi-journée ou à la journée. Exemple : 2 heures d\'endurance, 390 € par équipe.',
+    photo: 'assets/images/jb-emeric-briefing-enfants.jpg',
+    alt: 'Jean-Baptiste Emeric montre le plan de piste à deux enfants', sombre: true
+  })
+  html += '</div></div>'
 
-  if (data.length < 2) return ''
-
-  // Layout B : grande porte gauche + 2 vignettes droite
-  var html = '<div class="acad-layout">'
-
-  // Grande porte principale (Karting Enfant)
-  html += '<a href="' + data[0].href + '" class="acad-main ' + data[0].cls + '">'
-  html += data[0].inner
-  html += '</a>'
-
-  // Deux vignettes droite
-  html += '<div class="acad-side">'
-  for (var j = 1; j < data.length; j++) {
-    html += '<a href="' + data[j].href + '" class="acad-side-item ' + data[j].cls + '">'
-    html += data[j].inner
-    html += '</a>'
-  }
-  html += '</div>'
-
-  // Bandeau parcours en bas : miroir de academie.html#parcours
-  html += buildParcoursBar(parcours)
-
-  html += '</div>'
+  var citation = citationEl ? citationEl.textContent.trim() : ''
+  html += '<div class="acad-formateur">' +
+    '<img class="acad-formateur-photo" src="assets/images/Jean Baptiste EMERIC.png" alt="Portrait de Jean-Baptiste Emeric" loading="lazy">' +
+    '<div class="acad-formateur-corps">' +
+      '<p class="acad-kicker">Le formateur</p>' +
+      '<h2 class="acad-titre">Jean-Baptiste Emeric</h2>' +
+      (citation ? '<blockquote class="acad-formateur-citation">« ' + ech(citation) + ' »</blockquote>' : '') +
+      '<ul class="acad-formateur-titres">' +
+        '<li>BPJEPS Sport automobile, mention Circuit</li><li>Volant Palmyr 1987</li><li>Formule Ford, F3, Sport Prototype</li>' +
+      '</ul>' +
+      '<a class="acad-formateur-lien" href="' + ech(R.palmares || '/paddock/palmares.html') + '">Voir le palmarès →</a>' +
+    '</div>' +
+  '</div>'
   return html
 }
 
@@ -167,8 +222,9 @@ function buildParcoursBar(parcours) {
       var numCls   = 'acad-step-n'
       var numDisp  = num
 
-      if (i > 0) html += '<span class="acad-arrow">→</span>'
-      html += '<div class="' + stepCls + '">'
+      var route = attrRoute(step)
+      if (i > 0) html += '<span class="acad-arrow"' + route + '>→</span>'
+      html += '<div class="' + stepCls + '"' + route + '>'
       html += '<span class="' + numCls + '">' + numDisp + '</span>'
       html += '<div class="acad-step-info">'
       html += '<div class="acad-step-name">' + badge + '</div>'
@@ -183,7 +239,7 @@ function buildParcoursBar(parcours) {
     html += '<span class="acad-arrow">→</span>'
     html += '<div class="acad-step"><span class="acad-step-n">03</span><div class="acad-step-info"><div class="acad-step-name">Compétition</div><div class="acad-step-sub">Kart 125cc · Monoplace · Voiture de course</div></div></div>'
     html += '<span class="acad-arrow">→</span>'
-    html += '<div class="acad-step acad-step-champion"><span class="acad-step-n acad-step-star">★</span><div class="acad-step-info"><div class="acad-step-name">Champion</div><div class="acad-step-sub">France 1988 · JB EMERIC</div></div></div>'
+    html += '<div class="acad-step acad-step-champion"><span class="acad-step-n acad-step-star">★</span><div class="acad-step-info"><div class="acad-step-name">Volant Palmyr</div><div class="acad-step-sub">1987 · JB EMERIC</div></div></div>'
   }
 
   html += '<a href="academie.html" class="acad-parcours-cta">Découvrir l\'Académie →</a>'
@@ -196,7 +252,7 @@ function buildParcoursBar(parcours) {
 // ─────────────────────────────────────────────────────────────
 function mirrorCoaching() {
   var target = getTarget('mirror-coaching')
-  if (!target) return
+  if (!estAffiche(target)) return
   setLoading(target)
 
   fetchSection('coaching.html', 'formules')
@@ -279,7 +335,7 @@ function buildCoachingCards(section) {
 // ─────────────────────────────────────────────────────────────
 function mirrorTrack() {
   var target = getTarget('mirror-track')
-  if (!target) return
+  if (!estAffiche(target)) return
   setLoading(target)
 
   var SB_URL  = 'https://fyaybxamuabawerqzuud.supabase.co'
@@ -388,7 +444,7 @@ function buildTrackCards(section) {
 // ─────────────────────────────────────────────────────────────
 function mirrorPaddock() {
   var target = getTarget('mirror-paddock')
-  if (!target) return
+  if (!estAffiche(target)) return
   setLoading(target)
 
   var SB_URL = 'https://fyaybxamuabawerqzuud.supabase.co'

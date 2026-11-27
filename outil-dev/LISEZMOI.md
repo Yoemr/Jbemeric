@@ -14,8 +14,11 @@ Seul `build-cache.js` tourne en production, appelé par `netlify.toml` au moment
 | `node outil-dev/base.js` | ce qui est enregistré dans Supabase est-il correct |
 | `node outil-dev/fumee.js` | les pages tournent-elles sans erreur |
 | `node outil-dev/parcours.js` | les boutons font-ils quelque chose |
+| `node outil-dev/visiteur.js --base=<instantané>` | que voit le visiteur une fois les textes de la base appliqués |
 
-Les deux derniers ont besoin du serveur local : `node outil-dev/dev-server.js`.
+Les trois derniers ont besoin du serveur local : `node outil-dev/dev-server.js`.
+
+**`visiteur.js` sert dans les sessions cloud**, où jsdelivr et Supabase sont bloqués et où le live-editor ne tourne donc jamais. Il rejoue un instantané de la base, la requête qui le produit est dans son en-tête. Sur un poste qui joint Supabase, `fumee.js` voit déjà la base, puisque le live-editor s'y charge pour de vrai.
 
 **Pourquoi quatre et pas un.** Chacun voit ce que les autres ne voient pas. L'audit a annoncé zéro faute pendant trois jours pendant que la base servait un tiret cadratin et une BMW en dotation. Un site correct dans son dépôt peut mentir à ses visiteurs.
 

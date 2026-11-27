@@ -53,7 +53,10 @@ window.JBE = (function () {
       body: options.corps ? JSON.stringify(options.corps) : undefined,
     }).then(function (r) {
       if (!r.ok) return r.text().then(function (t) { throw new Error(t || ('HTTP ' + r.status)) })
-      return r.status === 204 ? null : r.json()
+      // Une création répond 201 sans corps : lire du JSON là-dessus levait
+      // « Unexpected end of JSON input » alors que la ligne était bien créée,
+      // et JB recliquait, d'où des doublons (19 novembre 2026).
+      return r.text().then(function (t) { return t ? JSON.parse(t) : null })
     })
   }
 
@@ -364,7 +367,11 @@ window.JBE = (function () {
     var zone = document.getElementById('g-contenu')
     zone.innerHTML = '<div class="g-attente">Chargement…</div>'
 
-    requete((def.vue || def.table) + '?select=' + (def.select || '*') + '&order=' + (def.tri || 'created_at.desc'))
+    // restreindre : un filtre fixe, au format de Supabase, que l'onglet ne
+    // montre jamais à JB. Par exemple « formule_id=not.is.null » pour ne
+    // garder que les dates karting d'une table qui en contient d'autres.
+    requete((def.vue || def.table) + '?select=' + (def.select || '*') + '&order=' + (def.tri || 'created_at.desc') +
+            (def.restreindre ? '&' + def.restreindre : ''))
       .then(function (toutes) {
         zone.__toutes = toutes
         dessiner(def, toutes)
@@ -393,6 +400,9 @@ window.JBE = (function () {
             // La Veille y met jusqu'où elle regarde.
             (def.entete ? '<div class="g-tete-reglage" id="g-tete-reglage"></div>' : '') +
             '<div class="g-tete-boutons">' +
+              // voir : la page où ce contenu s'affiche. L'inverse du bouton
+              // « Modifier dans le dashboard » que le live-editor pose sur la page.
+              (def.voir ? '<a class="g-btn" href="' + ech(def.voir) + '" target="_blank" rel="noopener">Voir sur le site ↗</a>' : '') +
               (def.boutonsTete || []).map(function (b) {
                 return '<button class="g-btn ' + ech(b.classe || '') + '" data-tete="' + ech(b.cle) + '">'
                      + ech(b.titre) + '</button>'
@@ -499,6 +509,8 @@ window.JBE = (function () {
       var groupe = m.querySelector('[data-champ="' + c.cle + '"]')
       if (!groupe) return
       var v = lireChamp(groupe, c)
+      // propre : la protection d'écriture de texte-propre.js, champ par champ.
+      if (c.propre && typeof v === 'string' && window.JBE_TEXTE) v = proprifier(c, v, m.dataset.id)
       if (c.obligatoire && (v == null || v === '' || (Array.isArray(v) && !v.length))) manquants.push(c.titre)
       valeurs[c.cle] = v
     })
@@ -513,6 +525,16 @@ window.JBE = (function () {
     formulaireCourant = null
   }
 
+  // Le modèle de casse d'un champ : sa valeur avant modification. Les
+  // graphies (sigles, noms propres) s'apprennent dans les autres lignes de
+  // la table. Voir texte-propre.js.
+  function proprifier(champ, valeur, id) {
+    var toutes = document.getElementById('g-contenu').__toutes || []
+    var avant = toutes.filter(function (l) { return String(l.id) === String(id) })[0]
+    var lexique = toutes.map(function (l) { return l[champ.cle] }).filter(function (x) { return typeof x === 'string' })
+    return window.JBE_TEXTE.proteger(valeur, { modele: avant ? avant[champ.cle] : '', lexique: lexique })
+  }
+
   function enregistrer(def) {
     var m = document.getElementById('g-modale')
     var corps = {}
@@ -521,12 +543,17 @@ window.JBE = (function () {
       var groupe = m.querySelector('[data-champ="' + c.cle + '"]')
       if (!groupe) return
       var v = lireChamp(groupe, c)
+      // propre : la protection d'écriture de texte-propre.js, champ par champ.
+      if (c.propre && typeof v === 'string' && window.JBE_TEXTE) v = proprifier(c, v, m.dataset.id)
       if (c.obligatoire && (v == null || v === '' || (Array.isArray(v) && !v.length))) manquants.push(c.titre)
       corps[c.cle] = v
     })
     if (manquants.length) { dire('Il manque : ' + manquants.join(', '), 'err'); return }
 
     var id = m.dataset.id
+    // completer : l'onglet remplit ce qui se déduit du reste avant l'envoi,
+    // le nom d'une date d'après sa formule par exemple. JB n'a pas à le saisir.
+    if (def.completer) corps = def.completer(corps, id) || corps
     var p = id
       ? requete(def.table + '?id=eq.' + encodeURIComponent(id), { methode: 'PATCH', corps: corps })
       : requete(def.table, { methode: 'POST', corps: corps })

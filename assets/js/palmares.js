@@ -9,18 +9,8 @@
 (function () {
   'use strict'
 
-  var CAT_LABELS = {
-    karting:    'Karting',
-    monoplace:  'Monoplace',
-    gt:         'GT',
-    prototype:  'Sport Proto',
-    tourisme:   'Tourisme',
-    montagne:   'Course de côte',
-    rallye:     'Rallye',
-    endurance:  'Endurance',
-    historique: 'Historique',
-    multi:      'Multi-disciplines'
-  }
+  // Les libellés vivent dans site-data.js, partagés avec palmares-une.js.
+  var CAT_LABELS = (window.JBEMERIC_DATA && window.JBEMERIC_DATA.palmaresCategories) || {}
 
   var CAROUSEL_AUTOPLAY_MS = 3500
   var PACK_CAP = 10  // capacité d'un slide pour packing sparse
@@ -903,11 +893,18 @@
     }
     var p = document.getElementById('pal-filtres-panel')
     if (p) p.classList.remove('open')
+    etatFiltres(false)
+  }
+
+  // aria-expanded : le lecteur d'écran dit si le panneau est ouvert.
+  function etatFiltres(ouvert) {
+    var t = document.querySelector('.pal-filtres-toggle')
+    if (t) t.setAttribute('aria-expanded', ouvert ? 'true' : 'false')
   }
 
   function toggleFiltresPanel() {
     var p = document.getElementById('pal-filtres-panel')
-    if (p) p.classList.toggle('open')
+    if (p) etatFiltres(p.classList.toggle('open'))
   }
 
   /* ═══ LIGHTBOX MAGAZINE ════════════════════════════════════ */

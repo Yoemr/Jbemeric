@@ -1,0 +1,34 @@
+/* boutique.css : la fenêtre de réservation et de bon cadeau (boutique.js).
+   Partagée par l'accueil et l'Académie. */
+.btq-fond {
+  position: fixed; inset: 0; z-index: 2000; background: rgba(4,10,30,.72);
+  display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 24px 12px;
+}
+.btq-fenetre {
+  position: relative; width: 100%; max-width: 520px; background: #fff; color: #040a1e;
+  border-radius: 10px; padding: 28px 24px; box-shadow: 0 30px 80px rgba(0,0,0,.45);
+  font-family: 'Outfit', sans-serif; display: flex; flex-direction: column; gap: 14px;
+}
+.btq-fermer { position: absolute; top: 10px; right: 12px; border: 0; background: none; font-size: 28px; line-height: 1; cursor: pointer; color: #040a1e }
+.btq-titre { margin: 0; font-family: 'Bebas Neue', sans-serif; font-weight: 400; font-size: 36px; line-height: 1 }
+.btq-resume { margin: 0; font-size: 15px; line-height: 1.5; color: rgba(13,13,13,.75) }
+.btq-prix { margin: 0; font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 1; color: #0A3D91 }
+.btq-4x:empty { display: none }
+.btq-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px }
+@media(max-width:480px) { .btq-grille { grid-template-columns: 1fr } }
+.btq-champ { display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500 }
+.btq-champ em { font-style: normal; font-weight: 400; color: rgba(13,13,13,.5) }
+.btq-champ input, .btq-champ select, .btq-champ textarea {
+  font: inherit; font-size: 15px; font-weight: 400; padding: 10px 12px; border: 1px solid rgba(10,61,145,.3); border-radius: 6px; background: #fff; color: #040a1e;
+}
+.btq-champ input:focus, .btq-champ select:focus, .btq-champ textarea:focus { outline: 2px solid #FFCF00; border-color: #0A3D91 }
+.btq-case { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; line-height: 1.5; color: rgba(13,13,13,.7) }
+.btq-case input { margin-top: 3px; flex-shrink: 0 }
+.btq-message:empty { display: none }
+.btq-message { margin: 0; font-size: 14px; padding: 10px 12px; border-radius: 6px }
+.btq-message--err { background: #fdecec; color: #8a1c1c }
+.btq-code { font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; padding: 14px; border: 0; border-radius: 6px; background: #FFCF00; color: #040a1e; cursor: pointer }
+.btq-code[hidden], .btq-paypal[hidden] { display: none }
+.btq-attente, .btq-note { margin: 0; font-size: 13px; color: rgba(13,13,13,.6) }
+.btq-confirme { margin: 0; font-size: 17px; line-height: 1.6 }
+.btq-code-bon { display: inline-block; margin: 8px 0; font-family: 'DM Mono', monospace; font-size: 22px; letter-spacing: 2px; background: #FFCF00; padding: 6px 12px; border-radius: 4px }
